@@ -369,7 +369,6 @@ create table imagen(
     id_empresa int null ,
     id_sede int  null,
     id_instalacion int  null,
-    id_tipo_instalacion int not null,
     url varchar(255) not null,
     activo TINYINT(1) not null default(1) ,
     id_usuario_creacion int not null default(1),
