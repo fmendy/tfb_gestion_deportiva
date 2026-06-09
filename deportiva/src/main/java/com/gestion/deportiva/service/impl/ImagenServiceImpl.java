@@ -5,7 +5,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -46,7 +45,6 @@ public class ImagenServiceImpl implements ImagenService {
 
 	@Override
 	@Transactional
-	@CacheEvict(value = "imagens", allEntries = true)
 	public String guardar(ImagenDTO dto) {
 		logger.info("Guardando Imagen");
 		Imagen model = imagenRepository.findByActivoTrueAndUuidEqualsIgnoreCase(dto.getUuid());
@@ -65,7 +63,6 @@ public class ImagenServiceImpl implements ImagenService {
 	}
 
 	@Override
-	@CacheEvict(value = "imagens", allEntries = true)
 	public void eliminar(Long id) {
 		logger.info("Eliminando Imagen por ID: {}");
 		Imagen model = imagenRepository.findByActivoTrueAndId(id);
@@ -74,7 +71,6 @@ public class ImagenServiceImpl implements ImagenService {
 	}
 
 	@Override
-	@CacheEvict(value = "imagens", allEntries = true)
 	public void eliminar(String uuid) {
 		logger.info("Eliminando Imagen por ID: {}");
 		Imagen model = imagenRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid);
