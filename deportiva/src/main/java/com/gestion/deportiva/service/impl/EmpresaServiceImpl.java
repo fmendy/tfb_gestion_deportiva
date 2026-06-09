@@ -18,9 +18,7 @@ import com.gestion.deportiva.dto.specifications.EmpresaSpecifications;
 import com.gestion.deportiva.model.Empresa;
 import com.gestion.deportiva.repository.EmpresaRepository;
 import com.gestion.deportiva.service.EmpresaService;
-import com.gestion.deportiva.util.Constantes;
 import com.gestion.deportiva.util.EmpresaUtil;
-import com.gestion.deportiva.util.SecurityUtil;
 import com.gestion.deportiva.util.Utils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -110,13 +108,13 @@ public class EmpresaServiceImpl implements EmpresaService {
 	}
 
 	@Override
-	public boolean canWrite(String uuid) {
-		return SecurityUtil.hasAuthority(Constantes.Permiso.Empresa.WRITE);
+	public boolean canWrite(Long id) {
+		return true;
 	}
 
 	@Override
-	public boolean canRead(String uuid) {
-		return SecurityUtil.hasAuthority(Constantes.Permiso.Empresa.READ);
+	public boolean canRead(Long id) {
+		return true;
 	}
 
 	@Override

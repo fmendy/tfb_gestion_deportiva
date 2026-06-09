@@ -19,8 +19,6 @@ import com.gestion.deportiva.model.ComunidadAutonoma;
 import com.gestion.deportiva.repository.ComunidadAutonomaRepository;
 import com.gestion.deportiva.service.ComunidadAutonomaService;
 import com.gestion.deportiva.util.ComunidadAutonomaUtil;
-import com.gestion.deportiva.util.Constantes;
-import com.gestion.deportiva.util.SecurityUtil;
 import com.gestion.deportiva.util.Utils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -114,13 +112,13 @@ public class ComunidadAutonomaServiceImpl implements ComunidadAutonomaService {
 	}
 
 	@Override
-	public boolean canWrite(String uuid) {
-		return SecurityUtil.hasAuthority(Constantes.Permiso.ComunidadAutonoma.WRITE);
+	public boolean canWrite(Long id) {
+		return true;
 	}
 
 	@Override
-	public boolean canRead(String uuid) {
-		return SecurityUtil.hasAuthority(Constantes.Permiso.ComunidadAutonoma.READ);
+	public boolean canRead(Long id) {
+		return true;
 	}
 
 	@Override

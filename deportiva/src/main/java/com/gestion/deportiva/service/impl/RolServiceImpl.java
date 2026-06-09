@@ -1,6 +1,5 @@
 package com.gestion.deportiva.service.impl;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -17,9 +16,7 @@ import com.gestion.deportiva.dto.specifications.RolSpecifications;
 import com.gestion.deportiva.model.Rol;
 import com.gestion.deportiva.repository.RolRepository;
 import com.gestion.deportiva.service.RolService;
-import com.gestion.deportiva.util.Constantes;
 import com.gestion.deportiva.util.RolUtil;
-import com.gestion.deportiva.util.SecurityUtil;
 import com.gestion.deportiva.util.Utils;
 
 @Service
@@ -100,12 +97,12 @@ public class RolServiceImpl implements RolService {
 
 
 	@Override
-	public boolean canWrite(String uuid) {
-		return false;
+	public boolean canWrite(Long id) {
+		return true;
 	}
 
 	@Override
-	public boolean canRead(String uuid) {
+	public boolean canRead(Long id) {
 		return true;
 	}
 
@@ -118,14 +115,14 @@ public class RolServiceImpl implements RolService {
 	@Override
 	public RolFilter getFilterParaUsuarioController() {
 		RolFilter filter = new RolFilter();
-		
+		/*
 		if(SecurityUtil.hasAuthority(Constantes.ROLE+"_"+Constantes.Rol.ADMINISTRADOR)) {
 			return filter;
 		}else if(SecurityUtil.hasAuthority(Constantes.ROLE+"_"+Constantes.Rol.GESTOR)) {
 			filter.setListNombre(Arrays.asList(Constantes.Rol.GESTOR, Constantes.Rol.CONDUCTOR));
 		}else {
 			filter.setListNombre(Arrays.asList( Constantes.Rol.CONDUCTOR));
-		}
+		}*/
 		return filter;
 	}
 

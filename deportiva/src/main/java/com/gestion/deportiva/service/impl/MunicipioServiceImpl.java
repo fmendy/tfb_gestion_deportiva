@@ -19,9 +19,7 @@ import com.gestion.deportiva.model.Municipio;
 import com.gestion.deportiva.repository.MunicipioRepository;
 import com.gestion.deportiva.repository.ProvinciaRepository;
 import com.gestion.deportiva.service.MunicipioService;
-import com.gestion.deportiva.util.Constantes;
 import com.gestion.deportiva.util.MunicipioUtil;
-import com.gestion.deportiva.util.SecurityUtil;
 import com.gestion.deportiva.util.Utils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -116,13 +114,13 @@ public class MunicipioServiceImpl implements MunicipioService {
 	}
 
 	@Override
-	public boolean canWrite(String uuid) {
-		return SecurityUtil.hasAuthority(Constantes.Permiso.Municipio.WRITE);
+	public boolean canWrite(Long id) {
+		return true;
 	}
 
 	@Override
-	public boolean canRead(String uuid) {
-		return SecurityUtil.hasAuthority(Constantes.Permiso.Municipio.READ);
+	public boolean canRead(Long id) {
+		return true;
 	}
 
 	@Override

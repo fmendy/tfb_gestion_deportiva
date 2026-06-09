@@ -33,9 +33,7 @@ import com.gestion.deportiva.model.UsuarioRol;
 
 import com.gestion.deportiva.repository.UsuarioRepository;
 
-import com.gestion.deportiva.service.UsuarioRolService;
 import com.gestion.deportiva.service.UsuarioService;
-import com.gestion.deportiva.util.Constantes;
 import com.gestion.deportiva.util.SecurityUtil;
 import com.gestion.deportiva.util.UsuarioUtil;
 import com.gestion.deportiva.util.Utils;
@@ -47,9 +45,6 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 
 	@Autowired
 	private UsuarioRepository usuarioRepository;
-
-	@Autowired
-	private UsuarioRolService usuarioRolService;
 
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
@@ -64,13 +59,7 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 	}
 
 	private UsuarioFilter limitacionesPermisos(UsuarioFilter filter) {
-		if (!SecurityUtil.hasAuthority(Constantes.Permiso.Usuario.READ_ALL)) {
-			if (SecurityUtil.hasAuthority(Constantes.Permiso.Usuario.READ)) {
-				filter.setListDemarcacionUuid(SecurityUtil.getCurrentUserListDemarcacionUuid());
-			} else {
-				filter.setUuid(SecurityUtil.getCurrentUserUuid());
-			}
-		}
+
 		return filter;
 	}
 
@@ -166,7 +155,6 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 	public String registrar(UsuarioRegistroDTO dto) {
 		Usuario usuario = UsuarioUtil.registroDTOToModel(dto);
 		usuarioRepository.saveAndFlush(usuario);
-		usuarioRolService.asignarRolPorDefecto(usuario);
 
 		return usuario.getUuid();
 	}
@@ -216,20 +204,13 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 	}
 
 	@Override
-	public boolean canWrite(String uuid) {
-		return SecurityUtil.hasAuthority(Constantes.Permiso.Usuario.WRITE_ALL)
-				|| userCanAccessUsuario(uuid, Constantes.Permiso.Usuario.WRITE);
+	public boolean canWrite(Long id) {
+		return true;
 	}
 
 	@Override
-	public boolean canRead(String uuid) {
-		return SecurityUtil.hasAuthority(Constantes.Permiso.Usuario.READ_ALL)
-				|| userCanAccessUsuario(uuid, Constantes.Permiso.Usuario.READ);
-	}
-
-	private boolean userCanAccessUsuario(String uuid, String requiredAuthority) {
+	public boolean canRead(Long id) {
 		return true;
-
 	}
 
 	@Override

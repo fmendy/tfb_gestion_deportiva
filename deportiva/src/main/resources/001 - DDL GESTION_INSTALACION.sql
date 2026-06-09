@@ -325,7 +325,7 @@ alter table sede add foreign key fk_sede_empresa (id_empresa) references empresa
 alter table sede add foreign key fk_sede_municipio (id_municipio) references municipio(id);
 
 
-create table tipo_instalacion(
+create table instalacion_tipo(
 	id INT  not null auto_increment primary key,
 	uuid CHAR(36) NOT NULL DEFAULT (UUID()),
     nombre varchar(255) not null,
@@ -337,8 +337,8 @@ create table tipo_instalacion(
     fecha_modificacion datetime not null default now()
 );
 
-alter table tipo_instalacion add foreign key fk_tipo_instalacion_usuario_creacion (id_usuario_creacion) references usuario(id);
-alter table tipo_instalacion add foreign key fk_tipo_instalacion_usuario_modificacion (id_usuario_modificacion) references usuario(id);
+alter table instalacion_tipo add foreign key fk_instalacion_tipo_usuario_creacion (id_usuario_creacion) references usuario(id);
+alter table instalacion_tipo add foreign key fk_instalacion_tipo_usuario_modificacion (id_usuario_modificacion) references usuario(id);
 
 insert into tipo_instalacion(nombre) values 
 ('GIMNASIO'),('PISCINA'),('PISTA PADEL'),('PISTA POLIDEPORTIVA'),('SAUNA'),('VELÓDROMO'),('PISTA DE TENIS'),('SALA MULTIUSOS');
@@ -348,7 +348,7 @@ create table instalacion(
 	id INT  not null auto_increment primary key,
 	uuid CHAR(36) NOT NULL DEFAULT (UUID()),
     id_sede int not null,
-    id_tipo_instalacion int not null,
+    id_instalacion_tipo int not null,
     nombre varchar(255) not null,
     descripcion varchar(1250) null,
     activo TINYINT(1) not null default(1) ,
@@ -361,7 +361,7 @@ create table instalacion(
 alter table instalacion add foreign key fk_instalacion_usuario_creacion (id_usuario_creacion) references usuario(id);
 alter table instalacion add foreign key fk_instalacion_usuario_modificacion (id_usuario_modificacion) references usuario(id);
 alter table instalacion add foreign key fk_instalacion_sede (id_sede) references sede(id);
-alter table instalacion add foreign key fk_instalacion_tipo_instalacion (id_tipo_instalacion) references tipo_instalacion(id);
+alter table instalacion add foreign key fk_instalacion_instalacion_tipo (id_instalacion_tipo) references tipo_instalacion(id);
 
 create table imagen(
 	id INT  not null auto_increment primary key,

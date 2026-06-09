@@ -22,7 +22,6 @@ import com.gestion.deportiva.repository.RolRepository;
 import com.gestion.deportiva.repository.UsuarioRepository;
 import com.gestion.deportiva.repository.UsuarioRolRepository;
 import com.gestion.deportiva.service.UsuarioRolService;
-import com.gestion.deportiva.util.Constantes;
 import com.gestion.deportiva.util.UsuarioRolUtil;
 import jakarta.transaction.Transactional;
 
@@ -92,15 +91,6 @@ public class UsuarioRolServiceImpl implements UsuarioRolService {
 	}
 
 	@Override
-	public void asignarRolPorDefecto(Usuario usuario) {
-		UsuarioRol usuarioRol = new UsuarioRol();
-		usuarioRol.setUsuario(usuario);
-		usuarioRol.setRol(rolRepository.findByActivoTrueAndNombreEqualsIgnoreCase(Constantes.Rol.CONDUCTOR));
-		usuarioRolRepository.saveAndFlush(usuarioRol);
-	}
-
-
-	@Override
 	public List<UsuarioRolDTO> getListDTO() {
 		return UsuarioRolUtil.listModelToListDTO(usuarioRolRepository.findByActivoTrue());
 	}
@@ -110,14 +100,13 @@ public class UsuarioRolServiceImpl implements UsuarioRolService {
 		return UsuarioRolUtil.listModelToListDTO(usuarioRolRepository.findAll(UsuarioRolSpecifications.filter(filter)));
 	}
 
-
 	@Override
-	public boolean canWrite(String uuid) {
+	public boolean canWrite(Long id) {
 		return false;
 	}
 
 	@Override
-	public boolean canRead(String uuid) {
+	public boolean canRead(Long id) {
 		return true;
 	}
 
@@ -131,11 +120,10 @@ public class UsuarioRolServiceImpl implements UsuarioRolService {
 	public UsuarioRolesDTO findUsuarioRolesDTOByUsuarioUuid(String usuarioUuid) {
 		logger.info("Construyendo usuarioRol con UUID: {}", usuarioUuid);
 		Usuario usuario = usuarioRepository.findByActivoTrueAndUuidEqualsIgnoreCase(usuarioUuid);
-		List<UsuarioRol> listUsuarioRol= usuarioRolRepository
+		List<UsuarioRol> listUsuarioRol = usuarioRolRepository
 				.findByActivoTrueAndUsuario_UuidEqualsIgnoreCase(usuarioUuid);
 		return UsuarioRolUtil.buildUsuarioRolesDTO(usuario, listUsuarioRol);
 	}
-	
 
 	@Override
 	@Transactional
@@ -181,6 +169,5 @@ public class UsuarioRolServiceImpl implements UsuarioRolService {
 			}
 		}
 	}
-
 
 }

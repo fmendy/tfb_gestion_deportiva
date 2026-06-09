@@ -27,9 +27,9 @@ public interface BaseService<T extends BaseDTO, F extends BaseEntityFilter> {
 
 	List<T> getListDTO(F filter);
 	
-	boolean canWrite(String uuid);
+	boolean canWrite(Long id);
 	
-	boolean canRead(String uuid);
+	boolean canRead(Long id);
 	
 	byte[] exportarExcel(F filter) throws IOException;
 }
