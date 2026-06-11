@@ -27,6 +27,7 @@ public class EmpresaUtil {
 		retVal.setUrl(model.getUrl());
 		retVal.setLogo(model.getLogo());
 		retVal.setDescripcion(model.getDescripcion());
+		retVal.setCif(model.getCif());
 		return retVal;
 	}
 
@@ -54,6 +55,7 @@ public class EmpresaUtil {
 		model.setEmail(dto.getEmail());
 		model.setUrl(dto.getUrl());
 		model.setLogo(dto.getLogo());
+		model.setCif(dto.getCif());
 		return model;
 	}
 
@@ -81,6 +83,7 @@ public class EmpresaUtil {
 		retVal.setEmail(dto.getEmail());
 		retVal.setUrl(dto.getUrl());
 		retVal.setLogo(dto.getLogo());
+		retVal.setCif(dto.getCif());
 		return retVal;
 	}
 

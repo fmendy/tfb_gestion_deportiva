@@ -33,5 +33,8 @@ public class Empresa extends Maestra implements Serializable {
 	
 	@Column(name = "descripcion", length = 1250)
 	private String descripcion;
+	
+	@Column(name = "cif", length = 20, nullable = false)
+	private String cif;
 
 }

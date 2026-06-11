@@ -13,7 +13,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +25,7 @@ import com.gestion.deportiva.dto.UsuarioDTO;
 import com.gestion.deportiva.dto.UsuarioRegistroDTO;
 import com.gestion.deportiva.dto.filter.UsuarioFilter;
 import com.gestion.deportiva.dto.specifications.UsuarioSpecifications;
+import com.gestion.deportiva.mapper.UsuarioMapper;
 import com.gestion.deportiva.model.Permiso;
 import com.gestion.deportiva.model.Rol;
 import com.gestion.deportiva.model.RolPermiso;
@@ -36,7 +36,6 @@ import com.gestion.deportiva.repository.UsuarioRepository;
 
 import com.gestion.deportiva.service.UsuarioService;
 import com.gestion.deportiva.util.SecurityUtil;
-import com.gestion.deportiva.util.UsuarioUtil;
 import com.gestion.deportiva.util.Utils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -48,15 +47,15 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 	@Autowired
 	private UsuarioRepository usuarioRepository;
 
-	@Autowired
-	private BCryptPasswordEncoder passwordEncoder;
-
 	@PersistenceContext
 	private EntityManager entityManager;
 
+	@Autowired
+	private UsuarioMapper usuarioMapper;
+
 	@Override
 	public Page<UsuarioDTO> getPageByFilter(UsuarioFilter filter, Pageable pageable) {
-		return UsuarioUtil.pageToPageDTO(
+		return usuarioMapper.pageToPageDTO(
 				usuarioRepository.findAll(UsuarioSpecifications.filter(limitacionesPermisos(filter)), pageable));
 	}
 
@@ -69,14 +68,14 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 	@Transactional
 	public String guardar(UsuarioDTO form) {
 		Usuario model = usuarioRepository.findByActivoTrueAndUuidEqualsIgnoreCase(form.getUuid());
-		model = UsuarioUtil.dtoToModel(form, model);
+		model = usuarioMapper.dtoToModel(form, model);
 		usuarioRepository.saveAndFlush(model);
 		return model.getUuid();
 	}
 
 	@Override
 	public UsuarioDTO findById(Long id) {
-		return UsuarioUtil.modelToDTO(usuarioRepository.findByActivoTrueAndId(id));
+		return usuarioMapper.modelToDTO(usuarioRepository.findByActivoTrueAndId(id));
 	}
 
 	@Override
@@ -139,7 +138,7 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 	@Override
 	public Long guardarDatos(UsuarioDTO form) {
 		Usuario model = usuarioRepository.findByActivoTrueAndId(form.getId());
-		model = UsuarioUtil.dtoToModel(form, model);
+		model = usuarioMapper.dtoToModel(form, model);
 		usuarioRepository.saveAndFlush(model);
 		return model.getId();
 	}
@@ -155,7 +154,7 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 
 	@Override
 	public String registrar(UsuarioRegistroDTO dto) {
-		Usuario usuario = UsuarioUtil.registroDTOToModel(dto);
+		Usuario usuario = usuarioMapper.registroDTOToModel(dto);
 		usuarioRepository.saveAndFlush(usuario);
 
 		return usuario.getUuid();
@@ -163,7 +162,7 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 
 	@Override
 	public UsuarioDTO findByUuid(String uuid) {
-		return UsuarioUtil.modelToDTO(usuarioRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid));
+		return usuarioMapper.modelToDTO(usuarioRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid));
 	}
 
 	@Override
@@ -177,31 +176,30 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 	@Override
 	public MiPerfilDTO getMiPerfilDTO() {
 		Usuario usuario = usuarioRepository.findByActivoTrueAndId(SecurityUtil.getCurrentUserId());
-		return UsuarioUtil.modelToMiPerfilDTO(usuario);
+		return usuarioMapper.modelToMiPerfilDTO(usuario);
 	}
 
 	@Override
 	public MiPerfilPasswordDTO getMiPerfilPasswordDTO() {
 		Usuario usuario = usuarioRepository.findByActivoTrueAndId(SecurityUtil.getCurrentUserId());
-		return UsuarioUtil.modelToMiPerfilPasswordDTO(usuario);
+		return usuarioMapper.modelToMiPerfilPasswordDTO(usuario);
 	}
 
 	@Override
 	public void actualizarPassword(MiPerfilPasswordDTO dto) {
 		Usuario usuario = usuarioRepository.findByActivoTrueAndUuidEqualsIgnoreCase(dto.getUuid());
-		dto.setPasswordNuevo(passwordEncoder.encode(dto.getPasswordNuevo()));
 		usuarioRepository.saveAndFlush(usuario);
 	}
 
 	@Override
 	public List<UsuarioDTO> getListDTO() {
-		return Utils.sortByNombre(UsuarioUtil.listModelToListDTO(usuarioRepository.findByActivoTrue()));
+		return Utils.sortByNombre(usuarioMapper.listModelToListDTO(usuarioRepository.findByActivoTrue()));
 	}
 
 	@Override
 	public List<UsuarioDTO> getListDTO(UsuarioFilter filter) {
 
-		return Utils.sortByNombre(UsuarioUtil.listModelToListDTO(
+		return Utils.sortByNombre(usuarioMapper.listModelToListDTO(
 				usuarioRepository.findAll(UsuarioSpecifications.filter(limitacionesPermisos(filter)))));
 	}
 
@@ -222,7 +220,7 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 
 	@Override
 	public Long registrarUsuario(@Valid RegistroEmpresaDTO dto) {
-		Usuario usuario = UsuarioUtil.registroEmpresaDTOToModel(dto);
+		Usuario usuario = usuarioMapper.registroEmpresaDTOToModel(dto);
 		usuarioRepository.saveAndFlush(usuario);
 
 		return usuario.getId();

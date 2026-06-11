@@ -1,5 +1,6 @@
 package com.gestion.deportiva.dto;
 
+import com.gestion.deportiva.validation.CifValid;
 import com.gestion.deportiva.validation.FieldMatchValid;
 import com.gestion.deportiva.validation.RegistroEmpresaEmailUnicoValid;
 
@@ -43,4 +44,9 @@ public class RegistroEmpresaDTO extends MaestraDTO {
 
 	@Size(max = 1250)
 	private String descripcion;
+	
+	@Size(max = 20)
+	@NotEmpty
+	@CifValid(message = "{error.validacion.cif.invalido}")
+	private String cif;
 }

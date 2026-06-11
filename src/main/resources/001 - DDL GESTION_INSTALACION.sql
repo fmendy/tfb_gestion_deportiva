@@ -286,6 +286,7 @@ create table empresa(
 	uuid CHAR(36) NOT NULL DEFAULT (UUID()),
     nombre varchar(255) not null ,
     email varchar(255) not null,
+    cif varchar(255) not null,
     logo varchar(255) null,
     url varchar(255),
     descripcion varchar(1250) null,
