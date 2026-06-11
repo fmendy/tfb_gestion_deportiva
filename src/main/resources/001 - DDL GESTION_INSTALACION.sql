@@ -340,7 +340,7 @@ create table instalacion_tipo(
 alter table instalacion_tipo add foreign key fk_instalacion_tipo_usuario_creacion (id_usuario_creacion) references usuario(id);
 alter table instalacion_tipo add foreign key fk_instalacion_tipo_usuario_modificacion (id_usuario_modificacion) references usuario(id);
 
-insert into tipo_instalacion(nombre) values 
+insert into instalacion_tipo(nombre) values 
 ('GIMNASIO'),('PISCINA'),('PISTA PADEL'),('PISTA POLIDEPORTIVA'),('SAUNA'),('VELÓDROMO'),('PISTA DE TENIS'),('SALA MULTIUSOS');
 
 
@@ -361,7 +361,7 @@ create table instalacion(
 alter table instalacion add foreign key fk_instalacion_usuario_creacion (id_usuario_creacion) references usuario(id);
 alter table instalacion add foreign key fk_instalacion_usuario_modificacion (id_usuario_modificacion) references usuario(id);
 alter table instalacion add foreign key fk_instalacion_sede (id_sede) references sede(id);
-alter table instalacion add foreign key fk_instalacion_instalacion_tipo (id_instalacion_tipo) references tipo_instalacion(id);
+alter table instalacion add foreign key fk_instalacion_instalacion_tipo (id_instalacion_tipo) references instalacion_tipo(id);
 
 create table imagen(
 	id INT  not null auto_increment primary key,
@@ -385,14 +385,13 @@ alter table imagen add foreign key fk_imagen_instalacion (id_instalacion) refere
 alter table imagen add CONSTRAINT chk_imagen_relacion CHECK ((id_empresa IS NOT NULL) +(id_sede IS NOT NULL) +(id_instalacion IS NOT NULL) = 1);
 
 
-create table horario (
+create table instalacion_horario (
 	id INT  not null auto_increment primary key,
 	uuid CHAR(36) NOT NULL DEFAULT (UUID()),
     id_instalacion int not null,
     dia_semana int not null,
     hora_inicio TIME not null,
     hora_fin TIME not null,
-	abierto_24 TINYINT(1) not null default(0) ,
     activo TINYINT(1) not null default(1) ,
     id_usuario_creacion int not null default(1),
     id_usuario_modificacion int not null default(1),
@@ -400,18 +399,17 @@ create table horario (
     fecha_modificacion datetime not null default now()
 );
 
-alter table horario add foreign key fk_horario_usuario_creacion (id_usuario_creacion) references usuario(id);
-alter table horario add foreign key fk_horario_usuario_modificacion (id_usuario_modificacion) references usuario(id);
-alter table horario add foreign key fk_horario_instalacion (id_instalacion) references instalacion(id);
+alter table instalacion_horario add foreign key fk_instalacion_horario_usuario_creacion (id_usuario_creacion) references usuario(id);
+alter table instalacion_horario add foreign key fk_instalacion_horario_usuario_modificacion (id_usuario_modificacion) references usuario(id);
+alter table instalacion_horario add foreign key fk_instalacion_horario_instalacion (id_instalacion) references instalacion(id);
 
-create table horario_especial (
+create table instalacion_horario_especial (
 	id INT  not null auto_increment primary key,
 	uuid CHAR(36) NOT NULL DEFAULT (UUID()),
     id_instalacion int not null,
     fecha DATE not null,
-    hora_inicio TIME not null,
-    hora_fin TIME not null,
-	abierto_24 TINYINT(1) not null default(0),
+    hora_inicio TIME  null,
+    hora_fin TIME  null,
     cerrado TINYINT(1) not null default(0),
     activo TINYINT(1) not null default(1) ,
     id_usuario_creacion int not null default(1),
@@ -420,9 +418,9 @@ create table horario_especial (
     fecha_modificacion datetime not null default now()
 );
 
-alter table horario_especial add foreign key fk_horario_especial_usuario_creacion (id_usuario_creacion) references usuario(id);
-alter table horario_especial add foreign key fk_horario_especial_usuario_modificacion (id_usuario_modificacion) references usuario(id);
-alter table horario_especial add foreign key fk_horario_especial_instalacion (id_instalacion) references instalacion(id);
+alter table instalacion_horario_especial add foreign key fk_instalacion_horario_especial_usuario_creacion (id_usuario_creacion) references usuario(id);
+alter table instalacion_horario_especial add foreign key fk_instalacion_horario_especial_usuario_modificacion (id_usuario_modificacion) references usuario(id);
+alter table instalacion_horario_especial add foreign key fk_instalacion_horario_especial_instalacion (id_instalacion) references instalacion(id);
 
 create table instalacion_configuracion_reserva (
 	id INT  not null auto_increment primary key,

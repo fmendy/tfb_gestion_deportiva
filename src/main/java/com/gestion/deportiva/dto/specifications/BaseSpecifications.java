@@ -1,5 +1,6 @@
 package com.gestion.deportiva.dto.specifications;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
@@ -82,6 +83,15 @@ public abstract class BaseSpecifications<T> {
 		};
 	}
 	
+	protected Specification<T> greaterThanOrEqualTo(String field, LocalDate value) {
+		return (root, query, cb) -> {
+			if (value != null) {
+				return cb.greaterThanOrEqualTo(root.get(field), value);
+			}
+			return null;
+		};
+	}
+	
 	protected Specification<T> greaterThanOrEqualTo(String field, Double value) {
 		return (root, query, cb) -> {
 			if (value != null) {
@@ -119,6 +129,15 @@ public abstract class BaseSpecifications<T> {
 	}
 
 	protected Specification<T> lessThanOrEqualTo(String field, Date value) {
+		return (root, query, cb) -> {
+			if (value != null) {
+				return cb.lessThanOrEqualTo(root.get(field), value);
+			}
+			return null;
+		};
+	}
+	
+	protected Specification<T> lessThanOrEqualTo(String field, LocalDate value) {
 		return (root, query, cb) -> {
 			if (value != null) {
 				return cb.lessThanOrEqualTo(root.get(field), value);
@@ -264,6 +283,12 @@ public abstract class BaseSpecifications<T> {
 	protected Specification<T> equalsFieldLong(String field, String field2, Long value) {
 		return (root, query, cb) -> {
 			return cb.equal(root.get(field).get(field2), value);
+		};
+	}
+	
+	protected Specification<T> equalsFieldLong(String field, String field2, String field3, Long value) {
+		return (root, query, cb) -> {
+			return cb.equal(root.get(field).get(field2).get(field3), value);
 		};
 	}
 
