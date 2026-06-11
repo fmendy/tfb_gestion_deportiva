@@ -91,7 +91,7 @@ public class InstalacionHorarioUtil {
 	}
 
 	public List<ComboDTO> listModelToListComboDTO(List<InstalacionHorario> list) {
-		return list.stream().map(bean -> new ComboDTO(bean.getUuid(), bean.getHoraFin() + " - "+bean.getHoraFin())).toList();
+		return list.stream().map(bean -> new ComboDTO(bean.getId(), bean.getHoraFin() + " - "+bean.getHoraFin())).toList();
 	}
 
 }

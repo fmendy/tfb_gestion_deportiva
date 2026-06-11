@@ -13,28 +13,28 @@ public class ComboDTO implements Serializable {
 
 	private static final long serialVersionUID = -1230850390210537332L;
 
-	private String key;
+	private Long key;
 
 	private String value;
 
-	private String keyPadre;
+	private Long keyPadre;
 
 	private String keyAbuelo;
 
-	public ComboDTO(String key, String value) {
+	public ComboDTO(Long key, String value) {
 		super();
 		this.key = key;
 		this.value = value;
 	}
 
-	public ComboDTO(String key, String value, String keyPadre) {
+	public ComboDTO(Long key, String value, Long keyPadre) {
 		super();
 		this.key = key;
 		this.value = value;
 		this.keyPadre = keyPadre;
 	}
 
-	public ComboDTO(String key, String value, String keyPadre, String keyAbuelo) {
+	public ComboDTO(Long key, String value, Long keyPadre, String keyAbuelo) {
 		super();
 		this.key = key;
 		this.value = value;

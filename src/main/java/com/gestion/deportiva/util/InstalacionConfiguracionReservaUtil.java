@@ -86,7 +86,7 @@ public class InstalacionConfiguracionReservaUtil {
 	}
 
 	public List<ComboDTO> listModelToListComboDTO(List<InstalacionConfiguracionReserva> list) {
-		return list.stream().map(bean -> new ComboDTO(bean.getUuid(), bean.getInstalacion().getNombre())).toList();
+		return list.stream().map(bean -> new ComboDTO(bean.getId(), bean.getInstalacion().getNombre())).toList();
 	}
 
 }

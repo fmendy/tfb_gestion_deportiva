@@ -93,7 +93,7 @@ public class InstalacionHorarioBloqueadoUtil {
 	}
 
 	public List<ComboDTO> listModelToListComboDTO(List<InstalacionHorarioBloqueado> list) {
-		return list.stream().map(bean -> new ComboDTO(bean.getUuid(), bean.getHoraFin() + " - " + bean.getHoraFin()))
+		return list.stream().map(bean -> new ComboDTO(bean.getId(), bean.getHoraFin() + " - " + bean.getHoraFin()))
 				.toList();
 	}
 

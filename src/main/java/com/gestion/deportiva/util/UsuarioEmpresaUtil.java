@@ -77,7 +77,7 @@ public class UsuarioEmpresaUtil {
 	}
 
 	public List<ComboDTO> listModelToListComboDTO(List<UsuarioEmpresa> list) {
-		return list.stream().map(bean -> new ComboDTO(bean.getUuid(),
+		return list.stream().map(bean -> new ComboDTO(bean.getId(),
 				bean.getUsuario().getNombre() + " - " + bean.getEmpresa().getNombre())).toList();
 	}
 

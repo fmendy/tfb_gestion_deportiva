@@ -70,7 +70,7 @@ public class EmpresaUtil {
 	}
 
 	public List<ComboDTO> listModelToListComboDTO(List<Empresa> list) {
-		return list.stream().map(bean -> new ComboDTO(bean.getUuid(), bean.getNombre())).toList();
+		return list.stream().map(bean -> new ComboDTO(bean.getId(), bean.getNombre())).toList();
 	}
 
 }

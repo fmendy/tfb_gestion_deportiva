@@ -63,7 +63,7 @@ public class SancionTipoUtil {
 	}
 
 	public List<ComboDTO> listModelToListComboDTO(List<SancionTipo> list) {
-		return list.stream().map(bean -> new ComboDTO(bean.getUuid(), bean.getNombre())).toList();
+		return list.stream().map(bean -> new ComboDTO(bean.getId(), bean.getNombre())).toList();
 	}
 
 }

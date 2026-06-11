@@ -65,7 +65,7 @@ public class InstalacionTipoUtil {
 	}
 
 	public List<ComboDTO> listModelToListComboDTO(List<InstalacionTipo> list) {
-		return list.stream().map(bean -> new ComboDTO(bean.getUuid(), bean.getNombre())).toList();
+		return list.stream().map(bean -> new ComboDTO(bean.getId(), bean.getNombre())).toList();
 	}
 
 }

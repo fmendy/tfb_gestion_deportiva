@@ -84,8 +84,8 @@ public class MunicipioUtil {
 	}
 
 	public List<ComboDTO> listModelToListComboDTO(List<Municipio> list) {
-		return list.stream().map(bean -> new ComboDTO(bean.getUuid(), bean.getNombre(),
-				bean.getProvincia().getComunidadAutonoma().getUuid(), bean.getProvincia().getUuid())).toList();
+		return list.stream().map(bean -> new ComboDTO(bean.getId(), bean.getNombre(),
+				bean.getProvincia().getComunidadAutonoma().getId(), bean.getProvincia().getId().toString())).toList();
 	}
 
 }

@@ -54,7 +54,7 @@ public class RolUtil {
 	}
 
 	public List<ComboDTO> listModelToListComboDTO(List<Rol> list) {
-		return list.stream().map(bean -> new ComboDTO(bean.getUuid(), bean.getNombre())).toList();
+		return list.stream().map(bean -> new ComboDTO(bean.getId(), bean.getNombre())).toList();
 	}
 
 }

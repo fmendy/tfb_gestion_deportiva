@@ -89,7 +89,7 @@ public class UsuarioInstalacionUtil {
 	}
 
 	public List<ComboDTO> listModelToListComboDTO(List<UsuarioInstalacion> list) {
-		return list.stream().map(bean -> new ComboDTO(bean.getUuid(), bean.getUsuario().getNombre() + " - " + bean.getInstalacion().getNombre()))
+		return list.stream().map(bean -> new ComboDTO(bean.getId(), bean.getUsuario().getNombre() + " - " + bean.getInstalacion().getNombre()))
 				.toList();
 	}
 

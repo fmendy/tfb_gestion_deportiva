@@ -102,7 +102,7 @@ public class ImagenUtil {
 	}
 
 	public List<ComboDTO> listModelToListComboDTO(List<Imagen> list) {
-		return list.stream().map(bean -> new ComboDTO(bean.getUuid(), bean.getUrl())).toList();
+		return list.stream().map(bean -> new ComboDTO(bean.getId(), bean.getUrl())).toList();
 	}
 
 }
