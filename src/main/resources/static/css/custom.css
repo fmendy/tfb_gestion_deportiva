@@ -1,0 +1,852 @@
+/* --- Folder Tabs Elegantes y Modernas --- */
+.folder-tabs {
+	display: flex;
+	gap: 0.25rem;
+	margin-bottom: 1.5rem;
+	position: relative;
+}
+
+.folder-tab {
+	position: relative;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.75rem 1.5rem;
+	border: 1px solid #dee2e6;
+	border-bottom: none;
+	border-radius: 0.8rem 0.8rem 0 0;
+	font-weight: 500;
+	font-size: 0.95rem;
+	color: #6b7280;
+	background: #f8f9fa;
+	transition: all 0.3s ease;
+	top: 0;
+	z-index: 1;
+}
+
+.folder-tab i {
+	font-size: 1.1rem;
+	color: #4f8ef7;
+	transition: color 0.3s ease;
+}
+
+/* Hover */
+.folder-tab:hover {
+	background: #ffffff;
+	color: #111;
+	transform: translateY(-2px);
+	box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.06);
+	z-index: 2;
+}
+
+/* Activa */
+.folder-tab.active {
+	background: linear-gradient(145deg, #4facfe, #00f2fe);
+	color: #fff;
+	font-weight: 600;
+	top: -3px;
+	z-index: 5;
+	box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15);
+	border-bottom: 1px solid #fff;
+}
+
+/* Icono activo */
+.folder-tab.active i {
+	color: #fff;
+}
+
+/* Línea inferior animada como indicador */
+.folder-tab.active::after {
+	content: '';
+	position: absolute;
+	bottom: -2px;
+	left: 20%;
+	width: 60%;
+	height: 3px;
+	border-radius: 2px;
+	background: #fff;
+}
+
+/* Responsive */
+@media ( max-width : 576px) {
+	.folder-tab {
+		padding: 0.6rem 1rem;
+		font-size: 0.85rem;
+	}
+	.folder-tab i {
+		font-size: 1rem;
+	}
+}
+
+/* --- FIN Folder Tabs Elegantes y Modernas --- */
+
+/* --- Estilos Generales --- */
+.required-asterisk {
+	color: red;
+	margin-left: 4px;
+}
+
+.styled-input {
+	padding: 12px;
+	border-radius: 0.375rem;
+	border: 1px solid #ced4da;
+	transition: all 0.3s;
+}
+
+.styled-input:focus {
+	border-color: #0dcaf0;
+	box-shadow: 0 0 0 0.2rem rgba(13, 202, 240, 0.25);
+}
+
+.opcion-correcta {
+	background-color: #28a745 !important; /* verde */
+	color: white !important;
+	border-color: #28a745 !important;
+}
+
+.opcion-incorrecta {
+	background-color: #dc3545 !important; /* rojo */
+	color: white !important;
+	border-color: #dc3545 !important;
+}
+
+label {
+	font-weight: 500;
+}
+
+.info-icon {
+	margin-left: 5px;
+	color: #0dcaf0;
+	cursor: pointer;
+}
+
+/* Hover effect */
+.navbar-nav .nav-link:hover {
+	background-color: rgba(255, 255, 255, 0.2);
+	transform: scale(1.05);
+	transition: all 0.3s ease;
+}
+
+/* Active / click effect */
+.navbar-nav .nav-link:active {
+	background-color: rgba(255, 255, 255, 0.35);
+	transform: scale(0.98);
+	transition: all 0.1s ease;
+}
+
+/* Sombra al navbar */
+.navbar {
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Botón con degradado y efecto hover */
+.btn-gradient {
+	background: linear-gradient(135deg, #4CAF50, #28a745);
+	color: white;
+	border: none;
+	transition: all 0.3s ease;
+}
+
+.btn-gradient:hover {
+	background: linear-gradient(135deg, #45b649, #218838);
+	transform: translateY(-3px);
+	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.btn-gradient:active {
+	transform: translateY(0);
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* Icono más grande y centrado verticalmente */
+.btn-gradient i {
+	font-size: 1.2rem;
+}
+
+.tab-activo {
+	background-color: #f8f9fa !important;
+}
+
+/* Bordes suaves y efecto focus moderno */
+.form-control {
+	border-radius: 0.75rem;
+	border: 1px solid #dee2e6;
+	transition: all 0.3s ease;
+}
+
+.form-control:focus {
+	box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, .25);
+	border-color: #0d6efd;
+}
+
+/* Botones con hover animado */
+.hover-scale {
+	transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hover-scale:hover {
+	transform: scale(1.05);
+	box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, .15);
+}
+
+/* Mensajes de error con icono */
+.text-danger {
+	font-size: 0.875rem;
+	font-weight: 500;
+}
+
+/* Degradado suave para iconos (opcional) */
+.text-gradient-primary {
+	background: linear-gradient(90deg, #0d6efd, #6610f2);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+/* Ajuste del color del toggle icon en mobile */
+.navbar-light .navbar-toggler-icon {
+	background-image:
+		url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255,255,255,0.9)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+/* ==== Ajustes para Navbar Moderno ==== */
+
+/* Fondo degradado y texto claro */
+.navbar.navbar-dark {
+	background: linear-gradient(90deg, #17a2b8, #0dcaf0) !important;
+	color: #fff !important;
+}
+
+/* Enlaces del navbar */
+.navbar-dark .nav-link {
+	color: #fff !important;
+	font-weight: 500;
+	transition: all 0.3s ease;
+}
+
+/* Hover moderno */
+.navbar-dark .nav-link:hover {
+	color: #fff !important;
+	background-color: rgba(255, 255, 255, 0.15);
+	transform: translateY(-1px);
+}
+
+/* Activo / clic */
+.navbar-dark .nav-link:active {
+	background-color: rgba(255, 255, 255, 0.25);
+	transform: scale(0.98);
+}
+
+/* Marca (nombre del proyecto) */
+.navbar-dark .navbar-brand {
+	color: #fff !important;
+	font-weight: 700;
+	letter-spacing: 0.5px;
+}
+
+
+/* Dropdowns: fondo claro con sombras suaves */
+.navbar-dark .dropdown-menu {
+	background-color: #fff !important;
+	border-radius: 0.75rem;
+	border: none;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Elementos dentro del dropdown */
+.navbar-dark .dropdown-item {
+	color: #333 !important;
+	transition: background-color 0.2s ease;
+}
+
+.navbar-dark .dropdown-item:hover {
+	background-color: #e9f7fc;
+	color: #0dcaf0 !important;
+}
+
+/* Toggler en móviles */
+.navbar-dark .navbar-toggler {
+	border: none;
+}
+
+/* Contenedor de la imagen para que sea uniforme (Proporción 2:3 típica de libros) */
+.book-cover-container {
+	position: relative;
+	width: 100%;
+	padding-top: 150%; /* Relación de aspecto 2:3 */
+	overflow: hidden;
+	background-color: #f8f9fa;
+	border-radius: 8px 8px 0 0;
+}
+
+.book-img {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover; /* Esto evita que la imagen se estire */
+	transition: transform 0.3s ease;
+}
+
+/* Efecto de Hover */
+.book-card:hover .book-img {
+	transform: scale(1.05);
+}
+
+.book-overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.7);
+	color: white;
+	opacity: 0;
+	transition: opacity 0.3s ease;
+	z-index: 2;
+}
+
+.book-card:hover .book-overlay {
+	opacity: 1;
+}
+
+/* Limitar el título a 2 líneas para que no rompa el diseño */
+.text-truncate-2 {
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	height: 2.5em; /* Altura fija para que todas las cards alineen igual */
+	line-height: 1.25em;
+}
+
+.book-card {
+	transition: box-shadow 0.3s ease;
+}
+
+.book-card:hover {
+	box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Contenedor Principal con Prefijo bc- (Book Catalogo) */
+.bc-main-wrapper {
+	--bc-primary: #2c3e50;
+	--bc-accent: #f39c12;
+	--bc-glass: rgba(255, 255, 255, 0.9);
+	--bc-radius: 20px;
+	background-color: #f8f9fa;
+	font-family: 'Inter', sans-serif;
+}
+
+/* Fondo dinámico desenfocado */
+.bc-hero-bg {
+	position: relative;
+	overflow: hidden;
+	padding: 100px 0 60px 0;
+	background-size: cover;
+	background-position: center;
+}
+
+.bc-hero-bg::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: inherit;
+	filter: blur(40px) brightness(0.6);
+	transform: scale(1.1);
+	z-index: 1;
+}
+
+.bc-content-layer {
+	position: relative;
+	z-index: 2;
+}
+
+/* Portada del libro Grande y con Efecto */
+.bc-cover-container {
+	perspective: 1000px;
+}
+
+.bc-book-cover {
+	width: 100%;
+	max-width: 400px; /* Tamaño mayor solicitado */
+	border-radius: 8px 20px 20px 8px;
+	box-shadow: 15px 15px 40px rgba(0, 0, 0, 0.5);
+	transition: transform 0.4s ease;
+	border-left: 5px solid rgba(255, 255, 255, 0.2);
+}
+
+.bc-book-cover:hover {
+	transform: rotateY(-5deg) scale(1.02);
+}
+
+/* Ficha de información tipo cristal */
+.bc-info-card {
+	background: var(--bc-glass);
+	backdrop-filter: blur(10px);
+	border-radius: var(--bc-radius);
+	padding: 40px;
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+	border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.bc-rating-badge {
+	background: linear-gradient(45deg, #f1c40f, #f39c12);
+	color: white;
+	padding: 8px 16px;
+	border-radius: 50px;
+	font-weight: bold;
+	box-shadow: 0 4px 15px rgba(243, 156, 18, 0.3);
+}
+
+.bc-label {
+	font-size: 0.75rem;
+	color: #888;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	display: block;
+	margin-bottom: 4px;
+}
+
+.bc-value {
+	font-weight: 600;
+	color: var(--bc-primary);
+	font-size: 1.1rem;
+}
+
+.bc-divider {
+	height: 2px;
+	background: linear-gradient(to right, var(--bc-accent), transparent);
+	margin: 20px 0;
+	border: none;
+}
+
+.bc-author-tag {
+	display: inline-block;
+	background: #e9ecef;
+	padding: 5px 15px;
+	border-radius: 20px;
+	margin-right: 8px;
+	color: var(--bc-primary);
+	text-decoration: none;
+	transition: 0.3s;
+}
+
+.bc-author-tag:hover {
+	background: var(--bc-primary);
+	color: white;
+}
+
+.bc-star-num {
+	font-size: 0.85rem;
+	font-weight: 700;
+	width: 12px;
+	color: var(--bc-primary);
+}
+
+.bc-votos-qty {
+	min-width: 35px;
+	text-align: right;
+	font-family: monospace; /* Para que los números no bailen al cambiar */
+}
+
+.bc-reviews-container .progress {
+	border-radius: 20px;
+}
+
+.bc-reviews-container .progress-bar {
+	border-radius: 20px;
+	transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Efecto al pasar el ratón por la fila */
+.bc-reviews-container .d-flex.align-items-center:hover {
+	background-color: #fbfbfb;
+	border-radius: 5px;
+}
+
+/* Contenedor del scroll horizontal */
+.bc-scroll-hide {
+	-ms-overflow-style: none; /* IE and Edge */
+	scrollbar-width: none; /* Firefox */
+}
+
+.bc-scroll-hide::-webkit-scrollbar {
+	display: none; /* Chrome, Safari and Opera */
+}
+
+.bc-related-wrapper {
+	position: relative;
+}
+
+/* Tarjeta de libro relacionado */
+.bc-related-card {
+	transition: all 0.3s ease;
+	background: transparent;
+}
+
+.bc-related-cover-container {
+	position: relative;
+	border-radius: 8px;
+	overflow: hidden;
+	aspect-ratio: 2/3;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.bc-related-img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: transform 0.5s ease;
+}
+
+.bc-related-card:hover .bc-related-img {
+	transform: scale(1.1);
+}
+
+.bc-related-card:hover {
+	transform: translateY(-5px);
+}
+
+/* Badge de valoración sobre la imagen */
+.bc-related-badge {
+	position: absolute;
+	top: 8px;
+	right: 8px;
+	background: rgba(255, 255, 255, 0.9);
+	padding: 2px 8px;
+	border-radius: 50px;
+	font-size: 0.7rem;
+	font-weight: bold;
+	color: #f39c12;
+	backdrop-filter: blur(4px);
+}
+
+.bc-related-title {
+	font-size: 0.9rem;
+	font-weight: 600;
+	color: var(--bc-primary);
+	margin-top: 8px;
+}
+
+.bc-related-author {
+	font-size: 0.75rem;
+}
+
+.bc-carousel-controls button {
+	width: 40px;
+	height: 40px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: all 0.2s ease;
+	border: 1px solid #ddd;
+}
+
+.bc-carousel-controls button:hover {
+	background-color: var(--bc-primary);
+	color: white;
+	border-color: var(--bc-primary);
+}
+
+/* Opcional: difuminado en los bordes para indicar que hay más contenido */
+.bc-related-wrapper::after {
+	content: "";
+	position: absolute;
+	top: 0;
+	right: 0;
+	height: 100%;
+	width: 50px;
+	background: linear-gradient(to right, transparent, rgba(248, 249, 250, 0.8));
+	pointer-events: none;
+}
+
+/* Estilo para que el scroll sea suave */
+#relatedBooksScroll {
+	scroll-snap-type: x mandatory;
+	-webkit-overflow-scrolling: touch;
+}
+
+#relatedBooksScroll>div {
+	scroll-snap-align: start;
+}
+
+.ca-main-wrapper {
+	--ca-primary: #1a1a1a;
+	--ca-accent: #6366f1;
+	--ca-bg: #ffffff;
+	background-color: var(--ca-bg);
+	min-height: 100vh;
+	padding-bottom: 80px;
+}
+
+/* Cabecera del Autor */
+.ca-header {
+	padding: 80px 0 60px;
+	background: linear-gradient(to bottom, #f8f9fa, #ffffff);
+	border-bottom: 1px solid #eee;
+	margin-bottom: 50px;
+}
+
+.ca-avatar-circle {
+	width: 150px;
+	height: 150px;
+	background: var(--ca-primary);
+	color: white;
+	font-size: 4rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 50%;
+	margin: 0 auto 20px;
+	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+	text-transform: uppercase;
+}
+
+.ca-author-name {
+	font-size: 3.5rem;
+	font-weight: 850;
+	letter-spacing: -1.5px;
+	color: var(--ca-primary);
+}
+
+/* Stats rápidas */
+.ca-stat-card {
+	text-align: center;
+	padding: 20px;
+	border-radius: 15px;
+	background: #fdfdfd;
+	border: 1px solid #f0f0f0;
+	transition: transform 0.3s ease;
+}
+
+.ca-stat-card:hover {
+	transform: translateY(-5px);
+	border-color: var(--ca-accent);
+}
+
+.ca-stat-value {
+	display: block;
+	font-size: 1.8rem;
+	font-weight: 700;
+	color: var(--ca-primary);
+}
+
+.ca-stat-label {
+	font-size: 0.8rem;
+	color: #888;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+}
+
+/* Listado de Libros */
+.ca-book-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+	gap: 30px;
+}
+
+.ca-book-item {
+	transition: all 0.3s ease;
+}
+
+.ca-book-cover-wrapper {
+	position: relative;
+	border-radius: 10px;
+	overflow: hidden;
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+	aspect-ratio: 2/3;
+}
+
+.ca-book-cover {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: transform 0.5s ease;
+}
+
+.ca-book-item:hover .ca-book-cover {
+	transform: scale(1.05);
+}
+
+.ca-book-title {
+	font-size: 1rem;
+	font-weight: 600;
+	margin-top: 12px;
+	color: var(--ca-primary);
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+}
+
+/* Gráfica de Valoraciones del Autor */
+.ca-rating-box {
+	background: #fafafa;
+	border-radius: 20px;
+	padding: 30px;
+}
+
+/* Estilos para el input de valoración */
+.bc-rating-input label {
+	cursor: pointer;
+	transition: transform 0.2s;
+}
+
+.bc-rating-input label:hover {
+	transform: scale(1.2);
+}
+
+/* Cambia a estrella rellena cuando está checkeado o hover */
+.bc-rating-input input:checked ~ label, .bc-rating-input label:hover,
+	.bc-rating-input label:hover ~ label {
+	font-family: "bootstrap-icons" !important;
+	content: "\f586"; /* Código de bi-star-fill */
+}
+
+/* Truco para cambiar el icono de bi-star a bi-star-fill usando CSS */
+.bc-rating-input input:checked ~ label::before, .bc-rating-input label:hover::before,
+	.bc-rating-input label:hover ~ label::before {
+	content: "\f586" !important;
+}
+
+/* Contenedor principal de la sección de recomendaciones */
+.recom-container {
+    background-color: #f8f9fc; /* Fondo claro, no blanco puro */
+    border-radius: 1rem;
+    padding: 1.5rem;
+}
+
+.recom-row {
+    margin-bottom: 3rem;
+    position: relative;
+}
+
+.recom-row-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 1.2rem;
+    display: flex;
+    align-items: center;
+}
+
+.recom-row-title i {
+    font-size: 1.2rem;
+    margin-right: 0.75rem;
+}
+
+/* Carrusel de desplazamiento horizontal */
+.recom-carousel {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    gap: 1.5rem;
+    padding: 0.5rem 0.5rem 1.5rem 0.5rem;
+    scroll-behavior: smooth;
+    scrollbar-width: none; /* Firefox */
+}
+
+.recom-carousel::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+}
+
+/* Ajuste de tu tarjeta para el carrusel */
+.recom-item {
+    flex: 0 0 auto;
+    width: 220px; /* Ancho fijo para mantener la proporción */
+    transition: transform 0.3s ease;
+}
+
+.recom-item:hover {
+    transform: translateY(-8px); /* Elevación suave en lugar de zoom Netflix */
+}
+
+/* Estilos para el contenedor de la imagen y el overlay */
+.book-cover-container {
+    position: relative;
+    aspect-ratio: 2/3;
+    overflow: hidden;
+    border-radius: 0.5rem 0.5rem 0 0;
+}
+
+.book-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.book-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 123, 255, 0.85); /* Azul translúcido en el hover */
+    color: white;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 2;
+}
+
+.recom-item:hover .book-overlay {
+    opacity: 1;
+}
+
+/* Texto truncado a 2 líneas para el título */
+.text-truncate-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    height: 2.5rem;
+}
+
+/* Posicionamiento relativo para la fila para situar los botones */
+.recom-row {
+    position: relative;
+}
+
+/* Botones de control */
+.carousel-control-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 45px;
+    height: 45px;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 50%;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    z-index: 10;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #007bff;
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
+    opacity: 0; /* Ocultos por defecto */
+}
+
+.recom-row:hover .carousel-control-btn {
+    opacity: 1; /* Aparecen al pasar el ratón por la fila */
+}
+
+.carousel-control-btn:hover {
+    background: #007bff;
+    color: white;
+}
+
+.btn-left { left: -15px; }
+.btn-right { right: -15px; }
+
+/* Asegurar que el carrusel no oculte los botones al hacer focus */
+.recom-carousel {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+

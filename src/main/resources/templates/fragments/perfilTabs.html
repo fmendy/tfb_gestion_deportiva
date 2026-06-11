@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+<style>
+</style>
+
+
+</head>
+<body>
+
+	<div th:fragment="perfilTabs (activeTab)">
+		<div>
+			<ul class="nav folder-tabs" id="perfilTabs" role="tablist"
+				style="margin-bottom: 0px">
+
+
+				<!-- Información -->
+				<li class="nav-item" role="presentation"><a
+					class="nav-link folder-tab"
+					th:classappend="${#strings.equalsIgnoreCase(activeTab, 'info')} ? ' active' : ''"
+					id="info-tab" th:href="@{/privado/miperfil}" role="tab"
+					aria-controls="info"
+					th:attr="aria-selected=${activeTab} == 'info' ? 'true' : 'false'">
+						<i class="bi bi-info-circle me-2"></i> <span
+						th:text="#{mi.perfil.tab.informacion}">Información</span>
+				</a></li>
+
+				<!-- Valoracion -->
+				<li class="nav-item" role="presentation"><a
+					class="nav-link folder-tab"
+					th:classappend="${activeTab} == 'valoracion' ? ' active' : ''"
+					id="equip-tab" th:href="@{/privado/miperfil/valoracion}" role="tab"
+					aria-controls="valoracion"
+					th:attr="aria-selected=${activeTab} == 'valoracion' ? 'true' : 'false'">
+						<i class="bi bi-star-fill me-2"></i> <span
+						th:text="#{mi.perfil.tab.valoracion}"></span>
+				</a></li>
+
+				<!-- estadistica -->
+				<li class="nav-item" role="presentation"><a
+					class="nav-link folder-tab"
+					th:classappend="${activeTab} == 'estadistica' ? ' active' : ''"
+					id="equip-tab" th:href="@{/privado/miperfil/estadistica}"
+					role="tab" aria-controls="estadistica"
+					th:attr="aria-selected=${activeTab} == 'estadistica' ? 'true' : 'false'">
+						<i class="bi bi-bar-chart me-2"></i> <span
+						th:text="#{mi.perfil.tab.estadisticas}"></span>
+				</a></li>
+
+
+			</ul>
+		</div>
+	</div>
+
+</body>
+</html>

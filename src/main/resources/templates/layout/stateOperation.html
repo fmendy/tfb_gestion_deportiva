@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" lang="es">
+<body>
+	<div th:fragment="stateOperation">
+		<div th:if="${httpStatus == 200}" class="alert alert-success"
+			role="alert" th:text="#{operacion.realizada.con.exito}"></div>
+
+		<div th:if="${httpStatus == 403}" class="alert alert-danger"
+			role="alert"
+			th:text="#{operacion.realizada.con.error.no.tiene.permisos}"></div>
+
+		<div th:if="${httpStatus == 500}" class="alert alert-danger"
+			role="alert" th:text="#{operacion.realizada.con.error}"></div>
+
+
+		<div th:if="${httpStatus == 501}" class="alert alert-danger"
+			role="alert" th:text="#{operacion.realizada.con.error}"></div>
+
+		<div th:if="${httpStatus == 503}" class="alert alert-danger"
+			role="alert"
+			th:text="#{operacion.realizada.con.error.servicio.no.disponible}"></div>
+
+		<!-- Error personalizado -->
+		<div th:if="${httpStatus == 555}" class="alert alert-danger"
+			role="alert" th:text="${customError}"></div>
+	</div>
+</body>
+</html>

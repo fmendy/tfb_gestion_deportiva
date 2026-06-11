@@ -1,0 +1,84 @@
+<!-- fragments/filaRecomendados.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+	<!-- Fragmento Reutilizable: Esto evita repetir código -->
+	<th:fragment th:fragment="filaRecomendados(lista, titulo, icono)">
+		<div class="recom-row" th:if="${not #lists.isEmpty(lista)}">
+			<h4 class="recom-row-title">
+				<i class="bi me-2" th:classappend="${icono}"></i> <span
+					th:text="${titulo}">Título de la Sección</span>
+			</h4>
+
+			<button class="carousel-control-btn btn-left"
+				onclick="scrollCarousel(this, -1)">
+				<i class="bi bi-chevron-left"></i>
+			</button>
+
+			<div class="recom-carousel">
+				<div class="recom-item" th:each="element : ${lista}">
+
+					<!-- ESTRUCTURA DE TU TARJETA -->
+					<div class="card h-100 book-card border-0 shadow-sm">
+						<div class="position-absolute top-0 end-0 m-2 z-3">
+							<span class="badge rounded-pill bg-warning text-dark shadow-sm">
+								<i class="bi bi-star-fill me-1"></i> <span
+								th:text="${element.valoracionMedia != 0.0 ? #numbers.formatDecimal(element.valoracionMedia, 1, 1) : '-'}"></span>
+							</span>
+						</div>
+
+						<div class="book-cover-container">
+							<img
+								th:src="${element.imagen != null ? element.imagen : '/img/no-cover.png'}"
+								class="card-img-top book-img" alt="Portada">
+
+							<div
+								class="book-overlay d-flex flex-column justify-content-center align-items-center text-center p-3">
+								<small class="mb-1"><i class="bi bi-calendar3 me-1"></i>
+									<span th:text="${element.fechaPublicacion}"></span></small>
+								<div class="small fw-light">
+									<i class="bi bi-person-fill"></i>
+									<div th:each="autor, iter : ${element.listAutores}"
+										th:text="${autor.nombre + (iter.last ? '' : ', ')}"
+										class="d-inline text-white"></div>
+								</div>
+								<div class="small fw-light mb-1">
+									<i class="bi bi-translate me-1"></i> <span
+										th:text="${element.idiomaNombre}"></span>
+								</div>
+								<div class="small fw-light">
+									<i class="bi bi-collection me-1"></i> <span
+										th:text="${element.numeroEjemplares}"></span> <span
+										th:text="#{catalogo.ejemplares}"></span>
+								</div>
+
+								<a th:href="@{'/privado/catalogo/libro/'+${element.id}}"
+									class="btn btn-sm btn-light mt-3 rounded-pill px-3"
+									th:text="#{catalogo.ver.mas.detalles}">Ver más</a>
+							</div>
+						</div>
+
+						<div class="card-body p-2 d-flex flex-column">
+							<h6 class="card-title text-truncate-2 mb-0 fw-bold"
+								th:text="${element.titulo}">Título</h6>
+							<p class="card-text small text-muted text-truncate mt-auto">
+								<span th:if="${!element.listAutores.isEmpty()}"
+									th:text="${element.listAutores[0].nombre}">Autor</span>
+							</p>
+						</div>
+					</div>
+					<!-- FIN ESTRUCTURA DE TARJETA -->
+
+				</div>
+			</div>
+
+			<button class="carousel-control-btn btn-right"
+				onclick="scrollCarousel(this, 1)">
+				<i class="bi bi-chevron-right"></i>
+			</button>
+		</div>
+	</th:fragment>
+
+</body>
+</html>

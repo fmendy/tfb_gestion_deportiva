@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+	lang="es">
+<head>
+<!-- Estilos modernos adicionales -->
+<style>
+/* Contenedor fijo para que los iconos no desplacen el texto */
+.nav-management-icon {
+	width: 2rem;
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 1.2rem;
+	transition: color 0.2s ease-in-out;
+}
+
+/* Colores personalizados para los iconos en estado normal */
+.icon-usuarios {
+	color: #4e73df !important;
+}
+
+.icon-autores {
+	color: #1cc88a !important;
+}
+
+.icon-sexo {
+	color: #36b9cc !important;
+}
+
+.icon-idioma {
+	color: #e74a3b !important;
+}
+
+.icon-gear {
+	color: #f6c23e !important;
+}
+
+/* REGLA CRÍTICA: Al hacer hover, el icono debe volverse blanco */
+.dropdown-item:hover .nav-management-icon {
+	color: #fff !important;
+}
+
+/* Mejora visual del dropdown */
+.dropdown-menu {
+	border-radius: 0.5rem;
+	padding: 0.5rem 0;
+}
+
+.dropdown-item {
+	padding: 0.6rem 1rem;
+	font-weight: 500;
+}
+</style>
+</head>
+<body>
+	<nav th:fragment="navbar"
+		class="navbar navbar-expand-lg navbar-dark shadow-sm"
+		style="background: linear-gradient(90deg, #007bff, #00d4ff);">
+		<div class="container-fluid">
+			<!-- Logo / Nombre del proyecto -->
+			<a class="navbar-brand fw-bold text-white d-flex align-items-center"
+				th:href="@{/}"> <i class="bi bi-book me-2"></i> <span
+				th:text="#{project.name}">Proyecto</span>
+			</a>
+
+			<!-- Botón toggle para móviles -->
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="collapse" data-bs-target="#navbarNav"
+				aria-controls="navbarNav" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<!-- Menú -->
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav ms-auto">
+
+					<!-- Inicio -->
+					<li class="nav-item"><a
+						class="nav-link text-white d-flex align-items-center"
+						th:href="@{/}"> <i class="bi bi-house-door-fill me-1"></i> <span
+							th:text="#{navbar.inicio}">Inicio</span>
+					</a></li>
+
+					<!-- Login / Registro -->
+					<li class="nav-item" sec:authorize="isAnonymous()"><a
+						class="nav-link text-white d-flex align-items-center"
+						th:href="@{/login}"> <i class="bi bi-box-arrow-in-right me-1"></i>
+							<span th:text="#{navbar.login}">Iniciar sesión</span>
+					</a></li>
+
+					<!-- Catalogo -->
+					<li class="nav-item" sec:authorize="isAuthenticated()"><a
+						class="nav-link text-white d-flex align-items-center"
+						th:href="@{/privado/catalogo/recomendado}"> <i
+							class="bi bi-award me-1"></i> <span
+							th:text="#{navbar.catalogo.recomendado}">Recomendado</span>
+					</a></li>
+
+					<!-- Catalogo -->
+					<li class="nav-item" sec:authorize="isAuthenticated()"><a
+						class="nav-link text-white d-flex align-items-center"
+						th:href="@{/privado/catalogo}"> <i class="bi bi-funnel me-1"></i>
+							<span th:text="#{navbar.catalogo}">Catalogo</span>
+					</a></li>
+
+					<!-- Catalogo -->
+					<li class="nav-item" sec:authorize="isAuthenticated()"><a
+						class="nav-link text-white d-flex align-items-center"
+						th:href="@{/privado/catalogo/libro/random}"> <i
+							class="bi bi-shuffle me-1"></i> <span
+							th:text="#{navbar.catalogo.libro.random}">Random</span>
+					</a></li>
+
+					<!-- Menú Gestión (Solo para Bibliotecarios) -->
+					<li class="nav-item dropdown" sec:authorize="isAuthenticated()"><a
+						class="nav-link dropdown-toggle text-white d-flex align-items-center"
+						href="#" id="estadisticaDropdown" role="button"
+						data-bs-toggle="dropdown" aria-expanded="false"> <i
+							class="bi bi-bar-chart me-1 nav-management-icon"></i> <span
+							th:text="#{navbar.estadisticas}">ESTADISTICAS </span>
+					</a>
+						<ul class="dropdown-menu shadow border-0"
+							aria-labelledby="estadisticaDropdown">
+
+							<!-- Estadisticas libros -->
+							<li><a class="dropdown-item d-flex align-items-center"
+								th:href="@{/privado/estadistica/libro}"> <i
+									class="bi bi-book nav-management-icon icon-book"></i> <span
+									th:text="#{navbar.estadisticas.libros}">Gestion usuario</span>
+							</a></li>
+							
+							<!-- Estadisticas usuario -->
+							<li><a class="dropdown-item d-flex align-items-center"
+								th:href="@{/privado/estadistica/usuario}"> <i
+									class="bi bi-person nav-management-icon "></i> <span
+									th:text="#{navbar.estadisticas.usuarios}">Gestion usuario</span>
+							</a></li>
+						</ul></li>
+
+
+
+
+					<!-- Menú Gestión (Solo para Bibliotecarios) -->
+					<li class="nav-item dropdown"
+						sec:authorize="hasRole('BIBLIOTECARIO')"><a
+						class="nav-link dropdown-toggle text-white d-flex align-items-center"
+						href="#" id="gestionBibliotecaDropdown" role="button"
+						data-bs-toggle="dropdown" aria-expanded="false"> <i
+							class="bi bi-gear-fill me-1 nav-management-icon icon-gear"></i> <span
+							th:text="#{navbar.gestionar.biblioteca}">GESTIONAR
+								BIBLIOTECA</span>
+					</a>
+						<ul class="dropdown-menu shadow border-0"
+							aria-labelledby="gestionBibliotecaDropdown">
+
+							<!-- Gestión de Usuarios -->
+							<li><a class="dropdown-item d-flex align-items-center"
+								th:href="@{/privado/usuario}"> <i
+									class="bi bi-person nav-management-icon icon-usuarios"></i> <span
+									th:text="#{navbar.gestion.usuarios}">Gestion usuario</span>
+							</a></li>
+
+							<!-- Gestión de Autores -->
+							<li><a class="dropdown-item d-flex align-items-center"
+								th:href="@{/privado/autor}"> <i
+									class="bi bi-pencil-fill nav-management-icon icon-autores"></i>
+									<span th:text="#{navbar.gestion.autores}">Gestion
+										autores</span>
+							</a></li>
+
+							<!-- Gestión de libros -->
+							<li><a class="dropdown-item d-flex align-items-center"
+								th:href="@{/privado/libro}"> <i
+									class="bi bi-book nav-management-icon icon-autores"></i> <span
+									th:text="#{navbar.gestion.libros}">Gestion libro</span>
+							</a></li>
+
+							<!-- Gestión de valoraciones -->
+							<li><a class="dropdown-item d-flex align-items-center"
+								th:href="@{/privado/valoracion}"> <i
+									class="bi bi-star nav-management-icon icon-autores"></i> <span
+									th:text="#{navbar.gestion.valoracion}">Gestion
+										Valoracion</span>
+							</a></li>
+
+							<li><hr class="dropdown-divider"></li>
+
+							<!-- Maestras: Sexo -->
+							<li><a class="dropdown-item d-flex align-items-center"
+								th:href="@{/privado/maestra/sexo}"> <i
+									class="bi bi-person-fill nav-management-icon icon-sexo"></i> <span
+									th:text="#{navbar.maestra.sexo}">Sexo</span>
+							</a></li>
+
+							<!-- Maestras: Idioma -->
+							<li><a class="dropdown-item d-flex align-items-center"
+								th:href="@{/privado/maestra/idioma}"> <i
+									class="bi bi-translate nav-management-icon icon-idioma"></i> <span
+									th:text="#{navbar.maestra.idioma}">Idioma</span>
+							</a></li>
+						</ul></li>
+
+
+
+
+				</ul>
+
+				<ul>
+					<!-- Dropdown usuario -->
+					<li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+						<a
+						class="nav-link dropdown-toggle text-white d-flex align-items-center"
+						href="#" id="userDropdown" role="button" data-bs-toggle="dropdown"
+						aria-expanded="false"> <i class="bi bi-person-circle me-1"></i>
+							<span th:text="${#authentication.name}">Usuario</span>
+					</a>
+						<ul class="dropdown-menu dropdown-menu-end shadow border-0"
+							aria-labelledby="userDropdown">
+							<li><a class="dropdown-item" th:href="@{/privado/miperfil}"
+								th:text="#{navbar.mi.perfil}">Mi perfil</a></li>
+							<li>
+								<form th:action="@{/privado/logout}" method="post">
+									<button type="submit" class="dropdown-item"
+										th:text="#{navbar.cerrar.sesion}">Cerrar sesión</button>
+								</form>
+							</li>
+						</ul>
+					</li>
+
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+</body>
+</html>

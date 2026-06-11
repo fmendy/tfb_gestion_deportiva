@@ -1,0 +1,42 @@
+<!-- fragments/modals.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+	<!-- 🔁 Fragmento reutilizable: modal de confirmación -->
+	<div
+		th:fragment="modalConfirmacion(idModal, titulo, mensaje, urlAccion, textoBoton)">
+		<div class="modal fade" th:id="${idModal}" tabindex="-1"
+			aria-labelledby="${idModal + 'Label'}" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content rounded-4 shadow-lg border-0">
+					<div class="modal-header border-0">
+						<h5 class="modal-title" th:id="${idModal + 'Label'}"
+							th:text="${titulo}"></h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Cerrar"></button>
+					</div>
+					<div class="modal-body text-center">
+						<p th:text="${mensaje}">¿Estás seguro?</p>
+						<p class="text-muted small"
+							th:text="#{modal.global.accion.no.puede.deshacer}">Esta
+							acción no se puede deshacer.</p>
+					</div>
+					<div class="modal-footer border-0 justify-content-center gap-3">
+						<button type="button" class="btn btn-secondary rounded-pill px-4"
+							data-bs-dismiss="modal">
+							<i class="bi bi-arrow-left"></i> <span
+								th:text="#{boton.no.volver}">Confirmar</span>
+						</button>
+						<a th:href="${urlAccion}"
+							class="btn btn-success rounded-pill px-4 shadow-sm"> <i
+							class="bi bi-check-lg"></i> <span th:text="${textoBoton}">Confirmar</span>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<style>
+/* Personalización leve de Bootstrap breadcrumb */
+.breadcrumb {
+	background: transparent;
+	margin-bottom: 1rem;
+}
+
+.breadcrumb-item+.breadcrumb-item::before {
+	content: "›";
+	color: #6c757d;
+	padding: 0 0.5rem;
+}
+
+.breadcrumb-item a {
+	color: #0d6efd;
+	text-decoration: none;
+	transition: color 0.2s ease;
+}
+
+.breadcrumb-item a:hover {
+	color: #0056b3;
+	text-decoration: underline;
+}
+
+.breadcrumb-item.active {
+	color: #6c757d;
+	font-weight: 500;
+}
+
+/* Ícono de inicio */
+.breadcrumb-home i {
+	font-size: 1rem;
+	vertical-align: middle;
+	margin-right: 0.25rem;
+}
+</style>
+</head>
+<body>
+
+	<!-- Fragmento Thymeleaf -->
+	<div th:fragment="breadcrumbs(breadcrumbs)">
+		<nav aria-label="breadcrumb" class="mb-3">
+			<ol class="breadcrumb">
+				<!-- Ícono de inicio -->
+
+				<!-- Niveles dinámicos -->
+				<li th:each="bc, iter : ${breadcrumbs}" class="breadcrumb-item"
+					th:classappend="${iter.last}? 'active'">
+					<!-- Si tiene URL --> <a th:if="${bc.url != null}"
+					th:href="@{${bc.url}}" th:text="${bc.label}"></a> <!-- Último elemento (sin enlace) -->
+					<span th:if="${bc.url == null}" th:text="${bc.label}"></span>
+				</li>
+			</ol>
+		</nav>
+	</div>
+
+</body>
+</html>
