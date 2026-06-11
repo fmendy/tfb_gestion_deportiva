@@ -30,7 +30,7 @@ public class WebSecurityConfig {
 		return http.build();
 	}
 
-	@Bean
+	@Bean(name = "myPasswordEncoder")
 	public BCryptPasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}

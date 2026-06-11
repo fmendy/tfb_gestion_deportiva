@@ -111,7 +111,7 @@ public class UsuarioEmpresaServiceImpl implements UsuarioEmpresaService {
 		UsuarioEmpresa model = new UsuarioEmpresa();
 		model.setUsuario(new Usuario(usuarioId));
 		model.setEmpresa(new  Empresa(empresaId));
-		System.out.println("Asociando Usuario " + usuarioId + " con Empresa " + empresaId);
+		logger.info("Asociando Usuario " + usuarioId + " con Empresa " + empresaId);
 		usuarioEmpresaRepository.saveAndFlush(model);
 	}
 }

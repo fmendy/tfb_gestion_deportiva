@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,27 +22,22 @@ import com.gestion.deportiva.model.Usuario;
 import com.gestion.deportiva.util.SecurityUtil;
 import com.gestion.deportiva.util.UsuarioRolUtil;
 
-
 @Component
 public class UsuarioMapper {
 
-    private final PasswordEncoder passwordEncoder;
+	@Autowired
+	@Qualifier("myPasswordEncoder")
+	private PasswordEncoder passwordEncoder;
 
-    public UsuarioMapper(PasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
-    }
+	public Usuario registroEmpresaDTOToModel(RegistroEmpresaDTO dto) {
+		Usuario usuario = new Usuario();
+		usuario.setNombre(dto.getNombre());
+		usuario.setEmail(dto.getEmail());
+		usuario.setPassword(passwordEncoder.encode(dto.getPassword()));
+		return usuario;
+	}
 
-    public Usuario registroEmpresaDTOToModel(RegistroEmpresaDTO dto) {
-        Usuario usuario = new Usuario();
-        usuario.setNombre(dto.getNombre());
-        usuario.setEmail(dto.getEmail());
-        usuario.setPassword(passwordEncoder.encode(dto.getPassword()));
-        return usuario;
-    }
-
-
-
-    public UsuarioDTO modelToDTO(Usuario model) {
+	public UsuarioDTO modelToDTO(Usuario model) {
 		UsuarioDTO retVal = new UsuarioDTO();
 		retVal.setUuid(model.getUuid());
 		retVal.setEmail(model.getEmail());
@@ -49,9 +46,8 @@ public class UsuarioMapper {
 		retVal.setListUsuarioRolDTO(UsuarioRolUtil.listModelToListDTO(model.getListUsuarioRol()));
 		return retVal;
 	}
-    
-    
-    public List<UsuarioDTO> listModelToListDTO(List<Usuario> list) {
+
+	public List<UsuarioDTO> listModelToListDTO(List<Usuario> list) {
 		List<UsuarioDTO> retVal = new ArrayList<>();
 		for (Usuario bean : list) {
 			retVal.add(modelToDTO(bean));
@@ -84,7 +80,7 @@ public class UsuarioMapper {
 		Usuario retVal = new Usuario();
 		retVal.setEmail(dto.getEmail());
 		retVal.setNombre(dto.getNombre());
-		retVal.setPassword(dto.getPassword());
+		retVal.setPassword(passwordEncoder.encode(dto.getPassword()));
 		return retVal;
 	}
 
@@ -105,11 +101,9 @@ public class UsuarioMapper {
 		retVal.setUuid(model.getUuid());
 		return retVal;
 	}
-	
+
 	public List<ComboDTO> listModelToListComboDTO(List<Usuario> list) {
 		return list.stream().map(bean -> new ComboDTO(bean.getId(), bean.getNombre())).toList();
 	}
-
-
 
 }
