@@ -493,6 +493,7 @@ create table usuario_empresa(
 alter table usuario_empresa add foreign key fk_usuario_empresa_usuario_creacion (id_usuario_creacion) references usuario(id);
 alter table usuario_empresa add foreign key fk_usuario_empresa_modificacion (id_usuario_modificacion) references usuario(id);
 alter table usuario_empresa add foreign key fk_usuario_empresa_empresa (id_empresa) references empresa(id);
+alter table usuario_empresa add foreign key fk_usuario_empresa_usuario (id_usuario) references usuario(id);
 
 create table usuario_sede(
 	id INT  not null auto_increment primary key,

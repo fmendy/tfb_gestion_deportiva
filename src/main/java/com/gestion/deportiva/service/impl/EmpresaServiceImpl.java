@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.gestion.deportiva.dto.ComboDTO;
 import com.gestion.deportiva.dto.EmpresaDTO;
+import com.gestion.deportiva.dto.RegistroEmpresaDTO;
 import com.gestion.deportiva.dto.filter.EmpresaFilter;
 import com.gestion.deportiva.dto.specifications.EmpresaSpecifications;
 import com.gestion.deportiva.model.Empresa;
@@ -121,5 +122,13 @@ public class EmpresaServiceImpl implements EmpresaService {
 	public byte[] exportarExcel(EmpresaFilter filter) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	@Override
+	public Long registrarEmpresa(RegistroEmpresaDTO dto) {
+		logger.info("Registrando nueva empresa nombre: {}", dto.getNombre());
+		Empresa model =  EmpresaUtil.registroEmpresaDTOToModel(dto);
+		model = empresaRepository.saveAndFlush(model);
+		return model.getId();
 	}
 }

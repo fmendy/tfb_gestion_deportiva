@@ -170,4 +170,21 @@ public class UsuarioRolServiceImpl implements UsuarioRolService {
 		}
 	}
 
+	@Override
+	public void asignarRol(Long usuarioId, String rolNombre) {
+		List<UsuarioRol> listUsuarioRol = usuarioRolRepository.findByActivoTrueAndUsuarioId(usuarioId);
+		for (UsuarioRol usuarioRol : listUsuarioRol) {
+			if (usuarioRol.isActivo()) {
+				usuarioRol.setActivo(false);
+				usuarioRolRepository.save(usuarioRol);
+			}
+		}
+
+		Rol rol = rolRepository.findByActivoTrueAndNombreEqualsIgnoreCase(rolNombre);
+		UsuarioRol usuarioRol = new UsuarioRol();
+		usuarioRol.setUsuario(new Usuario(usuarioId));
+		usuarioRol.setRol(rol);
+		usuarioRolRepository.saveAndFlush(usuarioRol);
+	}
+
 }

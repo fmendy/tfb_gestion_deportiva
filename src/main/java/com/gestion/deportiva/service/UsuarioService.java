@@ -6,10 +6,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 import com.gestion.deportiva.dto.MiPerfilDTO;
 import com.gestion.deportiva.dto.MiPerfilPasswordDTO;
+import com.gestion.deportiva.dto.RegistroEmpresaDTO;
 import com.gestion.deportiva.dto.UsuarioDTO;
 import com.gestion.deportiva.dto.UsuarioRegistroDTO;
 import com.gestion.deportiva.dto.filter.UsuarioFilter;
 import com.gestion.deportiva.model.Usuario;
+
+import jakarta.validation.Valid;
 
 public interface UsuarioService
 		extends UserDetailsService, BaseService<UsuarioDTO, UsuarioFilter> {
@@ -31,5 +34,7 @@ public interface UsuarioService
 	MiPerfilPasswordDTO getMiPerfilPasswordDTO();
 
 	void actualizarPassword(MiPerfilPasswordDTO dto);
+
+	Long registrarUsuario(@Valid RegistroEmpresaDTO dto);
 
 }

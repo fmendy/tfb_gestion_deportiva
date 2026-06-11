@@ -10,6 +10,7 @@ import org.springframework.util.StringUtils;
 
 import com.gestion.deportiva.dto.ComboDTO;
 import com.gestion.deportiva.dto.EmpresaDTO;
+import com.gestion.deportiva.dto.RegistroEmpresaDTO;
 import com.gestion.deportiva.dto.filter.EmpresaFilter;
 import com.gestion.deportiva.model.Empresa;
 import lombok.experimental.UtilityClass;
@@ -71,6 +72,16 @@ public class EmpresaUtil {
 
 	public List<ComboDTO> listModelToListComboDTO(List<Empresa> list) {
 		return list.stream().map(bean -> new ComboDTO(bean.getId(), bean.getNombre())).toList();
+	}
+
+	public  Empresa registroEmpresaDTOToModel(RegistroEmpresaDTO dto) {
+		Empresa retVal = new Empresa();
+		retVal.setNombre(dto.getNombre());
+		retVal.setDescripcion(dto.getDescripcion());
+		retVal.setEmail(dto.getEmail());
+		retVal.setUrl(dto.getUrl());
+		retVal.setLogo(dto.getLogo());
+		return retVal;
 	}
 
 }

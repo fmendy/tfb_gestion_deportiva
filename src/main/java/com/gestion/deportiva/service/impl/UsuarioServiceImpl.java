@@ -21,6 +21,7 @@ import com.gestion.deportiva.config.AuditorAwareContext;
 import com.gestion.deportiva.dto.CustomUserDetails;
 import com.gestion.deportiva.dto.MiPerfilDTO;
 import com.gestion.deportiva.dto.MiPerfilPasswordDTO;
+import com.gestion.deportiva.dto.RegistroEmpresaDTO;
 import com.gestion.deportiva.dto.UsuarioDTO;
 import com.gestion.deportiva.dto.UsuarioRegistroDTO;
 import com.gestion.deportiva.dto.filter.UsuarioFilter;
@@ -39,6 +40,7 @@ import com.gestion.deportiva.util.UsuarioUtil;
 import com.gestion.deportiva.util.Utils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.validation.Valid;
 
 @Service
 public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
@@ -216,6 +218,14 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 	@Override
 	public byte[] exportarExcel(UsuarioFilter filter) throws IOException {
 		return null;
+	}
+
+	@Override
+	public Long registrarUsuario(@Valid RegistroEmpresaDTO dto) {
+		Usuario usuario = UsuarioUtil.registroEmpresaDTOToModel(dto);
+		usuarioRepository.saveAndFlush(usuario);
+
+		return usuario.getId();
 	}
 
 }

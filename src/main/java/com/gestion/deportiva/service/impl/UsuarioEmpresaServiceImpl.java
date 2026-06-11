@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import com.gestion.deportiva.dto.UsuarioEmpresaDTO;
 import com.gestion.deportiva.dto.filter.UsuarioEmpresaFilter;
 import com.gestion.deportiva.dto.specifications.UsuarioEmpresaSpecifications;
+import com.gestion.deportiva.model.Empresa;
+import com.gestion.deportiva.model.Usuario;
 import com.gestion.deportiva.model.UsuarioEmpresa;
 import com.gestion.deportiva.repository.UsuarioEmpresaRepository;
 import com.gestion.deportiva.service.UsuarioEmpresaService;
@@ -102,5 +104,13 @@ public class UsuarioEmpresaServiceImpl implements UsuarioEmpresaService {
 	public byte[] exportarExcel(UsuarioEmpresaFilter filter) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void asociarUsuarioEmpresa(Long usuarioId, Long empresaId) {
+		UsuarioEmpresa model = new UsuarioEmpresa();
+		model.setUsuario(new Usuario(usuarioId));
+		model.setEmpresa(new  Empresa(empresaId));
+		usuarioEmpresaRepository.saveAndFlush(model);
 	}
 }

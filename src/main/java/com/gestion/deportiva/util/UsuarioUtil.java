@@ -4,26 +4,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.util.StringUtils;
 
 import com.gestion.deportiva.dto.ComboDTO;
 import com.gestion.deportiva.dto.MiPerfilDTO;
 import com.gestion.deportiva.dto.MiPerfilPasswordDTO;
+import com.gestion.deportiva.dto.RegistroEmpresaDTO;
 import com.gestion.deportiva.dto.UsuarioDTO;
 import com.gestion.deportiva.dto.UsuarioRegistroDTO;
 import com.gestion.deportiva.dto.filter.UsuarioFilter;
 import com.gestion.deportiva.model.Usuario;
+
+import jakarta.validation.Valid;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class UsuarioUtil {
 
-	@Autowired
-	private BCryptPasswordEncoder passwordEncoder;
+
 
 	public UsuarioDTO modelToDTO(Usuario model) {
 		UsuarioDTO retVal = new UsuarioDTO();
@@ -68,7 +68,7 @@ public class UsuarioUtil {
 		Usuario retVal = new Usuario();
 		retVal.setEmail(dto.getEmail());
 		retVal.setNombre(dto.getNombre());
-		retVal.setPassword(passwordEncoder.encode(dto.getPassword()));
+		retVal.setPassword(dto.getPassword());
 		return retVal;
 	}
 
@@ -116,6 +116,14 @@ public class UsuarioUtil {
 
 	public List<ComboDTO> listModelToListComboDTO(List<Usuario> list) {
 		return list.stream().map(bean -> new ComboDTO(bean.getId(), bean.getNombre())).toList();
+	}
+
+	public  Usuario registroEmpresaDTOToModel(@Valid RegistroEmpresaDTO dto) {
+		Usuario retVal = new Usuario();
+		retVal.setNombre(dto.getNombre());
+		retVal.setEmail(dto.getEmail());
+		retVal.setPassword(dto.getPassword());
+		return retVal;
 	}
 
 }

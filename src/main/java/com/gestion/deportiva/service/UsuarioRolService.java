@@ -12,4 +12,6 @@ public interface UsuarioRolService extends BaseService<UsuarioRolDTO, UsuarioRol
 
 	void guardar(UsuarioRolesDTO dto);
 
+	void asignarRol(Long usuarioId, String rolNombre);
+
 }
