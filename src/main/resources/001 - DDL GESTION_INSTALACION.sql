@@ -550,7 +550,6 @@ create table sancion_tipo(
 	id INT  not null auto_increment primary key,
 	uuid CHAR(36) NOT NULL DEFAULT (UUID()),
     nombre varchar(255) not null ,
-    descripcion varchar(1250) null,
     activo TINYINT(1) not null default(1) ,
     id_usuario_creacion int not null default(1),
     id_usuario_modificacion int not null default(1),
@@ -562,7 +561,7 @@ alter table sancion_tipo add foreign key fk_sancion_tipo_usuario_creacion (id_us
 alter table sancion_tipo add foreign key fk_sancion_tipo_usuario_modificacion (id_usuario_modificacion) references usuario(id);
 
 insert into sancion_tipo(nombre) values 
-('SANCION INDEFINIDA'),('SANCION TEMPORAL');
+('FALTA DE RESPETO'),('DESPERFECTOS EN LAS INSTALACIONES'), ('NO COMPARECENCIA');
 
 create table sancion(
 	id INT  not null auto_increment primary key,

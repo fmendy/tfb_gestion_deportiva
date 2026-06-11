@@ -25,7 +25,6 @@ public class UsuarioRolesDTO extends BaseDTO {
 
 	private String usuarioEmail;
 
-	// ✅ Nuevo campo: contendrá los UUIDs marcados en el formulario
 	@NotEmpty
 	private List<String> listActualRolUuid = new ArrayList<>();
 
