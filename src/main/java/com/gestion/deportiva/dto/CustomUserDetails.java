@@ -15,7 +15,9 @@ public class CustomUserDetails implements UserDetails {
 	private String userUuid;
 	private String username;
 	private String password;
-	private List<String> listDemarcacionUuid = new ArrayList<>();
+	private List<Long> listEmpresaId = new ArrayList<>();
+	private List<Long> listSedeId = new ArrayList<>();
+	private List<Long> listInstalacionId = new ArrayList<>();
 	private Collection<? extends GrantedAuthority> authorities;
 
 	// getters, setters, etc.
@@ -28,12 +30,23 @@ public class CustomUserDetails implements UserDetails {
 	}
 
 	public CustomUserDetails(Long userId, String username, String password, Set<GrantedAuthority> authorities,
-			List<String> listDemarcacionUuid) {
+			List<Long> listEmpresaId) {
 		this.userId = userId;
 		this.username = username;
 		this.password = password;
 		this.authorities = authorities;
-		this.listDemarcacionUuid = listDemarcacionUuid;
+		this.listEmpresaId = listEmpresaId;
+	}
+
+	public CustomUserDetails(Long userId, String username, String password, Set<GrantedAuthority> authorities,
+			List<Long> listEmpresaId, List<Long> listSedeId, List<Long> listInstalacionId) {
+		this.userId = userId;
+		this.username = username;
+		this.password = password;
+		this.authorities = authorities;
+		this.listEmpresaId = listEmpresaId;
+		this.listSedeId = listSedeId;
+		this.listInstalacionId = listInstalacionId;
 	}
 
 	public CustomUserDetails(Long userId, String userUuid, String username, String password,
@@ -68,12 +81,28 @@ public class CustomUserDetails implements UserDetails {
 		return this.username;
 	}
 
-	public List<String> getListDemarcacionUuid() {
-		return listDemarcacionUuid;
+	public List<Long> getListEmpresaId() {
+		return listEmpresaId;
 	}
 
-	public void setListDemarcacionUuid(List<String> listDemarcacionUuid) {
-		this.listDemarcacionUuid = listDemarcacionUuid;
+	public void setListEmpresaId(List<Long> listEmpresaId) {
+		this.listEmpresaId = listEmpresaId;
+	}
+
+	public List<Long> getListSedeId() {
+		return listSedeId;
+	}
+
+	public void setListSedeId(List<Long> listSedeId) {
+		this.listSedeId = listSedeId;
+	}
+
+	public List<Long> getListInstalacionId() {
+		return listInstalacionId;
+	}
+
+	public void setListInstalacionId(List<Long> listInstalacionId) {
+		this.listInstalacionId = listInstalacionId;
 	}
 
 }

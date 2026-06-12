@@ -56,7 +56,7 @@ public abstract class BaseSpecifications<T> {
 		};
 	}
 
-	protected Specification<T> fieldIn(String field, List<String> listString) {
+	protected Specification<T> fieldInString(String field, List<String> listString) {
 		return (root, query, cb) -> {
 			if (listString != null && !listString.isEmpty()) {
 				return root.get(field).in(listString);
@@ -64,6 +64,17 @@ public abstract class BaseSpecifications<T> {
 			return null;
 		};
 	}
+	
+	protected Specification<T> fieldInLong(String field, List<Long> listLong) {
+		return (root, query, cb) -> {
+			if (listLong != null && !listLong.isEmpty()) {
+				return root.get(field).in(listLong);
+			}
+			return null;
+		};
+	}
+	
+
 
 	protected Specification<T> equalsIgnoreCase(String field, String value) {
 		return (root, query, cb) -> {

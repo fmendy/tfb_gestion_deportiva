@@ -5,8 +5,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -16,10 +14,12 @@ import com.gestion.deportiva.dto.EmpresaDTO;
 import com.gestion.deportiva.dto.RegistroEmpresaDTO;
 import com.gestion.deportiva.dto.filter.EmpresaFilter;
 import com.gestion.deportiva.dto.specifications.EmpresaSpecifications;
+import com.gestion.deportiva.mapper.EmpresaMapper;
 import com.gestion.deportiva.model.Empresa;
 import com.gestion.deportiva.repository.EmpresaRepository;
 import com.gestion.deportiva.service.EmpresaService;
-import com.gestion.deportiva.util.EmpresaUtil;
+import com.gestion.deportiva.util.Constantes;
+import com.gestion.deportiva.util.SecurityUtil;
 import com.gestion.deportiva.util.Utils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -36,21 +36,23 @@ public class EmpresaServiceImpl implements EmpresaService {
 	@PersistenceContext
 	private EntityManager entityManager;
 
+	@Autowired
+	private EmpresaMapper empresaMapper;
+
 	@Override
 	public EmpresaDTO findById(Long id) {
 		logger.info("Buscando Empresa por ID: {}", id);
-		return EmpresaUtil.modelToDTO(empresaRepository.findByActivoTrueAndId(id));
+		return empresaMapper.modelToDTO(empresaRepository.findByActivoTrueAndId(id));
 	}
 
 	@Override
 	public EmpresaDTO findByUuid(String uuid) {
 		logger.info("Buscando Empresa por UUID: {}", uuid);
-		return EmpresaUtil.modelToDTO(empresaRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid));
+		return empresaMapper.modelToDTO(empresaRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid));
 	}
 
 	@Override
 	@Transactional
-	@CacheEvict(value = "empresas", allEntries = true)
 	public String guardar(EmpresaDTO dto) {
 		logger.info("Guardando Empresa");
 		Empresa model = empresaRepository.findByActivoTrueAndUuidEqualsIgnoreCase(dto.getUuid());
@@ -58,18 +60,31 @@ public class EmpresaServiceImpl implements EmpresaService {
 			logger.info("Creando nuevo Empresa");
 			model = new Empresa();
 		}
-		model = EmpresaUtil.dtoToModel(dto, model);
+		model = empresaMapper.dtoToModel(dto, model);
 		empresaRepository.saveAndFlush(model);
 		return model.getUuid();
 	}
 
 	@Override
 	public Page<EmpresaDTO> getPageByFilter(EmpresaFilter filter, Pageable pageable) {
-		return EmpresaUtil.pageToPageDTO(empresaRepository.findAll(EmpresaSpecifications.filter(filter), pageable));
+		return empresaMapper.pageToPageDTO(
+				empresaRepository.findAll(EmpresaSpecifications.filter(limitacionesPermisos(filter)), pageable));
+	}
+
+	private EmpresaFilter limitacionesPermisos(EmpresaFilter filter) {
+		if (SecurityUtil.hasAuthority(Constantes.Permiso.GESTION_GLOBAL)) {
+			return filter;
+		}
+
+		if (SecurityUtil.hasAuthority(Constantes.Permiso.Localizacion.GESTION_EMPRESA)) {
+			filter.setListIds(SecurityUtil.getCurrentUserListEmpresaId());
+		} else {
+			filter.setListIds(List.of(-1L));
+		}
+		return filter;
 	}
 
 	@Override
-	@CacheEvict(value = "empresas", allEntries = true)
 	public void eliminar(Long id) {
 		logger.info("Eliminando Empresa por ID: {}");
 		Empresa model = empresaRepository.findByActivoTrueAndId(id);
@@ -78,7 +93,6 @@ public class EmpresaServiceImpl implements EmpresaService {
 	}
 
 	@Override
-	@CacheEvict(value = "empresas", allEntries = true)
 	public void eliminar(String uuid) {
 		logger.info("Eliminando Empresa por ID: {}");
 		Empresa model = empresaRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid);
@@ -88,34 +102,37 @@ public class EmpresaServiceImpl implements EmpresaService {
 
 	@Override
 	public EmpresaDTO findByNombreEqualsIgnoreCase(String nombre) {
-		return EmpresaUtil.modelToDTO(empresaRepository.findByActivoTrueAndNombreEqualsIgnoreCase(nombre));
+		return empresaMapper.modelToDTO(empresaRepository.findByActivoTrueAndNombreEqualsIgnoreCase(nombre));
 	}
 
 	@Override
-	@Cacheable("empresas")
 	public List<ComboDTO> getListComboDTO() {
-		return EmpresaUtil.listModelToListComboDTO(empresaRepository.findByActivoTrue());
+		return empresaMapper.listModelToListComboDTO(empresaRepository.findByActivoTrue());
 	}
 
 	@Override
 	public List<EmpresaDTO> getListDTO() {
-		return Utils.sortByNombre(EmpresaUtil.listModelToListDTO(empresaRepository.findByActivoTrue()));
+		return Utils.sortByNombre(empresaMapper.listModelToListDTO(empresaRepository.findByActivoTrue()));
 	}
 
 	@Override
 	public List<EmpresaDTO> getListDTO(EmpresaFilter filter) {
-		return Utils.sortByNombre(
-				EmpresaUtil.listModelToListDTO(empresaRepository.findAll(EmpresaSpecifications.filter(filter))));
+		return Utils.sortByNombre(empresaMapper.listModelToListDTO(
+				empresaRepository.findAll(EmpresaSpecifications.filter(limitacionesPermisos(filter)))));
 	}
 
 	@Override
 	public boolean canWrite(Long id) {
-		return true;
+		return (SecurityUtil.hasAuthority(Constantes.Permiso.GESTION_GLOBAL)
+				|| (SecurityUtil.hasAuthority(Constantes.Permiso.Localizacion.GESTION_EMPRESA)
+						&& SecurityUtil.getCurrentUserListEmpresaId().contains(id)));
 	}
 
 	@Override
 	public boolean canRead(Long id) {
-		return true;
+		return (SecurityUtil.hasAuthority(Constantes.Permiso.GESTION_GLOBAL)
+				|| (SecurityUtil.hasAuthority(Constantes.Permiso.Localizacion.GESTION_EMPRESA)
+						&& SecurityUtil.getCurrentUserListEmpresaId().contains(id)));
 	}
 
 	@Override
@@ -123,11 +140,11 @@ public class EmpresaServiceImpl implements EmpresaService {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
 	public Long registrarEmpresa(RegistroEmpresaDTO dto) {
 		logger.info("Registrando nueva empresa nombre: {}", dto.getNombre());
-		Empresa model =  EmpresaUtil.registroEmpresaDTOToModel(dto);
+		Empresa model = empresaMapper.registroEmpresaDTOToModel(dto);
 		model = empresaRepository.saveAndFlush(model);
 		return model.getId();
 	}

@@ -20,10 +20,14 @@ public class EmpresaSpecifications extends BaseSpecifications<Empresa> {
 			specs.add(new EmpresaSpecifications().likeIgnoreCase("nombre", filter.getNombre()));
 		}
 
-		if (StringUtils.hasText(filter.getTipoEmpresaNombre())) {
-			specs.add(new EmpresaSpecifications().equalsIgnoreCase("tipoEmpresa", "nombre", filter.getTipoEmpresaNombre()));
+		if (StringUtils.hasText(filter.getCif())) {
+			specs.add(new EmpresaSpecifications().likeIgnoreCase("cif", filter.getCif()));
 		}
 
+		if(!filter.getListIds().isEmpty()) {
+			specs.add(new EmpresaSpecifications().fieldInLong("id", filter.getListIds()));
+		}
 		return new EmpresaSpecifications().combine(specs);
 	}
+
 }

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" lang="es"
+	layout:decorate="~{layout/base}">
+<head>
+
+<script>
+	
+</script>
+
+</head>
+<body>
+	<div layout:fragment="content" class="container py-5">
+
+		<div
+			th:replace="~{fragments/breadcrumbs :: breadcrumbs(${breadcrumbs})}"></div>
+
+		<div class="card shadow-lg border-0 rounded-4 p-4">
+			<!-- Contenedor para título + acción -->
+			<div
+				class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+				<!-- Título -->
+				<h5 class="mb-0 fw-semibold d-flex align-items-center">
+					<i class="bi bi-buildings text-primary me-2 fs-4"></i> <span
+						th:text="#{page.title.privado.empresa}"></span>
+				</h5>
+
+			</div>
+
+			<!-- Filtro de búsqueda -->
+			<div class="card bg-light border-0 shadow-sm mb-4">
+				<div class="card-body">
+					<form th:action="@{/privado/empresa}" method="get"
+						th:object="${filter}" class="row g-3 align-items-center">
+
+
+
+						<div class="col-md-4">
+							<label for="cif" class="form-label fw-bold"
+								th:text="#{empresa.filter.cif}"></label>
+							<div class="input-group">
+								<span class="input-group-text"><i class="bi bi-book"></i></span>
+								<input type="text" class="form-control"
+									th:field="*{cif}"
+									th:placeholder="#{empresa.filter.cif}" />
+							</div>
+						</div>
+						
+						<div class="col-md-4">
+							<label for="isbn" class="form-label fw-bold"
+								th:text="#{empresa.filter.nombre}"></label>
+							<div class="input-group">
+								<span class="input-group-text"><i class="bi bi-postage"></i></span>
+								<input type="text" class="form-control"
+									th:field="*{nombre}"
+									th:placeholder="#{empresa.filter.nombre}" />
+							</div>
+						</div>
+						
+
+						<div class="col-md-4 d-flex">
+							<button type="submit" class="btn btn-primary me-2">
+								<i class="bi bi-search"></i> <span th:text="#{boton.buscar}"></span>
+							</button>
+							<a th:href="@{/privado/empresa}"
+								class="btn btn-outline-secondary me-2"> <i
+								class="bi bi-x-circle"></i> <span th:text="#{boton.limpiar}"></span>
+							</a>
+						</div>
+
+
+					</form>
+				</div>
+			</div>
+
+
+
+
+			<!-- Tabla -->
+			<div class="table-responsive">
+				<table
+					class="table table-hover align-middle shadow-sm rounded-3 overflow-hidden">
+					<thead class="table-primary">
+						<tr>
+
+
+							<!-- Columna cif -->
+							<th class="text-nowrap"><span th:text="#{empresa.tabla.cif}"></span>
+								<a class="ms-1 text-decoration-none"
+								th:href="${url}+'&sort=cif,ASC'"
+								th:title="#{tabla.orden.ascendente}"> <i
+									class="bi bi-arrow-down-short"></i>
+							</a> <a class="text-decoration-none"
+								th:href="${url}+'&sort=cif,DESC'"
+								th:title="#{tabla.orden.descendente}"> <i
+									class="bi bi-arrow-up-short"></i>
+							</a></th>
+
+							<!-- Columna nombre -->
+							<th class="text-nowrap"><span
+								th:text="#{empresa.tabla.nombre}"></span> <a
+								class="ms-1 text-decoration-none"
+								th:href="${url}+'&sort=nombre,ASC'"
+								th:title="#{tabla.orden.ascendente}"> <i
+									class="bi bi-arrow-down-short"></i>
+							</a> <a class="text-decoration-none"
+								th:href="${url}+'&sort=nombre,DESC'"
+								th:title="#{tabla.orden.descendente}"> <i
+									class="bi bi-arrow-up-short"></i>
+							</a></th>
+
+							<!-- Editar  -->
+							<th class="text-center"><i class="bi bi-gear"></i></th>
+
+							<!-- Eliminar  -->
+							<th class="text-center"><i class="bi bi-trash"></i></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="element : ${page.content}">
+							<td class="fw-semibold" th:text="${element.cif}"></td>
+							<td class="fw-semibold" th:text="${element.nombre}"></td>
+							<td class="text-center"><a
+								th:href="@{/privado/empresa/{id}/editar(id=${element.id})}"
+								class="btn btn-sm btn-outline-primary rounded-circle"
+								th:title="#{boton.editar}"> <i class="bi bi-pencil-square"></i>
+							</a></td>
+
+
+							<td class="fw-semibold">
+
+								<button type="button"
+									class="btn btn-outline-danger rounded-pill shadow-sm px-4 py-2 d-flex align-items-center  hover-scale"
+									data-bs-toggle="modal"
+									th:attr="data-bs-target='#confirmarEliminarModal-' + ${element.id}">
+									<i class="bi bi-trash"></i> <span class="d-none d-md-inline"></span>
+								</button>
+
+								<div
+									th:replace="~{fragments/modals :: modalConfirmacion(
+									    'confirmarEliminarModal-' + ${element.id},
+									    #{empresa.modal.titulo.eliminar},
+									    #{empresa.modal.body.eliminar},
+									    @{/privado/empresa/{id}/eliminar(id=${element.id})},
+									    #{empresa.modal.boton.eliminar}
+									  )}">
+								</div>
+
+							</td>
+
+						</tr>
+						<tr th:if="${page.content.size() == 0}">
+							<td colspan="10" class="text-center text-muted py-4"><i
+								class="bi bi-search fs-3 d-block mb-2"></i> <span
+								th:text="#{tabla.no.se.encontraron.resultados}"> </span></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<div
+				th:replace="~{fragments/pagination :: pagination(${page}, ${url}, ${sort})}"></div>
+
+
+
+		</div>
+	</div>
+</body>
+</html>

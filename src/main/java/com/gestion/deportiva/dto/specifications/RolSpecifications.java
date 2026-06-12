@@ -23,7 +23,7 @@ public class RolSpecifications extends BaseSpecifications<Rol> {
 		}
 		
 		if (!filter.getListNombre().isEmpty()) {
-			specs.add(new RolSpecifications().fieldIn("nombre", filter.getListNombre()));
+			specs.add(new RolSpecifications().fieldInString("nombre", filter.getListNombre()));
 		}
 
 		return new RolSpecifications().combine(specs);

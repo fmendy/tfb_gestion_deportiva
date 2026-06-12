@@ -91,117 +91,14 @@
 							<span th:text="#{navbar.login}">Iniciar sesión</span>
 					</a></li>
 
-					<!-- Catalogo -->
-					<li class="nav-item" sec:authorize="isAuthenticated()"><a
+					<!-- Empresa -->
+					<li class="nav-item" sec:authorize="hasAuthority('GESTION_EMPRESA')"><a
 						class="nav-link text-white d-flex align-items-center"
-						th:href="@{/privado/catalogo/recomendado}"> <i
-							class="bi bi-award me-1"></i> <span
-							th:text="#{navbar.catalogo.recomendado}">Recomendado</span>
+						th:href="@{/privado/empresa}"> <i
+							class="bi bi-buildings me-1"></i> <span
+							th:text="#{navbar.gestion.empresas}">Gestionar empresas</span>
 					</a></li>
 
-					<!-- Catalogo -->
-					<li class="nav-item" sec:authorize="isAuthenticated()"><a
-						class="nav-link text-white d-flex align-items-center"
-						th:href="@{/privado/catalogo}"> <i class="bi bi-funnel me-1"></i>
-							<span th:text="#{navbar.catalogo}">Catalogo</span>
-					</a></li>
-
-					<!-- Catalogo -->
-					<li class="nav-item" sec:authorize="isAuthenticated()"><a
-						class="nav-link text-white d-flex align-items-center"
-						th:href="@{/privado/catalogo/libro/random}"> <i
-							class="bi bi-shuffle me-1"></i> <span
-							th:text="#{navbar.catalogo.libro.random}">Random</span>
-					</a></li>
-
-					<!-- Menú Gestión (Solo para Bibliotecarios) -->
-					<li class="nav-item dropdown" sec:authorize="isAuthenticated()"><a
-						class="nav-link dropdown-toggle text-white d-flex align-items-center"
-						href="#" id="estadisticaDropdown" role="button"
-						data-bs-toggle="dropdown" aria-expanded="false"> <i
-							class="bi bi-bar-chart me-1 nav-management-icon"></i> <span
-							th:text="#{navbar.estadisticas}">ESTADISTICAS </span>
-					</a>
-						<ul class="dropdown-menu shadow border-0"
-							aria-labelledby="estadisticaDropdown">
-
-							<!-- Estadisticas libros -->
-							<li><a class="dropdown-item d-flex align-items-center"
-								th:href="@{/privado/estadistica/libro}"> <i
-									class="bi bi-book nav-management-icon icon-book"></i> <span
-									th:text="#{navbar.estadisticas.libros}">Gestion usuario</span>
-							</a></li>
-							
-							<!-- Estadisticas usuario -->
-							<li><a class="dropdown-item d-flex align-items-center"
-								th:href="@{/privado/estadistica/usuario}"> <i
-									class="bi bi-person nav-management-icon "></i> <span
-									th:text="#{navbar.estadisticas.usuarios}">Gestion usuario</span>
-							</a></li>
-						</ul></li>
-
-
-
-
-					<!-- Menú Gestión (Solo para Bibliotecarios) -->
-					<li class="nav-item dropdown"
-						sec:authorize="hasRole('BIBLIOTECARIO')"><a
-						class="nav-link dropdown-toggle text-white d-flex align-items-center"
-						href="#" id="gestionBibliotecaDropdown" role="button"
-						data-bs-toggle="dropdown" aria-expanded="false"> <i
-							class="bi bi-gear-fill me-1 nav-management-icon icon-gear"></i> <span
-							th:text="#{navbar.gestionar.biblioteca}">GESTIONAR
-								BIBLIOTECA</span>
-					</a>
-						<ul class="dropdown-menu shadow border-0"
-							aria-labelledby="gestionBibliotecaDropdown">
-
-							<!-- Gestión de Usuarios -->
-							<li><a class="dropdown-item d-flex align-items-center"
-								th:href="@{/privado/usuario}"> <i
-									class="bi bi-person nav-management-icon icon-usuarios"></i> <span
-									th:text="#{navbar.gestion.usuarios}">Gestion usuario</span>
-							</a></li>
-
-							<!-- Gestión de Autores -->
-							<li><a class="dropdown-item d-flex align-items-center"
-								th:href="@{/privado/autor}"> <i
-									class="bi bi-pencil-fill nav-management-icon icon-autores"></i>
-									<span th:text="#{navbar.gestion.autores}">Gestion
-										autores</span>
-							</a></li>
-
-							<!-- Gestión de libros -->
-							<li><a class="dropdown-item d-flex align-items-center"
-								th:href="@{/privado/libro}"> <i
-									class="bi bi-book nav-management-icon icon-autores"></i> <span
-									th:text="#{navbar.gestion.libros}">Gestion libro</span>
-							</a></li>
-
-							<!-- Gestión de valoraciones -->
-							<li><a class="dropdown-item d-flex align-items-center"
-								th:href="@{/privado/valoracion}"> <i
-									class="bi bi-star nav-management-icon icon-autores"></i> <span
-									th:text="#{navbar.gestion.valoracion}">Gestion
-										Valoracion</span>
-							</a></li>
-
-							<li><hr class="dropdown-divider"></li>
-
-							<!-- Maestras: Sexo -->
-							<li><a class="dropdown-item d-flex align-items-center"
-								th:href="@{/privado/maestra/sexo}"> <i
-									class="bi bi-person-fill nav-management-icon icon-sexo"></i> <span
-									th:text="#{navbar.maestra.sexo}">Sexo</span>
-							</a></li>
-
-							<!-- Maestras: Idioma -->
-							<li><a class="dropdown-item d-flex align-items-center"
-								th:href="@{/privado/maestra/idioma}"> <i
-									class="bi bi-translate nav-management-icon icon-idioma"></i> <span
-									th:text="#{navbar.maestra.idioma}">Idioma</span>
-							</a></li>
-						</ul></li>
 
 
 

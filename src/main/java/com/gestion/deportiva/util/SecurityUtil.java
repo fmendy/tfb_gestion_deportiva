@@ -52,8 +52,8 @@ public class SecurityUtil {
 		return roles;
 	}
 
-	public static List<String> getCurrentUserListDemarcacionUuid() {
-		return getCurrentUser().getListDemarcacionUuid();
+	public static List<Long> getCurrentUserListEmpresaId() {
+		return getCurrentUser().getListEmpresaId();
 	}
 
 }

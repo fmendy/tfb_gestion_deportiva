@@ -1,6 +1,7 @@
 package com.gestion.deportiva.service.impl;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -32,10 +33,11 @@ import com.gestion.deportiva.model.Permiso;
 import com.gestion.deportiva.model.Rol;
 import com.gestion.deportiva.model.RolPermiso;
 import com.gestion.deportiva.model.Usuario;
+import com.gestion.deportiva.model.UsuarioEmpresa;
 import com.gestion.deportiva.model.UsuarioRol;
-
+import com.gestion.deportiva.repository.UsuarioEmpresaRepository;
 import com.gestion.deportiva.repository.UsuarioRepository;
-
+import com.gestion.deportiva.service.UsuarioEmpresaService;
 import com.gestion.deportiva.service.UsuarioService;
 import com.gestion.deportiva.util.SecurityUtil;
 import com.gestion.deportiva.util.Utils;
@@ -54,10 +56,13 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 
 	@Autowired
 	private UsuarioMapper usuarioMapper;
-	
+
 	@Autowired
 	@Qualifier("myPasswordEncoder")
 	private PasswordEncoder passwordEncoder;
+
+	@Autowired
+	private UsuarioEmpresaRepository usuarioEmpresaRepository;
 
 	@Override
 	public Page<UsuarioDTO> getPageByFilter(UsuarioFilter filter, Pageable pageable) {
@@ -117,8 +122,13 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 			}
 
 		}
-		return new CustomUserDetails(usuario.getId(), usuario.getUuid(), usuario.getNombre(), usuario.getPassword(),
-				authorities);
+
+		// Usuario Empresa
+		List<Long> listEmpresaId = usuarioEmpresaRepository.findByActivoTrueAndUsuarioId(usuario.getId()).stream()
+				.map(ue -> ue.getEmpresa().getId()).toList();
+
+		return new CustomUserDetails(usuario.getId(), usuario.getNombre(), usuario.getPassword(), authorities,
+				listEmpresaId, new ArrayList<>(), new ArrayList<>());
 	}
 
 	@Override
@@ -231,7 +241,7 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 
 		return usuario.getId();
 	}
-	
+
 	@Override
 	public void actualizarMiPerfil(@Valid MiPerfilDTO dto) {
 		Usuario usuario = usuarioRepository.findByActivoTrueAndId(dto.getId());
