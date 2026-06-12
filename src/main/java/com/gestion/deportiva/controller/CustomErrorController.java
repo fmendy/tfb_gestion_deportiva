@@ -16,11 +16,11 @@ public class CustomErrorController implements ErrorController {
 			int statusCode = Integer.parseInt(status.toString());
 
 			if (statusCode == 404) {
-				return "redirect:/privado/miperfil";
+				return "redirect:/privado/usuario/miperfil";
 			}
 		}
 
-		return "redirect:/privado/miperfil";
+		return "redirect:/privado//usuario/miperfil";
 	}
 
 }
