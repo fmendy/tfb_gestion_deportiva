@@ -96,13 +96,40 @@
 					</div>
 
 					<div class="col-12">
-						<label for="logo" class="form-label fw-semibold text-secondary">
-							<i class="bi bi-image me-1 text-primary"></i> <span
-							th:text="#{empresa.form.logo}">Logo</span>
-						</label> <input type="file" id="logo" name="logo"
-							accept="image/png, image/jpeg, image/webp"
-							class="form-control rounded-3 py-2">
-						<div class="form-text text-muted small"></div>
+						<div class="row align-items-center g-3">
+
+							<div
+								th:class="${form.logoUrl != null && !form.logoUrl.isEmpty()} ? 'col-12 col-sm-9 col-md-10' : 'col-12'">
+								<label for="logo" class="form-label fw-semibold text-secondary">
+									<i class="bi bi-image me-1 text-primary"></i> <span
+									th:text="#{empresa.form.logo}">Logo</span>
+								</label> <input type="file" th:field="*{logo}" id="logo"
+									accept="image/png, image/jpeg, image/webp"
+									class="form-control rounded-3 py-2"> <input
+									type="hidden" th:field="*{logoUrl}" />
+							</div>
+
+							<div th:if="${form.logoUrl != null && !form.logoUrl.isEmpty()}"
+								class="col-12 col-sm-3 col-md-2 text-center text-sm-end mt-4 mt-sm-0">
+
+								<div
+									class="d-inline-block p-1 bg-light border rounded-3 shadow-sm">
+									<img th:src="${form.logoUrl}" alt="Logo Empresa"
+										class="img-fluid rounded-2 shadow-inner"
+										style="max-height: 70px; object-fit: contain; width: auto;">
+								</div>
+
+								<div
+									class="form-check d-flex justify-content-center justify-content-sm-end align-items-center gap-2">
+									<input class="form-check-input mt-0 cursor-pointer"
+										type="checkbox" th:field="*{logoBorrar}" id="logoBorrar">
+									<label
+										class="form-check-label small text-danger fw-semibold cursor-pointer"
+										for="logoBorrar" th:text="#{empresa.form.borrar.logo}">  </label>
+								</div>
+							</div>
+
+						</div>
 					</div>
 
 					<div class="col-12">

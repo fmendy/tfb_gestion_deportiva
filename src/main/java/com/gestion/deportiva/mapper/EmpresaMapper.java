@@ -53,7 +53,7 @@ public class EmpresaMapper {
 		model.setDescripcion(dto.getDescripcion());
 		model.setEmail(dto.getEmail());
 		model.setUrl(dto.getUrl());
-		//model.setLogo(dto.getLogo());
+		model.setLogo(dto.getLogoUrl());
 		model.setCif(dto.getCif());
 		return model;
 	}

@@ -1,6 +1,8 @@
 package com.gestion.deportiva.service.impl;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +20,7 @@ import com.gestion.deportiva.mapper.EmpresaMapper;
 import com.gestion.deportiva.model.Empresa;
 import com.gestion.deportiva.repository.EmpresaRepository;
 import com.gestion.deportiva.service.EmpresaService;
+import com.gestion.deportiva.service.ImageStoreService;
 import com.gestion.deportiva.util.Constantes;
 import com.gestion.deportiva.util.SecurityUtil;
 import com.gestion.deportiva.util.Utils;
@@ -39,6 +42,9 @@ public class EmpresaServiceImpl implements EmpresaService {
 	@Autowired
 	private EmpresaMapper empresaMapper;
 
+	@Autowired
+	private ImageStoreService imageStoreService;
+
 	@Override
 	public EmpresaDTO findById(Long id) {
 		logger.info("Buscando Empresa por ID: {}", id);
@@ -55,10 +61,21 @@ public class EmpresaServiceImpl implements EmpresaService {
 	@Transactional
 	public Long guardar(EmpresaDTO dto) {
 		logger.info("Guardando Empresa");
-		Empresa model = empresaRepository.findByActivoTrueAndUuidEqualsIgnoreCase(dto.getUuid());
+		Empresa model = empresaRepository.findByActivoTrueAndId(dto.getId());
 		if (model == null) {
 			logger.info("Creando nuevo Empresa");
 			model = new Empresa();
+		}
+		if (dto.getLogoBorrar() != null && dto.getLogoBorrar()) {
+			dto.setLogoUrl(null);
+		}
+		if (dto.getLogo() != null && !dto.getLogo().isEmpty()) {
+			try {
+				Map<String, String> result = imageStoreService.uploadImage(dto.getLogo());
+				dto.setLogoUrl(result.get("url"));
+			} catch (IOException e) {
+				logger.error("Error al guardar el logo", e);
+			}
 		}
 		model = empresaMapper.dtoToModel(dto, model);
 		empresaRepository.saveAndFlush(model);

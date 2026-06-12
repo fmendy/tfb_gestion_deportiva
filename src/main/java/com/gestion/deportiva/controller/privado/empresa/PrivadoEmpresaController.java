@@ -42,35 +42,35 @@ public class PrivadoEmpresaController extends BaseController {
 	private static final String TITLE_PAGE = "page.title.privado.empresa";
 
 	private static final String VIEW_LIST = "privado/empresa/list";
-	
+
 	private static final String VIEW_FORM = "privado/empresa/form";
-	
+
 	@Autowired
 	private EmpresaService empresaService;
-
 
 	@GetMapping("")
 	public ModelAndView search(Pageable pageable, HttpServletRequest request, EmpresaFilter filter) {
 		logger.info("Mostrando vista de listado de libro con filtros");
 		return buildListView(filter, pageable, request);
 	}
-	
+
 	@GetMapping("/{id}/editar")
 	public ModelAndView editar(@PathVariable Long id, RedirectAttributes redirectAttributes) throws PermisoException {
 		if (!empresaService.canRead(id)) {
-			logger.error("Libro {} intentó acceder a una Empresa  sin permisos: usuario {}", SecurityUtil.getCurrentUserId(), id);
+			logger.error("Libro {} intentó acceder a una Empresa  sin permisos: usuario {}",
+					SecurityUtil.getCurrentUserId(), id);
 			throw new PermisoException("No tiene permisos para acceder a esta empresa.");
 		}
 		return loadForm(id, redirectAttributes);
 
 	}
-	
-	
+
 	@PostMapping("/guardar")
 	public ModelAndView guardar(@Valid @ModelAttribute("form") EmpresaDTO dto, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) throws PermisoException {
 		if (!empresaService.canWrite(dto.getId())) {
-			logger.error("Libro {} intentó acceder a una Empresa  sin permisos: usuario {}", SecurityUtil.getCurrentUserId(), dto.getId());
+			logger.error("Libro {} intentó acceder a una Empresa  sin permisos: usuario {}",
+					SecurityUtil.getCurrentUserId(), dto.getId());
 			throw new PermisoException("No tiene permisos para acceder a esta empresa.");
 		}
 		logger.info("Guardando datos de la empresa id: {}", dto.getId());
@@ -89,7 +89,6 @@ public class PrivadoEmpresaController extends BaseController {
 		}
 	}
 
-	
 	private ModelAndView loadForm(Long id, RedirectAttributes redirectAttributes) {
 		try {
 			EmpresaDTO dto = (id == null) ? new EmpresaDTO() : empresaService.findById(id);
@@ -99,7 +98,7 @@ public class PrivadoEmpresaController extends BaseController {
 			return redirectWithError(BASE_URL, redirectAttributes, HttpStatus.INTERNAL_SERVER_ERROR.value(), null);
 		}
 	}
-	
+
 	private ModelAndView buildDetailsForm(EmpresaDTO dto) {
 		ModelAndView mav = new ModelAndView(VIEW_FORM);
 		mav.addObject("form", dto);
@@ -108,9 +107,6 @@ public class PrivadoEmpresaController extends BaseController {
 		addBasicModelDetails(mav, TITLE_PAGE, false);
 		return mav;
 	}
-
-
-
 
 	private ModelAndView buildListView(EmpresaFilter filter, Pageable pageable, HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView(VIEW_LIST);

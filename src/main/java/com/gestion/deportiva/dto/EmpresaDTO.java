@@ -31,11 +31,15 @@ public class EmpresaDTO extends MaestraDTO {
 	
 	private String logoUrl;
 	
+	private Boolean logoBorrar;
+	
 	@Size(max = 250)
 	private String url;
 	
 	@Size(max = 1250)
 	private String descripcion;
+	
+	
 	
 	@Size(max = 20)
 	@NotEmpty
