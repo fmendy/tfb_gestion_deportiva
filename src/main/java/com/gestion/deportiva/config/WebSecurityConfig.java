@@ -20,7 +20,7 @@ public class WebSecurityConfig {
 		http.authorizeHttpRequests(auth -> auth
 				.requestMatchers("/resources/**", "/css/**", "/images/**", "/js/**", "/publico/**", "/login", "/error")
 				.permitAll().anyRequest().authenticated())
-				.formLogin(form -> form.loginPage("/login").defaultSuccessUrl("/privado/miperfil", true).permitAll())
+				.formLogin(form -> form.loginPage("/login").defaultSuccessUrl("/privado/usuario/miperfil", true).permitAll())
 				.logout(logout -> logout.logoutUrl("/privado/logout") // URL que invoca el logout
 						.logoutSuccessUrl ("/login") // A dónde redirige después del logout
 						.invalidateHttpSession(true) // invalida la sesión

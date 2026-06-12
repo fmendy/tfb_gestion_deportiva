@@ -1,3 +1,4 @@
+
 create database gestion_instalacion;
 use gestion_instalacion;
 
@@ -262,6 +263,17 @@ create table permiso(
 alter table permiso add foreign key fk_permiso_usuario_creacion (id_usuario_creacion) references usuario(id);
 alter table permiso add foreign key fk_permiso_usuario_modificacion (id_usuario_modificacion) references usuario(id);
 
+insert into permiso(nombre) values
+('GESTION_GLOBAL'),
+('GESTION_EMPRESA'),
+('GESTION_SEDE'),
+('GESTION_INSTALACION'),
+('MI_PERFIL'),
+('GESTION_USUARIO_GLOBAL'),
+('GESTION_USUARIO_EMPRESA'),
+('GESTION_USUARIO_SEDE'),
+('GESTION_USUARIO_INSTALACION');
+
 
 create table rol_permiso(
 	id INT  not null auto_increment primary key,
@@ -280,6 +292,42 @@ alter table rol_permiso add foreign key fk_rol_permiso_usuario_modificacion (id_
 alter table rol_permiso add foreign key fk_rol_permiso_rol (id_rol) references rol(id);
 alter table rol_permiso add foreign key fk_rol_permiso_permiso (id_permiso) references permiso(id);
 
+INSERT INTO rol_permiso(id_rol,id_permiso) values
+((select id from rol where nombre = 'ADMINISTRADOR'), (select id from permiso where nombre = 'GESTION_GLOBAL')),
+((select id from rol where nombre = 'ADMINISTRADOR'), (select id from permiso where nombre = 'GESTION_EMPRESA')),
+((select id from rol where nombre = 'ADMINISTRADOR'), (select id from permiso where nombre = 'GESTION_SEDE')),
+((select id from rol where nombre = 'ADMINISTRADOR'), (select id from permiso where nombre = 'GESTION_INSTALACION')),
+((select id from rol where nombre = 'ADMINISTRADOR'), (select id from permiso where nombre = 'MI_PERFIL')),
+((select id from rol where nombre = 'ADMINISTRADOR'), (select id from permiso where nombre = 'GESTION_USUARIO_GLOBAL')),
+((select id from rol where nombre = 'ADMINISTRADOR'), (select id from permiso where nombre = 'GESTION_USUARIO_EMPRESA')),
+((select id from rol where nombre = 'ADMINISTRADOR'), (select id from permiso where nombre = 'GESTION_USUARIO_SEDE')),
+((select id from rol where nombre = 'ADMINISTRADOR'), (select id from permiso where nombre = 'GESTION_USUARIO_INSTALACION'));
+
+INSERT INTO rol_permiso(id_rol,id_permiso) values
+((select id from rol where nombre = 'USUARIO_EMPRESA'), (select id from permiso where nombre = 'GESTION_EMPRESA')),
+((select id from rol where nombre = 'USUARIO_EMPRESA'), (select id from permiso where nombre = 'GESTION_SEDE')),
+((select id from rol where nombre = 'USUARIO_EMPRESA'), (select id from permiso where nombre = 'GESTION_INSTALACION')),
+((select id from rol where nombre = 'USUARIO_EMPRESA'), (select id from permiso where nombre = 'MI_PERFIL')),
+((select id from rol where nombre = 'USUARIO_EMPRESA'), (select id from permiso where nombre = 'GESTION_USUARIO_EMPRESA')),
+((select id from rol where nombre = 'USUARIO_EMPRESA'), (select id from permiso where nombre = 'GESTION_USUARIO_SEDE')),
+((select id from rol where nombre = 'USUARIO_EMPRESA'), (select id from permiso where nombre = 'GESTION_USUARIO_INSTALACION'));
+
+INSERT INTO rol_permiso(id_rol,id_permiso) values
+((select id from rol where nombre = 'USUARIO_SEDE'), (select id from permiso where nombre = 'GESTION_SEDE')),
+((select id from rol where nombre = 'USUARIO_SEDE'), (select id from permiso where nombre = 'GESTION_INSTALACION')),
+((select id from rol where nombre = 'USUARIO_SEDE'), (select id from permiso where nombre = 'MI_PERFIL')),
+((select id from rol where nombre = 'USUARIO_SEDE'), (select id from permiso where nombre = 'GESTION_USUARIO_SEDE')),
+((select id from rol where nombre = 'USUARIO_SEDE'), (select id from permiso where nombre = 'GESTION_USUARIO_INSTALACION'));
+
+
+INSERT INTO rol_permiso(id_rol,id_permiso) values
+((select id from rol where nombre = 'USUARIO_INSTALACION'), (select id from permiso where nombre = 'GESTION_INSTALACION')),
+((select id from rol where nombre = 'USUARIO_INSTALACION'), (select id from permiso where nombre = 'MI_PERFIL')),
+((select id from rol where nombre = 'USUARIO_INSTALACION'), (select id from permiso where nombre = 'GESTION_USUARIO_INSTALACION'));
+
+
+INSERT INTO rol_permiso(id_rol,id_permiso) values
+((select id from rol where nombre = 'USUARIO_CLIENTE'), (select id from permiso where nombre = 'MI_PERFIL'));
 
 create table empresa(
 	id INT  not null auto_increment primary key,

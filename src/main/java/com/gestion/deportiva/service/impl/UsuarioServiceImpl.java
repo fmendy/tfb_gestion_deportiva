@@ -60,7 +60,6 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 	}
 
 	private UsuarioFilter limitacionesPermisos(UsuarioFilter filter) {
-
 		return filter;
 	}
 
@@ -224,6 +223,14 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 		usuarioRepository.saveAndFlush(usuario);
 
 		return usuario.getId();
+	}
+	
+	@Override
+	public void actualizarMiPerfil(@Valid MiPerfilDTO dto) {
+		Usuario usuario = usuarioRepository.findByActivoTrueAndId(dto.getId());
+		usuario.setNombre(dto.getNombre());
+		usuario.setEmail(dto.getEmail());
+		usuarioRepository.saveAndFlush(usuario);
 	}
 
 }

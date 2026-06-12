@@ -37,4 +37,6 @@ public interface UsuarioService
 
 	Long registrarUsuario(@Valid RegistroEmpresaDTO dto);
 
+	void actualizarMiPerfil(@Valid MiPerfilDTO dto);
+
 }

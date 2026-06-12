@@ -19,7 +19,6 @@ import com.gestion.deportiva.dto.MiPerfilDTO;
 import com.gestion.deportiva.dto.MiPerfilPasswordDTO;
 import com.gestion.deportiva.dto.RegistroEmpresaDTO;
 import com.gestion.deportiva.model.Usuario;
-import com.gestion.deportiva.util.SecurityUtil;
 import com.gestion.deportiva.util.UsuarioRolUtil;
 
 @Component
@@ -90,7 +89,6 @@ public class UsuarioMapper {
 		retVal.setUuid(model.getUuid());
 		retVal.setNombre(model.getNombre());
 		retVal.setEmail(model.getEmail());
-		retVal.setRolNombre(SecurityUtil.getCurrentUserRol().toString());
 		retVal.setFechaAlta(model.getFechaCreacion());
 		return retVal;
 	}
