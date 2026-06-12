@@ -1,5 +1,7 @@
 package com.gestion.deportiva.dto;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -13,6 +15,15 @@ import lombok.Setter;
 public class SedeDTO extends MaestraDTO {
 
 	private static final long serialVersionUID = -3379926042905925747L;
+	
+	
+	private String comunidadAutonomaNombre;
+	
+	private Long comunidadAutonomaId;
+	
+	private Long provinciaId;
+	
+	private String provinciaNombre;
 
 	private String municipioNombre;
 	
@@ -37,8 +48,9 @@ public class SedeDTO extends MaestraDTO {
 	@Size(max = 250)
 	private String email;
 	
-	@Size(max = 250)
 	private String logo;
+	
+	private MultipartFile logoFile;
 	
 	@Size(max = 250)
 	private String url;

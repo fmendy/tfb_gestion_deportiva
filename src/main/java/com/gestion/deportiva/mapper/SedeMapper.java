@@ -1,0 +1,81 @@
+package com.gestion.deportiva.mapper;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+
+import com.gestion.deportiva.dto.ComboDTO;
+import com.gestion.deportiva.dto.SedeDTO;
+import com.gestion.deportiva.model.Empresa;
+import com.gestion.deportiva.model.Municipio;
+import com.gestion.deportiva.model.Sede;
+
+@Component
+public class SedeMapper {
+
+	public SedeDTO modelToDTO(Sede model) {
+		SedeDTO retVal = new SedeDTO();
+		retVal.setId(model.getId());
+		retVal.setNombre(model.getNombre());
+		retVal.setUuid(model.getUuid());
+		retVal.setEmail(model.getEmail());
+		retVal.setUrl(model.getUrl());
+		retVal.setLogo(model.getLogo());
+		retVal.setDescripcion(model.getDescripcion());
+		retVal.setEmpresaId(model.getEmpresa().getId());
+		retVal.setEmpresaNombre(model.getEmpresa().getNombre());
+		retVal.setDireccion(model.getDireccion());
+		retVal.setLatitud(model.getLatitud());
+		retVal.setLongitud(model.getLongitud());
+		retVal.setMunicipioId(model.getMunicipio().getId());
+		retVal.setMunicipioNombre(model.getMunicipio().getNombre());
+		retVal.setProvinciaId(model.getMunicipio().getProvincia().getId());
+		retVal.setProvinciaNombre(model.getMunicipio().getProvincia().getNombre());
+		retVal.setComunidadAutonomaId(model.getMunicipio().getProvincia().getComunidadAutonoma().getId());
+		retVal.setComunidadAutonomaNombre(model.getMunicipio().getProvincia().getNombre());
+		return retVal;
+	}
+
+	public List<SedeDTO> listModelToListDTO(List<Sede> list) {
+		List<SedeDTO> retVal = new ArrayList<>();
+		for (Sede bean : list) {
+			retVal.add(modelToDTO(bean));
+		}
+		return retVal;
+	}
+
+	public Page<SedeDTO> pageToPageDTO(Page<Sede> page) {
+		return new PageImpl<SedeDTO>(listModelToListDTO(page.getContent()), page.getPageable(),
+				page.getTotalElements());
+	}
+
+	public Sede dtoToModel(SedeDTO dto, Sede model) {
+		if (model == null) {
+			model = new Sede();
+		}
+		Optional.ofNullable(dto.getId()).ifPresent(model::setId);
+		Optional.ofNullable(dto.getUuid()).filter(StringUtils::hasText).ifPresent(model::setUuid);
+		model.setNombre(dto.getNombre());
+		model.setDescripcion(dto.getDescripcion());
+		model.setEmail(dto.getEmail());
+		model.setUrl(dto.getUrl());
+		model.setLogo(dto.getLogo());
+		model.setDireccion(dto.getDireccion());
+		model.setLatitud(dto.getLatitud());
+		model.setLongitud(dto.getLongitud());
+		model.setEmpresa(new Empresa(dto.getEmpresaId()));
+		model.setMunicipio(new Municipio(dto.getMunicipioId()));
+
+		return model;
+	}
+
+	public List<ComboDTO> listModelToListComboDTO(List<Sede> list) {
+		return list.stream().map(bean -> new ComboDTO(bean.getId(), bean.getNombre())).toList();
+	}
+
+}

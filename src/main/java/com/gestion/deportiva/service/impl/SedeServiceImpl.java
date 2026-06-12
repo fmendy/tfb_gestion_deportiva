@@ -5,8 +5,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -15,10 +13,12 @@ import com.gestion.deportiva.dto.ComboDTO;
 import com.gestion.deportiva.dto.SedeDTO;
 import com.gestion.deportiva.dto.filter.SedeFilter;
 import com.gestion.deportiva.dto.specifications.SedeSpecifications;
+import com.gestion.deportiva.mapper.SedeMapper;
 import com.gestion.deportiva.model.Sede;
 import com.gestion.deportiva.repository.SedeRepository;
 import com.gestion.deportiva.service.SedeService;
-import com.gestion.deportiva.util.SedeUtil;
+import com.gestion.deportiva.util.Constantes;
+import com.gestion.deportiva.util.SecurityUtil;
 import com.gestion.deportiva.util.Utils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -35,21 +35,23 @@ public class SedeServiceImpl implements SedeService {
 	@PersistenceContext
 	private EntityManager entityManager;
 
+	@Autowired
+	private SedeMapper sedeMapper;
+
 	@Override
 	public SedeDTO findById(Long id) {
 		logger.info("Buscando Sede por ID: {}", id);
-		return SedeUtil.modelToDTO(sedeRepository.findByActivoTrueAndId(id));
+		return sedeMapper.modelToDTO(sedeRepository.findByActivoTrueAndId(id));
 	}
 
 	@Override
 	public SedeDTO findByUuid(String uuid) {
 		logger.info("Buscando Sede por UUID: {}", uuid);
-		return SedeUtil.modelToDTO(sedeRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid));
+		return sedeMapper.modelToDTO(sedeRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid));
 	}
 
 	@Override
 	@Transactional
-	@CacheEvict(value = "sedes", allEntries = true)
 	public Long guardar(SedeDTO dto) {
 		logger.info("Guardando Sede");
 		Sede model = sedeRepository.findByActivoTrueAndUuidEqualsIgnoreCase(dto.getUuid());
@@ -57,18 +59,17 @@ public class SedeServiceImpl implements SedeService {
 			logger.info("Creando nuevo Sede");
 			model = new Sede();
 		}
-		model = SedeUtil.dtoToModel(dto, model);
+		model = sedeMapper.dtoToModel(dto, model);
 		sedeRepository.saveAndFlush(model);
 		return model.getId();
 	}
 
 	@Override
 	public Page<SedeDTO> getPageByFilter(SedeFilter filter, Pageable pageable) {
-		return SedeUtil.pageToPageDTO(sedeRepository.findAll(SedeSpecifications.filter(filter), pageable));
+		return sedeMapper.pageToPageDTO(sedeRepository.findAll(SedeSpecifications.filter(filter), pageable));
 	}
 
 	@Override
-	@CacheEvict(value = "sedes", allEntries = true)
 	public void eliminar(Long id) {
 		logger.info("Eliminando Sede por ID: {}");
 		Sede model = sedeRepository.findByActivoTrueAndId(id);
@@ -77,7 +78,6 @@ public class SedeServiceImpl implements SedeService {
 	}
 
 	@Override
-	@CacheEvict(value = "sedes", allEntries = true)
 	public void eliminar(String uuid) {
 		logger.info("Eliminando Sede por ID: {}");
 		Sede model = sedeRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid);
@@ -87,34 +87,49 @@ public class SedeServiceImpl implements SedeService {
 
 	@Override
 	public SedeDTO findByNombreEqualsIgnoreCase(String nombre) {
-		return SedeUtil.modelToDTO(sedeRepository.findByActivoTrueAndNombreEqualsIgnoreCase(nombre));
+		return sedeMapper.modelToDTO(sedeRepository.findByActivoTrueAndNombreEqualsIgnoreCase(nombre));
 	}
 
 	@Override
-	@Cacheable("sedes")
 	public List<ComboDTO> getListComboDTO() {
-		return SedeUtil.listModelToListComboDTO(sedeRepository.findByActivoTrue());
+		return sedeMapper.listModelToListComboDTO(sedeRepository.findByActivoTrue());
 	}
 
 	@Override
 	public List<SedeDTO> getListDTO() {
-		return Utils.sortByNombre(SedeUtil.listModelToListDTO(sedeRepository.findByActivoTrue()));
+		return Utils.sortByNombre(sedeMapper.listModelToListDTO(sedeRepository.findByActivoTrue()));
 	}
 
 	@Override
 	public List<SedeDTO> getListDTO(SedeFilter filter) {
-		return Utils.sortByNombre(
-				SedeUtil.listModelToListDTO(sedeRepository.findAll(SedeSpecifications.filter(filter))));
+		return Utils
+				.sortByNombre(sedeMapper.listModelToListDTO(sedeRepository.findAll(SedeSpecifications.filter(filter))));
 	}
 
 	@Override
 	public boolean canWrite(Long id) {
-		return true;
+		if (id == null) {
+			return false;
+		}
+		if (SecurityUtil.hasAuthority(Constantes.Permiso.GESTION_GLOBAL)) {
+			return true;
+		}
+		if (SecurityUtil.hasAuthority(Constantes.Permiso.Localizacion.GESTION_EMPRESA)) {
+			Sede sede = sedeRepository.findByActivoTrueAndId(id);
+			if (sede != null) {
+				return SecurityUtil.getCurrentUserListEmpresaId().contains(sede.getEmpresa().getId());
+			}
+
+		}
+		if (SecurityUtil.hasAuthority(Constantes.Permiso.Localizacion.GESTION_SEDE)) {
+			return SecurityUtil.getCurrentUserListSedeId().contains(id);
+		}
+		return false;
 	}
 
 	@Override
 	public boolean canRead(Long id) {
-		return true;
+		return canWrite(id);
 	}
 
 	@Override

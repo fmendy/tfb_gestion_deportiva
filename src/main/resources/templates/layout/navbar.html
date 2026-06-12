@@ -98,6 +98,14 @@
 							class="bi bi-buildings me-1"></i> <span
 							th:text="#{navbar.gestion.empresas}">Gestionar empresas</span>
 					</a></li>
+					
+					<!-- Sede -->
+					<li class="nav-item" sec:authorize="hasAuthority('GESTION_SEDE')"><a
+						class="nav-link text-white d-flex align-items-center"
+						th:href="@{/privado/sede}"> <i
+							class="bi bi-geo me-1"></i> <span
+							th:text="#{navbar.gestion.sede}">Gestionar sedes</span>
+					</a></li>
 
 
 

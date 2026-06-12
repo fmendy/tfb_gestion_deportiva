@@ -55,5 +55,13 @@ public class SecurityUtil {
 	public static List<Long> getCurrentUserListEmpresaId() {
 		return getCurrentUser().getListEmpresaId();
 	}
+	
+	public static List<Long> getCurrentUserListSedeId() {
+		return getCurrentUser().getListSedeId();
+	}
+	
+	public static List<Long> getCurrentUserListInstalacionId() {
+		return getCurrentUser().getListInstalacionId();
+	}
 
 }
