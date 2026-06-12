@@ -17,7 +17,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import com.gestion.deportiva.controller.BaseController;
 import com.gestion.deportiva.dto.MiPerfilDTO;
-import com.gestion.deportiva.dto.RegistroEmpresaDTO;
+import com.gestion.deportiva.dto.MiPerfilPasswordDTO;
 import com.gestion.deportiva.service.UsuarioService;
 import com.gestion.deportiva.util.Constantes;
 import com.gestion.deportiva.util.SecurityUtil;
@@ -34,6 +34,8 @@ public class PrivadoMiPerfilController extends BaseController {
 	private static final String TITLE_PAGE = "page.title.mi.perfil";
 
 	private static final String VIEW_FORM = "usuario/miperfil/form";
+	
+	private static final String VIEW_PASSWORD_FORM = "usuario/miperfil/passwordform";
 	
 	private static final String BASE_URL = "/privado/usuario/miperfil";
 
@@ -67,6 +69,39 @@ public class PrivadoMiPerfilController extends BaseController {
 
 	private ModelAndView buildDetailsMiPerilForm(MiPerfilDTO dto) {
 		ModelAndView mav = new ModelAndView(VIEW_FORM);
+		addBasicModelDetails(mav, TITLE_PAGE);
+		mav.addObject("form", dto);
+		return mav;
+	}
+	
+	@GetMapping("/password")
+	public ModelAndView verMiPerfilPassword() {
+		logger.info("Usuario autenticado viendo su perfil para cambio de password: {}", SecurityUtil.getCurrentUser().getUsername());
+		return buildDetailsMiPerilPasswordForm(usuarioService.getMiPerfilPasswordDTO());
+	}
+	
+	@PostMapping("/password/guardar")
+	public ModelAndView guardar(@Valid @ModelAttribute("form") MiPerfilPasswordDTO dto, BindingResult bindingResult,
+			RedirectAttributes redirectAttributes) {
+		logger.info("Actualizando password del usuario: {}", dto.getId());
+		if (bindingResult.hasErrors()) {
+			return buildDetailsMiPerilPasswordForm(dto);
+		}
+		try {
+			usuarioService.actualizarPassword(dto);
+			redirectAttributes.addFlashAttribute(Constantes.HTTP_STATUS, HttpStatus.OK.value());
+			logger.info("password actualizada del usuario: {}", dto.getId());
+			return new ModelAndView(new RedirectView(BASE_URL));
+		} catch (Exception e) {
+			logger.error("Error al actualizar la password de perfil : {}", e.getMessage(), e);
+			ModelAndView mav = buildDetailsMiPerilPasswordForm(dto);
+			mav.addObject(Constantes.HTTP_STATUS, HttpStatus.INTERNAL_SERVER_ERROR.value());
+			return mav;
+		}
+	}
+	
+	private ModelAndView buildDetailsMiPerilPasswordForm(MiPerfilPasswordDTO dto) {
+		ModelAndView mav = new ModelAndView(VIEW_PASSWORD_FORM);
 		addBasicModelDetails(mav, TITLE_PAGE);
 		mav.addObject("form", dto);
 		return mav;

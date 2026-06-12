@@ -2,7 +2,7 @@ package com.gestion.deportiva.dto;
 
 
 
-import com.gestion.deportiva.validation.UsuarioCambioPasswordValid;
+import com.gestion.deportiva.validation.MiPerfilPasswordValid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -12,7 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@UsuarioCambioPasswordValid
+@MiPerfilPasswordValid
 public class MiPerfilPasswordDTO extends BaseDTO {
 
 	private static final long serialVersionUID = 4324482952546323280L;
@@ -22,10 +22,10 @@ public class MiPerfilPasswordDTO extends BaseDTO {
 	
 	@NotEmpty
 	@Size(min = 8)
-	private String passwordNuevo;
+	private String password;
 	
 	@NotEmpty
 	@Size(min = 8)
-	private String passwordNuevoRepetido;
+	private String passwordConfirmar;
 
 }

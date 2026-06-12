@@ -11,8 +11,8 @@ import com.gestion.deportiva.util.Utils;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class UsuarioCambioPasswordValidator
-		implements ConstraintValidator<UsuarioCambioPasswordValid, MiPerfilPasswordDTO> {
+public class MiPerfilPasswordValidator
+		implements ConstraintValidator<MiPerfilPasswordValid, MiPerfilPasswordDTO> {
 
 	@Autowired
 	private UsuarioRepository repository;
@@ -23,11 +23,11 @@ public class UsuarioCambioPasswordValidator
 	@Override
 	public boolean isValid(MiPerfilPasswordDTO dto, ConstraintValidatorContext context) {
 
-		if (!StringUtils.hasText(dto.getPasswordNuevo()) || !StringUtils.hasText(dto.getPasswordNuevoRepetido())
+		if (!StringUtils.hasText(dto.getPassword()) || !StringUtils.hasText(dto.getPasswordConfirmar())
 				|| !StringUtils.hasText(dto.getPasswordActual())) {
 			return false;
 		}
-		Usuario model = repository.findByActivoTrueAndUuidEqualsIgnoreCase(dto.getUuid());
+		Usuario model = repository.findByActivoTrueAndId(dto.getId());
 
 		if (!passwordEncoder.matches(dto.getPasswordActual(), model.getPassword())) {
 			context.disableDefaultConstraintViolation();
@@ -36,23 +36,23 @@ public class UsuarioCambioPasswordValidator
 			return false;
 		}
 
-		if (!dto.getPasswordNuevo().equals(dto.getPasswordNuevoRepetido())) {
+		if (!dto.getPassword().equals(dto.getPasswordConfirmar())) {
 			context.disableDefaultConstraintViolation();
 			context.buildConstraintViolationWithTemplate(
-					Utils.getMessage("error.validacion.cambio.password.nueva.coincide"))
-					.addPropertyNode("passwordNuevo").addConstraintViolation();
+					Utils.getMessage("error.validacion.cambio.password.nueva.coincide")).addPropertyNode("password")
+					.addConstraintViolation();
 			return false;
 		}
 
 		String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^A-Za-z\\d]).{8,}$";
 
-		if (!dto.getPasswordNuevo().matches(passwordRegex)) {
+		if (!dto.getPassword().matches(passwordRegex)) {
 			context.buildConstraintViolationWithTemplate(
-					Utils.getMessage("error.validacion.cambio.password.nueva.complejidad"))
-					.addPropertyNode("passwordNuevo").addConstraintViolation();
+					Utils.getMessage("error.validacion.cambio.password.nueva.complejidad")).addPropertyNode("password")
+					.addConstraintViolation();
 			return false;
 		}
 
-		return false;
+		return true;
 	}
 }

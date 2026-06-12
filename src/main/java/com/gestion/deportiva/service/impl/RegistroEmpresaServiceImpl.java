@@ -1,7 +1,6 @@
 package com.gestion.deportiva.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,13 +27,11 @@ public class RegistroEmpresaServiceImpl implements RegistroEmpresaService{
     @Autowired 
     private UsuarioRolService usuarioRolService;
     
-	@Autowired
-	private BCryptPasswordEncoder passwordEncoder;
 
     @Transactional(rollbackFor = Exception.class)
     public void registrarEmpresa(RegistroEmpresaDTO dto) {
         Long empresaId = empresaService.registrarEmpresa(dto);
-        dto.setPassword(passwordEncoder.encode(dto.getPassword()));
+        dto.setPassword(dto.getPassword());
         Long usuarioId = usuarioService.registrarUsuario(dto);
         usuarioEmpresaService.asociarUsuarioEmpresa(usuarioId, empresaId);
         usuarioRolService.asignarRol(usuarioId, Constantes.Rol.USUARIO_EMPRESA);

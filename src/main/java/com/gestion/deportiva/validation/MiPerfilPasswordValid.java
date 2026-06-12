@@ -13,11 +13,11 @@ import jakarta.validation.Payload;
 
 
 @Documented
-@Constraint(validatedBy = UsuarioCambioPasswordValidator.class)
+@Constraint(validatedBy = MiPerfilPasswordValidator.class)
 @Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface UsuarioCambioPasswordValid {
-    String message() default "{error.validacion.sede.nombre.unico}";
+public @interface MiPerfilPasswordValid {
+    String message() default "{error.validacion.cambio.password.actual}";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

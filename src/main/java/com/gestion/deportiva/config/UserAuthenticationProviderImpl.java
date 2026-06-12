@@ -20,7 +20,6 @@ public class UserAuthenticationProviderImpl implements AuthenticationProvider {
 	private UsuarioService userDetailsService;
 
 	@Autowired
-	@Qualifier("myPasswordEncoder")
 	private PasswordEncoder passwordEncoder;
 
 	@Override
@@ -35,10 +34,9 @@ public class UserAuthenticationProviderImpl implements AuthenticationProvider {
 			throw new BadCredentialsException("Invalid username or password");
 		}
 
-		/*
-		 * if (!passwordEncoder.matches(password, userDetails.getPassword())) { throw
-		 * new BadCredentialsException("Invalid username or password"); }
-		 */
+		if (!passwordEncoder.matches(password, userDetails.getPassword())) {
+			throw new BadCredentialsException("Invalid username or password");
+		}
 
 		return new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(),
 				userDetails.getAuthorities());

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head></head>
+<body>
+
+    <div th:fragment="info-tooltip (mensajeKey)" class="d-inline-block ms-1">
+        <i class="bi bi-info-circle-fill text-muted" 
+           data-bs-toggle="tooltip" 
+           data-bs-placement="top" 
+           th:title="#{${mensajeKey}}"
+           style="cursor: pointer;">
+        </i>
+    </div>
+
+</body>
+</html>
