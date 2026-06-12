@@ -45,7 +45,7 @@ public class InstalacionHorarioEspecialServiceImpl implements InstalacionHorario
 
 	@Override
 	@Transactional
-	public String guardar(InstalacionHorarioEspecialDTO dto) {
+	public Long guardar(InstalacionHorarioEspecialDTO dto) {
 		logger.info("Guardando InstalacionHorarioEspecial");
 		InstalacionHorarioEspecial model = instalacionHorarioEspecialRepository.findByActivoTrueAndUuidEqualsIgnoreCase(dto.getUuid());
 		if (model == null) {
@@ -54,7 +54,7 @@ public class InstalacionHorarioEspecialServiceImpl implements InstalacionHorario
 		}
 		model = InstalacionHorarioEspecialUtil.dtoToModel(dto, model);
 		instalacionHorarioEspecialRepository.saveAndFlush(model);
-		return model.getUuid();
+		return model.getId();
 	}
 
 	@Override

@@ -33,11 +33,9 @@ import com.gestion.deportiva.model.Permiso;
 import com.gestion.deportiva.model.Rol;
 import com.gestion.deportiva.model.RolPermiso;
 import com.gestion.deportiva.model.Usuario;
-import com.gestion.deportiva.model.UsuarioEmpresa;
 import com.gestion.deportiva.model.UsuarioRol;
 import com.gestion.deportiva.repository.UsuarioEmpresaRepository;
 import com.gestion.deportiva.repository.UsuarioRepository;
-import com.gestion.deportiva.service.UsuarioEmpresaService;
 import com.gestion.deportiva.service.UsuarioService;
 import com.gestion.deportiva.util.SecurityUtil;
 import com.gestion.deportiva.util.Utils;
@@ -76,11 +74,11 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 
 	@Override
 	@Transactional
-	public String guardar(UsuarioDTO form) {
+	public Long guardar(UsuarioDTO form) {
 		Usuario model = usuarioRepository.findByActivoTrueAndUuidEqualsIgnoreCase(form.getUuid());
 		model = usuarioMapper.dtoToModel(form, model);
 		usuarioRepository.saveAndFlush(model);
-		return model.getUuid();
+		return model.getId();
 	}
 
 	@Override

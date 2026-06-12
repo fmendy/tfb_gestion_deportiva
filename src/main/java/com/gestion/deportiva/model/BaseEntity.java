@@ -57,7 +57,7 @@ public abstract class BaseEntity implements Serializable {
 
 	@CreatedBy
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_usuario_creacion", nullable = false)
+	@JoinColumn(name = "id_usuario_creacion", nullable = false,  updatable = false)
 	private Usuario usuarioCreacion;
 
 	@LastModifiedBy

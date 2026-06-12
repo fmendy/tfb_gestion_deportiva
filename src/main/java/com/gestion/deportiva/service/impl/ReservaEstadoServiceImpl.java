@@ -51,7 +51,7 @@ public class ReservaEstadoServiceImpl implements ReservaEstadoService {
 	@Override
 	@Transactional
 	@CacheEvict(value = "comunidades", allEntries = true)
-	public String guardar(ReservaEstadoDTO dto) {
+	public Long guardar(ReservaEstadoDTO dto) {
 		logger.info("Guardando ReservaEstado");
 		ReservaEstado model = reservaEstadoRepository.findByActivoTrueAndUuidEqualsIgnoreCase(dto.getUuid());
 		if (model == null) {
@@ -60,7 +60,7 @@ public class ReservaEstadoServiceImpl implements ReservaEstadoService {
 		}
 		model = ReservaEstadoUtil.dtoToModel(dto, model);
 		reservaEstadoRepository.saveAndFlush(model);
-		return model.getUuid();
+		return model.getId();
 	}
 
 	@Override

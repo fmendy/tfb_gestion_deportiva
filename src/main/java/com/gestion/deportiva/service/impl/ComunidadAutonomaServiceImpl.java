@@ -51,7 +51,7 @@ public class ComunidadAutonomaServiceImpl implements ComunidadAutonomaService {
 	@Override
 	@Transactional
 	@CacheEvict(value = "comunidades", allEntries = true)
-	public String guardar(ComunidadAutonomaDTO dto) {
+	public Long guardar(ComunidadAutonomaDTO dto) {
 		logger.info("Guardando ComunidadAutonoma");
 		ComunidadAutonoma model = comunidadAutonomaRepository.findByActivoTrueAndUuidEqualsIgnoreCase(dto.getUuid());
 		if (model == null) {
@@ -60,7 +60,7 @@ public class ComunidadAutonomaServiceImpl implements ComunidadAutonomaService {
 		}
 		model = ComunidadAutonomaUtil.dtoToModel(dto, model);
 		comunidadAutonomaRepository.saveAndFlush(model);
-		return model.getUuid();
+		return model.getId();
 	}
 
 	@Override

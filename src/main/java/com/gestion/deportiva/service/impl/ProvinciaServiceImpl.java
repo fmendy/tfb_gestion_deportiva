@@ -55,7 +55,7 @@ public class ProvinciaServiceImpl implements ProvinciaService {
 	@Override
 	@Transactional
 	@CacheEvict(value = "provincias", allEntries = true)
-	public String guardar(ProvinciaDTO dto) {
+	public Long guardar(ProvinciaDTO dto) {
 		logger.info("Guardando Provincia");
 		Provincia model = provinciaRepository.findByActivoTrueAndUuidEqualsIgnoreCase(dto.getUuid());
 		if (model == null) {
@@ -65,7 +65,7 @@ public class ProvinciaServiceImpl implements ProvinciaService {
 		model = ProvinciaUtil.dtoToModel(dto, model,
 				comunidadAutonomaRepository.findByActivoTrueAndUuidEqualsIgnoreCase(dto.getComunidadAutonomaUuid()));
 		provinciaRepository.saveAndFlush(model);
-		return model.getUuid();
+		return model.getId();
 	}
 
 	@Override

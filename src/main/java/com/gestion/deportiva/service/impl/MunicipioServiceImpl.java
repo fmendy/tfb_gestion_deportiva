@@ -54,7 +54,7 @@ public class MunicipioServiceImpl implements MunicipioService {
 	@Override
 	@Transactional
 	@CacheEvict(value = "municipios", allEntries = true)
-	public String guardar(MunicipioDTO dto) {
+	public Long guardar(MunicipioDTO dto) {
 		logger.info("Guardando Municipio");
 		Municipio model = municipioRepository.findByActivoTrueAndUuidEqualsIgnoreCase(dto.getUuid());
 		if (model == null) {
@@ -64,7 +64,7 @@ public class MunicipioServiceImpl implements MunicipioService {
 		model = MunicipioUtil.dtoToModel(dto, model,
 				provinciaRepository.findByActivoTrueAndUuidEqualsIgnoreCase(dto.getProvinciaUuid()));
 		municipioRepository.saveAndFlush(model);
-		return model.getUuid();
+		return model.getId();
 	}
 
 	@Override

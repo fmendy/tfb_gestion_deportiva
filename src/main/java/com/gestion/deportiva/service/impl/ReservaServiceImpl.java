@@ -45,7 +45,7 @@ public class ReservaServiceImpl implements ReservaService {
 
 	@Override
 	@Transactional
-	public String guardar(ReservaDTO dto) {
+	public Long guardar(ReservaDTO dto) {
 		logger.info("Guardando Reserva");
 		Reserva model = reservaRepository.findByActivoTrueAndUuidEqualsIgnoreCase(dto.getUuid());
 		if (model == null) {
@@ -54,7 +54,7 @@ public class ReservaServiceImpl implements ReservaService {
 		}
 		model = ReservaUtil.dtoToModel(dto, model);
 		reservaRepository.saveAndFlush(model);
-		return model.getUuid();
+		return model.getId();
 	}
 
 	@Override

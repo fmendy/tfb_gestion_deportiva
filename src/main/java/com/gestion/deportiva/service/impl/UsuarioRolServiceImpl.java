@@ -52,7 +52,7 @@ public class UsuarioRolServiceImpl implements UsuarioRolService {
 	}
 
 	@Override
-	public String guardar(UsuarioRolDTO dto) {
+	public Long guardar(UsuarioRolDTO dto) {
 		logger.info("Guardando UsuarioRol");
 		UsuarioRol model = usuarioRolRepository.findByActivoTrueAndUuidEqualsIgnoreCase(dto.getUuid());
 		if (model == null) {
@@ -61,7 +61,7 @@ public class UsuarioRolServiceImpl implements UsuarioRolService {
 		dto.setRolId(rolRepository.findByActivoTrueAndUuidEqualsIgnoreCase(dto.getRolUuid()).getId());
 		dto.setUsuarioId(usuarioRepository.findByActivoTrueAndUuidEqualsIgnoreCase(dto.getUsuarioUuid()).getId());
 		model = UsuarioRolUtil.dtoToModel(dto, model);
-		return dto.getUuid();
+		return dto.getId();
 	}
 
 	@Override

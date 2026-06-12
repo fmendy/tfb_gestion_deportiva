@@ -50,7 +50,7 @@ public class SedeServiceImpl implements SedeService {
 	@Override
 	@Transactional
 	@CacheEvict(value = "sedes", allEntries = true)
-	public String guardar(SedeDTO dto) {
+	public Long guardar(SedeDTO dto) {
 		logger.info("Guardando Sede");
 		Sede model = sedeRepository.findByActivoTrueAndUuidEqualsIgnoreCase(dto.getUuid());
 		if (model == null) {
@@ -59,7 +59,7 @@ public class SedeServiceImpl implements SedeService {
 		}
 		model = SedeUtil.dtoToModel(dto, model);
 		sedeRepository.saveAndFlush(model);
-		return model.getUuid();
+		return model.getId();
 	}
 
 	@Override

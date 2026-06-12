@@ -40,7 +40,7 @@
 							<label for="cif" class="form-label fw-bold"
 								th:text="#{empresa.filter.cif}"></label>
 							<div class="input-group">
-								<span class="input-group-text"><i class="bi bi-book"></i></span>
+								<span class="input-group-text"><i class="bi bi-card-heading"></i></span>
 								<input type="text" class="form-control"
 									th:field="*{cif}"
 									th:placeholder="#{empresa.filter.cif}" />
@@ -51,7 +51,7 @@
 							<label for="isbn" class="form-label fw-bold"
 								th:text="#{empresa.filter.nombre}"></label>
 							<div class="input-group">
-								<span class="input-group-text"><i class="bi bi-postage"></i></span>
+								<span class="input-group-text"><i class="bi bi-journal-text"></i></span>
 								<input type="text" class="form-control"
 									th:field="*{nombre}"
 									th:placeholder="#{empresa.filter.nombre}" />
@@ -77,87 +77,78 @@
 
 
 
-			<!-- Tabla -->
 			<div class="table-responsive">
-				<table
-					class="table table-hover align-middle shadow-sm rounded-3 overflow-hidden">
-					<thead class="table-primary">
-						<tr>
+    <table class="table table-hover align-middle shadow-sm rounded-3 overflow-hidden">
+        <thead class="table-primary">
+            <tr>
+                <th class="text-nowrap">
+                    <span th:text="#{empresa.tabla.cif}"></span>
+                    <a class="ms-1 text-decoration-none text-muted opacity-75" th:href="${url}+'&sort=cif,ASC'" th:title="#{tabla.orden.ascendente}">
+                        <i class="bi bi-arrow-down-short"></i>
+                    </a> 
+                    <a class="text-decoration-none text-muted opacity-75" th:href="${url}+'&sort=cif,DESC'" th:title="#{tabla.orden.descendente}">
+                        <i class="bi bi-arrow-up-short"></i>
+                    </a>
+                </th>
 
+                <th class="text-nowrap">
+                    <span th:text="#{empresa.tabla.nombre}"></span> 
+                    <a class="ms-1 text-decoration-none text-muted opacity-75" th:href="${url}+'&sort=nombre,ASC'" th:title="#{tabla.orden.ascendente}">
+                        <i class="bi bi-arrow-down-short"></i>
+                    </a> 
+                    <a class="text-decoration-none text-muted opacity-75" th:href="${url}+'&sort=nombre,DESC'" th:title="#{tabla.orden.descendente}">
+                        <i class="bi bi-arrow-up-short"></i>
+                    </a>
+                </th>
 
-							<!-- Columna cif -->
-							<th class="text-nowrap"><span th:text="#{empresa.tabla.cif}"></span>
-								<a class="ms-1 text-decoration-none"
-								th:href="${url}+'&sort=cif,ASC'"
-								th:title="#{tabla.orden.ascendente}"> <i
-									class="bi bi-arrow-down-short"></i>
-							</a> <a class="text-decoration-none"
-								th:href="${url}+'&sort=cif,DESC'"
-								th:title="#{tabla.orden.descendente}"> <i
-									class="bi bi-arrow-up-short"></i>
-							</a></th>
+                <th class="text-center" style="width: 60px;"><i class="bi bi-pencil"></i></th>
+                <th class="text-center" style="width: 60px;"><i class="bi bi-trash"></i></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="element : ${page.content}">
+                <td class="fw-semibold" th:text="${element.cif}"></td>
+                <td th:text="${element.nombre}"></td>
+                
+                <td class="text-center">
+                    <a th:href="@{/privado/empresa/{id}/editar(id=${element.id})}"
+                       class="btn btn-sm btn-outline-primary rounded-circle d-inline-flex align-items-center justify-content-center"
+                       style="width: 32px; height: 32px;"
+                       th:title="#{boton.editar}"> 
+                        <i class="bi bi-pencil-square"></i>
+                    </a>
+                </td>
 
-							<!-- Columna nombre -->
-							<th class="text-nowrap"><span
-								th:text="#{empresa.tabla.nombre}"></span> <a
-								class="ms-1 text-decoration-none"
-								th:href="${url}+'&sort=nombre,ASC'"
-								th:title="#{tabla.orden.ascendente}"> <i
-									class="bi bi-arrow-down-short"></i>
-							</a> <a class="text-decoration-none"
-								th:href="${url}+'&sort=nombre,DESC'"
-								th:title="#{tabla.orden.descendente}"> <i
-									class="bi bi-arrow-up-short"></i>
-							</a></th>
+                <td class="text-center">
+                    <button type="button"
+                            class="btn btn-sm btn-outline-danger rounded-circle d-inline-flex align-items-center justify-content-center hover-scale"
+                            style="width: 32px; height: 32px;"
+                            data-bs-toggle="modal"
+                            th:attr="data-bs-target='#confirmarEliminarModal-' + ${element.id}"
+                            th:title="#{empresa.modal.boton.eliminar}">
+                        <i class="bi bi-trash"></i>
+                    </button>
 
-							<!-- Editar  -->
-							<th class="text-center"><i class="bi bi-gear"></i></th>
-
-							<!-- Eliminar  -->
-							<th class="text-center"><i class="bi bi-trash"></i></th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr th:each="element : ${page.content}">
-							<td class="fw-semibold" th:text="${element.cif}"></td>
-							<td class="fw-semibold" th:text="${element.nombre}"></td>
-							<td class="text-center"><a
-								th:href="@{/privado/empresa/{id}/editar(id=${element.id})}"
-								class="btn btn-sm btn-outline-primary rounded-circle"
-								th:title="#{boton.editar}"> <i class="bi bi-pencil-square"></i>
-							</a></td>
-
-
-							<td class="fw-semibold">
-
-								<button type="button"
-									class="btn btn-outline-danger rounded-pill shadow-sm px-4 py-2 d-flex align-items-center  hover-scale"
-									data-bs-toggle="modal"
-									th:attr="data-bs-target='#confirmarEliminarModal-' + ${element.id}">
-									<i class="bi bi-trash"></i> <span class="d-none d-md-inline"></span>
-								</button>
-
-								<div
-									th:replace="~{fragments/modals :: modalConfirmacion(
-									    'confirmarEliminarModal-' + ${element.id},
-									    #{empresa.modal.titulo.eliminar},
-									    #{empresa.modal.body.eliminar},
-									    @{/privado/empresa/{id}/eliminar(id=${element.id})},
-									    #{empresa.modal.boton.eliminar}
-									  )}">
-								</div>
-
-							</td>
-
-						</tr>
-						<tr th:if="${page.content.size() == 0}">
-							<td colspan="10" class="text-center text-muted py-4"><i
-								class="bi bi-search fs-3 d-block mb-2"></i> <span
-								th:text="#{tabla.no.se.encontraron.resultados}"> </span></td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
+                    <div th:replace="~{fragments/modals :: modalConfirmacion(
+                        'confirmarEliminarModal-' + ${element.id},
+                        #{empresa.modal.titulo.eliminar},
+                        #{empresa.modal.body.eliminar},
+                        @{/privado/empresa/{id}/eliminar(id=${element.id})},
+                        #{empresa.modal.boton.eliminar}
+                      )}">
+                    </div>
+                </td>
+            </tr>
+            
+            <tr th:if="${#lists.isEmpty(page.content)}">
+                <td colspan="4" class="text-center text-muted py-5">
+                    <i class="bi bi-search fs-2 d-block mb-2 text-secondary"></i> 
+                    <span th:text="#{tabla.no.se.encontraron.resultados}"></span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 
 			<div
 				th:replace="~{fragments/pagination :: pagination(${page}, ${url}, ${sort})}"></div>

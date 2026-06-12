@@ -45,7 +45,7 @@ public class ImagenServiceImpl implements ImagenService {
 
 	@Override
 	@Transactional
-	public String guardar(ImagenDTO dto) {
+	public Long guardar(ImagenDTO dto) {
 		logger.info("Guardando Imagen");
 		Imagen model = imagenRepository.findByActivoTrueAndUuidEqualsIgnoreCase(dto.getUuid());
 		if (model == null) {
@@ -54,7 +54,7 @@ public class ImagenServiceImpl implements ImagenService {
 		}
 		model = ImagenUtil.dtoToModel(dto, model);
 		imagenRepository.saveAndFlush(model);
-		return model.getUuid();
+		return model.getId();
 	}
 
 	@Override

@@ -45,7 +45,7 @@ public class UsuarioSedeServiceImpl implements UsuarioSedeService {
 
 	@Override
 	@Transactional
-	public String guardar(UsuarioSedeDTO dto) {
+	public Long guardar(UsuarioSedeDTO dto) {
 		logger.info("Guardando UsuarioSede");
 		UsuarioSede model = usuarioSedeRepository.findByActivoTrueAndUuidEqualsIgnoreCase(dto.getUuid());
 		if (model == null) {
@@ -54,7 +54,7 @@ public class UsuarioSedeServiceImpl implements UsuarioSedeService {
 		}
 		model = UsuarioSedeUtil.dtoToModel(dto, model);
 		usuarioSedeRepository.saveAndFlush(model);
-		return model.getUuid();
+		return model.getId();
 	}
 
 	@Override

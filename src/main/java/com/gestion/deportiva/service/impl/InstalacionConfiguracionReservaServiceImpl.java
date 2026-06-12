@@ -45,7 +45,7 @@ public class InstalacionConfiguracionReservaServiceImpl implements InstalacionCo
 
 	@Override
 	@Transactional
-	public String guardar(InstalacionConfiguracionReservaDTO dto) {
+	public Long guardar(InstalacionConfiguracionReservaDTO dto) {
 		logger.info("Guardando InstalacionConfiguracionReserva");
 		InstalacionConfiguracionReserva model = instalacionConfiguracionReservaRepository.findByActivoTrueAndUuidEqualsIgnoreCase(dto.getUuid());
 		if (model == null) {
@@ -54,7 +54,7 @@ public class InstalacionConfiguracionReservaServiceImpl implements InstalacionCo
 		}
 		model = InstalacionConfiguracionReservaUtil.dtoToModel(dto, model);
 		instalacionConfiguracionReservaRepository.saveAndFlush(model);
-		return model.getUuid();
+		return model.getId();
 	}
 
 	@Override

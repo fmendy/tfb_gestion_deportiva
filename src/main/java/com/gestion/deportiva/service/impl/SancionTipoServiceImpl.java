@@ -51,7 +51,7 @@ public class SancionTipoServiceImpl implements SancionTipoService {
 	@Override
 	@Transactional
 	@CacheEvict(value = "comunidades", allEntries = true)
-	public String guardar(SancionTipoDTO dto) {
+	public Long guardar(SancionTipoDTO dto) {
 		logger.info("Guardando SancionTipo");
 		SancionTipo model = sancionTipoRepository.findByActivoTrueAndUuidEqualsIgnoreCase(dto.getUuid());
 		if (model == null) {
@@ -60,7 +60,7 @@ public class SancionTipoServiceImpl implements SancionTipoService {
 		}
 		model = SancionTipoUtil.dtoToModel(dto, model);
 		sancionTipoRepository.saveAndFlush(model);
-		return model.getUuid();
+		return model.getId();
 	}
 
 	@Override

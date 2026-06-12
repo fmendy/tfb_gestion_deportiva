@@ -47,7 +47,7 @@ public class InstalacionServiceImpl implements InstalacionService {
 
 	@Override
 	@Transactional
-	public String guardar(InstalacionDTO dto) {
+	public Long guardar(InstalacionDTO dto) {
 		logger.info("Guardando Instalacion");
 		Instalacion model = instalacionRepository.findByActivoTrueAndUuidEqualsIgnoreCase(dto.getUuid());
 		if (model == null) {
@@ -56,7 +56,7 @@ public class InstalacionServiceImpl implements InstalacionService {
 		}
 		model = InstalacionUtil.dtoToModel(dto, model);
 		instalacionRepository.saveAndFlush(model);
-		return model.getUuid();
+		return model.getId();
 	}
 
 	@Override

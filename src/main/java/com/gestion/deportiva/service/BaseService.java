@@ -15,7 +15,7 @@ public interface BaseService<T extends BaseDTO, F extends BaseEntityFilter> {
 
 	T findByUuid(String uuid);
 
-	String guardar(T dto);
+	Long guardar(T dto);
 
 	Page<T> getPageByFilter(F filter, Pageable pageable);
 

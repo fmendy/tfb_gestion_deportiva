@@ -40,7 +40,7 @@ public class RolServiceImpl implements RolService {
 	}
 
 	@Override
-	public String guardar(RolDTO dto) {
+	public Long guardar(RolDTO dto) {
 		logger.info("Guardando rol");
 		Rol model = rolRepository.findByActivoTrueAndUuidEqualsIgnoreCase(dto.getUuid());
 		if (model == null) {
@@ -49,7 +49,7 @@ public class RolServiceImpl implements RolService {
 		}
 		model = RolUtil.dtoToModel(dto, model);
 		rolRepository.saveAndFlush(model);
-		return model.getUuid();
+		return model.getId();
 	}
 
 	@Override

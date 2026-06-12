@@ -24,7 +24,7 @@ public class EmpresaMapper {
 		retVal.setUuid(model.getUuid());
 		retVal.setEmail(model.getEmail());
 		retVal.setUrl(model.getUrl());
-		retVal.setLogo(model.getLogo());
+		retVal.setLogoUrl(model.getLogo());
 		retVal.setDescripcion(model.getDescripcion());
 		retVal.setCif(model.getCif());
 		return retVal;
@@ -53,7 +53,7 @@ public class EmpresaMapper {
 		model.setDescripcion(dto.getDescripcion());
 		model.setEmail(dto.getEmail());
 		model.setUrl(dto.getUrl());
-		model.setLogo(dto.getLogo());
+		//model.setLogo(dto.getLogo());
 		model.setCif(dto.getCif());
 		return model;
 	}

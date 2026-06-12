@@ -47,7 +47,7 @@ public class UsuarioEmpresaServiceImpl implements UsuarioEmpresaService {
 
 	@Override
 	@Transactional
-	public String guardar(UsuarioEmpresaDTO dto) {
+	public Long guardar(UsuarioEmpresaDTO dto) {
 		logger.info("Guardando UsuarioEmpresa");
 		UsuarioEmpresa model = usuarioEmpresaRepository.findByActivoTrueAndUuidEqualsIgnoreCase(dto.getUuid());
 		if (model == null) {
@@ -56,7 +56,7 @@ public class UsuarioEmpresaServiceImpl implements UsuarioEmpresaService {
 		}
 		model = UsuarioEmpresaUtil.dtoToModel(dto, model);
 		usuarioEmpresaRepository.saveAndFlush(model);
-		return model.getUuid();
+		return model.getId();
 	}
 
 	@Override

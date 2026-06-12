@@ -53,7 +53,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 
 	@Override
 	@Transactional
-	public String guardar(EmpresaDTO dto) {
+	public Long guardar(EmpresaDTO dto) {
 		logger.info("Guardando Empresa");
 		Empresa model = empresaRepository.findByActivoTrueAndUuidEqualsIgnoreCase(dto.getUuid());
 		if (model == null) {
@@ -62,7 +62,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 		}
 		model = empresaMapper.dtoToModel(dto, model);
 		empresaRepository.saveAndFlush(model);
-		return model.getUuid();
+		return model.getId();
 	}
 
 	@Override

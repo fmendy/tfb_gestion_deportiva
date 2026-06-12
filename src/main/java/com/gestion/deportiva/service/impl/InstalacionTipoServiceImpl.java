@@ -50,7 +50,7 @@ public class InstalacionTipoServiceImpl implements InstalacionTipoService {
 	@Override
 	@Transactional
 	@CacheEvict(value = "instalacionTipos", allEntries = true)
-	public String guardar(InstalacionTipoDTO dto) {
+	public Long guardar(InstalacionTipoDTO dto) {
 		logger.info("Guardando InstalacionTipo");
 		InstalacionTipo model = instalacionTipoRepository.findByActivoTrueAndUuidEqualsIgnoreCase(dto.getUuid());
 		if (model == null) {
@@ -59,7 +59,7 @@ public class InstalacionTipoServiceImpl implements InstalacionTipoService {
 		}
 		model = InstalacionTipoUtil.dtoToModel(dto, model);
 		instalacionTipoRepository.saveAndFlush(model);
-		return model.getUuid();
+		return model.getId();
 	}
 
 	@Override

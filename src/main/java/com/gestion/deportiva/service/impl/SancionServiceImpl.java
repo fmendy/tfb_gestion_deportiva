@@ -45,7 +45,7 @@ public class SancionServiceImpl implements SancionService {
 
 	@Override
 	@Transactional
-	public String guardar(SancionDTO dto) {
+	public Long guardar(SancionDTO dto) {
 		logger.info("Guardando Sancion");
 		Sancion model = sancionRepository.findByActivoTrueAndUuidEqualsIgnoreCase(dto.getUuid());
 		if (model == null) {
@@ -54,7 +54,7 @@ public class SancionServiceImpl implements SancionService {
 		}
 		model = SancionUtil.dtoToModel(dto, model);
 		sancionRepository.saveAndFlush(model);
-		return model.getUuid();
+		return model.getId();
 	}
 
 	@Override
