@@ -10,6 +10,8 @@ import org.springframework.util.StringUtils;
 
 import com.gestion.deportiva.util.SecurityUtil;
 
+import jakarta.persistence.criteria.Path;
+
 public abstract class BaseSpecifications<T> {
 
 	protected Specification<T> activoTrue() {
@@ -64,17 +66,23 @@ public abstract class BaseSpecifications<T> {
 			return null;
 		};
 	}
-	
-	protected Specification<T> fieldInLong(String field, List<Long> listLong) {
-		return (root, query, cb) -> {
-			if (listLong != null && !listLong.isEmpty()) {
-				return root.get(field).in(listLong);
-			}
-			return null;
-		};
-	}
-	
 
+	
+	protected Specification<T> fieldInLong(List<Long> listLong, String... fields) {
+	    return (root, query, cb) -> {
+	        if (listLong == null || listLong.isEmpty() || fields == null || fields.length == 0) {
+	            return null;
+	        }
+
+	        // Caminamos dinámicamente a través de los campos
+	        Path<?> path = root;
+	        for (String field : fields) {
+	            path = path.get(field);
+	        }
+
+	        return path.in(listLong);
+	    };
+	}
 
 	protected Specification<T> equalsIgnoreCase(String field, String value) {
 		return (root, query, cb) -> {
@@ -93,7 +101,7 @@ public abstract class BaseSpecifications<T> {
 			return null;
 		};
 	}
-	
+
 	protected Specification<T> greaterThanOrEqualTo(String field, LocalDate value) {
 		return (root, query, cb) -> {
 			if (value != null) {
@@ -102,7 +110,7 @@ public abstract class BaseSpecifications<T> {
 			return null;
 		};
 	}
-	
+
 	protected Specification<T> greaterThanOrEqualTo(String field, Double value) {
 		return (root, query, cb) -> {
 			if (value != null) {
@@ -147,7 +155,7 @@ public abstract class BaseSpecifications<T> {
 			return null;
 		};
 	}
-	
+
 	protected Specification<T> lessThanOrEqualTo(String field, LocalDate value) {
 		return (root, query, cb) -> {
 			if (value != null) {
@@ -156,7 +164,7 @@ public abstract class BaseSpecifications<T> {
 			return null;
 		};
 	}
-	
+
 	protected Specification<T> lessThanOrEqualTo(String field, Double value) {
 		return (root, query, cb) -> {
 			if (value != null) {
@@ -296,7 +304,7 @@ public abstract class BaseSpecifications<T> {
 			return cb.equal(root.get(field).get(field2), value);
 		};
 	}
-	
+
 	protected Specification<T> equalsFieldLong(String field, String field2, String field3, Long value) {
 		return (root, query, cb) -> {
 			return cb.equal(root.get(field).get(field2).get(field3), value);

@@ -20,6 +20,17 @@ public class SedeSpecifications extends BaseSpecifications<Sede> {
 			specs.add(new SedeSpecifications().likeIgnoreCase("nombre", filter.getNombre()));
 		}
 
+		if (filter.getEmpresaId() != null) {
+			specs.add(new SedeSpecifications().equalsFieldLong("empresa", "id", filter.getEmpresaId()));
+		}
+
+		if (!filter.getListIds().isEmpty()) {
+			specs.add(new SedeSpecifications().fieldInLong(filter.getListIds(), "id"));
+		}
+
+		if (!filter.getListEmpresaIds().isEmpty()) {
+			specs.add(new SedeSpecifications().fieldInLong(filter.getListEmpresaIds(), "empresa", "id"));
+		}
 
 		return new SedeSpecifications().combine(specs);
 	}

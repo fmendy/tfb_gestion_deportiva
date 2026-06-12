@@ -66,7 +66,25 @@ public class SedeServiceImpl implements SedeService {
 
 	@Override
 	public Page<SedeDTO> getPageByFilter(SedeFilter filter, Pageable pageable) {
-		return sedeMapper.pageToPageDTO(sedeRepository.findAll(SedeSpecifications.filter(filter), pageable));
+		return sedeMapper.pageToPageDTO(
+				sedeRepository.findAll(SedeSpecifications.filter(limitacionesPermisos(filter)), pageable));
+	}
+
+	private SedeFilter limitacionesPermisos(SedeFilter filter) {
+		if (SecurityUtil.hasAuthority(Constantes.Permiso.GESTION_GLOBAL)) {
+			return filter;
+		}
+		if (SecurityUtil.hasAuthority(Constantes.Permiso.Localizacion.GESTION_EMPRESA)) {
+			filter.setListEmpresaIds(SecurityUtil.getCurrentUserListEmpresaId());
+			return filter;
+		}
+
+		if (SecurityUtil.hasAuthority(Constantes.Permiso.Localizacion.GESTION_SEDE)) {
+			filter.setListIds(SecurityUtil.getCurrentUserListSedeId());
+		} else {
+			filter.setListIds(List.of(-1L));
+		}
+		return filter;
 	}
 
 	@Override
@@ -102,8 +120,8 @@ public class SedeServiceImpl implements SedeService {
 
 	@Override
 	public List<SedeDTO> getListDTO(SedeFilter filter) {
-		return Utils
-				.sortByNombre(sedeMapper.listModelToListDTO(sedeRepository.findAll(SedeSpecifications.filter(filter))));
+		return Utils.sortByNombre(sedeMapper
+				.listModelToListDTO(sedeRepository.findAll(SedeSpecifications.filter(limitacionesPermisos(filter)))));
 	}
 
 	@Override
