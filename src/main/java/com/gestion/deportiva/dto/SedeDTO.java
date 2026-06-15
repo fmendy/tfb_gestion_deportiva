@@ -52,6 +52,8 @@ public class SedeDTO extends MaestraDTO {
 	
 	private MultipartFile logoFile;
 	
+	private Boolean logoBorrar;
+	
 	@Size(max = 250)
 	private String url;
 	

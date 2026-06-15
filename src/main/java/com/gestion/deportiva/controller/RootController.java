@@ -8,6 +8,6 @@ public class RootController {
 
 	@GetMapping("/")
 	public String redirectToHome() {
-		return "redirect:/privado//usuario/miperfil";
+		return "redirect:/privado/usuario/miperfil";
 	}
 }

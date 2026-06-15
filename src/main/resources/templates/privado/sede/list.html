@@ -26,6 +26,13 @@
 						th:text="#{page.title.privado.sede}"></span>
 				</h5>
 
+				<a sec:authorize="hasAuthority('GESTION_EMPRESA')"
+					th:href="@{/privado/sede/crear}"
+					class="btn btn-primary rounded-3 px-4 py-2 d-flex align-items-center fw-semibold">
+					<i class="bi bi-plus-lg me-2"></i> <span
+					th:text="#{boton.crear}">Crear</span>
+				</a>
+
 			</div>
 
 			<!-- Filtro de búsqueda -->

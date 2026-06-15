@@ -37,7 +37,7 @@ import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping(value = "/privado/sede")
-@PreAuthorize("hasAuthority('" + Constantes.Permiso.Localizacion.GESTION_EMPRESA + "')")
+@PreAuthorize("hasAuthority('" + Constantes.Permiso.Localizacion.GESTION_SEDE+ "')")
 public class PrivadoSedeController extends BaseController {
 
 	private static final Logger logger = LoggerFactory.getLogger(PrivadoSedeController.class);
@@ -72,21 +72,31 @@ public class PrivadoSedeController extends BaseController {
 	}
 
 	@GetMapping("/{id}/editar")
+	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Localizacion.GESTION_SEDE + "')")
 	public ModelAndView editar(@PathVariable Long id, RedirectAttributes redirectAttributes) throws PermisoException {
 		if (!sedeService.canRead(id)) {
-			logger.error("Libro {} intentó acceder a una Sede  sin permisos: usuario {}",
+			logger.error("Sede {} intentó acceder a una Sede  sin permisos: usuario {}",
 					SecurityUtil.getCurrentUserId(), id);
 			throw new PermisoException("No tiene permisos para acceder a esta sede.");
 		}
 		return loadForm(id, redirectAttributes);
 
 	}
+	
+	@GetMapping("/crear")
+	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Localizacion.GESTION_EMPRESA + "')")
+	public ModelAndView crear(RedirectAttributes redirectAttributes)   {
+		
+		return loadForm(null, redirectAttributes);
+
+	}
 
 	@PostMapping("/guardar")
+	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Localizacion.GESTION_SEDE + "')")
 	public ModelAndView guardar(@Valid @ModelAttribute("form") SedeDTO dto, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) throws PermisoException {
 		if (!sedeService.canWrite(dto.getId())) {
-			logger.error("Libro {} intentó acceder a una Sede  sin permisos: usuario {}",
+			logger.error("Sede {} intentó acceder a una Sede  sin permisos: usuario {}",
 					SecurityUtil.getCurrentUserId(), dto.getId());
 			throw new PermisoException("No tiene permisos para acceder a esta sede.");
 		}
@@ -99,7 +109,7 @@ public class PrivadoSedeController extends BaseController {
 			redirectAttributes.addFlashAttribute(Constantes.HTTP_STATUS, HttpStatus.OK.value());
 			return new ModelAndView(new RedirectView(BASE_URL + "/" + id + "/editar"));
 		} catch (Exception e) {
-			logger.error("Error al guardar la libro : {}", e.getMessage(), e);
+			logger.error("Error al guardar la Sede : {}", e.getMessage(), e);
 			ModelAndView mav = buildDetailsForm(dto);
 			mav.addObject(Constantes.HTTP_STATUS, HttpStatus.INTERNAL_SERVER_ERROR.value());
 			return mav;
@@ -111,7 +121,7 @@ public class PrivadoSedeController extends BaseController {
 			SedeDTO dto = (id == null) ? new SedeDTO() : sedeService.findById(id);
 			return buildDetailsForm(dto);
 		} catch (Exception e) {
-			logger.error("Error al cargar formulario de libro {}: {}", id, e.getMessage(), e);
+			logger.error("Error al cargar formulario de Sede {}: {}", id, e.getMessage(), e);
 			return redirectWithError(BASE_URL, redirectAttributes, HttpStatus.INTERNAL_SERVER_ERROR.value(), null);
 		}
 	}
@@ -119,6 +129,14 @@ public class PrivadoSedeController extends BaseController {
 	private ModelAndView buildDetailsForm(SedeDTO dto) {
 		ModelAndView mav = new ModelAndView(VIEW_FORM);
 		mav.addObject("form", dto);
+		mav.addObject("listEmpresas", empresaService.getListDTO(new EmpresaFilter()));
+		mav.addObject("breadcrumbs",
+				BreadcrumbBuilder.start().includeHome().add("breadcrumb.gestion.sede", null).build());
+		mav.addObject("listComunidades", comunidadAutonomaService.getListComboDTO());
+		mav.addObject("listProvincias",
+				provinciaService.getListComboDTOByComunidadAutonomaId(dto.getComunidadAutonomaId()));
+		mav.addObject("listMunicipios", municipioService.getListComboDTOByComunidadAutonomaIdOrProvinciaId(
+				dto.getComunidadAutonomaId(), dto.getProvinciaId()));
 		mav.addObject("breadcrumbs", BreadcrumbBuilder.start().includeHome().add("breadcrumb.gestion.sede", BASE_URL)
 				.add("breadcrumb.gestion.sede.editar", null).build());
 		addBasicModelDetails(mav, TITLE_PAGE, false);

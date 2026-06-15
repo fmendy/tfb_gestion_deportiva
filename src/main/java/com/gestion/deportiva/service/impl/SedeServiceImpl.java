@@ -1,6 +1,8 @@
 package com.gestion.deportiva.service.impl;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +18,7 @@ import com.gestion.deportiva.dto.specifications.SedeSpecifications;
 import com.gestion.deportiva.mapper.SedeMapper;
 import com.gestion.deportiva.model.Sede;
 import com.gestion.deportiva.repository.SedeRepository;
+import com.gestion.deportiva.service.ImageStoreService;
 import com.gestion.deportiva.service.SedeService;
 import com.gestion.deportiva.util.Constantes;
 import com.gestion.deportiva.util.SecurityUtil;
@@ -38,6 +41,9 @@ public class SedeServiceImpl implements SedeService {
 	@Autowired
 	private SedeMapper sedeMapper;
 
+	@Autowired
+	private ImageStoreService imageStoreService;
+
 	@Override
 	public SedeDTO findById(Long id) {
 		logger.info("Buscando Sede por ID: {}", id);
@@ -58,6 +64,18 @@ public class SedeServiceImpl implements SedeService {
 		if (model == null) {
 			logger.info("Creando nuevo Sede");
 			model = new Sede();
+		}
+		if (dto.getLogoBorrar() != null && dto.getLogoBorrar()) {
+			dto.setLogo(null);
+		}
+
+		if (dto.getLogoFile() != null && !dto.getLogoFile().isEmpty()) {
+			try {
+				Map<String, String> result = imageStoreService.uploadImage(dto.getLogoFile());
+				dto.setLogo(result.get("url"));
+			} catch (IOException e) {
+				logger.error("Error al guardar el logo", e);
+			}
 		}
 		model = sedeMapper.dtoToModel(dto, model);
 		sedeRepository.saveAndFlush(model);
@@ -126,11 +144,16 @@ public class SedeServiceImpl implements SedeService {
 
 	@Override
 	public boolean canWrite(Long id) {
-		if (id == null) {
-			return false;
-		}
+
 		if (SecurityUtil.hasAuthority(Constantes.Permiso.GESTION_GLOBAL)) {
 			return true;
+		}
+
+		if (id == null && SecurityUtil.hasAuthority(Constantes.Permiso.Localizacion.GESTION_EMPRESA)) {
+			return true;
+		}
+		if (id == null) {
+			return false;
 		}
 		if (SecurityUtil.hasAuthority(Constantes.Permiso.Localizacion.GESTION_EMPRESA)) {
 			Sede sede = sedeRepository.findByActivoTrueAndId(id);

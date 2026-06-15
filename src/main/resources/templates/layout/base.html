@@ -103,16 +103,7 @@
 			loader.classList.add("hidden");
 		});
 		
-		  fetch("/privado/trayecto/solicitud/pendientes/contar")
-	        .then(r => r.json())
-	        .then(count => {
-	            const badge = document.getElementById("badgePendientes");
-	            if (count > 0) {
-	                badge.style.display = "inline-block";
-	                badge.innerText = count;
-	            }
-	        });
-		
+
 		
 	</script>
 

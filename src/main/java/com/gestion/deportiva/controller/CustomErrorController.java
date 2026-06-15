@@ -20,7 +20,7 @@ public class CustomErrorController implements ErrorController {
 			}
 		}
 
-		return "redirect:/privado//usuario/miperfil";
+		return "redirect:/privado/usuario/miperfil";
 	}
 
 }
