@@ -16,11 +16,11 @@ public class ReservaSpecifications extends BaseSpecifications<Reserva> {
 		specs.add(new ReservaSpecifications().activoTrue());
 
 		if (filter.getSedeId() != null) {
-			specs.add(new ReservaSpecifications().equalsFieldLong("instalacion", "sede", "id", filter.getSedeId()));
+			specs.add(new ReservaSpecifications().equalsFieldLong(filter.getSedeId(), "instalacion", "sede", "id"));
 		}
 
 		if (filter.getInstalacionId() != null) {
-			specs.add(new ReservaSpecifications().equalsFieldLong("instalacion", "id", filter.getInstalacionId()));
+			specs.add(new ReservaSpecifications().equalsFieldLong(filter.getInstalacionId(), "instalacion", "id"));
 		}
 
 		if (filter.getFechaDesde() != null) {
@@ -32,12 +32,12 @@ public class ReservaSpecifications extends BaseSpecifications<Reserva> {
 		}
 
 		if (filter.getReservaEstadoId() != null) {
-			specs.add(new ReservaSpecifications().equalsFieldLong("reservaEstado", "id", filter.getReservaEstadoId()));
+			specs.add(new ReservaSpecifications().equalsFieldLong(filter.getReservaEstadoId(), "reservaEstado", "id"));
 		}
 
 		if (filter.getUsuarioCreacionId() != null) {
-			specs.add(new ReservaSpecifications().equalsFieldLong("usuarioCreacion", "id",
-					filter.getUsuarioCreacionId()));
+			specs.add(new ReservaSpecifications().equalsFieldLong(
+					filter.getUsuarioCreacionId(),"usuarioCreacion", "id"));
 		}
 
 		return new ReservaSpecifications().combine(specs);

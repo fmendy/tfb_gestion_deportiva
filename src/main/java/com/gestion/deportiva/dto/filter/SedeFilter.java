@@ -18,5 +18,11 @@ public class SedeFilter extends MaestraFilter {
 	private Long empresaId;
 	
 	private List<Long> listEmpresaIds;
+	
+	private Long comunidadAutonomaId;
+	
+	private Long provinciaId;
+	
+	private Long municipioId;
 
 }

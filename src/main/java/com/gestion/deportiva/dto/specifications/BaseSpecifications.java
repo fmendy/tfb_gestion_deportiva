@@ -67,21 +67,20 @@ public abstract class BaseSpecifications<T> {
 		};
 	}
 
-	
 	protected Specification<T> fieldInLong(List<Long> listLong, String... fields) {
-	    return (root, query, cb) -> {
-	        if (listLong == null || listLong.isEmpty() || fields == null || fields.length == 0) {
-	            return null;
-	        }
+		return (root, query, cb) -> {
+			if (listLong == null || listLong.isEmpty() || fields == null || fields.length == 0) {
+				return null;
+			}
 
-	        // Caminamos dinámicamente a través de los campos
-	        Path<?> path = root;
-	        for (String field : fields) {
-	            path = path.get(field);
-	        }
+			// Caminamos dinámicamente a través de los campos
+			Path<?> path = root;
+			for (String field : fields) {
+				path = path.get(field);
+			}
 
-	        return path.in(listLong);
-	    };
+			return path.in(listLong);
+		};
 	}
 
 	protected Specification<T> equalsIgnoreCase(String field, String value) {
@@ -293,21 +292,17 @@ public abstract class BaseSpecifications<T> {
 		};
 	}
 
-	protected Specification<T> equalsFieldLong(String field, Long value) {
+	protected Specification<T> equalsFieldLong(Long value, String... fields) {
 		return (root, query, cb) -> {
-			return cb.equal(root.get(field), value);
-		};
-	}
+			// Obtenemos el path inicial empezando por el primer campo
+			Path<Object> path = root.get(fields[0]);
 
-	protected Specification<T> equalsFieldLong(String field, String field2, Long value) {
-		return (root, query, cb) -> {
-			return cb.equal(root.get(field).get(field2), value);
-		};
-	}
+			// Iteramos sobre los campos restantes para ir haciendo "get" encadenados
+			for (int i = 1; i < fields.length; i++) {
+				path = path.get(fields[i]);
+			}
 
-	protected Specification<T> equalsFieldLong(String field, String field2, String field3, Long value) {
-		return (root, query, cb) -> {
-			return cb.equal(root.get(field).get(field2).get(field3), value);
+			return cb.equal(path, value);
 		};
 	}
 

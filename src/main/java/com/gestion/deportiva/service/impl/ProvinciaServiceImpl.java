@@ -10,7 +10,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import com.gestion.deportiva.dto.ComboDTO;
 import com.gestion.deportiva.dto.ProvinciaDTO;
@@ -104,11 +103,13 @@ public class ProvinciaServiceImpl implements ProvinciaService {
 	}
 
 	@Override
-	public List<ComboDTO> getListComboDTOByComunidadAutonomaUuid(String comunidadAutonomaUuid) {
-		return StringUtils.hasText(comunidadAutonomaUuid)
-				? ProvinciaUtil.listModelToListComboDTO(
-						provinciaRepository.findByActivoTrueAndComunidadAutonoma_Uuid(comunidadAutonomaUuid))
-				: getListComboDTO();
+	public List<ComboDTO> getListComboDTOByComunidadAutonomaId(Long comunidadAutonomaId) {
+		if (comunidadAutonomaId == null) {
+			return getListComboDTO();
+		} else {
+			return ProvinciaUtil.listModelToListComboDTO(
+					provinciaRepository.findByActivoTrueAndComunidadAutonomaId(comunidadAutonomaId));
+		}
 	}
 
 	@Override

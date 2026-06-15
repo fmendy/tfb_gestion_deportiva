@@ -16,13 +16,13 @@ public class InstalacionConfiguracionReservaSpecifications extends BaseSpecifica
 		specs.add(new InstalacionConfiguracionReservaSpecifications().activoTrue());
 
 		if (filter.getSedeId() != null) {
-			specs.add(new InstalacionConfiguracionReservaSpecifications().equalsFieldLong("instalacion", "sede", "id",
-					filter.getSedeId()));
+			specs.add(new InstalacionConfiguracionReservaSpecifications().equalsFieldLong(filter.getSedeId(),
+					"instalacion", "sede", "id"));
 		}
 
 		if (filter.getInstalacionId() != null) {
-			specs.add(new InstalacionConfiguracionReservaSpecifications().equalsFieldLong("instalacion", "id",
-					filter.getInstalacionId()));
+			specs.add(new InstalacionConfiguracionReservaSpecifications().equalsFieldLong(filter.getInstalacionId(),
+					"id", "instalacion"));
 		}
 
 		return new InstalacionConfiguracionReservaSpecifications().combine(specs);

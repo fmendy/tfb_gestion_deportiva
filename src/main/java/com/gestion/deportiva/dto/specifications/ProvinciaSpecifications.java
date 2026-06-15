@@ -24,7 +24,7 @@ public class ProvinciaSpecifications extends BaseSpecifications<Provincia> {
 					filter.getComunidadAutonomaUuid()));
 		}
 		if (filter.getCodigoIne() != null) {
-			specs.add(new ProvinciaSpecifications().equalsFieldLong("codigoIne", filter.getCodigoIne()));
+			specs.add(new ProvinciaSpecifications().equalsFieldLong( filter.getCodigoIne(),"codigoIne"));
 		}
 
 		return new ProvinciaSpecifications().combine(specs);

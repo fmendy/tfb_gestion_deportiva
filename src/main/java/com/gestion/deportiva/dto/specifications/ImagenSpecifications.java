@@ -16,15 +16,15 @@ public class ImagenSpecifications extends BaseSpecifications<Imagen> {
 		specs.add(new ImagenSpecifications().activoTrue());
 
 		if (filter.getEmpresaId() != null) {
-			specs.add(new ImagenSpecifications().equalsFieldLong("empresaId", filter.getEmpresaId()));
+			specs.add(new ImagenSpecifications().equalsFieldLong( filter.getEmpresaId(),"empresaId"));
 		}
 		
 		if (filter.getSedeId() != null) {
-			specs.add(new ImagenSpecifications().equalsFieldLong("sedeId", filter.getSedeId()));
+			specs.add(new ImagenSpecifications().equalsFieldLong( filter.getSedeId(),"sedeId"));
 		}
 		
 		if (filter.getInstalacionId() != null) {
-			specs.add(new ImagenSpecifications().equalsFieldLong("instalacionId", filter.getInstalacionId()));
+			specs.add(new ImagenSpecifications().equalsFieldLong( filter.getInstalacionId(),"instalacionId"));
 		}
 		
 		return new ImagenSpecifications().combine(specs);

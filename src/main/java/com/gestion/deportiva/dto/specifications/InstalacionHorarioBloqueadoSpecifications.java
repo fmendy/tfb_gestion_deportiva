@@ -16,24 +16,24 @@ public class InstalacionHorarioBloqueadoSpecifications extends BaseSpecification
 		specs.add(new InstalacionHorarioBloqueadoSpecifications().activoTrue());
 
 		if (filter.getSedeId() != null) {
-			specs.add(new InstalacionHorarioBloqueadoSpecifications().equalsFieldLong("instalacion", "sede", "id",
-					filter.getSedeId()));
+			specs.add(new InstalacionHorarioBloqueadoSpecifications().equalsFieldLong(filter.getSedeId(), "instalacion",
+					"sede", "id"));
 		}
 
 		if (filter.getInstalacionId() != null) {
-			specs.add(new InstalacionHorarioBloqueadoSpecifications().equalsFieldLong("instalacion", "id",
-					filter.getInstalacionId()));
+			specs.add(new InstalacionHorarioBloqueadoSpecifications().equalsFieldLong(filter.getInstalacionId(),
+					"instalacion", "id"));
 		}
 
 		if (filter.getFechaDesde() != null) {
-			specs.add(new InstalacionHorarioBloqueadoSpecifications().greaterThanOrEqualTo("fecha", filter.getFechaDesde()));
+			specs.add(new InstalacionHorarioBloqueadoSpecifications().greaterThanOrEqualTo("fecha",
+					filter.getFechaDesde()));
 		}
-		
+
 		if (filter.getFechaHasta() != null) {
-			specs.add(new InstalacionHorarioBloqueadoSpecifications().greaterThanOrEqualTo("fecha", filter.getFechaHasta()));
+			specs.add(new InstalacionHorarioBloqueadoSpecifications().greaterThanOrEqualTo("fecha",
+					filter.getFechaHasta()));
 		}
-		
-		
 
 		return new InstalacionHorarioBloqueadoSpecifications().combine(specs);
 	}

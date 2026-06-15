@@ -16,18 +16,18 @@ public class UsuarioInstalacionSpecifications extends BaseSpecifications<Usuario
 		specs.add(new UsuarioInstalacionSpecifications().activoTrue());
 
 		if (filter.getSedeId() != null) {
-			specs.add(new UsuarioInstalacionSpecifications().equalsFieldLong("instalacion", "sede", "id",
-					filter.getSedeId()));
+			specs.add(new UsuarioInstalacionSpecifications().equalsFieldLong(
+					filter.getSedeId(),"instalacion", "sede", "id"));
 		}
 
 		if (filter.getInstalacionId() != null) {
-			specs.add(new UsuarioInstalacionSpecifications().equalsFieldLong("instalacion", "id",
-					filter.getInstalacionId()));
+			specs.add(new UsuarioInstalacionSpecifications().equalsFieldLong(
+					filter.getInstalacionId(),"instalacion", "id"));
 		}
 
 		if (filter.getUsuarioId() != null) {
-			specs.add(new UsuarioInstalacionSpecifications().equalsFieldLong("usuario", "id",
-					filter.getUsuarioId()));
+			specs.add(new UsuarioInstalacionSpecifications().equalsFieldLong(
+					filter.getUsuarioId(),"usuario", "id"));
 		}	
 
 		return new UsuarioInstalacionSpecifications().combine(specs);

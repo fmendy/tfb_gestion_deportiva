@@ -8,5 +8,5 @@ import com.gestion.deportiva.dto.filter.ProvinciaFilter;
 
 public interface ProvinciaService extends MaestraService<ProvinciaDTO, ProvinciaFilter> {
 	
-	List<ComboDTO> getListComboDTOByComunidadAutonomaUuid(String comunidadAutonomaUuid);
+	List<ComboDTO> getListComboDTOByComunidadAutonomaId(Long comunidadAutonomaId);
 }

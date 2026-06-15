@@ -16,11 +16,11 @@ public class UsuarioEmpresaSpecifications extends BaseSpecifications<UsuarioEmpr
 		specs.add(new UsuarioEmpresaSpecifications().activoTrue());
 
 		if (filter.getEmpresaId() != null) {
-			specs.add(new UsuarioEmpresaSpecifications().equalsFieldLong("empresa", "id", filter.getEmpresaId()));
+			specs.add(new UsuarioEmpresaSpecifications().equalsFieldLong( filter.getEmpresaId(),"empresa", "id"));
 		}
 
 		if (filter.getUsuarioId() != null) {
-			specs.add(new UsuarioEmpresaSpecifications().equalsFieldLong("usuario", "id", filter.getUsuarioId()));
+			specs.add(new UsuarioEmpresaSpecifications().equalsFieldLong( filter.getUsuarioId(),"usuario", "id"));
 		}
 
 		return new UsuarioEmpresaSpecifications().combine(specs);

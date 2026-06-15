@@ -21,12 +21,12 @@ public class InstalacionSpecifications extends BaseSpecifications<Instalacion> {
 		}
 
 		if (filter.getInstalacionTipoId() != null) {
-			specs.add(new InstalacionSpecifications().equalsFieldLong("instalacionTipoId",
-					filter.getInstalacionTipoId()));
+			specs.add(new InstalacionSpecifications().equalsFieldLong(filter.getInstalacionTipoId(),
+					"instalacionTipoId"));
 		}
 
 		if (filter.getSedeId() != null) {
-			specs.add(new InstalacionSpecifications().equalsFieldLong("sedeId", filter.getSedeId()));
+			specs.add(new InstalacionSpecifications().equalsFieldLong(filter.getSedeId(), "sedeId"));
 		}
 
 		return new InstalacionSpecifications().combine(specs);

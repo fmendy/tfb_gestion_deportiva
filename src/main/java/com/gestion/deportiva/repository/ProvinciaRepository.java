@@ -12,5 +12,5 @@ public interface ProvinciaRepository extends MaestraRepository<Provincia, Long> 
 
 	Provincia findByActivoTrueAndCodigoIne(Long codigoIne);
 	
-	List<Provincia> findByActivoTrueAndComunidadAutonoma_Uuid(String comunidadAutonomaUuid);
+	List<Provincia> findByActivoTrueAndComunidadAutonomaId(Long comunidadAutonomaId);
 }

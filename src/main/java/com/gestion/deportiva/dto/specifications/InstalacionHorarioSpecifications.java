@@ -16,17 +16,17 @@ public class InstalacionHorarioSpecifications extends BaseSpecifications<Instala
 		specs.add(new InstalacionHorarioSpecifications().activoTrue());
 
 		if (filter.getSedeId() != null) {
-			specs.add(new InstalacionHorarioSpecifications().equalsFieldLong("instalacion", "sede", "id",
-					filter.getSedeId()));
+			specs.add(new InstalacionHorarioSpecifications().equalsFieldLong(
+					filter.getSedeId(),"instalacion", "sede", "id"));
 		}
 
 		if (filter.getInstalacionId() != null) {
-			specs.add(new InstalacionHorarioSpecifications().equalsFieldLong("instalacion", "id",
-					filter.getInstalacionId()));
+			specs.add(new InstalacionHorarioSpecifications().equalsFieldLong(
+					filter.getInstalacionId(),"instalacion", "id"));
 		}
 
 		if (filter.getDiaSemana() != null) {
-			specs.add(new InstalacionHorarioSpecifications().equalsFieldLong("diaSemana", filter.getDiaSemana()));
+			specs.add(new InstalacionHorarioSpecifications().equalsFieldLong( filter.getDiaSemana(),"diaSemana"));
 		}
 
 		return new InstalacionHorarioSpecifications().combine(specs);

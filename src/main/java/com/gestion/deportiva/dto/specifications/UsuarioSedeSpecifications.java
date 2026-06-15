@@ -16,19 +16,16 @@ public class UsuarioSedeSpecifications extends BaseSpecifications<UsuarioSede> {
 		specs.add(new UsuarioSedeSpecifications().activoTrue());
 
 		if (filter.getEmpresaId() != null) {
-			specs.add(new UsuarioSedeSpecifications().equalsFieldLong("sede", "empresa", "id",
-					filter.getEmpresaId()));
+			specs.add(new UsuarioSedeSpecifications().equalsFieldLong(filter.getEmpresaId(), "sede", "empresa", "id"));
 		}
 
 		if (filter.getSedeId() != null) {
-			specs.add(new UsuarioSedeSpecifications().equalsFieldLong("sede", "id",
-					filter.getSedeId()));
+			specs.add(new UsuarioSedeSpecifications().equalsFieldLong(filter.getSedeId(), "sede", "id"));
 		}
 
 		if (filter.getUsuarioId() != null) {
-			specs.add(new UsuarioSedeSpecifications().equalsFieldLong("usuario", "id",
-					filter.getUsuarioId()));
-		}	
+			specs.add(new UsuarioSedeSpecifications().equalsFieldLong(filter.getUsuarioId(), "usuario", "id"));
+		}
 
 		return new UsuarioSedeSpecifications().combine(specs);
 	}

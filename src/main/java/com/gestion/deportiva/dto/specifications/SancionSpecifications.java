@@ -16,15 +16,15 @@ public class SancionSpecifications extends BaseSpecifications<Sancion> {
 		specs.add(new SancionSpecifications().activoTrue());
 
 		if (filter.getEmpresaId() != null) {
-			specs.add(new SancionSpecifications().equalsFieldLong("empresa", "id", filter.getEmpresaId()));
+			specs.add(new SancionSpecifications().equalsFieldLong( filter.getEmpresaId(),"empresa", "id"));
 		}
 
 		if (filter.getUsuarioId() != null) {
-			specs.add(new SancionSpecifications().equalsFieldLong("usuario", "id", filter.getUsuarioId()));
+			specs.add(new SancionSpecifications().equalsFieldLong( filter.getUsuarioId(),"usuario", "id"));
 		}
 
 		if (filter.getSancionTipoId() != null) {
-			specs.add(new SancionSpecifications().equalsFieldLong("sancionTipo", "id", filter.getSancionTipoId()));
+			specs.add(new SancionSpecifications().equalsFieldLong( filter.getSancionTipoId(),"sancionTipo", "id"));
 		}
 
 		return new SancionSpecifications().combine(specs);

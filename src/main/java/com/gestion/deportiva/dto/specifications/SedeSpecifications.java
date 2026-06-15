@@ -21,10 +21,24 @@ public class SedeSpecifications extends BaseSpecifications<Sede> {
 		}
 
 		if (filter.getEmpresaId() != null) {
-			specs.add(new SedeSpecifications().equalsFieldLong("empresa", "id", filter.getEmpresaId()));
+			specs.add(new SedeSpecifications().equalsFieldLong(filter.getEmpresaId(), "empresa", "id"));
 		}
 
-		if (!filter.getListIds().isEmpty()) {
+		if (filter.getMunicipioId() != null) {
+			specs.add(new SedeSpecifications().equalsFieldLong(filter.getMunicipioId(), "municipio", "id"));
+		}
+
+		if (filter.getProvinciaId() != null) {
+			specs.add(
+					new SedeSpecifications().equalsFieldLong(filter.getProvinciaId(), "municipio", "provincia", "id"));
+		}
+
+		if (filter.getComunidadAutonomaId() != null) {
+			specs.add(new SedeSpecifications().equalsFieldLong(filter.getComunidadAutonomaId(), "municipio",
+					"provincia", "comunidadAutonoma", "id"));
+		}
+
+		if (filter.getListIds() != null && !filter.getListIds().isEmpty()) {
 			specs.add(new SedeSpecifications().fieldInLong(filter.getListIds(), "id"));
 		}
 
