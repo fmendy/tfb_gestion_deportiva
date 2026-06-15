@@ -13,10 +13,10 @@ import com.gestion.deportiva.dto.ComboDTO;
 import com.gestion.deportiva.dto.InstalacionDTO;
 import com.gestion.deportiva.dto.filter.InstalacionFilter;
 import com.gestion.deportiva.dto.specifications.InstalacionSpecifications;
+import com.gestion.deportiva.mapper.InstalacionMapper;
 import com.gestion.deportiva.model.Instalacion;
 import com.gestion.deportiva.repository.InstalacionRepository;
 import com.gestion.deportiva.service.InstalacionService;
-import com.gestion.deportiva.util.InstalacionUtil;
 import com.gestion.deportiva.util.Utils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -33,16 +33,19 @@ public class InstalacionServiceImpl implements InstalacionService {
 	@PersistenceContext
 	private EntityManager entityManager;
 
+	@Autowired
+	private InstalacionMapper instalacionMapper;
+
 	@Override
 	public InstalacionDTO findById(Long id) {
 		logger.info("Buscando Instalacion por ID: {}", id);
-		return InstalacionUtil.modelToDTO(instalacionRepository.findByActivoTrueAndId(id));
+		return instalacionMapper.modelToDTO(instalacionRepository.findByActivoTrueAndId(id));
 	}
 
 	@Override
 	public InstalacionDTO findByUuid(String uuid) {
 		logger.info("Buscando Instalacion por UUID: {}", uuid);
-		return InstalacionUtil.modelToDTO(instalacionRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid));
+		return instalacionMapper.modelToDTO(instalacionRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid));
 	}
 
 	@Override
@@ -54,14 +57,14 @@ public class InstalacionServiceImpl implements InstalacionService {
 			logger.info("Creando nuevo Instalacion");
 			model = new Instalacion();
 		}
-		model = InstalacionUtil.dtoToModel(dto, model);
+		model = instalacionMapper.dtoToModel(dto, model);
 		instalacionRepository.saveAndFlush(model);
 		return model.getId();
 	}
 
 	@Override
 	public Page<InstalacionDTO> getPageByFilter(InstalacionFilter filter, Pageable pageable) {
-		return InstalacionUtil
+		return instalacionMapper
 				.pageToPageDTO(instalacionRepository.findAll(InstalacionSpecifications.filter(filter), pageable));
 	}
 
@@ -83,22 +86,22 @@ public class InstalacionServiceImpl implements InstalacionService {
 
 	@Override
 	public InstalacionDTO findByNombreEqualsIgnoreCase(String nombre) {
-		return InstalacionUtil.modelToDTO(instalacionRepository.findByActivoTrueAndNombreEqualsIgnoreCase(nombre));
+		return instalacionMapper.modelToDTO(instalacionRepository.findByActivoTrueAndNombreEqualsIgnoreCase(nombre));
 	}
 
 	@Override
 	public List<ComboDTO> getListComboDTO() {
-		return InstalacionUtil.listModelToListComboDTO(instalacionRepository.findByActivoTrue());
+		return instalacionMapper.listModelToListComboDTO(instalacionRepository.findByActivoTrue());
 	}
 
 	@Override
 	public List<InstalacionDTO> getListDTO() {
-		return Utils.sortByNombre(InstalacionUtil.listModelToListDTO(instalacionRepository.findByActivoTrue()));
+		return Utils.sortByNombre(instalacionMapper.listModelToListDTO(instalacionRepository.findByActivoTrue()));
 	}
 
 	@Override
 	public List<InstalacionDTO> getListDTO(InstalacionFilter filter) {
-		return Utils.sortByNombre(InstalacionUtil
+		return Utils.sortByNombre(instalacionMapper
 				.listModelToListDTO(instalacionRepository.findAll(InstalacionSpecifications.filter(filter))));
 	}
 

@@ -13,6 +13,10 @@ public class InstalacionDTO extends MaestraDTO {
 
 	private static final long serialVersionUID = 2548795909988123347L;
 
+	private String empresaNombre;
+
+	private Long empresaId;
+
 	private String sedeNombre;
 
 	@NotNull
