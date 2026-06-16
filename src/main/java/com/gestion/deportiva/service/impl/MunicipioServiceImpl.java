@@ -130,17 +130,17 @@ public class MunicipioServiceImpl implements MunicipioService {
 	}
 
 	@Override
-	public List<ComboDTO> getListComboDTOByComunidadAutonomaIdOrProvinciaId(Long comunidadAutonomaId,
+	public List<MunicipioDTO> getListDTOByComunidadAutonomaIdOrProvinciaId(Long comunidadAutonomaId,
 			Long provinciaId) {
 		if (provinciaId != null) {
 			return MunicipioUtil
-					.listModelToListComboDTO(municipioRepository.findByActivoTrueAndProvinciaId(provinciaId));
+					.listModelToListDTO(municipioRepository.findByActivoTrueAndProvinciaId(provinciaId));
 		}
 		if (comunidadAutonomaId != null) {
-			return MunicipioUtil.listModelToListComboDTO(
+			return MunicipioUtil.listModelToListDTO(
 					municipioRepository.findByActivoTrueAndProvinciaComunidadAutonomaId(comunidadAutonomaId));
 		}
-		return getListComboDTO();
+		return getListDTO();
 	}
 
 }

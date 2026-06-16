@@ -37,7 +37,7 @@ import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping(value = "/privado/sede")
-@PreAuthorize("hasAuthority('" + Constantes.Permiso.Localizacion.GESTION_SEDE+ "')")
+@PreAuthorize("hasAuthority('" + Constantes.Permiso.Localizacion.GESTION_SEDE + "')")
 public class PrivadoSedeController extends BaseController {
 
 	private static final Logger logger = LoggerFactory.getLogger(PrivadoSedeController.class);
@@ -82,11 +82,11 @@ public class PrivadoSedeController extends BaseController {
 		return loadForm(id, redirectAttributes);
 
 	}
-	
+
 	@GetMapping("/crear")
 	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Localizacion.GESTION_EMPRESA + "')")
-	public ModelAndView crear(RedirectAttributes redirectAttributes)   {
-		
+	public ModelAndView crear(RedirectAttributes redirectAttributes) {
+
 		return loadForm(null, redirectAttributes);
 
 	}
@@ -132,11 +132,10 @@ public class PrivadoSedeController extends BaseController {
 		mav.addObject("listEmpresas", empresaService.getListDTO(new EmpresaFilter()));
 		mav.addObject("breadcrumbs",
 				BreadcrumbBuilder.start().includeHome().add("breadcrumb.gestion.sede", null).build());
-		mav.addObject("listComunidades", comunidadAutonomaService.getListComboDTO());
-		mav.addObject("listProvincias",
-				provinciaService.getListComboDTOByComunidadAutonomaId(dto.getComunidadAutonomaId()));
-		mav.addObject("listMunicipios", municipioService.getListComboDTOByComunidadAutonomaIdOrProvinciaId(
-				dto.getComunidadAutonomaId(), dto.getProvinciaId()));
+		mav.addObject("listComunidades", comunidadAutonomaService.getListDTO());
+		mav.addObject("listProvincias", provinciaService.getListDTOByComunidadAutonomaId(dto.getComunidadAutonomaId()));
+		mav.addObject("listMunicipios", municipioService
+				.getListDTOByComunidadAutonomaIdOrProvinciaId(dto.getComunidadAutonomaId(), dto.getProvinciaId()));
 		mav.addObject("breadcrumbs", BreadcrumbBuilder.start().includeHome().add("breadcrumb.gestion.sede", BASE_URL)
 				.add("breadcrumb.gestion.sede.editar", null).build());
 		addBasicModelDetails(mav, TITLE_PAGE, false);
@@ -151,10 +150,10 @@ public class PrivadoSedeController extends BaseController {
 		mav.addObject("url", SedeUtil.cleanUrlPageFilter(filter, request.getRequestURI()));
 		mav.addObject("breadcrumbs",
 				BreadcrumbBuilder.start().includeHome().add("breadcrumb.gestion.sede", null).build());
-		mav.addObject("listComunidades", comunidadAutonomaService.getListComboDTO());
+		mav.addObject("listComunidades", comunidadAutonomaService.getListDTO());
 		mav.addObject("listProvincias",
-				provinciaService.getListComboDTOByComunidadAutonomaId(filter.getComunidadAutonomaId()));
-		mav.addObject("listMunicipios", municipioService.getListComboDTOByComunidadAutonomaIdOrProvinciaId(
+				provinciaService.getListDTOByComunidadAutonomaId(filter.getComunidadAutonomaId()));
+		mav.addObject("listMunicipios", municipioService.getListDTOByComunidadAutonomaIdOrProvinciaId(
 				filter.getComunidadAutonomaId(), filter.getProvinciaId()));
 
 		addSortParameter(mav, pageable);

@@ -18,8 +18,8 @@ async function cargarDatos(id, url, targetId, tipo = null) {
 
 	data.forEach(item => {
 		const option = document.createElement('option');
-		option.value = item.key;
-		option.text = item.value;
+		option.value = item.id;
+		option.text = item.nombre;
 		targetSelect.appendChild(option);
 	});
 }

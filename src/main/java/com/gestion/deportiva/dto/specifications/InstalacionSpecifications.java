@@ -26,7 +26,7 @@ public class InstalacionSpecifications extends BaseSpecifications<Instalacion> {
 		}
 
 		if (filter.getSedeId() != null) {
-			specs.add(new InstalacionSpecifications().equalsFieldLong(filter.getSedeId(), "sedeId"));
+			specs.add(new InstalacionSpecifications().equalsFieldLong(filter.getSedeId(), "sede", "id"));
 		}
 
 		return new InstalacionSpecifications().combine(specs);

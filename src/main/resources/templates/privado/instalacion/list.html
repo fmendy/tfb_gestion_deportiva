@@ -42,34 +42,27 @@
 
 
 
+
 						<div class="col-md-4">
 							<label for="empresaId" class="form-label fw-bold"
-								th:text="#{instalacion.filter.empresa}"></label>
-							<div class="input-group">
-								<span class="input-group-text"><i
-									class="bi bi-card-heading"></i></span> <select class="form-select"
-									th:field="*{empresaId}">
-									<option value="">Seleccione...</option>
-									<option th:each="empresa : ${listEmpresas}"
-										th:value="${empresa.id}" th:text="${empresa.nombre}">Nombre
-										Empresa</option>
-								</select>
-							</div>
+								th:text="#{instalacion.filter.empresa}"></label> <select
+								id="selectEmpresa" class="form-select" th:field="*{empresaId}"
+								onchange="cargarDatos(this.value, '/api/sede/list/instalacion', 'selectSede');">
+								<option value="">Seleccione...</option>
+								<option th:each="c : ${listEmpresas}" th:value="${c.id}"
+									th:text="${c.nombre}"></option>
+							</select>
 						</div>
 
 						<div class="col-md-4">
-							<label for="sedeId" class="form-label fw-bold"
-								th:text="#{instalacion.filter.sede}"></label>
-							<div class="input-group">
-								<span class="input-group-text"><i
-									class="bi bi-card-heading"></i></span> <select class="form-select"
-									th:field="*{sedeId}">
-									<option value="">Seleccione...</option>
-									<option th:each="sede : ${listSede}" th:value="${sede.id}"
-										th:text="${sede.nombre}"></option>
-								</select>
-							</div>
+							<label class="form-label fw-bold">Sede</label> <select
+								id="selectSede" class="form-select" th:field="*{sedeId}">
+								<option value="">Seleccione...</option>
+								<option th:each="p : ${listSedes}" th:value="${p.id}"
+									th:text="${p.nombre}"></option>
+							</select>
 						</div>
+
 
 						<div class="col-md-4">
 							<label for="instalacionTipoId" class="form-label fw-bold"
@@ -78,7 +71,6 @@
 								<span class="input-group-text"><i
 									class="bi bi-card-heading"></i></span> <select class="form-select"
 									th:field="*{instalacionTipoId}">
-									<option value="">Seleccione...</option>
 									<option th:each="instalacion : ${listInstalacionTipo}"
 										th:value="${instalacion.id}" th:text="${instalacion.nombre}"></option>
 								</select>

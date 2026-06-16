@@ -19,16 +19,18 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import com.gestion.deportiva.controller.BaseController;
 import com.gestion.deportiva.dto.InstalacionDTO;
+import com.gestion.deportiva.dto.InstalacionTipoDTO;
 import com.gestion.deportiva.dto.filter.InstalacionFilter;
-import com.gestion.deportiva.dto.filter.SedeFilter;
 import com.gestion.deportiva.exception.PermisoException;
 import com.gestion.deportiva.service.SedeService;
+import com.gestion.deportiva.service.EmpresaService;
 import com.gestion.deportiva.service.InstalacionService;
 import com.gestion.deportiva.service.InstalacionTipoService;
 import com.gestion.deportiva.util.BreadcrumbBuilder;
 import com.gestion.deportiva.util.Constantes;
 import com.gestion.deportiva.util.InstalacionUtil;
 import com.gestion.deportiva.util.SecurityUtil;
+import com.gestion.deportiva.util.Utils;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -56,6 +58,9 @@ public class PrivadoInstalacionController extends BaseController {
 
 	@Autowired
 	private InstalacionTipoService instalacionTipoService;
+
+	@Autowired
+	private EmpresaService empresaService;
 
 	@GetMapping("")
 	public ModelAndView search(Pageable pageable, HttpServletRequest request, InstalacionFilter filter) {
@@ -121,8 +126,9 @@ public class PrivadoInstalacionController extends BaseController {
 	private ModelAndView buildDetailsForm(InstalacionDTO dto) {
 		ModelAndView mav = new ModelAndView(VIEW_FORM);
 		mav.addObject("form", dto);
-		mav.addObject("listSedes", sedeService.getListDTO(new SedeFilter()));
-		mav.addObject("listInstalacionTipo", instalacionTipoService.getListDTO());
+		mav.addObject("listEmpresas", empresaService.getListDTOParaInstalacion());
+		mav.addObject("listSedes", sedeService.getListDTOParaInstalacion(dto.getEmpresaId()));
+		mav.addObject("listInstalacionTipo", Utils.addEmptyOptionIfMoreThanOneOption(instalacionTipoService.getListDTO(), InstalacionTipoDTO.class));
 		mav.addObject("breadcrumbs",
 				BreadcrumbBuilder.start().includeHome().add("breadcrumb.gestion.instalacion", null).build());
 
@@ -140,8 +146,9 @@ public class PrivadoInstalacionController extends BaseController {
 		mav.addObject("url", InstalacionUtil.cleanUrlPageFilter(filter, request.getRequestURI()));
 		mav.addObject("breadcrumbs",
 				BreadcrumbBuilder.start().includeHome().add("breadcrumb.gestion.instalacion", null).build());
-		mav.addObject("listInstalacionTipo", instalacionTipoService.getListDTO());
-		mav.addObject("listSedes", sedeService.getListDTO(new SedeFilter()));
+		mav.addObject("listEmpresas", empresaService.getListDTOParaInstalacion());
+		mav.addObject("listInstalacionTipo", Utils.addEmptyOptionIfMoreThanOneOption(instalacionTipoService.getListDTO(), InstalacionTipoDTO.class));
+		mav.addObject("listSedes", sedeService.getListDTOParaInstalacion(filter.getEmpresaId()));
 		addSortParameter(mav, pageable);
 		addBasicModelDetails(mav, TITLE_PAGE, false);
 		return mav;

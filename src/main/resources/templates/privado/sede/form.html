@@ -159,8 +159,8 @@
 							onchange="cargarDatos(this.value, '/api/provincias', 'selectProvincia'); 
                       cargarDatos(this.value, '/api/municipios', 'selectMunicipio', 'comunidad')">
 							<option value=""></option>
-							<option th:each="c : ${listComunidades}" th:value="${c.key}"
-								th:text="${c.value}"></option>
+							<option th:each="c : ${listComunidades}" th:value="${c.id}"
+								th:text="${c.nombre}"></option>
 						</select>
 					</div>
 
@@ -174,8 +174,8 @@
 							required th:field="*{provinciaId}"
 							onchange="cargarDatos(this.value, '/api/municipios', 'selectMunicipio')">
 							<option value=""></option>
-							<option th:each="p : ${listProvincias}" th:value="${p.key}"
-								th:text="${p.value}"></option>
+							<option th:each="p : ${listProvincias}" th:value="${p.id}"
+								th:text="${p.nombre}"></option>
 						</select>
 					</div>
 
@@ -188,8 +188,8 @@
 						</label> <select id="selectMunicipio" class="form-select rounded-3 py-2"
 							required th:field="*{municipioId}">
 							<option value=""></option>
-							<option th:each="m : ${listMunicipios}" th:value="${m.key}"
-								th:text="${m.value}"></option>
+							<option th:each="m : ${listMunicipios}" th:value="${m.id}"
+								th:text="${m.nombre}"></option>
 						</select>
 					</div>
 

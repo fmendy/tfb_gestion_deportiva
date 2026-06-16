@@ -103,11 +103,11 @@ public class ProvinciaServiceImpl implements ProvinciaService {
 	}
 
 	@Override
-	public List<ComboDTO> getListComboDTOByComunidadAutonomaId(Long comunidadAutonomaId) {
+	public List<ProvinciaDTO> getListDTOByComunidadAutonomaId(Long comunidadAutonomaId) {
 		if (comunidadAutonomaId == null) {
-			return getListComboDTO();
+			return getListDTO();
 		} else {
-			return ProvinciaUtil.listModelToListComboDTO(
+			return ProvinciaUtil.listModelToListDTO(
 					provinciaRepository.findByActivoTrueAndComunidadAutonomaId(comunidadAutonomaId));
 		}
 	}

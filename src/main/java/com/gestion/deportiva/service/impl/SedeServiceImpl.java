@@ -1,6 +1,7 @@
 package com.gestion.deportiva.service.impl;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -16,7 +17,9 @@ import com.gestion.deportiva.dto.SedeDTO;
 import com.gestion.deportiva.dto.filter.SedeFilter;
 import com.gestion.deportiva.dto.specifications.SedeSpecifications;
 import com.gestion.deportiva.mapper.SedeMapper;
+import com.gestion.deportiva.model.Instalacion;
 import com.gestion.deportiva.model.Sede;
+import com.gestion.deportiva.repository.InstalacionRepository;
 import com.gestion.deportiva.repository.SedeRepository;
 import com.gestion.deportiva.service.ImageStoreService;
 import com.gestion.deportiva.service.SedeService;
@@ -34,6 +37,9 @@ public class SedeServiceImpl implements SedeService {
 
 	@Autowired
 	private SedeRepository sedeRepository;
+
+	@Autowired
+	private InstalacionRepository instalacionRepository;
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -177,5 +183,28 @@ public class SedeServiceImpl implements SedeService {
 	public byte[] exportarExcel(SedeFilter filter) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public List<SedeDTO> getListDTOParaInstalacion(Long empresaId) {
+		List<SedeDTO> retVal = new ArrayList<>();
+		if (SecurityUtil.hasAuthority(Constantes.Permiso.GESTION_GLOBAL)) {
+			retVal = getListDTO();
+		} else if (SecurityUtil.hasAuthority(Constantes.Permiso.Localizacion.GESTION_EMPRESA)) {
+			retVal = sedeMapper.listModelToListDTO(
+					sedeRepository.findByActivoTrueAndEmpresaIdIn(SecurityUtil.getCurrentUserListEmpresaId()));
+		} else if (SecurityUtil.hasAuthority(Constantes.Permiso.Localizacion.GESTION_SEDE)) {
+			retVal = sedeMapper.listModelToListDTO(
+					sedeRepository.findByActivoTrueAndIdIn(SecurityUtil.getCurrentUserListSedeId()).stream().toList());
+		} else if (SecurityUtil.hasAuthority(Constantes.Permiso.Localizacion.GESTION_INSTALACION)) {
+			retVal = sedeMapper.listModelToListDTO(
+					instalacionRepository.findByActivoTrueAndIdIn(SecurityUtil.getCurrentUserListSedeId()).stream()
+							.map(Instalacion::getSede).toList());
+		}
+		
+		if(empresaId != null) {
+			retVal.removeIf(s -> !s.getEmpresaId().equals(empresaId));
+		}
+		return Utils.addEmptyOptionIfMoreThanOneOption(retVal, SedeDTO.class);
 	}
 }

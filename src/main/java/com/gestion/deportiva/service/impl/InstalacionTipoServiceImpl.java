@@ -64,7 +64,8 @@ public class InstalacionTipoServiceImpl implements InstalacionTipoService {
 
 	@Override
 	public Page<InstalacionTipoDTO> getPageByFilter(InstalacionTipoFilter filter, Pageable pageable) {
-		return InstalacionTipoUtil.pageToPageDTO(instalacionTipoRepository.findAll(InstalacionTipoSpecifications.filter(filter), pageable));
+		return InstalacionTipoUtil.pageToPageDTO(
+				instalacionTipoRepository.findAll(InstalacionTipoSpecifications.filter(filter), pageable));
 	}
 
 	@Override
@@ -87,7 +88,8 @@ public class InstalacionTipoServiceImpl implements InstalacionTipoService {
 
 	@Override
 	public InstalacionTipoDTO findByNombreEqualsIgnoreCase(String nombre) {
-		return InstalacionTipoUtil.modelToDTO(instalacionTipoRepository.findByActivoTrueAndNombreEqualsIgnoreCase(nombre));
+		return InstalacionTipoUtil
+				.modelToDTO(instalacionTipoRepository.findByActivoTrueAndNombreEqualsIgnoreCase(nombre));
 	}
 
 	@Override
@@ -99,12 +101,13 @@ public class InstalacionTipoServiceImpl implements InstalacionTipoService {
 	@Override
 	public List<InstalacionTipoDTO> getListDTO() {
 		return Utils.sortByNombre(InstalacionTipoUtil.listModelToListDTO(instalacionTipoRepository.findByActivoTrue()));
+
 	}
 
 	@Override
 	public List<InstalacionTipoDTO> getListDTO(InstalacionTipoFilter filter) {
-		return Utils.sortByNombre(
-				InstalacionTipoUtil.listModelToListDTO(instalacionTipoRepository.findAll(InstalacionTipoSpecifications.filter(filter))));
+		return Utils.sortByNombre(InstalacionTipoUtil
+				.listModelToListDTO(instalacionTipoRepository.findAll(InstalacionTipoSpecifications.filter(filter))));
 	}
 
 	@Override
