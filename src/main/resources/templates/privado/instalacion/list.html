@@ -48,7 +48,6 @@
 								th:text="#{instalacion.filter.empresa}"></label> <select
 								id="selectEmpresa" class="form-select" th:field="*{empresaId}"
 								onchange="cargarDatos(this.value, '/api/sede/list/instalacion', 'selectSede');">
-								<option value="">Seleccione...</option>
 								<option th:each="c : ${listEmpresas}" th:value="${c.id}"
 									th:text="${c.nombre}"></option>
 							</select>
@@ -57,7 +56,6 @@
 						<div class="col-md-4">
 							<label class="form-label fw-bold">Sede</label> <select
 								id="selectSede" class="form-select" th:field="*{sedeId}">
-								<option value="">Seleccione...</option>
 								<option th:each="p : ${listSedes}" th:value="${p.id}"
 									th:text="${p.nombre}"></option>
 							</select>

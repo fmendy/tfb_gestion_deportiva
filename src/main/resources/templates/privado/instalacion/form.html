@@ -10,93 +10,7 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
-	// 1. Declaramos variables globales para que sean accesibles en todo el script
-	var map;
-	var marcador = null;
-
-	// Función para mostrar/ocultar el mapa
-	function toggleMapa() {
-		var divMapa = document.getElementById('contenedorMapa');
-		if (divMapa.style.display === 'none') {
-			divMapa.style.display = 'block';
-
-			// Inicializamos el mapa solo la primera vez que se abre
-			if (!map) {
-				inicializarMapa();
-			} else {
-				// Si ya existía, corregimos el tamaño al hacerlo visible
-				map.invalidateSize();
-			}
-		} else {
-			divMapa.style.display = 'none';
-		}
-	}
-
-	function inicializarMapa() {
-		map = L.map('mapa').setView([ 40.4637, -3.7492 ], 6);
-		L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-			attribution : '© OpenStreetMap contributors'
-		}).addTo(map);
-
-		// Cargar marcador inicial si existen coordenadas
-		var latInput = document.getElementById('latitud');
-		var lonInput = document.getElementById('longitud');
-		if (latInput.value && lonInput.value) {
-			var coords = [ parseFloat(latInput.value),
-					parseFloat(lonInput.value) ];
-			map.setView(coords, 15);
-			marcador = L.marker(coords).addTo(map);
-		}
-
-		map.on('click', function(e) {
-			if (marcador !== null) {
-				marcador.setLatLng(e.latlng);
-			} else {
-				marcador = L.marker(e.latlng).addTo(map);
-			}
-			document.getElementById('latitud').value = e.latlng.lat;
-			document.getElementById('longitud').value = e.latlng.lng;
-		});
-	}
-
-	document.addEventListener('DOMContentLoaded', function() {
-		// 2. Inicializar mapa
-		map = L.map('mapa').setView([ 40.4637, -3.7492 ], 6);
-
-		L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-			attribution : '© OpenStreetMap contributors'
-		}).addTo(map);
-
-		// 3. Cargar marcador inicial si existen coordenadas (caso edición)
-		var latInput = document.getElementById('latitud');
-		var lonInput = document.getElementById('longitud');
-
-		if (latInput.value && lonInput.value) {
-			var coords = [ parseFloat(latInput.value),
-					parseFloat(lonInput.value) ];
-			map.setView(coords, 15);
-			marcador = L.marker(coords).addTo(map);
-		}
-
-		// 4. Evento clic en el mapa
-		map.on('click', function(e) {
-			// Si el marcador existe, lo movemos. Si no, lo creamos.
-			if (marcador !== null) {
-				marcador.setLatLng(e.latlng);
-			} else {
-				marcador = L.marker(e.latlng).addTo(map);
-			}
-
-			// Actualizar inputs
-			document.getElementById('latitud').value = e.latlng.lat;
-			document.getElementById('longitud').value = e.latlng.lng;
-		});
-
-		// 5. Ajustar tamaño tras cargar
-		setTimeout(function() {
-			map.invalidateSize();
-		}, 100);
-	});
+	
 </script>
 
 
@@ -116,51 +30,30 @@
 			<!-- Título -->
 			<h3 class="text-center mb-4 fw-bold">
 				<i class="bi bi-buildings me-2 text-gradient-primary"></i> <span
-					th:text="#{page.title.privado.sede}"> </span>
+					th:text="#{page.title.privado.instalacion}"> </span>
 			</h3>
 
 
 
 			<div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
-				<form th:action="@{/privado/sede/guardar}" th:object="${form}"
-					th:csrf="true" method="post" enctype="multipart/form-data"
-					class="row g-4">
+				<form th:action="@{/privado/instalacion/guardar}"
+					th:object="${form}" th:csrf="true" method="post"
+					enctype="multipart/form-data" class="row g-4">
 
 					<input type="hidden" th:field="*{id}" />
 
-					<div class="col-md-4">
-						<label for="empresaId"
-							class="form-label fw-semibold text-secondary"> <i
-							class="bi bi-building me-1 text-primary"></i> <span
-							th:text="#{sede.form.empresa}">Empresa </span> <span
-							class="text-danger">*</span>
-						</label> <select th:field="*{empresaId}" id="empresaId" required
-							class="form-select rounded-3 py-2">
-							<option value=""></option>
-							<option th:each="empresa : ${listEmpresas}"
-								th:value="${empresa.id}" th:text="${empresa.nombre}">empresa</option>
-						</select>
-
-						<div class="text-danger small mt-1"
-							th:if="${#fields.hasErrors('empresaId')}"
-							th:errors="*{empresaId}">
-							<i class="bi bi-exclamation-circle me-1"></i> Error
-						</div>
-					</div>
 
 					<div class="col-md-4">
-						<label for="selectComunidad"
+						<label for="selectEmpresa"
 							class="form-label fw-semibold text-secondary"> <i
 							class="bi bi-geo-alt me-1 text-primary"></i> <span
-							th:text="#{sede.form.comunidad.autonoma}">Comunidad
-								Autónoma</span> <span class="text-danger">*</span>
-						</label> <select id="selectComunidad" class="form-select rounded-3 py-2"
-							required th:field="*{comunidadAutonomaId}"
-							onchange="cargarDatos(this.value, '/api/provincias', 'selectProvincia'); 
-                      cargarDatos(this.value, '/api/municipios', 'selectMunicipio', 'comunidad')">
-							<option value=""></option>
-							<option th:each="c : ${listComunidades}" th:value="${c.key}"
-								th:text="${c.value}"></option>
+							th:text="#{instalacion.form.empresa}">Empresa </span> <span
+							class="text-danger">*</span>
+						</label> <select id="selectEmpresa" class="form-select rounded-3 py-2"
+							required th:field="*{empresaId}"
+							onchange="cargarDatos(this.value, '/api/sede/list/instalacion', 'selectSede');">
+							<option th:each="c : ${listEmpresas}" th:value="${c.id}"
+								th:text="${c.nombre}"></option>
 						</select>
 					</div>
 
@@ -168,167 +61,59 @@
 						<label for="selectProvincia"
 							class="form-label fw-semibold text-secondary"> <i
 							class="bi bi-map me-1 text-primary"></i> <span
-							th:text="#{sede.form.provincia}">Provincia</span> <span
+							th:text="#{instalacion.form.sede}">Sede</span> <span
 							class="text-danger">*</span>
-						</label> <select id="selectProvincia" class="form-select rounded-3 py-2"
-							required th:field="*{provinciaId}"
-							onchange="cargarDatos(this.value, '/api/municipios', 'selectMunicipio')">
+						</label> <select id="selectSede" class="form-select rounded-3 py-2"
+							required th:field="*{sedeId}">
 							<option value=""></option>
-							<option th:each="p : ${listProvincias}" th:value="${p.key}"
-								th:text="${p.value}"></option>
+							<option th:each="p : ${listSedes}" th:value="${p.id}"
+								th:text="${p.nombre}"></option>
 						</select>
 					</div>
 
 					<div class="col-md-4">
-						<label for="selectMunicipio"
+						<label for="selectInstalacionTipo"
 							class="form-label fw-semibold text-secondary"> <i
-							class="bi bi-pin-map me-1 text-primary"></i> <span
-							th:text="#{sede.form.municipio}">Municipio</span> <span
-							class="text-danger">*</span>
-						</label> <select id="selectMunicipio" class="form-select rounded-3 py-2"
-							required th:field="*{municipioId}">
-							<option value=""></option>
-							<option th:each="m : ${listMunicipios}" th:value="${m.key}"
-								th:text="${m.value}"></option>
+							class="bi bi-card-heading me-1 text-primary"></i> <span
+							th:text="#{instalacion.form.tipo.instalacion}">Instalacion
+								tipo</span> <span class="text-danger">*</span>
+						</label> <select id="selectInstalacionTipo"
+							class="form-select rounded-3 py-2" required
+							th:field="*{instalacionTipoId}">
+							<option th:each="p : ${listInstalacionTipo}" th:value="${p.id}"
+								th:text="${p.nombre}"></option>
 						</select>
 					</div>
 
-					<div class="col-md-8">
-						<label for="direccion"
-							class="form-label fw-semibold text-secondary"> <i
-							class="bi bi-building me-1 text-primary"></i> <span
-							th:text="#{sede.form.direccion} ">direccion</span> <span
-							class="text-danger">*</span>
-						</label> <input type="text" th:field="*{direccion}" id="direccion"
-							required class="form-control rounded-3 py-2"
-							th:placeholder="#{sede.form.direccion}" maxlength="255">
-						<div class="text-danger small mt-1"
-							th:if="${#fields.hasErrors('direccion')}"
-							th:errors="*{direccion}">
-							<i class="bi bi-exclamation-circle me-1"></i> Error
-						</div>
-					</div>
 
-					<div class="col-md-4">
-						<label for="latitud" class="form-label fw-semibold text-secondary">
-							<i class="bi bi-geo me-1 text-primary"></i> <span
-							th:text="#{sede.form.latitud} ">latitud</span> <span
-							class="text-danger">*</span>
-						</label> <input type="text" th:field="*{latitud}" id="latitud"
-							 required class="form-control rounded-3 py-2"
-							th:placeholder="#{sede.form.latitud}" maxlength="255">
-						<div class="text-danger small mt-1"
-							th:if="${#fields.hasErrors('latitud')}" th:errors="*{latitud}">
-							<i class="bi bi-exclamation-circle me-1"></i> Error
-						</div>
-					</div>
-
-					<div class="col-md-4">
-						<label for="longitud"
-							class="form-label fw-semibold text-secondary"> <i
-							class="bi bi-geo me-1 text-primary"></i> <span
-							th:text="#{sede.form.longitud} ">longitud</span> <span
-							class="text-danger">*</span>
-						</label> <input type="text" th:field="*{longitud}" id="longitud"
-							 required class="form-control rounded-3 py-2"
-							th:placeholder="#{sede.form.longitud}" maxlength="255">
-						<div class="text-danger small mt-1"
-							th:if="${#fields.hasErrors('longitud')}" th:errors="*{longitud}">
-							<i class="bi bi-exclamation-circle me-1"></i> Error
-						</div>
-					</div>
-
-
-
-					<div class="col-md-12">
-
-					<button type="button" id="btnMapa"
-						class="btn btn-outline-primary mt-2" onclick="toggleMapa()">
-						<i class="bi bi-geo-alt"></i> <span th:text="#{sede.form.seleccionar.ubicacion.mapa}"></span>
-					</button>
-
-					<div id="contenedorMapa" style="display: none; margin-top: 15px;">
-						<div id="mapa"
-							style="height: 400px; width: 100%; border-radius: 10px;"
-							class="shadow-sm border"></div>
-					</div>
-					</div>
-					
 					<div class="col-md-4">
 						<label for="nombre" class="form-label fw-semibold text-secondary">
 							<i class="bi bi-building me-1 text-primary"></i> <span
-							th:text="#{sede.form.nombre}">Nombre sede</span> <span
+							th:text="#{instalacion.form.nombre}">Nombre instalacion</span> <span
 							class="text-danger">*</span>
 						</label> <input type="text" th:field="*{nombre}" id="nombre" required
 							class="form-control rounded-3 py-2"
-							th:placeholder="#{sede.form.nombre}" maxlength="255">
+							th:placeholder="#{instalacion.form.nombre}" maxlength="255">
 						<div class="text-danger small mt-1"
 							th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}">
 							<i class="bi bi-exclamation-circle me-1"></i> Error
 						</div>
 					</div>
 
-					<div class="col-md-4">
-						<label for="email" class="form-label fw-semibold text-secondary">
-							<i class="bi bi-mailbox me-1 text-primary"></i> <span
-							th:text="#{sede.form.email}">Email</span> <span
-							class="text-danger">*</span>
-						</label> <input type="email" th:field="*{email}" id="email" required
-							class="form-control rounded-3 py-2"
-							th:placeholder="#{sede.form.email}" maxlength="255">
-						<div class="text-danger small mt-1"
-							th:if="${#fields.hasErrors('email')}" th:errors="*{email}">
-							<i class="bi bi-exclamation-circle me-1"></i> Error
-						</div>
-					</div>
 
 
-					<div class="col-12">
-						<div class="row align-items-center g-3">
 
-							<div
-								th:class="${form.logo != null && !form.logo.isEmpty()} ? 'col-12 col-sm-9 col-md-10' : 'col-12'">
-								<label for="logo" class="form-label fw-semibold text-secondary">
-									<i class="bi bi-image me-1 text-primary"></i> <span
-									th:text="#{sede.form.logo}">Logo</span>
-								</label> <input type="file" th:field="*{logoFile}" id="logoFile"
-									accept="image/png, image/jpeg, image/webp"
-									class="form-control rounded-3 py-2"> <input
-									type="hidden" th:field="*{logo}" />
-							</div>
 
-							<div th:if="${form.logo != null && !form.logo.isEmpty()}"
-								class="col-12 col-sm-3 col-md-2 text-center text-sm-end mt-4 mt-sm-0">
-
-								<div
-									class="d-inline-block p-1 bg-light border rounded-3 shadow-sm">
-									<img th:src="${form.logo}" alt="Logo sede"
-										class="img-fluid rounded-2 shadow-inner"
-										style="max-height: 70px; object-fit: contain; width: auto;">
-								</div>
-
-								<div
-									class="form-check d-flex justify-content-center justify-content-sm-end align-items-center gap-2">
-									<input class="form-check-input mt-0 cursor-pointer"
-										type="checkbox" th:field="*{logoBorrar}" id="logoBorrar">
-									<label
-										class="form-check-label small text-danger fw-semibold cursor-pointer"
-										for="logoBorrar" th:text="#{sede.form.borrar.logo}"> </label>
-								</div>
-							</div>
-
-						</div>
-					</div>
 
 					<div class="col-12">
 						<label for="descripcion"
 							class="form-label fw-semibold text-secondary"> <i
 							class="bi bi-text-paragraph me-1 text-primary"></i> <span
-							th:text="#{sede.form.descripcion}">Descripción</span>
+							th:text="#{instalacion.form.descripcion}">Descripción</span>
 						</label>
 						<textarea th:field="*{descripcion}" id="descripcion"
 							class="form-control rounded-3"
-							th:placeholder="#{sede.form.descripcion}" maxlength="1250"
+							th:placeholder="#{instalacion.form.descripcion}" maxlength="1250"
 							rows="4" style="resize: vertical;"></textarea>
 						<div class="text-danger small mt-1"
 							th:if="${#fields.hasErrors('descripcion')}"
@@ -339,7 +124,7 @@
 
 					<div
 						class="col-12 d-grid d-md-flex justify-content-md-end gap-3 mt-4">
-						<a th:href="@{/privado/sede}"
+						<a th:href="@{/privado/instalacion}"
 							class="btn btn-outline-secondary rounded-3 px-4 py-2 d-inline-flex align-items-center justify-content-center fw-semibold">
 							<i class="bi bi-x-lg me-2"></i> <span th:text="#{boton.cancelar}">Cancelar</span>
 						</a>
