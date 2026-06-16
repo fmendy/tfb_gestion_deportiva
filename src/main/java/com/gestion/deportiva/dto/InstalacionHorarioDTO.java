@@ -2,6 +2,8 @@ package com.gestion.deportiva.dto;
 
 import java.time.LocalTime;
 
+import com.gestion.deportiva.validation.InstalacionHorarioValid;
+
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@InstalacionHorarioValid
 public class InstalacionHorarioDTO extends BaseDTO {
 
 	private static final long serialVersionUID = 5026431591115314363L;
@@ -17,7 +20,7 @@ public class InstalacionHorarioDTO extends BaseDTO {
 	private String empresaNombre;
 
 	private Long empresaId;
-	
+
 	private String sedeNombre;
 
 	private Long sedeId;
@@ -29,10 +32,10 @@ public class InstalacionHorarioDTO extends BaseDTO {
 
 	@NotNull
 	private LocalTime horaInicio;
-	
+
 	@NotNull
 	private LocalTime horaFin;
-	
+
 	@NotNull
 	private Long diaSemana;
 

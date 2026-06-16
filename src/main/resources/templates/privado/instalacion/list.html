@@ -137,11 +137,11 @@
 							<th class="text-nowrap"><span
 								th:text="#{instalacion.tabla.tipo.instalacion}"></span> <a
 								class="ms-1 text-decoration-none text-muted opacity-75"
-								th:href="${url}+'&sort=tipoInstalacion.nombre,ASC'"
+								th:href="${url}+'&sort=instalacionTipoNombre.nombre,ASC'"
 								th:title="#{tabla.orden.ascendente}"> <i
 									class="bi bi-arrow-down-short"></i>
 							</a> <a class="text-decoration-none text-muted opacity-75"
-								th:href="${url}+'&sort=tipoInstalacion.nombre,DESC'"
+								th:href="${url}+'&sort=instalacionTipoNombre.nombre,DESC'"
 								th:title="#{tabla.orden.descendente}"> <i
 									class="bi bi-arrow-up-short"></i>
 							</a></th>
@@ -169,7 +169,7 @@
 							<td class="fw-semibold" th:text="${element.empresaNombre}"></td>
 							<td class="fw-semibold" th:text="${element.sedeNombre}"></td>
 							<td class="fw-semibold"
-								th:text="${element.tipoInstalacionNombre}"></td>
+								th:text="${element.instalacionTipoNombre}"></td>
 							<td th:text="${element.nombre}"></td>
 
 							<td class="text-center"><a

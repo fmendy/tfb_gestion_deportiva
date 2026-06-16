@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" lang="es"
+	layout:decorate="~{layout/base}">
+<body>
+	<div layout:fragment="content" class="container-fluid py-5 px-3">
+
+		<div
+			th:replace="~{fragments/breadcrumbs :: breadcrumbs(${breadcrumbs})}"></div>
+
+		<div class="card shadow-lg border-0 rounded-4 p-4">
+			<h3 class="text-center mb-4 fw-bold">
+				<i class="bi bi-clock me-2 text-primary"></i> <span
+					th:text="#{page.title.privado.instalacion.horario}">Horarios</span>
+			</h3>
+
+			<div
+				th:replace="~{fragments/instalacion-tabs :: tabs(${form.instalacionId}, 'horarios')}"></div>
+
+			<div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
+				<form
+					th:action="@{/privado/instalacion/{id}/horario/guardar(id=${form.instalacionId})}"
+					th:object="${form}" method="post" class="row g-4">
+					
+					<input type="hidden" th:field="*{instalacionId}" />
+
+					<div th:each="dia : ${#numbers.sequence(1, 7)}"
+						class="col-12 col-md-6 col-lg-4">
+						<div class="card h-100 border-0 bg-light p-3">
+							<h6 class="fw-bold text-primary mb-3">
+								<i class="bi bi-calendar-day me-2"></i> <span
+									th:text="#{dia.semana.__${dia}__}">Día</span>
+							</h6>
+
+							<div th:id="'container-dia-' + ${dia}">
+								<div th:each="turno, stat : *{horarios.get(__${dia}__)}"
+									class="row g-2 mb-2">
+									<div class="col-5">
+										<input type="time"
+											th:value="${#temporals.format(turno.horaInicio, 'HH:mm')}"
+											th:field="*{horarios[__${dia}__][__${stat.index}__].horaInicio}"
+											class="form-control form-control-sm">
+									</div>
+									<div class="col-5">
+										<input type="time"
+											th:field="*{horarios[__${dia}__][__${stat.index}__].horaFin}"
+											class="form-control form-control-sm">
+									</div>
+									<div class="col-2">
+										<button type="button" class="btn btn-sm btn-outline-danger"
+											onclick="this.parentElement.parentElement.remove()">
+											<i class="bi bi-trash"></i>
+										</button>
+									</div>
+								</div>
+							</div>
+
+							<button type="button" class="btn btn-sm btn-outline-primary mt-2"
+								th:onclick="'addTurno(' + ${dia} + ')'">
+								<i class="bi bi-plus-lg me-1"></i> <span
+									th:text="#{boton.anadir.horario}"></span>
+							</button>
+						</div>
+					</div>
+
+					<div class="col-12 text-end mt-4 pt-3 border-top">
+						<button type="submit"
+							class="btn btn-primary px-5 py-2 fw-semibold shadow-sm">
+							<i class="bi bi-check-circle-fill me-2"></i> <span
+								th:text="#{boton.guardar}"></span>
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<script th:inline="javascript">
+            function addTurno(dia) {
+                const container = document.getElementById(`container-dia-${dia}`);
+                const index = container.children.length;
+                const html = `
+                    <div class="row g-2 mb-2">
+                        <div class="col-5">
+                            <input type="time" name="horarios[${dia}][${index}].horaInicio" class="form-control form-control-sm" required>
+                        </div>
+                        <div class="col-5">
+                            <input type="time" name="horarios[${dia}][${index}].horaFin" class="form-control form-control-sm" required>
+                        </div>
+                        <div class="col-2">
+                            <button type="button" class="btn btn-sm btn-outline-danger" onclick="this.parentElement.parentElement.remove()">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </div>`;
+                container.insertAdjacentHTML('beforeend', html);
+            }
+        </script>
+	</div>
+</body>
+</html>
