@@ -12,10 +12,10 @@ import org.springframework.stereotype.Service;
 import com.gestion.deportiva.dto.InstalacionConfiguracionReservaDTO;
 import com.gestion.deportiva.dto.filter.InstalacionConfiguracionReservaFilter;
 import com.gestion.deportiva.dto.specifications.InstalacionConfiguracionReservaSpecifications;
+import com.gestion.deportiva.mapper.InstalacionConfiguracionReservaMapper;
 import com.gestion.deportiva.model.InstalacionConfiguracionReserva;
 import com.gestion.deportiva.repository.InstalacionConfiguracionReservaRepository;
 import com.gestion.deportiva.service.InstalacionConfiguracionReservaService;
-import com.gestion.deportiva.util.InstalacionConfiguracionReservaUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
@@ -31,35 +31,43 @@ public class InstalacionConfiguracionReservaServiceImpl implements InstalacionCo
 	@PersistenceContext
 	private EntityManager entityManager;
 
+	@Autowired
+	private InstalacionConfiguracionReservaMapper instalacionConfiguracionReservaMapper;
+
 	@Override
 	public InstalacionConfiguracionReservaDTO findById(Long id) {
 		logger.info("Buscando InstalacionConfiguracionReserva por ID: {}", id);
-		return InstalacionConfiguracionReservaUtil.modelToDTO(instalacionConfiguracionReservaRepository.findByActivoTrueAndId(id));
+		return instalacionConfiguracionReservaMapper
+				.modelToDTO(instalacionConfiguracionReservaRepository.findByActivoTrueAndId(id));
 	}
 
 	@Override
 	public InstalacionConfiguracionReservaDTO findByUuid(String uuid) {
 		logger.info("Buscando InstalacionConfiguracionReserva por UUID: {}", uuid);
-		return InstalacionConfiguracionReservaUtil.modelToDTO(instalacionConfiguracionReservaRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid));
+		return instalacionConfiguracionReservaMapper
+				.modelToDTO(instalacionConfiguracionReservaRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid));
 	}
 
 	@Override
 	@Transactional
 	public Long guardar(InstalacionConfiguracionReservaDTO dto) {
 		logger.info("Guardando InstalacionConfiguracionReserva");
-		InstalacionConfiguracionReserva model = instalacionConfiguracionReservaRepository.findByActivoTrueAndUuidEqualsIgnoreCase(dto.getUuid());
+		InstalacionConfiguracionReserva model = instalacionConfiguracionReservaRepository
+				.findByActivoTrueAndUuidEqualsIgnoreCase(dto.getUuid());
 		if (model == null) {
 			logger.info("Creando nuevo InstalacionConfiguracionReserva");
 			model = new InstalacionConfiguracionReserva();
 		}
-		model = InstalacionConfiguracionReservaUtil.dtoToModel(dto, model);
+		model = instalacionConfiguracionReservaMapper.dtoToModel(dto, model);
 		instalacionConfiguracionReservaRepository.saveAndFlush(model);
 		return model.getId();
 	}
 
 	@Override
-	public Page<InstalacionConfiguracionReservaDTO> getPageByFilter(InstalacionConfiguracionReservaFilter filter, Pageable pageable) {
-		return InstalacionConfiguracionReservaUtil.pageToPageDTO(instalacionConfiguracionReservaRepository.findAll(InstalacionConfiguracionReservaSpecifications.filter(filter), pageable));
+	public Page<InstalacionConfiguracionReservaDTO> getPageByFilter(InstalacionConfiguracionReservaFilter filter,
+			Pageable pageable) {
+		return instalacionConfiguracionReservaMapper.pageToPageDTO(instalacionConfiguracionReservaRepository
+				.findAll(InstalacionConfiguracionReservaSpecifications.filter(filter), pageable));
 	}
 
 	@Override
@@ -73,19 +81,22 @@ public class InstalacionConfiguracionReservaServiceImpl implements InstalacionCo
 	@Override
 	public void eliminar(String uuid) {
 		logger.info("Eliminando InstalacionConfiguracionReserva por ID: {}");
-		InstalacionConfiguracionReserva model = instalacionConfiguracionReservaRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid);
+		InstalacionConfiguracionReserva model = instalacionConfiguracionReservaRepository
+				.findByActivoTrueAndUuidEqualsIgnoreCase(uuid);
 		model.setActivo(false);
 		instalacionConfiguracionReservaRepository.saveAndFlush(model);
 	}
 
 	@Override
 	public List<InstalacionConfiguracionReservaDTO> getListDTO() {
-		return InstalacionConfiguracionReservaUtil.listModelToListDTO(instalacionConfiguracionReservaRepository.findByActivoTrue());
+		return instalacionConfiguracionReservaMapper
+				.listModelToListDTO(instalacionConfiguracionReservaRepository.findByActivoTrue());
 	}
 
 	@Override
 	public List<InstalacionConfiguracionReservaDTO> getListDTO(InstalacionConfiguracionReservaFilter filter) {
-		return InstalacionConfiguracionReservaUtil.listModelToListDTO(instalacionConfiguracionReservaRepository.findAll(InstalacionConfiguracionReservaSpecifications.filter(filter)));
+		return instalacionConfiguracionReservaMapper.listModelToListDTO(instalacionConfiguracionReservaRepository
+				.findAll(InstalacionConfiguracionReservaSpecifications.filter(filter)));
 	}
 
 	@Override
@@ -103,4 +114,31 @@ public class InstalacionConfiguracionReservaServiceImpl implements InstalacionCo
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public InstalacionConfiguracionReservaDTO findDTOByInstalacionId(Long instalacionId) {
+		logger.info("Buscando InstalacionConfiguracionReserva por instalacionID: {}", instalacionId);
+		return instalacionConfiguracionReservaMapper
+				.modelToDTO(instalacionConfiguracionReservaRepository.findByActivoTrueAndInstalacionId(instalacionId));
+	}
+
+	@Override
+	public InstalacionConfiguracionReserva findByInstalacionId(Long instalacionId) {
+		logger.info("Buscando InstalacionConfiguracionReserva por instalacionID: {}", instalacionId);
+		return instalacionConfiguracionReservaRepository.findByActivoTrueAndInstalacionId(instalacionId);
+	}
+
+	@Override
+	public InstalacionConfiguracionReservaDTO findDTOByInstalacionIdOrNewIfEmpty(Long instalacionId) {
+		logger.info("Buscando InstalacionConfiguracionReserva por instalacionID: {}", instalacionId);
+
+		InstalacionConfiguracionReserva bean = findByInstalacionId(instalacionId);
+		if (bean == null) {
+			InstalacionConfiguracionReservaDTO retVal = new InstalacionConfiguracionReservaDTO();
+			retVal.setInstalacionId(instalacionId);
+			return retVal;
+		}
+		return instalacionConfiguracionReservaMapper.modelToDTO(bean);
+	}
+
 }

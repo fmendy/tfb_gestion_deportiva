@@ -1,6 +1,8 @@
 package com.gestion.deportiva.dto;
 
 
+import com.gestion.deportiva.validation.InstalacionConfiguracionReservaValid;
+
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,6 +11,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@InstalacionConfiguracionReservaValid
 public class InstalacionConfiguracionReservaDTO extends BaseDTO {
 
 	private static final long serialVersionUID = 8828334797129917468L;

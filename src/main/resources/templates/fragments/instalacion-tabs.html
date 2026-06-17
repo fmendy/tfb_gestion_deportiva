@@ -37,8 +37,8 @@
                <i class="bi bi-calendar-event me-1"></i><span class="d-none d-sm-inline"th:text="#{instalacion.tab.horario.especial}">Especiales</span>
             </a> 
 
-            <a th:href="@{/privado/instalacion/{id}/configuracion(id=${id})}"
-               th:classappend="${activeTab == 'config' ? 'bg-white text-primary shadow-sm' : 'text-secondary'}"
+            <a th:href="@{/privado/instalacion/{id}/configuracion/reserva(id=${id})}"
+               th:classappend="${activeTab == 'configuracion-reserva' ? 'bg-white text-primary shadow-sm' : 'text-secondary'}"
                th:class="${baseClass}"> 
                <i class="bi bi-gear me-1"></i><span class="d-none d-sm-inline" th:text="#{instalacion.tab.configuracion}">Config.</span>
             </a>
