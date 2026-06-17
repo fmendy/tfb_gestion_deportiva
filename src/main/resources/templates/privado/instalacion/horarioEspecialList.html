@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" lang="es"
+	layout:decorate="~{layout/base}">
+<body>
+	<div layout:fragment="content" class="container-fluid py-5 px-3">
+
+		<div
+			th:replace="~{fragments/breadcrumbs :: breadcrumbs(${breadcrumbs})}"></div>
+
+		<div class="card shadow-lg border-0 rounded-4 p-4">
+			<h3 class="text-center mb-4 fw-bold">
+				<i class="bi bi-calendar-event me-2 text-primary"></i> <span
+					th:text="#{page.title.privado.instalacion.horario.especial}">Horarios</span>
+			</h3>
+
+			<div
+				th:replace="~{fragments/instalacion-tabs :: tabs(${filter.instalacionId}, 'horario-especial')}"></div>
+
+			<div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
+				<!-- Contenedor para título + acción -->
+				<div
+					class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+
+
+					<a sec:authorize="hasAuthority('GESTION_INSTALACION')"
+						th:href="@{/privado/instalacion/{id}/horario/especial/crear(id=${filter.instalacionId})}"
+						class="btn btn-primary rounded-3 px-4 py-2 d-flex align-items-center fw-semibold">
+						<i class="bi bi-plus-lg me-2"></i> <span th:text="#{boton.crear}">Crear</span>
+					</a>
+
+				</div>
+
+				<div class="card bg-light border-0 shadow-sm mb-4">
+					<div class="card-body">
+						<form
+							th:action="@{/privado/instalacion/{id}/horario/especial(id=${filter.instalacionId})}"
+							method="get" th:object="${filter}"
+							class="row g-3 align-items-center">
+
+
+
+
+							<div class="col-md-4">
+								<label for="fechaDesde" class="form-label fw-bold"
+									th:text="#{instalacion.horario.especial.filter.fecha.desde}"></label>
+								<div class="input-group">
+									<span class="input-group-text"><i class="bi bi-calendar"></i></span>
+									<input type="date" class="form-control"
+										th:field="*{fechaDesde}"
+										th:placeholder="#{instalacion.horario.especial.filter.fecha.desde}" />
+								</div>
+							</div>
+
+							<div class="col-md-4">
+								<label for="fechaHasta" class="form-label fw-bold"
+									th:text="#{instalacion.horario.especial.filter.fecha.hasta}"></label>
+								<div class="input-group">
+									<span class="input-group-text"><i class="bi bi-calendar"></i></span>
+									<input type="date" class="form-control"
+										th:field="*{fechaHasta}"
+										th:placeholder="#{instalacion.horario.especial.filter.fecha.hasta}" />
+								</div>
+							</div>
+
+							<div class="col-md-4">
+								<label class="form-label fw-bold"
+									th:text="#{instalacion.horario.especial.filter.cerrado}"></label>
+								<select class="form-select" th:field="*{cerrado}">
+									<option value=""></option>
+									<option value="true" th:text="#{global.si}">Sí</option>
+									<option value="false" th:text="#{global.no}">No</option>
+								</select>
+							</div>
+
+
+							<div class="col-md-4 d-flex">
+								<button type="submit" class="btn btn-primary me-2">
+									<i class="bi bi-search"></i> <span th:text="#{boton.buscar}"></span>
+								</button>
+								<a th:href="@{/privado/instalacion}"
+									class="btn btn-outline-secondary me-2"> <i
+									class="bi bi-x-circle"></i> <span th:text="#{boton.limpiar}"></span>
+								</a>
+							</div>
+
+
+						</form>
+					</div>
+				</div>
+
+
+
+
+				<div class="table-responsive">
+					<table
+						class="table table-hover align-middle shadow-sm rounded-3 overflow-hidden">
+						<thead class="table-primary">
+							<tr>
+								<th class="text-nowrap"><span
+									th:text="#{instalacion.horario.especial.tabla.fecha}"></span> <a
+									class="ms-1 text-decoration-none text-muted opacity-75"
+									th:href="${url}+'&sort=fecha,ASC'"
+									th:title="#{tabla.orden.ascendente}"> <i
+										class="bi bi-arrow-down-short"></i>
+								</a> <a class="text-decoration-none text-muted opacity-75"
+									th:href="${url}+'&sort=fecha,DESC'"
+									th:title="#{tabla.orden.descendente}"> <i
+										class="bi bi-arrow-up-short"></i>
+								</a></th>
+
+
+								<th class="text-nowrap"><span
+									th:text="#{instalacion.horario.especial.tabla.hora.inicio}"></span>
+									<a class="ms-1 text-decoration-none text-muted opacity-75"
+									th:href="${url}+'&sort=horaInicio,ASC'"
+									th:title="#{tabla.orden.ascendente}"> <i
+										class="bi bi-arrow-down-short"></i>
+								</a> <a class="text-decoration-none text-muted opacity-75"
+									th:href="${url}+'&sort=horaInicio,DESC'"
+									th:title="#{tabla.orden.descendente}"> <i
+										class="bi bi-arrow-up-short"></i>
+								</a></th>
+
+								<th class="text-nowrap"><span
+									th:text="#{instalacion.horario.especial.tabla.hora.fin}"></span>
+									<a class="ms-1 text-decoration-none text-muted opacity-75"
+									th:href="${url}+'&sort=horaFin,ASC'"
+									th:title="#{tabla.orden.ascendente}"> <i
+										class="bi bi-arrow-down-short"></i>
+								</a> <a class="text-decoration-none text-muted opacity-75"
+									th:href="${url}+'&sort=horaFin,DESC'"
+									th:title="#{tabla.orden.descendente}"> <i
+										class="bi bi-arrow-up-short"></i>
+								</a></th>
+
+								<th class="text-nowrap"><span
+									th:text="#{instalacion.horario.especial.tabla.cerrado}"></span>
+									<a class="ms-1 text-decoration-none text-muted opacity-75"
+									th:href="${url}+'&sort=cerrado,ASC'"
+									th:title="#{tabla.orden.ascendente}"> <i
+										class="bi bi-arrow-down-short"></i>
+								</a> <a class="text-decoration-none text-muted opacity-75"
+									th:href="${url}+'&sort=cerrado,DESC'"
+									th:title="#{tabla.orden.descendente}"> <i
+										class="bi bi-arrow-up-short"></i>
+								</a></th>
+
+								<th class="text-center" style="width: 60px;"><i
+									class="bi bi-pencil"></i></th>
+								<th class="text-center" style="width: 60px;"><i
+									class="bi bi-trash"></i></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="element : ${page.content}">
+								<td class="fw-semibold" th:text="${element.fecha}"></td>
+								<td class="fw-semibold" th:text="${element.horaInicio}"></td>
+								<td class="fw-semibold" th:text="${element.horaFin}"></td>
+								<td th:text="${element.cerrado}"></td>
+
+								<td class="text-center"><a
+									th:href="@{/privado/instalacion/{idInstalacion}/horario/especial/{id}/editar(idInstalacion=${element.instalacionId},id=${element.id})}"
+									class="btn btn-sm btn-outline-primary rounded-circle d-inline-flex align-items-center justify-content-center"
+									style="width: 32px; height: 32px;" th:title="#{boton.editar}">
+										<i class="bi bi-pencil-square"></i>
+								</a></td>
+
+								<td class="text-center">
+									<button type="button"
+										class="btn btn-sm btn-outline-danger rounded-circle d-inline-flex align-items-center justify-content-center hover-scale"
+										style="width: 32px; height: 32px;" data-bs-toggle="modal"
+										th:attr="data-bs-target='#confirmarEliminarModal-' + ${element.id}"
+										th:title="#{instalacion.modal.boton.eliminar}">
+										<i class="bi bi-trash"></i>
+									</button>
+
+									<div
+										th:replace="~{fragments/modals :: modalConfirmacion(
+                        'confirmarEliminarModal-' + ${element.id},
+                        #{instalacion.modal.titulo.eliminar},
+                        #{instalacion.modal.body.eliminar},
+                        @{/privado/instalacion/{instalacionId}/horario/especial/{id}/eliminar(instalacionId=${element.instalacionId},id=${element.id})},
+                        #{instalacion.modal.boton.eliminar}
+                      )}">
+									</div>
+								</td>
+							</tr>
+
+							<tr th:if="${#lists.isEmpty(page.content)}">
+								<td colspan="4" class="text-center text-muted py-5"><i
+									class="bi bi-search fs-2 d-block mb-2 text-secondary"></i> <span
+									th:text="#{tabla.no.se.encontraron.resultados}"></span></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<div
+					th:replace="~{fragments/pagination :: pagination(${page}, ${url}, ${sort})}"></div>
+
+
+
+			</div>
+		</div>
+
+
+	</div>
+</body>
+</html>

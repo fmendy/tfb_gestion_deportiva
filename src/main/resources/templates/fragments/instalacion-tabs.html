@@ -31,8 +31,8 @@
                <i class="bi bi-clock me-1"></i><span class="d-none d-sm-inline" th:text="#{instalacion.tab.horario}">Horarios</span>
             </a> 
 
-            <a th:href="@{/privado/instalacion/{id}/especiales(id=${id})}"
-               th:classappend="${activeTab == 'especiales' ? 'bg-white text-primary shadow-sm' : 'text-secondary'}"
+            <a th:href="@{/privado/instalacion/{id}/horario/especial(id=${id})}"
+               th:classappend="${activeTab == 'horario-especial' ? 'bg-white text-primary shadow-sm' : 'text-secondary'}"
                th:class="${baseClass}"> 
                <i class="bi bi-calendar-event me-1"></i><span class="d-none d-sm-inline"th:text="#{instalacion.tab.horario.especial}">Especiales</span>
             </a> 

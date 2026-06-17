@@ -35,7 +35,6 @@ public class InstalacionHorarioEspecialDTO extends BaseDTO {
 	@NotNull
 	private LocalDate fecha;
 	
-	@NotNull
 	private Boolean cerrado;
 
 }

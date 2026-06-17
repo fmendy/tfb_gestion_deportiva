@@ -34,6 +34,15 @@ public class InstalacionHorarioEspecialSpecifications extends BaseSpecifications
 			specs.add(new InstalacionHorarioEspecialSpecifications().greaterThanOrEqualTo("fecha",
 					filter.getFechaHasta()));
 		}
+		
+		if (filter.getCerrado() != null) {
+			if(filter.getCerrado()) {
+				specs.add(new InstalacionHorarioEspecialSpecifications().equalsFieldLong(1L,"cerrado"));
+			}else {
+				specs.add(new InstalacionHorarioEspecialSpecifications().equalsFieldLong(0L,"cerrado"));
+			}
+			
+		}
 
 		return new InstalacionHorarioEspecialSpecifications().combine(specs);
 	}

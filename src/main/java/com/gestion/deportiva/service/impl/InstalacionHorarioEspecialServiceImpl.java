@@ -12,10 +12,10 @@ import org.springframework.stereotype.Service;
 import com.gestion.deportiva.dto.InstalacionHorarioEspecialDTO;
 import com.gestion.deportiva.dto.filter.InstalacionHorarioEspecialFilter;
 import com.gestion.deportiva.dto.specifications.InstalacionHorarioEspecialSpecifications;
+import com.gestion.deportiva.mapper.InstalacionHorarioEspecialMapper;
 import com.gestion.deportiva.model.InstalacionHorarioEspecial;
 import com.gestion.deportiva.repository.InstalacionHorarioEspecialRepository;
 import com.gestion.deportiva.service.InstalacionHorarioEspecialService;
-import com.gestion.deportiva.util.InstalacionHorarioEspecialUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
@@ -31,35 +31,43 @@ public class InstalacionHorarioEspecialServiceImpl implements InstalacionHorario
 	@PersistenceContext
 	private EntityManager entityManager;
 
+	@Autowired
+	private InstalacionHorarioEspecialMapper instalacionHorarioEspecialMapper;
+
 	@Override
 	public InstalacionHorarioEspecialDTO findById(Long id) {
 		logger.info("Buscando InstalacionHorarioEspecial por ID: {}", id);
-		return InstalacionHorarioEspecialUtil.modelToDTO(instalacionHorarioEspecialRepository.findByActivoTrueAndId(id));
+		return instalacionHorarioEspecialMapper
+				.modelToDTO(instalacionHorarioEspecialRepository.findByActivoTrueAndId(id));
 	}
 
 	@Override
 	public InstalacionHorarioEspecialDTO findByUuid(String uuid) {
 		logger.info("Buscando InstalacionHorarioEspecial por UUID: {}", uuid);
-		return InstalacionHorarioEspecialUtil.modelToDTO(instalacionHorarioEspecialRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid));
+		return instalacionHorarioEspecialMapper
+				.modelToDTO(instalacionHorarioEspecialRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid));
 	}
 
 	@Override
 	@Transactional
 	public Long guardar(InstalacionHorarioEspecialDTO dto) {
 		logger.info("Guardando InstalacionHorarioEspecial");
-		InstalacionHorarioEspecial model = instalacionHorarioEspecialRepository.findByActivoTrueAndUuidEqualsIgnoreCase(dto.getUuid());
+		InstalacionHorarioEspecial model = instalacionHorarioEspecialRepository
+				.findByActivoTrueAndUuidEqualsIgnoreCase(dto.getUuid());
 		if (model == null) {
 			logger.info("Creando nuevo InstalacionHorarioEspecial");
 			model = new InstalacionHorarioEspecial();
 		}
-		model = InstalacionHorarioEspecialUtil.dtoToModel(dto, model);
+		model = instalacionHorarioEspecialMapper.dtoToModel(dto, model);
 		instalacionHorarioEspecialRepository.saveAndFlush(model);
 		return model.getId();
 	}
 
 	@Override
-	public Page<InstalacionHorarioEspecialDTO> getPageByFilter(InstalacionHorarioEspecialFilter filter, Pageable pageable) {
-		return InstalacionHorarioEspecialUtil.pageToPageDTO(instalacionHorarioEspecialRepository.findAll(InstalacionHorarioEspecialSpecifications.filter(filter), pageable));
+	public Page<InstalacionHorarioEspecialDTO> getPageByFilter(InstalacionHorarioEspecialFilter filter,
+			Pageable pageable) {
+		return instalacionHorarioEspecialMapper.pageToPageDTO(instalacionHorarioEspecialRepository
+				.findAll(InstalacionHorarioEspecialSpecifications.filter(filter), pageable));
 	}
 
 	@Override
@@ -73,19 +81,22 @@ public class InstalacionHorarioEspecialServiceImpl implements InstalacionHorario
 	@Override
 	public void eliminar(String uuid) {
 		logger.info("Eliminando InstalacionHorarioEspecial por ID: {}");
-		InstalacionHorarioEspecial model = instalacionHorarioEspecialRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid);
+		InstalacionHorarioEspecial model = instalacionHorarioEspecialRepository
+				.findByActivoTrueAndUuidEqualsIgnoreCase(uuid);
 		model.setActivo(false);
 		instalacionHorarioEspecialRepository.saveAndFlush(model);
 	}
 
 	@Override
 	public List<InstalacionHorarioEspecialDTO> getListDTO() {
-		return InstalacionHorarioEspecialUtil.listModelToListDTO(instalacionHorarioEspecialRepository.findByActivoTrue());
+		return instalacionHorarioEspecialMapper
+				.listModelToListDTO(instalacionHorarioEspecialRepository.findByActivoTrue());
 	}
 
 	@Override
 	public List<InstalacionHorarioEspecialDTO> getListDTO(InstalacionHorarioEspecialFilter filter) {
-		return InstalacionHorarioEspecialUtil.listModelToListDTO(instalacionHorarioEspecialRepository.findAll(InstalacionHorarioEspecialSpecifications.filter(filter)));
+		return instalacionHorarioEspecialMapper.listModelToListDTO(
+				instalacionHorarioEspecialRepository.findAll(InstalacionHorarioEspecialSpecifications.filter(filter)));
 	}
 
 	@Override
