@@ -31,17 +31,12 @@ public class InstalacionHorarioEspecialSpecifications extends BaseSpecifications
 		}
 
 		if (filter.getFechaHasta() != null) {
-			specs.add(new InstalacionHorarioEspecialSpecifications().greaterThanOrEqualTo("fecha",
+			specs.add(new InstalacionHorarioEspecialSpecifications().lessThanOrEqualTo("fecha",
 					filter.getFechaHasta()));
 		}
-		
+
 		if (filter.getCerrado() != null) {
-			if(filter.getCerrado()) {
-				specs.add(new InstalacionHorarioEspecialSpecifications().equalsFieldLong(1L,"cerrado"));
-			}else {
-				specs.add(new InstalacionHorarioEspecialSpecifications().equalsFieldLong(0L,"cerrado"));
-			}
-			
+			specs.add(new InstalacionHorarioEspecialSpecifications().equalsField(filter.getCerrado(), "cerrado"));
 		}
 
 		return new InstalacionHorarioEspecialSpecifications().combine(specs);

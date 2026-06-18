@@ -305,6 +305,20 @@ public abstract class BaseSpecifications<T> {
 			return cb.equal(path, value);
 		};
 	}
+	
+	protected Specification<T> equalsField(Boolean value, String... fields) {
+		return (root, query, cb) -> {
+			// Obtenemos el path inicial empezando por el primer campo
+			Path<Object> path = root.get(fields[0]);
+
+			// Iteramos sobre los campos restantes para ir haciendo "get" encadenados
+			for (int i = 1; i < fields.length; i++) {
+				path = path.get(fields[i]);
+			}
+
+			return cb.equal(path, value);
+		};
+	}
 
 	protected Specification<T> createdByUsuarioUuid(String uuid) {
 		return (root, query, cb) -> cb.equal(cb.upper(root.get("usuarioCreacion").get("uuid")), uuid.toUpperCase());

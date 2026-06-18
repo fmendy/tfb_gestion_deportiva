@@ -32,4 +32,5 @@ public interface BaseService<T extends BaseDTO, F extends BaseEntityFilter> {
 	boolean canRead(Long id);
 	
 	byte[] exportarExcel(F filter) throws IOException;
+
 }

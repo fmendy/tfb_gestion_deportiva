@@ -52,7 +52,8 @@ public class PrivadoInstalacionHorarioEspecialController extends BaseController 
 	private InstalacionHorarioEspecialService instalacionHorarioEspecialService;
 
 	@GetMapping("")
-	public ModelAndView search(@PathVariable Long idInstalacion,Pageable pageable, HttpServletRequest request, InstalacionHorarioEspecialFilter filter) {
+	public ModelAndView search(@PathVariable Long idInstalacion, Pageable pageable, HttpServletRequest request,
+			InstalacionHorarioEspecialFilter filter) {
 		logger.info("Mostrando vista de listado de instalacionHorarioEspecial con filtros");
 		filter.setInstalacionId(idInstalacion);
 		return buildListView(filter, pageable, request);
@@ -67,7 +68,7 @@ public class PrivadoInstalacionHorarioEspecialController extends BaseController 
 					SecurityUtil.getCurrentUserId(), id);
 			throw new PermisoException("No tiene permisos para acceder a esta instalacionHorarioEspecial.");
 		}
-		return loadForm(id, redirectAttributes);
+		return loadForm(id, idInstalacion, redirectAttributes);
 
 	}
 
@@ -75,7 +76,7 @@ public class PrivadoInstalacionHorarioEspecialController extends BaseController 
 	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Localizacion.GESTION_SEDE + "')")
 	public ModelAndView crear(@PathVariable Long idInstalacion, RedirectAttributes redirectAttributes) {
 
-		return loadForm(null, redirectAttributes);
+		return loadForm(null, idInstalacion, redirectAttributes);
 
 	}
 
@@ -93,9 +94,9 @@ public class PrivadoInstalacionHorarioEspecialController extends BaseController 
 			return buildDetailsForm(dto);
 		}
 		try {
-			Long id = instalacionHorarioEspecialService.guardar(dto);
+			instalacionHorarioEspecialService.guardar(dto);
 			redirectAttributes.addFlashAttribute(Constantes.HTTP_STATUS, HttpStatus.OK.value());
-			return new ModelAndView(new RedirectView(BASE_URL + "/" + id + "/editar"));
+			return new ModelAndView(new RedirectView(String.format(BASE_URL, dto.getInstalacionId().toString())));
 		} catch (Exception e) {
 			logger.error("Error al guardar la Instalacion : {}", e.getMessage(), e);
 			ModelAndView mav = buildDetailsForm(dto);
@@ -104,10 +105,9 @@ public class PrivadoInstalacionHorarioEspecialController extends BaseController 
 		}
 	}
 
-	private ModelAndView loadForm(Long id, RedirectAttributes redirectAttributes) {
+	private ModelAndView loadForm(Long id, Long instalacionId, RedirectAttributes redirectAttributes) {
 		try {
-			InstalacionHorarioEspecialDTO dto = (id == null) ? new InstalacionHorarioEspecialDTO()
-					: instalacionHorarioEspecialService.findById(id);
+			InstalacionHorarioEspecialDTO dto = instalacionHorarioEspecialService.findByIdOrNewEmpty(id, instalacionId);
 			return buildDetailsForm(dto);
 		} catch (Exception e) {
 			logger.error("Error al cargar formulario de Instalacion {}: {}", id, e.getMessage(), e);
@@ -119,8 +119,9 @@ public class PrivadoInstalacionHorarioEspecialController extends BaseController 
 		ModelAndView mav = new ModelAndView(VIEW_FORM);
 		mav.addObject("form", dto);
 		mav.addObject("breadcrumbs",
-				BreadcrumbBuilder.start().includeHome().add("breadcrumb.gestion.instalacion", BASE_URL)
-						.add("breadcrumb.gestion.instalacion.editar", null).build());
+				BreadcrumbBuilder.start().includeHome().add("breadcrumb.gestion.instalacion", String
+						.format(BASE_URL, dto.getInstalacionId().toString()).replace("horario/especial", "editar"))
+						.add("breadcrumb.gestion.instalacion.horario", null).build());
 		addBasicModelDetails(mav, TITLE_PAGE, false);
 		return mav;
 	}
@@ -131,14 +132,33 @@ public class PrivadoInstalacionHorarioEspecialController extends BaseController 
 		mav.addObject("page", instalacionHorarioEspecialService.getPageByFilter(filter, pageable));
 		mav.addObject("filter", filter);
 		mav.addObject("url", InstalacionHorarioEspecialUtil.cleanUrlPageFilter(filter, request.getRequestURI()));
-		mav.addObject("breadcrumbs",
-				BreadcrumbBuilder.start().includeHome()
-						.add("breadcrumb.gestion.instalacion",
-								String.format(BASE_URL, filter.getInstalacionId().toString()).replace("horario/especial", "editar"))
-						.add("breadcrumb.gestion.instalacion.horario", null).build());
+		mav.addObject("breadcrumbs", BreadcrumbBuilder.start().includeHome()
+				.add("breadcrumb.gestion.instalacion", String.format(BASE_URL, filter.getInstalacionId().toString())
+						.replace("horario/especial", "editar"))
+				.add("breadcrumb.gestion.instalacion.horario", null).build());
 
 		addSortParameter(mav, pageable);
 		addBasicModelDetails(mav, TITLE_PAGE, false);
 		return mav;
+	}
+
+	@GetMapping("/{id}/eliminar")
+	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Localizacion.GESTION_INSTALACION + "')")
+	public ModelAndView eliminar(@PathVariable Long idInstalacion, @PathVariable Long id,
+			RedirectAttributes redirectAttributes) throws PermisoException {
+		if (!instalacionHorarioEspecialService.canWrite(id)) {
+			logger.error("Instalacion {} intentó acceder a una instalacionHorarioEspecial  sin permisos: usuario {}",
+					SecurityUtil.getCurrentUserId(), id);
+			throw new PermisoException("No tiene permisos para acceder a esta instalacionHorarioEspecial.");
+		}
+		try {
+			instalacionHorarioEspecialService.eliminar(id);
+			redirectAttributes.addFlashAttribute(Constantes.HTTP_STATUS, HttpStatus.OK.value());
+			return new ModelAndView(new RedirectView(String.format(BASE_URL, idInstalacion).toString()));
+		} catch (Exception e) {
+			logger.error("Error al eliminar instalacionHorarioEspecial {}", id, e);
+			return redirectWithError(BASE_URL, redirectAttributes, HttpStatus.INTERNAL_SERVER_ERROR.value(), null);
+		}
+
 	}
 }

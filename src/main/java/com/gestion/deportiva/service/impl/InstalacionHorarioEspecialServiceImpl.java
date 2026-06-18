@@ -114,4 +114,17 @@ public class InstalacionHorarioEspecialServiceImpl implements InstalacionHorario
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public InstalacionHorarioEspecialDTO findByIdOrNewEmpty(Long id, Long instalacionId) {
+		InstalacionHorarioEspecialDTO retVal = null;
+		if (id != null) {
+			retVal = findById(instalacionId);
+		}
+		if (retVal == null) {
+			retVal = new InstalacionHorarioEspecialDTO();
+			retVal.setInstalacionId(instalacionId);
+		}
+		return retVal;
+	}
 }
