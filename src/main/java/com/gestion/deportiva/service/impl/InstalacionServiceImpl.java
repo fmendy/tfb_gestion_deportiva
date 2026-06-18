@@ -1,5 +1,6 @@
 package com.gestion.deportiva.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -17,6 +18,8 @@ import com.gestion.deportiva.mapper.InstalacionMapper;
 import com.gestion.deportiva.model.Instalacion;
 import com.gestion.deportiva.repository.InstalacionRepository;
 import com.gestion.deportiva.service.InstalacionService;
+import com.gestion.deportiva.util.Constantes;
+import com.gestion.deportiva.util.SecurityUtil;
 import com.gestion.deportiva.util.Utils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -119,5 +122,32 @@ public class InstalacionServiceImpl implements InstalacionService {
 	public byte[] exportarExcel(InstalacionFilter filter) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public List<InstalacionDTO> getListDTOParaEmpleado(Long empresaId, Long sedeId) {
+		List<InstalacionDTO> retVal = new ArrayList<>();
+		if (SecurityUtil.hasAuthority(Constantes.Permiso.GESTION_GLOBAL)
+				|| SecurityUtil.hasAuthority(Constantes.Permiso.Usuario.GESTION_USUARIO_GLOBAL)) {
+			retVal = getListDTO();
+		} else if (SecurityUtil.hasAuthority(Constantes.Permiso.Usuario.GESTION_USUARIO_EMPRESA)) {
+			retVal = instalacionMapper.listModelToListDTO(instalacionRepository
+					.findByActivoTrueAndSedeEmpresaIdIn(SecurityUtil.getCurrentUserListEmpresaId()));
+		} else if (SecurityUtil.hasAuthority(Constantes.Permiso.Usuario.GESTION_USUARIO_SEDE)) {
+			retVal = instalacionMapper.listModelToListDTO(instalacionRepository
+					.findByActivoTrueAndSedeIdIn(SecurityUtil.getCurrentUserListSedeId()).stream().toList());
+		} else if (SecurityUtil.hasAuthority(Constantes.Permiso.Usuario.GESTION_USUARIO_INSTALACION)) {
+			retVal = instalacionMapper.listModelToListDTO(
+					instalacionRepository.findByActivoTrueAndIdIn(SecurityUtil.getCurrentUserListInstalacionId()));
+		}
+
+		if (empresaId != null) {
+			retVal.removeIf(s -> !s.getEmpresaId().equals(empresaId));
+		}
+		if (sedeId != null) {
+			retVal.removeIf(s -> !s.getSedeId().equals(sedeId));
+		}
+		Utils.sortByCampo(retVal, InstalacionDTO::getEmpresaSedeInstalacionNombre);
+		return Utils.addEmptyOption(retVal, InstalacionDTO.class);
 	}
 }

@@ -17,7 +17,7 @@ public class InstalacionTipoSpecifications extends BaseSpecifications<Instalacio
 		specs.add(new InstalacionTipoSpecifications().activoTrue());
 
 		if (StringUtils.hasText(filter.getNombre())) {
-			specs.add(new InstalacionTipoSpecifications().likeIgnoreCase("nombre", filter.getNombre()));
+			specs.add(new InstalacionTipoSpecifications().likeIgnoreCase(filter.getNombre(), "nombre"));
 		}
 
 		return new InstalacionTipoSpecifications().combine(specs);

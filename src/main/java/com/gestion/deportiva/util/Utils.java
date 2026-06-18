@@ -78,6 +78,21 @@ public class Utils {
 		return list;
 	}
 
+	public static <T extends MaestraDTO> List<T> addEmptyOption(List<T> list, Class<T> clazz) {
+		if (list != null && list.size() > 0) {
+			try {
+				T emptyOption = clazz.getDeclaredConstructor().newInstance();
+				emptyOption.setId(null);
+				emptyOption.setNombre("");
+				list.add(0, emptyOption);
+			} catch (Exception e) {
+				throw new RuntimeException("No se pudo crear instancia de clase hija de MaestraDTO: " + clazz.getName(),
+						e);
+			}
+		}
+		return list;
+	}
+
 	public static Date dateSetHoraMinutoSegundoMilisegundo(Date date, int hora, int min, int sec, int milisec) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
@@ -120,6 +135,13 @@ public class Utils {
 
 	public static <T extends MaestraDTO> List<T> sortByNombre(List<T> lista) {
 		Collections.sort(lista, Comparator.comparing(MaestraDTO::getNombre));
+		return lista;
+	}
+
+	public static <T extends MaestraDTO, U extends Comparable<? super U>> List<T> sortByCampo(List<T> lista,
+			Function<? super T, ? extends U> keyExtractor) {
+
+		Collections.sort(lista, Comparator.comparing(keyExtractor));
 		return lista;
 	}
 
@@ -171,7 +193,5 @@ public class Utils {
 			this.text = text;
 		}
 	}
-
-
 
 }

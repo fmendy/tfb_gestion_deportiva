@@ -17,7 +17,7 @@ public class ProvinciaSpecifications extends BaseSpecifications<Provincia> {
 		specs.add(new ProvinciaSpecifications().activoTrue());
 
 		if (StringUtils.hasText(filter.getNombre())) {
-			specs.add(new ProvinciaSpecifications().likeIgnoreCase("nombre", filter.getNombre()));
+			specs.add(new ProvinciaSpecifications().likeIgnoreCase( filter.getNombre(),"nombre"));
 		}
 		if (StringUtils.hasText(filter.getComunidadAutonomaUuid())) {
 			specs.add(new ProvinciaSpecifications().equalsIgnoreCase("comunidadAutonoma", "uuid",

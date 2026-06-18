@@ -11,5 +11,7 @@ public interface EmpresaService extends MaestraService<EmpresaDTO, EmpresaFilter
 	Long registrarEmpresa(RegistroEmpresaDTO dto);
 
 	List<EmpresaDTO> getListDTOParaInstalacion();
+	
+	List<EmpresaDTO> getListDTOParaEmpleado();
 
 }

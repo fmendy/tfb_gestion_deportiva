@@ -10,6 +10,9 @@ public interface SedeService extends MaestraService<SedeDTO, SedeFilter> {
 
 	List<SedeDTO> getListDTOParaInstalacion(Long empresaId);
 	
+	
+	List<SedeDTO> getListDTOParaEmpleado(Long empresaId);
+	
 
 
 }

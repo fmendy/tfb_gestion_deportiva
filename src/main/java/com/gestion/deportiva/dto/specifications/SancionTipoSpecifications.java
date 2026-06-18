@@ -17,7 +17,7 @@ public class SancionTipoSpecifications extends BaseSpecifications<SancionTipo> {
 		specs.add(new SancionTipoSpecifications().activoTrue());
 
 		if (StringUtils.hasText(filter.getNombre())) {
-			specs.add(new SancionTipoSpecifications().likeIgnoreCase("nombre", filter.getNombre()));
+			specs.add(new SancionTipoSpecifications().likeIgnoreCase(filter.getNombre(), "nombre"));
 		}
 
 		return new SancionTipoSpecifications().combine(specs);

@@ -19,13 +19,6 @@ public class UsuarioUtil {
 				retVal = retVal + "&nombre=" + filter.getNombre();
 			}
 
-			if (StringUtils.hasText(filter.getDemarcacionUuid())) {
-				retVal = retVal + "&demarcacionUuid=" + filter.getDemarcacionUuid();
-			}
-
-			if (StringUtils.hasText(filter.getRolUuid())) {
-				retVal = retVal + "&rolUuid=" + filter.getRolUuid();
-			}
 			if (StringUtils.hasText(filter.getEmail())) {
 				retVal = retVal + "&email=" + filter.getEmail();
 			}

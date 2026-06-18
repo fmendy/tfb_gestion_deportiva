@@ -17,7 +17,7 @@ public class ComunidadAutonomaSpecifications extends BaseSpecifications<Comunida
 		specs.add(new ComunidadAutonomaSpecifications().activoTrue());
 
 		if (StringUtils.hasText(filter.getNombre())) {
-			specs.add(new ComunidadAutonomaSpecifications().likeIgnoreCase("nombre", filter.getNombre()));
+			specs.add(new ComunidadAutonomaSpecifications().likeIgnoreCase(filter.getNombre(), "nombre"));
 		}
 		if (filter.getCodigoIne() != null) {
 			specs.add(new ComunidadAutonomaSpecifications().equalsFieldLong(filter.getCodigoIne(), "codigoIne"));

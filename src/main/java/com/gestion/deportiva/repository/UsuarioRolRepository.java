@@ -12,5 +12,7 @@ public interface UsuarioRolRepository extends BaseEntityRepository<UsuarioRol, L
 
 	List<UsuarioRol> findByActivoTrueAndUsuarioId(Long usuarioId);
 	
+	List<UsuarioRol> findByActivoTrueAndUsuarioIdAndRolNombreIn(Long usuarioId, List<String> listRolNombres);
+	
 	List<UsuarioRol> findByActivoTrueAndUsuario_UuidEqualsIgnoreCase(String usuarioUuid);
 }

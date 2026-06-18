@@ -1,7 +1,6 @@
 package com.gestion.deportiva.dto.filter;
 
 import java.io.Serializable;
-import java.util.List;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,10 +15,5 @@ public class UsuarioFilter extends MaestraFilter implements Serializable {
 
 	private String email;
 	
-	private String demarcacionUuid; 
-	
-	private List<String> listDemarcacionUuid;
-	
-	private String rolUuid;
 
 }

@@ -17,7 +17,7 @@ public class ReservaEstadoSpecifications extends BaseSpecifications<ReservaEstad
 		specs.add(new ReservaEstadoSpecifications().activoTrue());
 
 		if (StringUtils.hasText(filter.getNombre())) {
-			specs.add(new ReservaEstadoSpecifications().likeIgnoreCase("nombre", filter.getNombre()));
+			specs.add(new ReservaEstadoSpecifications().likeIgnoreCase(filter.getNombre(), "nombre"));
 		}
 
 		return new ReservaEstadoSpecifications().combine(specs);

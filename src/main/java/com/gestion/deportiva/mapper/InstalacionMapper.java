@@ -30,6 +30,8 @@ public class InstalacionMapper {
 		retVal.setDescripcion(model.getDescripcion());
 		retVal.setEmpresaId(model.getSede().getEmpresa().getId());
 		retVal.setEmpresaNombre(model.getSede().getEmpresa().getNombre());
+		retVal.setEmpresaSedeInstalacionNombre(model.getSede().getEmpresa().getNombre() + " - "
+				+ model.getSede().getNombre() + " - " + model.getNombre());
 
 		return retVal;
 	}

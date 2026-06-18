@@ -10,4 +10,8 @@ import com.gestion.deportiva.model.Instalacion;
 public interface InstalacionRepository extends MaestraRepository<Instalacion, Long> {
 
 	List<Instalacion> findByActivoTrueAndIdIn(List<Long> ids);
+
+	List<Instalacion> findByActivoTrueAndSedeEmpresaIdIn(List<Long> listEmpresaIds);
+
+	List<Instalacion> findByActivoTrueAndSedeIdIn(List<Long> listSedeId);
 }

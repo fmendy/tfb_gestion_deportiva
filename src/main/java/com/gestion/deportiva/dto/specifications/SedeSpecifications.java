@@ -17,7 +17,7 @@ public class SedeSpecifications extends BaseSpecifications<Sede> {
 		specs.add(new SedeSpecifications().activoTrue());
 
 		if (StringUtils.hasText(filter.getNombre())) {
-			specs.add(new SedeSpecifications().likeIgnoreCase("nombre", filter.getNombre()));
+			specs.add(new SedeSpecifications().likeIgnoreCase(filter.getNombre(), "nombre"));
 		}
 
 		if (filter.getEmpresaId() != null) {

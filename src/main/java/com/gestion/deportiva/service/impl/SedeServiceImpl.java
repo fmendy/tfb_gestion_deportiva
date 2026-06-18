@@ -201,10 +201,34 @@ public class SedeServiceImpl implements SedeService {
 					instalacionRepository.findByActivoTrueAndIdIn(SecurityUtil.getCurrentUserListSedeId()).stream()
 							.map(Instalacion::getSede).toList());
 		}
-		
-		if(empresaId != null) {
+
+		if (empresaId != null) {
 			retVal.removeIf(s -> !s.getEmpresaId().equals(empresaId));
 		}
 		return Utils.addEmptyOptionIfMoreThanOneOption(retVal, SedeDTO.class);
+	}
+
+	@Override
+	public List<SedeDTO> getListDTOParaEmpleado(Long empresaId) {
+		List<SedeDTO> retVal = new ArrayList<>();
+		if (SecurityUtil.hasAuthority(Constantes.Permiso.GESTION_GLOBAL)
+				|| SecurityUtil.hasAuthority(Constantes.Permiso.Usuario.GESTION_USUARIO_GLOBAL)) {
+			retVal = getListDTO();
+		} else if (SecurityUtil.hasAuthority(Constantes.Permiso.Usuario.GESTION_USUARIO_EMPRESA)) {
+			retVal = sedeMapper.listModelToListDTO(
+					sedeRepository.findByActivoTrueAndEmpresaIdIn(SecurityUtil.getCurrentUserListEmpresaId()));
+		} else if (SecurityUtil.hasAuthority(Constantes.Permiso.Usuario.GESTION_USUARIO_SEDE)) {
+			retVal = sedeMapper.listModelToListDTO(
+					sedeRepository.findByActivoTrueAndIdIn(SecurityUtil.getCurrentUserListSedeId()).stream().toList());
+		} else if (SecurityUtil.hasAuthority(Constantes.Permiso.Usuario.GESTION_USUARIO_INSTALACION)) {
+			retVal = sedeMapper.listModelToListDTO(
+					instalacionRepository.findByActivoTrueAndIdIn(SecurityUtil.getCurrentUserListSedeId()).stream()
+							.map(Instalacion::getSede).toList());
+		}
+
+		if (empresaId != null) {
+			retVal.removeIf(s -> !s.getEmpresaId().equals(empresaId));
+		}
+		return Utils.addEmptyOption(retVal, SedeDTO.class);
 	}
 }

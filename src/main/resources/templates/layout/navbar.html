@@ -90,6 +90,15 @@
 						th:href="@{/login}"> <i class="bi bi-box-arrow-in-right me-1"></i>
 							<span th:text="#{navbar.login}">Iniciar sesión</span>
 					</a></li>
+					
+					
+					<!-- Empresa -->
+					<li class="nav-item" sec:authorize="hasAuthority('GESTION_USUARIO_INSTALACION')"><a
+						class="nav-link text-white d-flex align-items-center"
+						th:href="@{/privado/empleado}"> <i
+							class="bi bi-person-square me-1"></i> <span
+							th:text="#{navbar.gestion.empleados}">Gestionar empleados</span>
+					</a></li>
 
 					<!-- Empresa -->
 					<li class="nav-item" sec:authorize="hasAuthority('GESTION_EMPRESA')"><a

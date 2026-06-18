@@ -42,10 +42,31 @@ public class Usuario extends Maestra implements Serializable {
 
 	@OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
 	private List<UsuarioRol> listUsuarioRol;
+	
+	@OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
+	private List<UsuarioEmpresa> listUsuarioEmpresa;
+	
+	@OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
+	private List<UsuarioSede> listUsuarioSede;
+	
+	@OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
+	private List<UsuarioInstalacion> listUsuarioInstalacion;
 
 
 
 	public List<UsuarioRol> getListUsuarioRol() {
 		return listUsuarioRol.stream().filter(ud -> ud.isActivo()).toList();
+	}
+	
+	public List<UsuarioEmpresa> getListUsuarioEmpresa() {
+		return listUsuarioEmpresa.stream().filter(ud -> ud.isActivo()).toList();
+	}
+	
+	public List<UsuarioSede> getListUsuarioSede() {
+		return listUsuarioSede.stream().filter(ud -> ud.isActivo()).toList();
+	}
+	
+	public List<UsuarioInstalacion> getListUsuarioInstalacion() {
+		return listUsuarioInstalacion.stream().filter(ud -> ud.isActivo()).toList();
 	}
 }

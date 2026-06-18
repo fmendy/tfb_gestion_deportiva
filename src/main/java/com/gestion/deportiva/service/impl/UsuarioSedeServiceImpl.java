@@ -12,10 +12,10 @@ import org.springframework.stereotype.Service;
 import com.gestion.deportiva.dto.UsuarioSedeDTO;
 import com.gestion.deportiva.dto.filter.UsuarioSedeFilter;
 import com.gestion.deportiva.dto.specifications.UsuarioSedeSpecifications;
+import com.gestion.deportiva.mapper.UsuarioSedeMapper;
 import com.gestion.deportiva.model.UsuarioSede;
 import com.gestion.deportiva.repository.UsuarioSedeRepository;
 import com.gestion.deportiva.service.UsuarioSedeService;
-import com.gestion.deportiva.util.UsuarioSedeUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
@@ -30,17 +30,20 @@ public class UsuarioSedeServiceImpl implements UsuarioSedeService {
 
 	@PersistenceContext
 	private EntityManager entityManager;
+	
+	@Autowired
+	private UsuarioSedeMapper usuarioSedeMapper;
 
 	@Override
 	public UsuarioSedeDTO findById(Long id) {
 		logger.info("Buscando UsuarioSede por ID: {}", id);
-		return UsuarioSedeUtil.modelToDTO(usuarioSedeRepository.findByActivoTrueAndId(id));
+		return usuarioSedeMapper.modelToDTO(usuarioSedeRepository.findByActivoTrueAndId(id));
 	}
 
 	@Override
 	public UsuarioSedeDTO findByUuid(String uuid) {
 		logger.info("Buscando UsuarioSede por UUID: {}", uuid);
-		return UsuarioSedeUtil.modelToDTO(usuarioSedeRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid));
+		return usuarioSedeMapper.modelToDTO(usuarioSedeRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid));
 	}
 
 	@Override
@@ -52,14 +55,14 @@ public class UsuarioSedeServiceImpl implements UsuarioSedeService {
 			logger.info("Creando nuevo UsuarioSede");
 			model = new UsuarioSede();
 		}
-		model = UsuarioSedeUtil.dtoToModel(dto, model);
+		model = usuarioSedeMapper.dtoToModel(dto, model);
 		usuarioSedeRepository.saveAndFlush(model);
 		return model.getId();
 	}
 
 	@Override
 	public Page<UsuarioSedeDTO> getPageByFilter(UsuarioSedeFilter filter, Pageable pageable) {
-		return UsuarioSedeUtil.pageToPageDTO(usuarioSedeRepository.findAll(UsuarioSedeSpecifications.filter(filter), pageable));
+		return usuarioSedeMapper.pageToPageDTO(usuarioSedeRepository.findAll(UsuarioSedeSpecifications.filter(filter), pageable));
 	}
 
 	@Override
@@ -80,12 +83,12 @@ public class UsuarioSedeServiceImpl implements UsuarioSedeService {
 
 	@Override
 	public List<UsuarioSedeDTO> getListDTO() {
-		return UsuarioSedeUtil.listModelToListDTO(usuarioSedeRepository.findByActivoTrue());
+		return usuarioSedeMapper.listModelToListDTO(usuarioSedeRepository.findByActivoTrue());
 	}
 
 	@Override
 	public List<UsuarioSedeDTO> getListDTO(UsuarioSedeFilter filter) {
-		return UsuarioSedeUtil.listModelToListDTO(usuarioSedeRepository.findAll(UsuarioSedeSpecifications.filter(filter)));
+		return usuarioSedeMapper.listModelToListDTO(usuarioSedeRepository.findAll(UsuarioSedeSpecifications.filter(filter)));
 	}
 
 	@Override

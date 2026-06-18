@@ -196,4 +196,25 @@ public class EmpresaServiceImpl implements EmpresaService {
 		}
 		return Utils.addEmptyOptionIfMoreThanOneOption(retVal, EmpresaDTO.class);
 	}
+
+	@Override
+	public List<EmpresaDTO> getListDTOParaEmpleado() {
+		List<EmpresaDTO> retVal = new ArrayList<>();
+		if (SecurityUtil.hasAuthority(Constantes.Permiso.GESTION_GLOBAL)
+				|| SecurityUtil.hasAuthority(Constantes.Permiso.Usuario.GESTION_USUARIO_GLOBAL)) {
+			retVal = getListDTO();
+		} else if (SecurityUtil.hasAuthority(Constantes.Permiso.Usuario.GESTION_USUARIO_EMPRESA)) {
+			retVal = empresaMapper.listModelToListDTO(
+					empresaRepository.findByActivoTrueAndIdIn(SecurityUtil.getCurrentUserListEmpresaId()));
+		} else if (SecurityUtil.hasAuthority(Constantes.Permiso.Usuario.GESTION_USUARIO_SEDE)) {
+			retVal = empresaMapper
+					.listModelToListDTO(sedeRepository.findByActivoTrueAndIdIn(SecurityUtil.getCurrentUserListSedeId())
+							.stream().map(Sede::getEmpresa).toList());
+		} else if (SecurityUtil.hasAuthority(Constantes.Permiso.Usuario.GESTION_USUARIO_INSTALACION)) {
+			retVal = empresaMapper.listModelToListDTO(
+					instalacionRepository.findByActivoTrueAndIdIn(SecurityUtil.getCurrentUserListSedeId()).stream()
+							.map(Instalacion::getSede).toList().stream().map(Sede::getEmpresa).toList());
+		}
+		return Utils.addEmptyOption(retVal, EmpresaDTO.class);
+	}
 }

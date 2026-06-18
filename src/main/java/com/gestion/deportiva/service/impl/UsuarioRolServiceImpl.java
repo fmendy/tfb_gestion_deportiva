@@ -15,6 +15,7 @@ import com.gestion.deportiva.dto.UsuarioRolesDTO;
 import com.gestion.deportiva.dto.UsuarioRolDTO;
 import com.gestion.deportiva.dto.filter.UsuarioRolFilter;
 import com.gestion.deportiva.dto.specifications.UsuarioRolSpecifications;
+import com.gestion.deportiva.mapper.UsuarioRolMapper;
 import com.gestion.deportiva.model.Rol;
 import com.gestion.deportiva.model.Usuario;
 import com.gestion.deportiva.model.UsuarioRol;
@@ -22,7 +23,6 @@ import com.gestion.deportiva.repository.RolRepository;
 import com.gestion.deportiva.repository.UsuarioRepository;
 import com.gestion.deportiva.repository.UsuarioRolRepository;
 import com.gestion.deportiva.service.UsuarioRolService;
-import com.gestion.deportiva.util.UsuarioRolUtil;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -39,16 +39,19 @@ public class UsuarioRolServiceImpl implements UsuarioRolService {
 	@Autowired
 	private RolRepository rolRepository;
 
+	@Autowired
+	private UsuarioRolMapper usuarioRolMapper;
+
 	@Override
 	public UsuarioRolDTO findById(Long id) {
 		logger.info("Buscando UsuarioRol con ID: {}", id);
-		return UsuarioRolUtil.modelToDTO(usuarioRolRepository.findByActivoTrueAndId(id));
+		return usuarioRolMapper.modelToDTO(usuarioRolRepository.findByActivoTrueAndId(id));
 	}
 
 	@Override
 	public UsuarioRolDTO findByUuid(String uuid) {
 		logger.info("Buscando UsuarioRol con UUID: {}", uuid);
-		return UsuarioRolUtil.modelToDTO(usuarioRolRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid));
+		return usuarioRolMapper.modelToDTO(usuarioRolRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid));
 	}
 
 	@Override
@@ -60,13 +63,13 @@ public class UsuarioRolServiceImpl implements UsuarioRolService {
 		}
 		dto.setRolId(rolRepository.findByActivoTrueAndUuidEqualsIgnoreCase(dto.getRolUuid()).getId());
 		dto.setUsuarioId(usuarioRepository.findByActivoTrueAndUuidEqualsIgnoreCase(dto.getUsuarioUuid()).getId());
-		model = UsuarioRolUtil.dtoToModel(dto, model);
+		model = usuarioRolMapper.dtoToModel(dto, model);
 		return dto.getId();
 	}
 
 	@Override
 	public Page<UsuarioRolDTO> getPageByFilter(UsuarioRolFilter filter, Pageable pageable) {
-		return UsuarioRolUtil
+		return usuarioRolMapper
 				.pageToPageDTO(usuarioRolRepository.findAll(UsuarioRolSpecifications.filter(filter), pageable));
 	}
 
@@ -92,12 +95,13 @@ public class UsuarioRolServiceImpl implements UsuarioRolService {
 
 	@Override
 	public List<UsuarioRolDTO> getListDTO() {
-		return UsuarioRolUtil.listModelToListDTO(usuarioRolRepository.findByActivoTrue());
+		return usuarioRolMapper.listModelToListDTO(usuarioRolRepository.findByActivoTrue());
 	}
 
 	@Override
 	public List<UsuarioRolDTO> getListDTO(UsuarioRolFilter filter) {
-		return UsuarioRolUtil.listModelToListDTO(usuarioRolRepository.findAll(UsuarioRolSpecifications.filter(filter)));
+		return usuarioRolMapper
+				.listModelToListDTO(usuarioRolRepository.findAll(UsuarioRolSpecifications.filter(filter)));
 	}
 
 	@Override
@@ -122,7 +126,7 @@ public class UsuarioRolServiceImpl implements UsuarioRolService {
 		Usuario usuario = usuarioRepository.findByActivoTrueAndUuidEqualsIgnoreCase(usuarioUuid);
 		List<UsuarioRol> listUsuarioRol = usuarioRolRepository
 				.findByActivoTrueAndUsuario_UuidEqualsIgnoreCase(usuarioUuid);
-		return UsuarioRolUtil.buildUsuarioRolesDTO(usuario, listUsuarioRol);
+		return usuarioRolMapper.buildUsuarioRolesDTO(usuario, listUsuarioRol);
 	}
 
 	@Override

@@ -19,7 +19,6 @@ import com.gestion.deportiva.dto.MiPerfilDTO;
 import com.gestion.deportiva.dto.MiPerfilPasswordDTO;
 import com.gestion.deportiva.dto.RegistroEmpresaDTO;
 import com.gestion.deportiva.model.Usuario;
-import com.gestion.deportiva.util.UsuarioRolUtil;
 
 @Component
 public class UsuarioMapper {
@@ -28,6 +27,9 @@ public class UsuarioMapper {
 	@Qualifier("myPasswordEncoder")
 	private PasswordEncoder passwordEncoder;
 
+	@Autowired
+	private UsuarioRolMapper usuarioRolMapper;
+	
 	public Usuario registroEmpresaDTOToModel(RegistroEmpresaDTO dto) {
 		Usuario usuario = new Usuario();
 		usuario.setNombre(dto.getNombre());
@@ -42,7 +44,7 @@ public class UsuarioMapper {
 		retVal.setEmail(model.getEmail());
 		retVal.setId(model.getId());
 		retVal.setNombre(model.getNombre());
-		retVal.setListUsuarioRolDTO(UsuarioRolUtil.listModelToListDTO(model.getListUsuarioRol()));
+		retVal.setListUsuarioRolDTO(usuarioRolMapper.listModelToListDTO(model.getListUsuarioRol()));
 		return retVal;
 	}
 

@@ -17,11 +17,11 @@ public class EmpresaSpecifications extends BaseSpecifications<Empresa> {
 		specs.add(new EmpresaSpecifications().activoTrue());
 
 		if (StringUtils.hasText(filter.getNombre())) {
-			specs.add(new EmpresaSpecifications().likeIgnoreCase("nombre", filter.getNombre()));
+			specs.add(new EmpresaSpecifications().likeIgnoreCase(filter.getNombre(), "nombre"));
 		}
 
 		if (StringUtils.hasText(filter.getCif())) {
-			specs.add(new EmpresaSpecifications().likeIgnoreCase("cif", filter.getCif()));
+			specs.add(new EmpresaSpecifications().likeIgnoreCase(filter.getCif(), "cif"));
 		}
 
 		if (!filter.getListIds().isEmpty()) {

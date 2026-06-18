@@ -12,12 +12,12 @@ import org.springframework.stereotype.Service;
 import com.gestion.deportiva.dto.UsuarioEmpresaDTO;
 import com.gestion.deportiva.dto.filter.UsuarioEmpresaFilter;
 import com.gestion.deportiva.dto.specifications.UsuarioEmpresaSpecifications;
+import com.gestion.deportiva.mapper.UsuarioEmpresaMapper;
 import com.gestion.deportiva.model.Empresa;
 import com.gestion.deportiva.model.Usuario;
 import com.gestion.deportiva.model.UsuarioEmpresa;
 import com.gestion.deportiva.repository.UsuarioEmpresaRepository;
 import com.gestion.deportiva.service.UsuarioEmpresaService;
-import com.gestion.deportiva.util.UsuarioEmpresaUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
@@ -33,16 +33,19 @@ public class UsuarioEmpresaServiceImpl implements UsuarioEmpresaService {
 	@PersistenceContext
 	private EntityManager entityManager;
 
+	@Autowired
+	private UsuarioEmpresaMapper usuarioEmpresaMapper;
+
 	@Override
 	public UsuarioEmpresaDTO findById(Long id) {
 		logger.info("Buscando UsuarioEmpresa por ID: {}", id);
-		return UsuarioEmpresaUtil.modelToDTO(usuarioEmpresaRepository.findByActivoTrueAndId(id));
+		return usuarioEmpresaMapper.modelToDTO(usuarioEmpresaRepository.findByActivoTrueAndId(id));
 	}
 
 	@Override
 	public UsuarioEmpresaDTO findByUuid(String uuid) {
 		logger.info("Buscando UsuarioEmpresa por UUID: {}", uuid);
-		return UsuarioEmpresaUtil.modelToDTO(usuarioEmpresaRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid));
+		return usuarioEmpresaMapper.modelToDTO(usuarioEmpresaRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid));
 	}
 
 	@Override
@@ -54,14 +57,15 @@ public class UsuarioEmpresaServiceImpl implements UsuarioEmpresaService {
 			logger.info("Creando nuevo UsuarioEmpresa");
 			model = new UsuarioEmpresa();
 		}
-		model = UsuarioEmpresaUtil.dtoToModel(dto, model);
+		model = usuarioEmpresaMapper.dtoToModel(dto, model);
 		usuarioEmpresaRepository.saveAndFlush(model);
 		return model.getId();
 	}
 
 	@Override
 	public Page<UsuarioEmpresaDTO> getPageByFilter(UsuarioEmpresaFilter filter, Pageable pageable) {
-		return UsuarioEmpresaUtil.pageToPageDTO(usuarioEmpresaRepository.findAll(UsuarioEmpresaSpecifications.filter(filter), pageable));
+		return usuarioEmpresaMapper
+				.pageToPageDTO(usuarioEmpresaRepository.findAll(UsuarioEmpresaSpecifications.filter(filter), pageable));
 	}
 
 	@Override
@@ -82,12 +86,13 @@ public class UsuarioEmpresaServiceImpl implements UsuarioEmpresaService {
 
 	@Override
 	public List<UsuarioEmpresaDTO> getListDTO() {
-		return UsuarioEmpresaUtil.listModelToListDTO(usuarioEmpresaRepository.findByActivoTrue());
+		return usuarioEmpresaMapper.listModelToListDTO(usuarioEmpresaRepository.findByActivoTrue());
 	}
 
 	@Override
 	public List<UsuarioEmpresaDTO> getListDTO(UsuarioEmpresaFilter filter) {
-		return UsuarioEmpresaUtil.listModelToListDTO(usuarioEmpresaRepository.findAll(UsuarioEmpresaSpecifications.filter(filter)));
+		return usuarioEmpresaMapper
+				.listModelToListDTO(usuarioEmpresaRepository.findAll(UsuarioEmpresaSpecifications.filter(filter)));
 	}
 
 	@Override
@@ -110,7 +115,7 @@ public class UsuarioEmpresaServiceImpl implements UsuarioEmpresaService {
 	public void asociarUsuarioEmpresa(Long usuarioId, Long empresaId) {
 		UsuarioEmpresa model = new UsuarioEmpresa();
 		model.setUsuario(new Usuario(usuarioId));
-		model.setEmpresa(new  Empresa(empresaId));
+		model.setEmpresa(new Empresa(empresaId));
 		logger.info("Asociando Usuario " + usuarioId + " con Empresa " + empresaId);
 		usuarioEmpresaRepository.saveAndFlush(model);
 	}

@@ -12,10 +12,10 @@ import org.springframework.stereotype.Service;
 import com.gestion.deportiva.dto.UsuarioInstalacionDTO;
 import com.gestion.deportiva.dto.filter.UsuarioInstalacionFilter;
 import com.gestion.deportiva.dto.specifications.UsuarioInstalacionSpecifications;
+import com.gestion.deportiva.mapper.UsuarioInstalacionMapper;
 import com.gestion.deportiva.model.UsuarioInstalacion;
 import com.gestion.deportiva.repository.UsuarioInstalacionRepository;
 import com.gestion.deportiva.service.UsuarioInstalacionService;
-import com.gestion.deportiva.util.UsuarioInstalacionUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
@@ -30,17 +30,20 @@ public class UsuarioInstalacionServiceImpl implements UsuarioInstalacionService 
 
 	@PersistenceContext
 	private EntityManager entityManager;
+	
+	@Autowired
+	private UsuarioInstalacionMapper usuarioInstalacionMapper;
 
 	@Override
 	public UsuarioInstalacionDTO findById(Long id) {
 		logger.info("Buscando UsuarioInstalacion por ID: {}", id);
-		return UsuarioInstalacionUtil.modelToDTO(usuarioInstalacionRepository.findByActivoTrueAndId(id));
+		return usuarioInstalacionMapper.modelToDTO(usuarioInstalacionRepository.findByActivoTrueAndId(id));
 	}
 
 	@Override
 	public UsuarioInstalacionDTO findByUuid(String uuid) {
 		logger.info("Buscando UsuarioInstalacion por UUID: {}", uuid);
-		return UsuarioInstalacionUtil.modelToDTO(usuarioInstalacionRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid));
+		return usuarioInstalacionMapper.modelToDTO(usuarioInstalacionRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid));
 	}
 
 	@Override
@@ -52,14 +55,14 @@ public class UsuarioInstalacionServiceImpl implements UsuarioInstalacionService 
 			logger.info("Creando nuevo UsuarioInstalacion");
 			model = new UsuarioInstalacion();
 		}
-		model = UsuarioInstalacionUtil.dtoToModel(dto, model);
+		model = usuarioInstalacionMapper.dtoToModel(dto, model);
 		usuarioInstalacionRepository.saveAndFlush(model);
 		return model.getId();
 	}
 
 	@Override
 	public Page<UsuarioInstalacionDTO> getPageByFilter(UsuarioInstalacionFilter filter, Pageable pageable) {
-		return UsuarioInstalacionUtil.pageToPageDTO(usuarioInstalacionRepository.findAll(UsuarioInstalacionSpecifications.filter(filter), pageable));
+		return usuarioInstalacionMapper.pageToPageDTO(usuarioInstalacionRepository.findAll(UsuarioInstalacionSpecifications.filter(filter), pageable));
 	}
 
 	@Override
@@ -80,12 +83,12 @@ public class UsuarioInstalacionServiceImpl implements UsuarioInstalacionService 
 
 	@Override
 	public List<UsuarioInstalacionDTO> getListDTO() {
-		return UsuarioInstalacionUtil.listModelToListDTO(usuarioInstalacionRepository.findByActivoTrue());
+		return usuarioInstalacionMapper.listModelToListDTO(usuarioInstalacionRepository.findByActivoTrue());
 	}
 
 	@Override
 	public List<UsuarioInstalacionDTO> getListDTO(UsuarioInstalacionFilter filter) {
-		return UsuarioInstalacionUtil.listModelToListDTO(usuarioInstalacionRepository.findAll(UsuarioInstalacionSpecifications.filter(filter)));
+		return usuarioInstalacionMapper.listModelToListDTO(usuarioInstalacionRepository.findAll(UsuarioInstalacionSpecifications.filter(filter)));
 	}
 
 	@Override

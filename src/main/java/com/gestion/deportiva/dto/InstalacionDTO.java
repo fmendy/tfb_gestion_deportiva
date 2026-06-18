@@ -29,5 +29,7 @@ public class InstalacionDTO extends MaestraDTO {
 
 	@Size(max = 1250)
 	private String descripcion;
+	
+	private String empresaSedeInstalacionNombre;
 
 }
