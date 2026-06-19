@@ -15,10 +15,10 @@ import com.gestion.deportiva.dto.ComboDTO;
 import com.gestion.deportiva.dto.SancionTipoDTO;
 import com.gestion.deportiva.dto.filter.SancionTipoFilter;
 import com.gestion.deportiva.dto.specifications.SancionTipoSpecifications;
+import com.gestion.deportiva.mapper.SancionTipoMapper;
 import com.gestion.deportiva.model.SancionTipo;
 import com.gestion.deportiva.repository.SancionTipoRepository;
 import com.gestion.deportiva.service.SancionTipoService;
-import com.gestion.deportiva.util.SancionTipoUtil;
 import com.gestion.deportiva.util.Utils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -35,17 +35,19 @@ public class SancionTipoServiceImpl implements SancionTipoService {
 	@PersistenceContext
 	private EntityManager entityManager;
 
+	@Autowired
+	private SancionTipoMapper sancionTipoMapper;
+
 	@Override
 	public SancionTipoDTO findById(Long id) {
 		logger.info("Buscando SancionTipo por ID: {}", id);
-		return SancionTipoUtil.modelToDTO(sancionTipoRepository.findByActivoTrueAndId(id));
+		return sancionTipoMapper.modelToDTO(sancionTipoRepository.findByActivoTrueAndId(id));
 	}
 
 	@Override
 	public SancionTipoDTO findByUuid(String uuid) {
 		logger.info("Buscando SancionTipo por UUID: {}", uuid);
-		return SancionTipoUtil
-				.modelToDTO(sancionTipoRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid));
+		return sancionTipoMapper.modelToDTO(sancionTipoRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid));
 	}
 
 	@Override
@@ -58,15 +60,15 @@ public class SancionTipoServiceImpl implements SancionTipoService {
 			logger.info("Creando nuevo SancionTipo");
 			model = new SancionTipo();
 		}
-		model = SancionTipoUtil.dtoToModel(dto, model);
+		model = sancionTipoMapper.dtoToModel(dto, model);
 		sancionTipoRepository.saveAndFlush(model);
 		return model.getId();
 	}
 
 	@Override
 	public Page<SancionTipoDTO> getPageByFilter(SancionTipoFilter filter, Pageable pageable) {
-		return SancionTipoUtil.pageToPageDTO(
-				sancionTipoRepository.findAll(SancionTipoSpecifications.filter(filter), pageable));
+		return sancionTipoMapper
+				.pageToPageDTO(sancionTipoRepository.findAll(SancionTipoSpecifications.filter(filter), pageable));
 	}
 
 	@Override
@@ -89,26 +91,24 @@ public class SancionTipoServiceImpl implements SancionTipoService {
 
 	@Override
 	public SancionTipoDTO findByNombreEqualsIgnoreCase(String nombre) {
-		return SancionTipoUtil
-				.modelToDTO(sancionTipoRepository.findByActivoTrueAndNombreEqualsIgnoreCase(nombre));
+		return sancionTipoMapper.modelToDTO(sancionTipoRepository.findByActivoTrueAndNombreEqualsIgnoreCase(nombre));
 	}
 
 	@Override
 	@Cacheable("comunidades")
 	public List<ComboDTO> getListComboDTO() {
-		return SancionTipoUtil.listModelToListComboDTO(sancionTipoRepository.findByActivoTrue());
+		return sancionTipoMapper.listModelToListComboDTO(sancionTipoRepository.findByActivoTrue());
 	}
 
 	@Override
 	public List<SancionTipoDTO> getListDTO() {
-		return Utils
-				.sortByNombre(SancionTipoUtil.listModelToListDTO(sancionTipoRepository.findByActivoTrue()));
+		return Utils.sortByNombre(sancionTipoMapper.listModelToListDTO(sancionTipoRepository.findByActivoTrue()));
 	}
 
 	@Override
 	public List<SancionTipoDTO> getListDTO(SancionTipoFilter filter) {
-		return Utils.sortByNombre(SancionTipoUtil.listModelToListDTO(
-				sancionTipoRepository.findAll(SancionTipoSpecifications.filter(filter))));
+		return Utils.sortByNombre(sancionTipoMapper
+				.listModelToListDTO(sancionTipoRepository.findAll(SancionTipoSpecifications.filter(filter))));
 	}
 
 	@Override

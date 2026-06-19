@@ -15,10 +15,10 @@ import com.gestion.deportiva.dto.ComboDTO;
 import com.gestion.deportiva.dto.ReservaEstadoDTO;
 import com.gestion.deportiva.dto.filter.ReservaEstadoFilter;
 import com.gestion.deportiva.dto.specifications.ReservaEstadoSpecifications;
+import com.gestion.deportiva.mapper.ReservaEstadoMapper;
 import com.gestion.deportiva.model.ReservaEstado;
 import com.gestion.deportiva.repository.ReservaEstadoRepository;
 import com.gestion.deportiva.service.ReservaEstadoService;
-import com.gestion.deportiva.util.ReservaEstadoUtil;
 import com.gestion.deportiva.util.Utils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -35,17 +35,19 @@ public class ReservaEstadoServiceImpl implements ReservaEstadoService {
 	@PersistenceContext
 	private EntityManager entityManager;
 
+	@Autowired
+	private ReservaEstadoMapper reservaEstadoMapper;
+
 	@Override
 	public ReservaEstadoDTO findById(Long id) {
 		logger.info("Buscando ReservaEstado por ID: {}", id);
-		return ReservaEstadoUtil.modelToDTO(reservaEstadoRepository.findByActivoTrueAndId(id));
+		return reservaEstadoMapper.modelToDTO(reservaEstadoRepository.findByActivoTrueAndId(id));
 	}
 
 	@Override
 	public ReservaEstadoDTO findByUuid(String uuid) {
 		logger.info("Buscando ReservaEstado por UUID: {}", uuid);
-		return ReservaEstadoUtil
-				.modelToDTO(reservaEstadoRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid));
+		return reservaEstadoMapper.modelToDTO(reservaEstadoRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid));
 	}
 
 	@Override
@@ -58,15 +60,15 @@ public class ReservaEstadoServiceImpl implements ReservaEstadoService {
 			logger.info("Creando nuevo ReservaEstado");
 			model = new ReservaEstado();
 		}
-		model = ReservaEstadoUtil.dtoToModel(dto, model);
+		model = reservaEstadoMapper.dtoToModel(dto, model);
 		reservaEstadoRepository.saveAndFlush(model);
 		return model.getId();
 	}
 
 	@Override
 	public Page<ReservaEstadoDTO> getPageByFilter(ReservaEstadoFilter filter, Pageable pageable) {
-		return ReservaEstadoUtil.pageToPageDTO(
-				reservaEstadoRepository.findAll(ReservaEstadoSpecifications.filter(filter), pageable));
+		return reservaEstadoMapper
+				.pageToPageDTO(reservaEstadoRepository.findAll(ReservaEstadoSpecifications.filter(filter), pageable));
 	}
 
 	@Override
@@ -89,26 +91,25 @@ public class ReservaEstadoServiceImpl implements ReservaEstadoService {
 
 	@Override
 	public ReservaEstadoDTO findByNombreEqualsIgnoreCase(String nombre) {
-		return ReservaEstadoUtil
+		return reservaEstadoMapper
 				.modelToDTO(reservaEstadoRepository.findByActivoTrueAndNombreEqualsIgnoreCase(nombre));
 	}
 
 	@Override
 	@Cacheable("comunidades")
 	public List<ComboDTO> getListComboDTO() {
-		return ReservaEstadoUtil.listModelToListComboDTO(reservaEstadoRepository.findByActivoTrue());
+		return reservaEstadoMapper.listModelToListComboDTO(reservaEstadoRepository.findByActivoTrue());
 	}
 
 	@Override
 	public List<ReservaEstadoDTO> getListDTO() {
-		return Utils
-				.sortByNombre(ReservaEstadoUtil.listModelToListDTO(reservaEstadoRepository.findByActivoTrue()));
+		return Utils.sortByNombre(reservaEstadoMapper.listModelToListDTO(reservaEstadoRepository.findByActivoTrue()));
 	}
 
 	@Override
 	public List<ReservaEstadoDTO> getListDTO(ReservaEstadoFilter filter) {
-		return Utils.sortByNombre(ReservaEstadoUtil.listModelToListDTO(
-				reservaEstadoRepository.findAll(ReservaEstadoSpecifications.filter(filter))));
+		return Utils.sortByNombre(reservaEstadoMapper
+				.listModelToListDTO(reservaEstadoRepository.findAll(ReservaEstadoSpecifications.filter(filter))));
 	}
 
 	@Override

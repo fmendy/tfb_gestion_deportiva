@@ -15,10 +15,10 @@ import com.gestion.deportiva.dto.ComboDTO;
 import com.gestion.deportiva.dto.ComunidadAutonomaDTO;
 import com.gestion.deportiva.dto.filter.ComunidadAutonomaFilter;
 import com.gestion.deportiva.dto.specifications.ComunidadAutonomaSpecifications;
+import com.gestion.deportiva.mapper.ComunidadAutonomaMapper;
 import com.gestion.deportiva.model.ComunidadAutonoma;
 import com.gestion.deportiva.repository.ComunidadAutonomaRepository;
 import com.gestion.deportiva.service.ComunidadAutonomaService;
-import com.gestion.deportiva.util.ComunidadAutonomaUtil;
 import com.gestion.deportiva.util.Utils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -35,16 +35,19 @@ public class ComunidadAutonomaServiceImpl implements ComunidadAutonomaService {
 	@PersistenceContext
 	private EntityManager entityManager;
 
+	@Autowired
+	private ComunidadAutonomaMapper comunidadAutonomaMapper;
+
 	@Override
 	public ComunidadAutonomaDTO findById(Long id) {
 		logger.info("Buscando ComunidadAutonoma por ID: {}", id);
-		return ComunidadAutonomaUtil.modelToDTO(comunidadAutonomaRepository.findByActivoTrueAndId(id));
+		return comunidadAutonomaMapper.modelToDTO(comunidadAutonomaRepository.findByActivoTrueAndId(id));
 	}
 
 	@Override
 	public ComunidadAutonomaDTO findByUuid(String uuid) {
 		logger.info("Buscando ComunidadAutonoma por UUID: {}", uuid);
-		return ComunidadAutonomaUtil
+		return comunidadAutonomaMapper
 				.modelToDTO(comunidadAutonomaRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid));
 	}
 
@@ -58,14 +61,14 @@ public class ComunidadAutonomaServiceImpl implements ComunidadAutonomaService {
 			logger.info("Creando nuevo ComunidadAutonoma");
 			model = new ComunidadAutonoma();
 		}
-		model = ComunidadAutonomaUtil.dtoToModel(dto, model);
+		model = comunidadAutonomaMapper.dtoToModel(dto, model);
 		comunidadAutonomaRepository.saveAndFlush(model);
 		return model.getId();
 	}
 
 	@Override
 	public Page<ComunidadAutonomaDTO> getPageByFilter(ComunidadAutonomaFilter filter, Pageable pageable) {
-		return ComunidadAutonomaUtil.pageToPageDTO(
+		return comunidadAutonomaMapper.pageToPageDTO(
 				comunidadAutonomaRepository.findAll(ComunidadAutonomaSpecifications.filter(filter), pageable));
 	}
 
@@ -89,25 +92,25 @@ public class ComunidadAutonomaServiceImpl implements ComunidadAutonomaService {
 
 	@Override
 	public ComunidadAutonomaDTO findByNombreEqualsIgnoreCase(String nombre) {
-		return ComunidadAutonomaUtil
+		return comunidadAutonomaMapper
 				.modelToDTO(comunidadAutonomaRepository.findByActivoTrueAndNombreEqualsIgnoreCase(nombre));
 	}
 
 	@Override
 	@Cacheable("comunidades")
 	public List<ComboDTO> getListComboDTO() {
-		return ComunidadAutonomaUtil.listModelToListComboDTO(comunidadAutonomaRepository.findByActivoTrue());
+		return comunidadAutonomaMapper.listModelToListComboDTO(comunidadAutonomaRepository.findByActivoTrue());
 	}
 
 	@Override
 	public List<ComunidadAutonomaDTO> getListDTO() {
-		return Utils
-				.sortByNombre(ComunidadAutonomaUtil.listModelToListDTO(comunidadAutonomaRepository.findByActivoTrue()));
+		return Utils.sortByNombre(
+				comunidadAutonomaMapper.listModelToListDTO(comunidadAutonomaRepository.findByActivoTrue()));
 	}
 
 	@Override
 	public List<ComunidadAutonomaDTO> getListDTO(ComunidadAutonomaFilter filter) {
-		return Utils.sortByNombre(ComunidadAutonomaUtil.listModelToListDTO(
+		return Utils.sortByNombre(comunidadAutonomaMapper.listModelToListDTO(
 				comunidadAutonomaRepository.findAll(ComunidadAutonomaSpecifications.filter(filter))));
 	}
 

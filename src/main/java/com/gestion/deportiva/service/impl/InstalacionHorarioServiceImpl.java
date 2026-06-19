@@ -13,11 +13,11 @@ import com.gestion.deportiva.dto.InstalacionHorarioDTO;
 import com.gestion.deportiva.dto.InstalacionHorarioSemanalDTO;
 import com.gestion.deportiva.dto.filter.InstalacionHorarioFilter;
 import com.gestion.deportiva.dto.specifications.InstalacionHorarioSpecifications;
+import com.gestion.deportiva.mapper.InstalacionHorarioMapper;
 import com.gestion.deportiva.model.Instalacion;
 import com.gestion.deportiva.model.InstalacionHorario;
 import com.gestion.deportiva.repository.InstalacionHorarioRepository;
 import com.gestion.deportiva.service.InstalacionHorarioService;
-import com.gestion.deportiva.util.InstalacionHorarioUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
@@ -34,16 +34,19 @@ public class InstalacionHorarioServiceImpl implements InstalacionHorarioService 
 	@PersistenceContext
 	private EntityManager entityManager;
 
+	@Autowired
+	private InstalacionHorarioMapper instalacionHorarioMapper;
+
 	@Override
 	public InstalacionHorarioDTO findById(Long id) {
 		logger.info("Buscando InstalacionHorario por ID: {}", id);
-		return InstalacionHorarioUtil.modelToDTO(instalacionHorarioRepository.findByActivoTrueAndId(id));
+		return instalacionHorarioMapper.modelToDTO(instalacionHorarioRepository.findByActivoTrueAndId(id));
 	}
 
 	@Override
 	public InstalacionHorarioDTO findByUuid(String uuid) {
 		logger.info("Buscando InstalacionHorario por UUID: {}", uuid);
-		return InstalacionHorarioUtil
+		return instalacionHorarioMapper
 				.modelToDTO(instalacionHorarioRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid));
 	}
 
@@ -56,14 +59,14 @@ public class InstalacionHorarioServiceImpl implements InstalacionHorarioService 
 			logger.info("Creando nuevo InstalacionHorario");
 			model = new InstalacionHorario();
 		}
-		model = InstalacionHorarioUtil.dtoToModel(dto, model);
+		model = instalacionHorarioMapper.dtoToModel(dto, model);
 		instalacionHorarioRepository.saveAndFlush(model);
 		return model.getId();
 	}
 
 	@Override
 	public Page<InstalacionHorarioDTO> getPageByFilter(InstalacionHorarioFilter filter, Pageable pageable) {
-		return InstalacionHorarioUtil.pageToPageDTO(
+		return instalacionHorarioMapper.pageToPageDTO(
 				instalacionHorarioRepository.findAll(InstalacionHorarioSpecifications.filter(filter), pageable));
 	}
 
@@ -85,12 +88,12 @@ public class InstalacionHorarioServiceImpl implements InstalacionHorarioService 
 
 	@Override
 	public List<InstalacionHorarioDTO> getListDTO() {
-		return InstalacionHorarioUtil.listModelToListDTO(instalacionHorarioRepository.findByActivoTrue());
+		return instalacionHorarioMapper.listModelToListDTO(instalacionHorarioRepository.findByActivoTrue());
 	}
 
 	@Override
 	public List<InstalacionHorarioDTO> getListDTO(InstalacionHorarioFilter filter) {
-		return InstalacionHorarioUtil.listModelToListDTO(
+		return instalacionHorarioMapper.listModelToListDTO(
 				instalacionHorarioRepository.findAll(InstalacionHorarioSpecifications.filter(filter)));
 	}
 

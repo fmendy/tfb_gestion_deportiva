@@ -12,10 +12,10 @@ import org.springframework.stereotype.Service;
 import com.gestion.deportiva.dto.SancionDTO;
 import com.gestion.deportiva.dto.filter.SancionFilter;
 import com.gestion.deportiva.dto.specifications.SancionSpecifications;
+import com.gestion.deportiva.mapper.SancionMapper;
 import com.gestion.deportiva.model.Sancion;
 import com.gestion.deportiva.repository.SancionRepository;
 import com.gestion.deportiva.service.SancionService;
-import com.gestion.deportiva.util.SancionUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
@@ -31,16 +31,19 @@ public class SancionServiceImpl implements SancionService {
 	@PersistenceContext
 	private EntityManager entityManager;
 
+	@Autowired
+	private SancionMapper sancionMapper;
+
 	@Override
 	public SancionDTO findById(Long id) {
 		logger.info("Buscando Sancion por ID: {}", id);
-		return SancionUtil.modelToDTO(sancionRepository.findByActivoTrueAndId(id));
+		return sancionMapper.modelToDTO(sancionRepository.findByActivoTrueAndId(id));
 	}
 
 	@Override
 	public SancionDTO findByUuid(String uuid) {
 		logger.info("Buscando Sancion por UUID: {}", uuid);
-		return SancionUtil.modelToDTO(sancionRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid));
+		return sancionMapper.modelToDTO(sancionRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid));
 	}
 
 	@Override
@@ -52,14 +55,14 @@ public class SancionServiceImpl implements SancionService {
 			logger.info("Creando nuevo Sancion");
 			model = new Sancion();
 		}
-		model = SancionUtil.dtoToModel(dto, model);
+		model = sancionMapper.dtoToModel(dto, model);
 		sancionRepository.saveAndFlush(model);
 		return model.getId();
 	}
 
 	@Override
 	public Page<SancionDTO> getPageByFilter(SancionFilter filter, Pageable pageable) {
-		return SancionUtil.pageToPageDTO(sancionRepository.findAll(SancionSpecifications.filter(filter), pageable));
+		return sancionMapper.pageToPageDTO(sancionRepository.findAll(SancionSpecifications.filter(filter), pageable));
 	}
 
 	@Override
@@ -80,12 +83,12 @@ public class SancionServiceImpl implements SancionService {
 
 	@Override
 	public List<SancionDTO> getListDTO() {
-		return SancionUtil.listModelToListDTO(sancionRepository.findByActivoTrue());
+		return sancionMapper.listModelToListDTO(sancionRepository.findByActivoTrue());
 	}
 
 	@Override
 	public List<SancionDTO> getListDTO(SancionFilter filter) {
-		return SancionUtil.listModelToListDTO(sancionRepository.findAll(SancionSpecifications.filter(filter)));
+		return sancionMapper.listModelToListDTO(sancionRepository.findAll(SancionSpecifications.filter(filter)));
 	}
 
 	@Override

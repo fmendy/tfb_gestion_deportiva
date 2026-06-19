@@ -12,10 +12,10 @@ import org.springframework.stereotype.Service;
 import com.gestion.deportiva.dto.ImagenDTO;
 import com.gestion.deportiva.dto.filter.ImagenFilter;
 import com.gestion.deportiva.dto.specifications.ImagenSpecifications;
+import com.gestion.deportiva.mapper.ImagenMapper;
 import com.gestion.deportiva.model.Imagen;
 import com.gestion.deportiva.repository.ImagenRepository;
 import com.gestion.deportiva.service.ImagenService;
-import com.gestion.deportiva.util.ImagenUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
@@ -31,16 +31,19 @@ public class ImagenServiceImpl implements ImagenService {
 	@PersistenceContext
 	private EntityManager entityManager;
 
+	@Autowired
+	private ImagenMapper imagenMapper;
+
 	@Override
 	public ImagenDTO findById(Long id) {
 		logger.info("Buscando Imagen por ID: {}", id);
-		return ImagenUtil.modelToDTO(imagenRepository.findByActivoTrueAndId(id));
+		return imagenMapper.modelToDTO(imagenRepository.findByActivoTrueAndId(id));
 	}
 
 	@Override
 	public ImagenDTO findByUuid(String uuid) {
 		logger.info("Buscando Imagen por UUID: {}", uuid);
-		return ImagenUtil.modelToDTO(imagenRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid));
+		return imagenMapper.modelToDTO(imagenRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid));
 	}
 
 	@Override
@@ -52,14 +55,14 @@ public class ImagenServiceImpl implements ImagenService {
 			logger.info("Creando nuevo Imagen");
 			model = new Imagen();
 		}
-		model = ImagenUtil.dtoToModel(dto, model);
+		model = imagenMapper.dtoToModel(dto, model);
 		imagenRepository.saveAndFlush(model);
 		return model.getId();
 	}
 
 	@Override
 	public Page<ImagenDTO> getPageByFilter(ImagenFilter filter, Pageable pageable) {
-		return ImagenUtil.pageToPageDTO(imagenRepository.findAll(ImagenSpecifications.filter(filter), pageable));
+		return imagenMapper.pageToPageDTO(imagenRepository.findAll(ImagenSpecifications.filter(filter), pageable));
 	}
 
 	@Override
@@ -80,12 +83,12 @@ public class ImagenServiceImpl implements ImagenService {
 
 	@Override
 	public List<ImagenDTO> getListDTO() {
-		return ImagenUtil.listModelToListDTO(imagenRepository.findByActivoTrue());
+		return imagenMapper.listModelToListDTO(imagenRepository.findByActivoTrue());
 	}
 
 	@Override
 	public List<ImagenDTO> getListDTO(ImagenFilter filter) {
-		return ImagenUtil.listModelToListDTO(imagenRepository.findAll(ImagenSpecifications.filter(filter)));
+		return imagenMapper.listModelToListDTO(imagenRepository.findAll(ImagenSpecifications.filter(filter)));
 	}
 
 	@Override

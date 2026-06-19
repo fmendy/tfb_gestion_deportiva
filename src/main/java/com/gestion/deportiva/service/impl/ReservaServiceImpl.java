@@ -12,10 +12,10 @@ import org.springframework.stereotype.Service;
 import com.gestion.deportiva.dto.ReservaDTO;
 import com.gestion.deportiva.dto.filter.ReservaFilter;
 import com.gestion.deportiva.dto.specifications.ReservaSpecifications;
+import com.gestion.deportiva.mapper.ReservaMapper;
 import com.gestion.deportiva.model.Reserva;
 import com.gestion.deportiva.repository.ReservaRepository;
 import com.gestion.deportiva.service.ReservaService;
-import com.gestion.deportiva.util.ReservaUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
@@ -31,16 +31,19 @@ public class ReservaServiceImpl implements ReservaService {
 	@PersistenceContext
 	private EntityManager entityManager;
 
+	@Autowired
+	private ReservaMapper reservaMapper;
+
 	@Override
 	public ReservaDTO findById(Long id) {
 		logger.info("Buscando Reserva por ID: {}", id);
-		return ReservaUtil.modelToDTO(reservaRepository.findByActivoTrueAndId(id));
+		return reservaMapper.modelToDTO(reservaRepository.findByActivoTrueAndId(id));
 	}
 
 	@Override
 	public ReservaDTO findByUuid(String uuid) {
 		logger.info("Buscando Reserva por UUID: {}", uuid);
-		return ReservaUtil.modelToDTO(reservaRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid));
+		return reservaMapper.modelToDTO(reservaRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid));
 	}
 
 	@Override
@@ -52,14 +55,14 @@ public class ReservaServiceImpl implements ReservaService {
 			logger.info("Creando nuevo Reserva");
 			model = new Reserva();
 		}
-		model = ReservaUtil.dtoToModel(dto, model);
+		model = reservaMapper.dtoToModel(dto, model);
 		reservaRepository.saveAndFlush(model);
 		return model.getId();
 	}
 
 	@Override
 	public Page<ReservaDTO> getPageByFilter(ReservaFilter filter, Pageable pageable) {
-		return ReservaUtil.pageToPageDTO(reservaRepository.findAll(ReservaSpecifications.filter(filter), pageable));
+		return reservaMapper.pageToPageDTO(reservaRepository.findAll(ReservaSpecifications.filter(filter), pageable));
 	}
 
 	@Override
@@ -80,12 +83,12 @@ public class ReservaServiceImpl implements ReservaService {
 
 	@Override
 	public List<ReservaDTO> getListDTO() {
-		return ReservaUtil.listModelToListDTO(reservaRepository.findByActivoTrue());
+		return reservaMapper.listModelToListDTO(reservaRepository.findByActivoTrue());
 	}
 
 	@Override
 	public List<ReservaDTO> getListDTO(ReservaFilter filter) {
-		return ReservaUtil.listModelToListDTO(reservaRepository.findAll(ReservaSpecifications.filter(filter)));
+		return reservaMapper.listModelToListDTO(reservaRepository.findAll(ReservaSpecifications.filter(filter)));
 	}
 
 	@Override

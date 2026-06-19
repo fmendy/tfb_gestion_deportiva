@@ -15,11 +15,11 @@ import com.gestion.deportiva.dto.ComboDTO;
 import com.gestion.deportiva.dto.MunicipioDTO;
 import com.gestion.deportiva.dto.filter.MunicipioFilter;
 import com.gestion.deportiva.dto.specifications.MunicipioSpecifications;
+import com.gestion.deportiva.mapper.MunicipioMapper;
 import com.gestion.deportiva.model.Municipio;
 import com.gestion.deportiva.repository.MunicipioRepository;
 import com.gestion.deportiva.repository.ProvinciaRepository;
 import com.gestion.deportiva.service.MunicipioService;
-import com.gestion.deportiva.util.MunicipioUtil;
 import com.gestion.deportiva.util.Utils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -39,16 +39,19 @@ public class MunicipioServiceImpl implements MunicipioService {
 	@PersistenceContext
 	private EntityManager entityManager;
 
+	@Autowired
+	private MunicipioMapper municipioMapper;
+
 	@Override
 	public MunicipioDTO findById(Long id) {
 		logger.info("Buscando Municipio por ID: {}", id);
-		return MunicipioUtil.modelToDTO(municipioRepository.findByActivoTrueAndId(id));
+		return municipioMapper.modelToDTO(municipioRepository.findByActivoTrueAndId(id));
 	}
 
 	@Override
 	public MunicipioDTO findByUuid(String uuid) {
 		logger.info("Buscando Municipio por UUID: {}", uuid);
-		return MunicipioUtil.modelToDTO(municipioRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid));
+		return municipioMapper.modelToDTO(municipioRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid));
 	}
 
 	@Override
@@ -61,7 +64,7 @@ public class MunicipioServiceImpl implements MunicipioService {
 			logger.info("Creando nuevo Municipio");
 			model = new Municipio();
 		}
-		model = MunicipioUtil.dtoToModel(dto, model,
+		model = municipioMapper.dtoToModel(dto, model,
 				provinciaRepository.findByActivoTrueAndUuidEqualsIgnoreCase(dto.getProvinciaUuid()));
 		municipioRepository.saveAndFlush(model);
 		return model.getId();
@@ -69,7 +72,7 @@ public class MunicipioServiceImpl implements MunicipioService {
 
 	@Override
 	public Page<MunicipioDTO> getPageByFilter(MunicipioFilter filter, Pageable pageable) {
-		return MunicipioUtil
+		return municipioMapper
 				.pageToPageDTO(municipioRepository.findAll(MunicipioSpecifications.filter(filter), pageable));
 	}
 
@@ -93,24 +96,24 @@ public class MunicipioServiceImpl implements MunicipioService {
 
 	@Override
 	public MunicipioDTO findByNombreEqualsIgnoreCase(String nombre) {
-		return MunicipioUtil.modelToDTO(municipioRepository.findByActivoTrueAndNombreEqualsIgnoreCase(nombre));
+		return municipioMapper.modelToDTO(municipioRepository.findByActivoTrueAndNombreEqualsIgnoreCase(nombre));
 	}
 
 	@Override
 	@Cacheable("municipios")
 	public List<ComboDTO> getListComboDTO() {
-		return MunicipioUtil.listModelToListComboDTO(municipioRepository.findByActivoTrue());
+		return municipioMapper.listModelToListComboDTO(municipioRepository.findByActivoTrue());
 	}
 
 	@Override
 	public List<MunicipioDTO> getListDTO() {
-		return Utils.sortByNombre(MunicipioUtil.listModelToListDTO(municipioRepository.findByActivoTrue()));
+		return Utils.sortByNombre(municipioMapper.listModelToListDTO(municipioRepository.findByActivoTrue()));
 	}
 
 	@Override
 	public List<MunicipioDTO> getListDTO(MunicipioFilter filter) {
-		return Utils.sortByNombre(
-				MunicipioUtil.listModelToListDTO(municipioRepository.findAll(MunicipioSpecifications.filter(filter))));
+		return Utils.sortByNombre(municipioMapper
+				.listModelToListDTO(municipioRepository.findAll(MunicipioSpecifications.filter(filter))));
 	}
 
 	@Override
@@ -130,14 +133,12 @@ public class MunicipioServiceImpl implements MunicipioService {
 	}
 
 	@Override
-	public List<MunicipioDTO> getListDTOByComunidadAutonomaIdOrProvinciaId(Long comunidadAutonomaId,
-			Long provinciaId) {
+	public List<MunicipioDTO> getListDTOByComunidadAutonomaIdOrProvinciaId(Long comunidadAutonomaId, Long provinciaId) {
 		if (provinciaId != null) {
-			return MunicipioUtil
-					.listModelToListDTO(municipioRepository.findByActivoTrueAndProvinciaId(provinciaId));
+			return municipioMapper.listModelToListDTO(municipioRepository.findByActivoTrueAndProvinciaId(provinciaId));
 		}
 		if (comunidadAutonomaId != null) {
-			return MunicipioUtil.listModelToListDTO(
+			return municipioMapper.listModelToListDTO(
 					municipioRepository.findByActivoTrueAndProvinciaComunidadAutonomaId(comunidadAutonomaId));
 		}
 		return getListDTO();

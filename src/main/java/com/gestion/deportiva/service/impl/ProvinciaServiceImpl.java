@@ -15,11 +15,11 @@ import com.gestion.deportiva.dto.ComboDTO;
 import com.gestion.deportiva.dto.ProvinciaDTO;
 import com.gestion.deportiva.dto.filter.ProvinciaFilter;
 import com.gestion.deportiva.dto.specifications.ProvinciaSpecifications;
+import com.gestion.deportiva.mapper.ProvinciaMapper;
 import com.gestion.deportiva.model.Provincia;
 import com.gestion.deportiva.repository.ComunidadAutonomaRepository;
 import com.gestion.deportiva.repository.ProvinciaRepository;
 import com.gestion.deportiva.service.ProvinciaService;
-import com.gestion.deportiva.util.ProvinciaUtil;
 import com.gestion.deportiva.util.Utils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -39,16 +39,19 @@ public class ProvinciaServiceImpl implements ProvinciaService {
 	@PersistenceContext
 	private EntityManager entityManager;
 
+	@Autowired
+	private ProvinciaMapper provinciaMapper;
+
 	@Override
 	public ProvinciaDTO findById(Long id) {
 		logger.info("Buscando Provincia por ID: {}", id);
-		return ProvinciaUtil.modelToDTO(provinciaRepository.findByActivoTrueAndId(id));
+		return provinciaMapper.modelToDTO(provinciaRepository.findByActivoTrueAndId(id));
 	}
 
 	@Override
 	public ProvinciaDTO findByUuid(String uuid) {
 		logger.info("Buscando Provincia por UUID: {}", uuid);
-		return ProvinciaUtil.modelToDTO(provinciaRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid));
+		return provinciaMapper.modelToDTO(provinciaRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid));
 	}
 
 	@Override
@@ -61,7 +64,7 @@ public class ProvinciaServiceImpl implements ProvinciaService {
 			logger.info("Creando nuevo Provincia");
 			model = new Provincia();
 		}
-		model = ProvinciaUtil.dtoToModel(dto, model,
+		model = provinciaMapper.dtoToModel(dto, model,
 				comunidadAutonomaRepository.findByActivoTrueAndUuidEqualsIgnoreCase(dto.getComunidadAutonomaUuid()));
 		provinciaRepository.saveAndFlush(model);
 		return model.getId();
@@ -69,7 +72,7 @@ public class ProvinciaServiceImpl implements ProvinciaService {
 
 	@Override
 	public Page<ProvinciaDTO> getPageByFilter(ProvinciaFilter filter, Pageable pageable) {
-		return ProvinciaUtil
+		return provinciaMapper
 				.pageToPageDTO(provinciaRepository.findAll(ProvinciaSpecifications.filter(filter), pageable));
 	}
 
@@ -93,13 +96,13 @@ public class ProvinciaServiceImpl implements ProvinciaService {
 
 	@Override
 	public ProvinciaDTO findByNombreEqualsIgnoreCase(String nombre) {
-		return ProvinciaUtil.modelToDTO(provinciaRepository.findByActivoTrueAndNombreEqualsIgnoreCase(nombre));
+		return provinciaMapper.modelToDTO(provinciaRepository.findByActivoTrueAndNombreEqualsIgnoreCase(nombre));
 	}
 
 	@Override
 	@Cacheable("provincias")
 	public List<ComboDTO> getListComboDTO() {
-		return ProvinciaUtil.listModelToListComboDTO(provinciaRepository.findByActivoTrue());
+		return provinciaMapper.listModelToListComboDTO(provinciaRepository.findByActivoTrue());
 	}
 
 	@Override
@@ -107,20 +110,20 @@ public class ProvinciaServiceImpl implements ProvinciaService {
 		if (comunidadAutonomaId == null) {
 			return getListDTO();
 		} else {
-			return ProvinciaUtil.listModelToListDTO(
+			return provinciaMapper.listModelToListDTO(
 					provinciaRepository.findByActivoTrueAndComunidadAutonomaId(comunidadAutonomaId));
 		}
 	}
 
 	@Override
 	public List<ProvinciaDTO> getListDTO() {
-		return Utils.sortByNombre(ProvinciaUtil.listModelToListDTO(provinciaRepository.findByActivoTrue()));
+		return Utils.sortByNombre(provinciaMapper.listModelToListDTO(provinciaRepository.findByActivoTrue()));
 	}
 
 	@Override
 	public List<ProvinciaDTO> getListDTO(ProvinciaFilter filter) {
-		return Utils.sortByNombre(
-				ProvinciaUtil.listModelToListDTO(provinciaRepository.findAll(ProvinciaSpecifications.filter(filter))));
+		return Utils.sortByNombre(provinciaMapper
+				.listModelToListDTO(provinciaRepository.findAll(ProvinciaSpecifications.filter(filter))));
 	}
 
 	@Override
