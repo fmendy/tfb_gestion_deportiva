@@ -38,6 +38,7 @@ public class SedeMapper {
 		retVal.setProvinciaNombre(model.getMunicipio().getProvincia().getNombre());
 		retVal.setComunidadAutonomaId(model.getMunicipio().getProvincia().getComunidadAutonoma().getId());
 		retVal.setComunidadAutonomaNombre(model.getMunicipio().getProvincia().getNombre());
+		retVal.setEmpresaSedeNombre(model.getEmpresa().getNombre() + " - " + model.getNombre());
 		return retVal;
 	}
 

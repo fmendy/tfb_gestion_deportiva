@@ -2,7 +2,6 @@ package com.gestion.deportiva.model;
 
 import java.io.Serializable;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -25,12 +24,12 @@ public class UsuarioSede extends BaseEntity implements Serializable {
 		super(id);
 	}
 
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_sede", nullable = false)
 	private Sede sede;
 
-	@Column(name = "id_usuario", nullable = false)
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_usuario", nullable = false)
 	private Usuario usuario;
 
 }

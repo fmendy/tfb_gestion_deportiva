@@ -559,6 +559,7 @@ create table usuario_sede(
 alter table usuario_sede add foreign key fk_usuario_sede_usuario_creacion (id_usuario_creacion) references usuario(id);
 alter table usuario_sede add foreign key fk_usuario_sede_modificacion (id_usuario_modificacion) references usuario(id);
 alter table usuario_sede add foreign key fk_usuario_sede_sede(id_sede) references sede(id);
+alter table usuario_sede add foreign key fk_usuario_sede_usuario(id_usuario) references usuario(id);
 
 
 create table usuario_instalacion(
@@ -573,9 +574,10 @@ create table usuario_instalacion(
     fecha_modificacion datetime not null default now()
 );
 
-alter table usuario_instalacion add foreign key fk_usuario_sede_usuario_creacion (id_usuario_creacion) references usuario(id);
-alter table usuario_instalacion add foreign key fk_usuario_sede_modificacion (id_usuario_modificacion) references usuario(id);
+alter table usuario_instalacion add foreign key fk_usuario_instalacion_usuario_creacion (id_usuario_creacion) references usuario(id);
+alter table usuario_instalacion add foreign key fk_usuario_instalacion_modificacion (id_usuario_modificacion) references usuario(id);
 alter table usuario_instalacion add foreign key fk_usuario_instalacion_instalacion (id_instalacion) references instalacion(id);
+alter table usuario_instalacion add foreign key fk_usuario_instalacion_usuario (id_usuario) references usuario(id);
 
 
 create table instalacion_horario_bloqueado(

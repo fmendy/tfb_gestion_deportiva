@@ -112,11 +112,12 @@ public class UsuarioEmpresaServiceImpl implements UsuarioEmpresaService {
 	}
 
 	@Override
-	public void asociarUsuarioEmpresa(Long usuarioId, Long empresaId) {
+	public Long asociarUsuarioEmpresa(Long usuarioId, Long empresaId) {
 		UsuarioEmpresa model = new UsuarioEmpresa();
 		model.setUsuario(new Usuario(usuarioId));
 		model.setEmpresa(new Empresa(empresaId));
 		logger.info("Asociando Usuario " + usuarioId + " con Empresa " + empresaId);
 		usuarioEmpresaRepository.saveAndFlush(model);
+		return model.getId();
 	}
 }

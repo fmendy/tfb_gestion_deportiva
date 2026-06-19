@@ -13,6 +13,8 @@ import com.gestion.deportiva.dto.UsuarioSedeDTO;
 import com.gestion.deportiva.dto.filter.UsuarioSedeFilter;
 import com.gestion.deportiva.dto.specifications.UsuarioSedeSpecifications;
 import com.gestion.deportiva.mapper.UsuarioSedeMapper;
+import com.gestion.deportiva.model.Sede;
+import com.gestion.deportiva.model.Usuario;
 import com.gestion.deportiva.model.UsuarioSede;
 import com.gestion.deportiva.repository.UsuarioSedeRepository;
 import com.gestion.deportiva.service.UsuarioSedeService;
@@ -30,7 +32,7 @@ public class UsuarioSedeServiceImpl implements UsuarioSedeService {
 
 	@PersistenceContext
 	private EntityManager entityManager;
-	
+
 	@Autowired
 	private UsuarioSedeMapper usuarioSedeMapper;
 
@@ -62,7 +64,8 @@ public class UsuarioSedeServiceImpl implements UsuarioSedeService {
 
 	@Override
 	public Page<UsuarioSedeDTO> getPageByFilter(UsuarioSedeFilter filter, Pageable pageable) {
-		return usuarioSedeMapper.pageToPageDTO(usuarioSedeRepository.findAll(UsuarioSedeSpecifications.filter(filter), pageable));
+		return usuarioSedeMapper
+				.pageToPageDTO(usuarioSedeRepository.findAll(UsuarioSedeSpecifications.filter(filter), pageable));
 	}
 
 	@Override
@@ -88,7 +91,8 @@ public class UsuarioSedeServiceImpl implements UsuarioSedeService {
 
 	@Override
 	public List<UsuarioSedeDTO> getListDTO(UsuarioSedeFilter filter) {
-		return usuarioSedeMapper.listModelToListDTO(usuarioSedeRepository.findAll(UsuarioSedeSpecifications.filter(filter)));
+		return usuarioSedeMapper
+				.listModelToListDTO(usuarioSedeRepository.findAll(UsuarioSedeSpecifications.filter(filter)));
 	}
 
 	@Override
@@ -105,5 +109,15 @@ public class UsuarioSedeServiceImpl implements UsuarioSedeService {
 	public byte[] exportarExcel(UsuarioSedeFilter filter) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public Long asociarUsuarioSede(Long usuarioId, Long sedeId) {
+		UsuarioSede model = new UsuarioSede();
+		model.setUsuario(new Usuario(usuarioId));
+		model.setSede(new Sede(sedeId));
+		logger.info("Asociando Usuario " + usuarioId + " con Sede " + sedeId);
+		usuarioSedeRepository.saveAndFlush(model);
+		return model.getId();
 	}
 }

@@ -30,6 +30,8 @@ public interface MaestraRepository<T extends Maestra, ID extends Serializable>
 	
 	List<T> findByActivoTrueOrderByNombreDesc();
 	
+	List<T> findByActivoTrueAndNombreInIgnoreCase(List<String> nombres);
+	
 	@Query("SELECT t.nombre FROM #{#entityName} t WHERE t.activo = true AND t.id = :id")
     String findNombreByActivoTrueAndId(@Param("id") Long id);
 

@@ -29,6 +29,17 @@ public class InstalacionSpecifications extends BaseSpecifications<Instalacion> {
 			specs.add(new InstalacionSpecifications().equalsFieldLong(filter.getSedeId(), "sede", "id"));
 		}
 
+		if (filter.getListEmpresaIds() != null && !filter.getListEmpresaIds().isEmpty()) {
+			specs.add(new InstalacionSpecifications().fieldInLong(filter.getListEmpresaIds(), "sede", "empresa", "id"));
+		}
+
+		if (filter.getListSedeIds() != null && !filter.getListSedeIds().isEmpty()) {
+			specs.add(new InstalacionSpecifications().fieldInLong(filter.getListSedeIds(), "sede", "id"));
+		}
+
+		if (filter.getListInstalacionIds() != null && !filter.getListInstalacionIds().isEmpty()) {
+			specs.add(new InstalacionSpecifications().fieldInLong(filter.getListInstalacionIds(), "id"));
+		}
 		return new InstalacionSpecifications().combine(specs);
 	}
 }

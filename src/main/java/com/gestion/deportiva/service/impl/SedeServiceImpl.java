@@ -169,6 +169,7 @@ public class SedeServiceImpl implements SedeService {
 
 		}
 		if (SecurityUtil.hasAuthority(Constantes.Permiso.Localizacion.GESTION_SEDE)) {
+			logger.info("Sedes del usuario {}, sede trando de ver {}", SecurityUtil.getCurrentUserListSedeId(), id);
 			return SecurityUtil.getCurrentUserListSedeId().contains(id);
 		}
 		return false;
@@ -229,6 +230,7 @@ public class SedeServiceImpl implements SedeService {
 		if (empresaId != null) {
 			retVal.removeIf(s -> !s.getEmpresaId().equals(empresaId));
 		}
+		Utils.sortByCampo(retVal, SedeDTO::getEmpresaSedeNombre);
 		return Utils.addEmptyOption(retVal, SedeDTO.class);
 	}
 }

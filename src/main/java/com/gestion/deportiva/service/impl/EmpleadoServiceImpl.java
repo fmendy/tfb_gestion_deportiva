@@ -11,18 +11,26 @@ import org.springframework.stereotype.Service;
 
 import com.gestion.deportiva.dto.ComboDTO;
 import com.gestion.deportiva.dto.EmpleadoDTO;
+import com.gestion.deportiva.dto.EmpleadoRegistroDTO;
 import com.gestion.deportiva.dto.filter.EmpleadoFilter;
 import com.gestion.deportiva.dto.specifications.EmpleadoSpecifications;
 import com.gestion.deportiva.mapper.EmpleadoMapper;
 import com.gestion.deportiva.model.Usuario;
+import com.gestion.deportiva.repository.InstalacionRepository;
+import com.gestion.deportiva.repository.SedeRepository;
 import com.gestion.deportiva.repository.UsuarioRepository;
 import com.gestion.deportiva.service.EmpleadoService;
+import com.gestion.deportiva.service.UsuarioEmpresaService;
+import com.gestion.deportiva.service.UsuarioInstalacionService;
+import com.gestion.deportiva.service.UsuarioRolService;
+import com.gestion.deportiva.service.UsuarioSedeService;
 import com.gestion.deportiva.util.Constantes;
 import com.gestion.deportiva.util.SecurityUtil;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 
 @Service
 public class EmpleadoServiceImpl implements EmpleadoService {
@@ -37,6 +45,24 @@ public class EmpleadoServiceImpl implements EmpleadoService {
 
 	@Autowired
 	private EmpleadoMapper empleadoMapper;
+
+	@Autowired
+	private SedeRepository sedeRepository;
+
+	@Autowired
+	private InstalacionRepository instalacionRepository;
+	
+	@Autowired
+	private UsuarioRolService usuarioRolService;
+	
+	@Autowired
+	private UsuarioEmpresaService usuarioEmpresaService;
+	
+	@Autowired
+	private UsuarioSedeService usuarioSedeService;
+	
+	@Autowired
+	private UsuarioInstalacionService usuarioInstalacionService;
 
 	@Override
 	public EmpleadoDTO findById(Long id) {
@@ -65,20 +91,39 @@ public class EmpleadoServiceImpl implements EmpleadoService {
 	}
 
 	private EmpleadoFilter limitacionesPermisos(EmpleadoFilter filter) {
-		if (SecurityUtil.hasAuthority(Constantes.Permiso.GESTION_GLOBAL)
-				|| SecurityUtil.hasAuthority(Constantes.Permiso.Usuario.GESTION_USUARIO_GLOBAL)) {
+		if (SecurityUtil.hasGlobalAccess())
 			return filter;
-		}
+
 		if (SecurityUtil.hasAuthority(Constantes.Permiso.Usuario.GESTION_USUARIO_EMPRESA)) {
-			filter.setListEmpresaIds(SecurityUtil.getCurrentUserListEmpresaId());
+			applyEmpresaAccess(filter);
 		} else if (SecurityUtil.hasAuthority(Constantes.Permiso.Usuario.GESTION_USUARIO_SEDE)) {
-			filter.setListSedeIds(SecurityUtil.getCurrentUserListSedeId());
+			applySedeAccess(filter);
 		} else if (SecurityUtil.hasAuthority(Constantes.Permiso.Usuario.GESTION_USUARIO_INSTALACION)) {
-			filter.setListInstalacionIds(SecurityUtil.getCurrentUserListInstalacionId());
+			applyInstalacionAccess(filter);
 		} else {
 			filter.setInstalacionId(-1L);
 		}
 		return filter;
+	}
+
+	private void applyInstalacionAccess(EmpleadoFilter filter) {
+		List<Long> listIds = SecurityUtil.getCurrentUserListInstalacionId();
+		filter.setListInstalacionIds(listIds);
+
+	}
+
+	private void applySedeAccess(EmpleadoFilter filter) {
+		List<Long> listIds = SecurityUtil.getCurrentUserListSedeId();
+		filter.setListSedeIds(listIds);
+		filter.setListInstalacionIds(instalacionRepository.findListIdsByListSedesIdsIn(listIds));
+
+	}
+
+	private void applyEmpresaAccess(EmpleadoFilter filter) {
+		List<Long> listIds = SecurityUtil.getCurrentUserListEmpresaId();
+		filter.setListEmpresaIds(listIds);
+		filter.setListSedeIds(sedeRepository.findListIdsByListEmpresasIdsIn(listIds));
+		filter.setListInstalacionIds(instalacionRepository.findListIdsByListEmpresasIdsIn(listIds));
 	}
 
 	@Override
@@ -111,18 +156,105 @@ public class EmpleadoServiceImpl implements EmpleadoService {
 
 	@Override
 	public boolean canWrite(Long id) {
+		if (SecurityUtil.hasGlobalAccess()
+				|| SecurityUtil.hasAuthority(Constantes.Permiso.Usuario.GESTION_USUARIO_GLOBAL)) {
+			return true;
+		}
+
+		// Si es creación (id == null) y tiene al menos un permiso de gestión
+		if (id == null) {
+			return SecurityUtil.hasAnyAuthority(Constantes.Permiso.Usuario.GESTION_USUARIO_EMPRESA,
+					Constantes.Permiso.Usuario.GESTION_USUARIO_SEDE,
+					Constantes.Permiso.Usuario.GESTION_USUARIO_INSTALACION);
+		}
+
+		Usuario usuario = usuarioRepository.findByActivoTrueAndId(id);
+		if (usuario == null)
+			return false;
+
+		// Delegamos la validación según el rol
+		if (SecurityUtil.hasAuthority(Constantes.Permiso.Usuario.GESTION_USUARIO_EMPRESA)) {
+			return canAccessByEmpresa(usuario);
+		}
+		if (SecurityUtil.hasAuthority(Constantes.Permiso.Usuario.GESTION_USUARIO_SEDE)) {
+			return canAccessBySede(usuario);
+		}
+		if (SecurityUtil.hasAuthority(Constantes.Permiso.Usuario.GESTION_USUARIO_INSTALACION)) {
+			return canAccessByInstalacion(usuario);
+		}
+
 		return false;
+	}
+
+	private boolean canAccessByEmpresa(Usuario usuario) {
+		List<Long> allowedEmpresas = SecurityUtil.getCurrentUserListEmpresaId();
+
+		boolean match = usuario.getListUsuarioEmpresa().stream()
+				.anyMatch(ue -> allowedEmpresas.contains(ue.getEmpresa().getId()));
+		if (match)
+			return true;
+
+		match = usuario.getListUsuarioSede().stream()
+				.anyMatch(us -> allowedEmpresas.contains(us.getSede().getEmpresa().getId()));
+		if (match)
+			return true;
+
+		return usuario.getListUsuarioInstalacion().stream()
+				.anyMatch(ui -> allowedEmpresas.contains(ui.getInstalacion().getSede().getEmpresa().getId()));
+	}
+
+	private boolean canAccessBySede(Usuario usuario) {
+		List<Long> allowedSedes = SecurityUtil.getCurrentUserListSedeId();
+
+		boolean match = usuario.getListUsuarioSede().stream()
+				.anyMatch(us -> allowedSedes.contains(us.getSede().getId()));
+		if (match)
+			return true;
+
+		return usuario.getListUsuarioInstalacion().stream()
+				.anyMatch(ui -> allowedSedes.contains(ui.getInstalacion().getSede().getId()));
+	}
+
+	private boolean canAccessByInstalacion(Usuario usuario) {
+		List<Long> allowedInstalaciones = SecurityUtil.getCurrentUserListInstalacionId();
+		return usuario.getListUsuarioInstalacion().stream()
+				.anyMatch(ui -> allowedInstalaciones.contains(ui.getInstalacion().getId()));
 	}
 
 	@Override
 	public boolean canRead(Long id) {
-		return false;
+		return canWrite(id);
 	}
 
 	@Override
 	public byte[] exportarExcel(EmpleadoFilter filter) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	@Transactional
+	public Long guardar(@Valid EmpleadoRegistroDTO dto) {
+		Usuario usuario = empleadoMapper.empleadoRegistroDTOToUsuario(dto);
+		usuarioRepository.save(usuario);
+		usuarioRolService.asignarRol(usuario.getId(), dto.getRolId());
+		if(dto.getEmpresaId() != null) {
+			usuarioEmpresaService.asociarUsuarioEmpresa(usuario.getId(), dto.getEmpresaId());
+		}
+		if(dto.getSedeId() != null) {
+			usuarioSedeService.asociarUsuarioSede(usuario.getId(), dto.getSedeId());
+		}
+		if(dto.getInstalacionId() != null) {
+			usuarioInstalacionService.asociarUsuarioInstalacion(usuario.getId(), dto.getInstalacionId());
+		}
+		return usuario.getId();
+	}
+
+	@Override
+	public EmpleadoRegistroDTO findEmpleadoRegistroById(Long id) {
+		logger.info("Buscando Empleado por ID: {}", id);
+		Usuario usuario = usuarioRepository.findByActivoTrueAndId(id);
+		return empleadoMapper.modelToEmpleadoRegistroDTO(usuario);
 	}
 
 }

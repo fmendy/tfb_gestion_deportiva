@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import com.gestion.deportiva.dto.ComboDTO;
 import com.gestion.deportiva.dto.UsuarioRolDTO;
-import com.gestion.deportiva.dto.UsuarioRolesDTO;
 import com.gestion.deportiva.model.Rol;
 import com.gestion.deportiva.model.Usuario;
 import com.gestion.deportiva.model.UsuarioRol;
@@ -53,17 +52,6 @@ public class UsuarioRolMapper {
 		return model;
 	}
 
-	public UsuarioRolesDTO buildUsuarioRolesDTO(Usuario usuario, List<UsuarioRol> list) {
-		UsuarioRolesDTO retVal = new UsuarioRolesDTO();
-		retVal.setUsuarioEmail(usuario.getEmail());
-		retVal.setUsuarioNombre(usuario.getNombre());
-		retVal.setUsuarioUuid(usuario.getUuid());
-		retVal.setListUsuarioRolDTO(listModelToListDTO(usuario.getListUsuarioRol()));
-		retVal.setListActualRolUuid(retVal.getListUsuarioRolDTO().stream().map(UsuarioRolDTO::getRolUuid).toList());
-		System.out.println(retVal.getListActualRolUuid());
-		return retVal;
-	}
-	
 	public List<ComboDTO> listModelToListComboDTO(List<UsuarioRol> list) {
 		return null;
 	}

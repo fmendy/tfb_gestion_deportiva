@@ -1,5 +1,7 @@
 package com.gestion.deportiva.service.impl;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -13,10 +15,12 @@ import com.gestion.deportiva.dto.ComboDTO;
 import com.gestion.deportiva.dto.RolDTO;
 import com.gestion.deportiva.dto.filter.RolFilter;
 import com.gestion.deportiva.dto.specifications.RolSpecifications;
+import com.gestion.deportiva.mapper.RolMapper;
 import com.gestion.deportiva.model.Rol;
 import com.gestion.deportiva.repository.RolRepository;
 import com.gestion.deportiva.service.RolService;
-import com.gestion.deportiva.util.RolUtil;
+import com.gestion.deportiva.util.Constantes;
+import com.gestion.deportiva.util.SecurityUtil;
 import com.gestion.deportiva.util.Utils;
 
 @Service
@@ -27,16 +31,19 @@ public class RolServiceImpl implements RolService {
 	@Autowired
 	private RolRepository rolRepository;
 
+	@Autowired
+	private RolMapper rolMapper;
+
 	@Override
 	public RolDTO findById(Long id) {
 		logger.info("Buscando rol por ID: {}", id);
-		return RolUtil.modelToDTO(rolRepository.findByActivoTrueAndId(id));
+		return rolMapper.modelToDTO(rolRepository.findByActivoTrueAndId(id));
 	}
 
 	@Override
 	public RolDTO findByUuid(String uuid) {
 		logger.info("Buscando rol por UUID: {}", uuid);
-		return RolUtil.modelToDTO(rolRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid));
+		return rolMapper.modelToDTO(rolRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid));
 	}
 
 	@Override
@@ -47,14 +54,14 @@ public class RolServiceImpl implements RolService {
 			logger.info("Creando nuevo rol");
 			model = new Rol();
 		}
-		model = RolUtil.dtoToModel(dto, model);
+		model = rolMapper.dtoToModel(dto, model);
 		rolRepository.saveAndFlush(model);
 		return model.getId();
 	}
 
 	@Override
 	public Page<RolDTO> getPageByFilter(RolFilter filter, Pageable pageable) {
-		return RolUtil.pageToPageDTO(rolRepository.findAll(RolSpecifications.filter(filter), pageable));
+		return rolMapper.pageToPageDTO(rolRepository.findAll(RolSpecifications.filter(filter), pageable));
 	}
 
 	@Override
@@ -75,26 +82,25 @@ public class RolServiceImpl implements RolService {
 
 	@Override
 	public RolDTO findByNombreEqualsIgnoreCase(String nombre) {
-		return RolUtil.modelToDTO(rolRepository.findByActivoTrueAndNombreEqualsIgnoreCase(nombre));
+		return rolMapper.modelToDTO(rolRepository.findByActivoTrueAndNombreEqualsIgnoreCase(nombre));
 	}
 
 	@Override
 	public List<ComboDTO> getListComboDTO() {
 		List<Rol> list = rolRepository.findByActivoTrueOrderByNombreAsc();
-		return RolUtil.listModelToListComboDTO(list);
+		return rolMapper.listModelToListComboDTO(list);
 	}
-
 
 	@Override
 	public List<RolDTO> getListDTO() {
-		return Utils.sortByNombre(RolUtil.listModelToListDTO(rolRepository.findByActivoTrue()));
+		return Utils.sortByNombre(rolMapper.listModelToListDTO(rolRepository.findByActivoTrue()));
 	}
 
 	@Override
 	public List<RolDTO> getListDTO(RolFilter filter) {
-		return Utils.sortByNombre(RolUtil.listModelToListDTO(rolRepository.findAll(RolSpecifications.filter(filter))));
+		return Utils
+				.sortByNombre(rolMapper.listModelToListDTO(rolRepository.findAll(RolSpecifications.filter(filter))));
 	}
-
 
 	@Override
 	public boolean canWrite(Long id) {
@@ -116,14 +122,32 @@ public class RolServiceImpl implements RolService {
 	public RolFilter getFilterParaUsuarioController() {
 		RolFilter filter = new RolFilter();
 		/*
-		if(SecurityUtil.hasAuthority(Constantes.ROLE+"_"+Constantes.Rol.ADMINISTRADOR)) {
-			return filter;
-		}else if(SecurityUtil.hasAuthority(Constantes.ROLE+"_"+Constantes.Rol.GESTOR)) {
-			filter.setListNombre(Arrays.asList(Constantes.Rol.GESTOR, Constantes.Rol.CONDUCTOR));
-		}else {
-			filter.setListNombre(Arrays.asList( Constantes.Rol.CONDUCTOR));
-		}*/
+		 * if(SecurityUtil.hasAuthority(Constantes.ROLE+"_"+Constantes.Rol.ADMINISTRADOR
+		 * )) { return filter; }else
+		 * if(SecurityUtil.hasAuthority(Constantes.ROLE+"_"+Constantes.Rol.GESTOR)) {
+		 * filter.setListNombre(Arrays.asList(Constantes.Rol.GESTOR,
+		 * Constantes.Rol.CONDUCTOR)); }else { filter.setListNombre(Arrays.asList(
+		 * Constantes.Rol.CONDUCTOR)); }
+		 */
 		return filter;
+	}
+
+	@Override
+	public List<RolDTO> getListDTOParaEmpleado() {
+		List<Rol> listRoles = new ArrayList<>();
+		if (SecurityUtil.hasAuthority(Constantes.Role.ADMINISTRADOR)) {
+			listRoles = rolRepository.findByActivoTrue();
+		} else if (SecurityUtil.hasAuthority(Constantes.Role.USUARIO_EMPRESA)) {
+			listRoles = rolRepository.findByActivoTrueAndNombreInIgnoreCase(Arrays.asList(
+					Constantes.Rol.USUARIO_EMPRESA, Constantes.Rol.USUARIO_SEDE, Constantes.Rol.USUARIO_INSTALACION));
+		} else if (SecurityUtil.hasAuthority(Constantes.Role.USUARIO_SEDE)) {
+			listRoles = rolRepository.findByActivoTrueAndNombreInIgnoreCase(
+					Arrays.asList(Constantes.Rol.USUARIO_SEDE, Constantes.Rol.USUARIO_INSTALACION));
+		} else if (SecurityUtil.hasAuthority(Constantes.Role.USUARIO_INSTALACION)) {
+			listRoles = rolRepository
+					.findByActivoTrueAndNombreInIgnoreCase(Arrays.asList(Constantes.Rol.USUARIO_INSTALACION));
+		}
+		return Utils.addEmptyOptionIfMoreThanOneOption(rolMapper.listModelToListDTO(listRoles), RolDTO.class);
 	}
 
 }

@@ -31,7 +31,7 @@ public class SecurityUtil {
 	public static Long getCurrentUserId() {
 		return getCurrentUser().getUserId();
 	}
-	
+
 	public static String getCurrentUserUuid() {
 		return getCurrentUser().getUserUuid();
 	}
@@ -55,13 +55,26 @@ public class SecurityUtil {
 	public static List<Long> getCurrentUserListEmpresaId() {
 		return getCurrentUser().getListEmpresaId();
 	}
-	
+
 	public static List<Long> getCurrentUserListSedeId() {
 		return getCurrentUser().getListSedeId();
 	}
-	
+
 	public static List<Long> getCurrentUserListInstalacionId() {
 		return getCurrentUser().getListInstalacionId();
+	}
+
+	public static boolean hasGlobalAccess() {
+		return hasAuthority(Constantes.Permiso.GESTION_GLOBAL);
+	}
+
+	public static boolean hasAnyAuthority(String... authorities) {
+		for (String auth: authorities) {
+			if (hasAuthority(auth)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

@@ -5,16 +5,23 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.gestion.deportiva.dto.EmpleadoDTO;
+import com.gestion.deportiva.dto.EmpleadoRegistroDTO;
 import com.gestion.deportiva.model.Usuario;
 import com.gestion.deportiva.util.Constantes;
 
 @Component
 public class EmpleadoMapper {
+
+	@Autowired
+	@Qualifier("myPasswordEncoder")
+	private PasswordEncoder passwordEncoder;
 
 	@Autowired
 	private UsuarioRolMapper usuarioRolMapper;
@@ -45,6 +52,29 @@ public class EmpleadoMapper {
 			retVal.setListUsuarioInstalacionDTO(
 					usuarioInstalacionMapper.listModelToListDTO(usuario.getListUsuarioInstalacion()));
 		}
+		return retVal;
+	}
+
+	public EmpleadoRegistroDTO modelToEmpleadoRegistroDTO(Usuario usuario) {
+		EmpleadoRegistroDTO retVal = new EmpleadoRegistroDTO();
+		List<String> listaRolesEmpleados = Arrays.asList(Constantes.Rol.ADMINISTRADOR, Constantes.Rol.USUARIO_EMPRESA,
+				Constantes.Rol.USUARIO_SEDE, Constantes.Rol.USUARIO_INSTALACION);
+
+		if (!usuario.getListUsuarioRol().isEmpty() && usuario.getListUsuarioRol().stream()
+				.map(usuarioRol -> usuarioRol.getRol().getNombre()).anyMatch(listaRolesEmpleados::contains)) {
+
+			retVal.setId(usuario.getId());
+			retVal.setEmail(usuario.getEmail());
+			retVal.setNombre(usuario.getNombre());
+		}
+		return retVal;
+	}
+
+	public Usuario empleadoRegistroDTOToUsuario(EmpleadoRegistroDTO dto) {
+		Usuario retVal = new Usuario();
+		retVal.setEmail(dto.getEmail());
+		retVal.setNombre(dto.getNombre());
+		retVal.setPassword(passwordEncoder.encode(dto.getPassword()));
 		return retVal;
 	}
 

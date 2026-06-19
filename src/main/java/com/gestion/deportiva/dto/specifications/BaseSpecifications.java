@@ -322,7 +322,33 @@ public abstract class BaseSpecifications<T> {
 			return cb.equal(root.join(relationField).get(joinField).get(targetField), value);
 		};
 	}
+	
+	protected Specification<T> inListLeftJoin(String collectionName, List<?> values, String... pathParts) {
+	    return (root, query, cb) -> {
+	        if (values == null || values.isEmpty()) return null;
 
+	        // En lugar de join, usamos un Subquery EXISTS
+	        jakarta.persistence.criteria.Subquery<Long> subquery = query.subquery(Long.class);
+	        jakarta.persistence.criteria.Root<T> subRoot = subquery.correlate(root);
+	        
+	        var join = subRoot.join(collectionName);
+	        jakarta.persistence.criteria.Path<Object> path = join;
+	        
+	        for (String part : pathParts) {
+	            path = path.get(part);
+	        }
+
+	        // Filtro de activo en la relación
+	        jakarta.persistence.criteria.Predicate activePredicate = cb.isTrue(join.get("activo"));
+	        
+	        subquery.select(subRoot.get("id"))
+	                .where(cb.and(activePredicate, path.in(values)));
+
+	        return cb.exists(subquery);
+	    };
+	}
+
+	//Inner Join
 	protected Specification<T> inList(String collectionName, List<?> values, String... pathParts) {
 		return (root, query, cb) -> {
 			if (values == null || values.isEmpty()) {

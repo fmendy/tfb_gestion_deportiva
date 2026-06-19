@@ -42,7 +42,7 @@ public class SedeSpecifications extends BaseSpecifications<Sede> {
 			specs.add(new SedeSpecifications().fieldInLong(filter.getListIds(), "id"));
 		}
 
-		if (!filter.getListEmpresaIds().isEmpty()) {
+		if (filter.getListEmpresaIds() != null && !filter.getListEmpresaIds().isEmpty()) {
 			specs.add(new SedeSpecifications().fieldInLong(filter.getListEmpresaIds(), "empresa", "id"));
 		}
 

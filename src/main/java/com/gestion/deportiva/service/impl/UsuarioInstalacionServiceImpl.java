@@ -13,6 +13,8 @@ import com.gestion.deportiva.dto.UsuarioInstalacionDTO;
 import com.gestion.deportiva.dto.filter.UsuarioInstalacionFilter;
 import com.gestion.deportiva.dto.specifications.UsuarioInstalacionSpecifications;
 import com.gestion.deportiva.mapper.UsuarioInstalacionMapper;
+import com.gestion.deportiva.model.Instalacion;
+import com.gestion.deportiva.model.Usuario;
 import com.gestion.deportiva.model.UsuarioInstalacion;
 import com.gestion.deportiva.repository.UsuarioInstalacionRepository;
 import com.gestion.deportiva.service.UsuarioInstalacionService;
@@ -30,7 +32,7 @@ public class UsuarioInstalacionServiceImpl implements UsuarioInstalacionService 
 
 	@PersistenceContext
 	private EntityManager entityManager;
-	
+
 	@Autowired
 	private UsuarioInstalacionMapper usuarioInstalacionMapper;
 
@@ -43,7 +45,8 @@ public class UsuarioInstalacionServiceImpl implements UsuarioInstalacionService 
 	@Override
 	public UsuarioInstalacionDTO findByUuid(String uuid) {
 		logger.info("Buscando UsuarioInstalacion por UUID: {}", uuid);
-		return usuarioInstalacionMapper.modelToDTO(usuarioInstalacionRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid));
+		return usuarioInstalacionMapper
+				.modelToDTO(usuarioInstalacionRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid));
 	}
 
 	@Override
@@ -62,7 +65,8 @@ public class UsuarioInstalacionServiceImpl implements UsuarioInstalacionService 
 
 	@Override
 	public Page<UsuarioInstalacionDTO> getPageByFilter(UsuarioInstalacionFilter filter, Pageable pageable) {
-		return usuarioInstalacionMapper.pageToPageDTO(usuarioInstalacionRepository.findAll(UsuarioInstalacionSpecifications.filter(filter), pageable));
+		return usuarioInstalacionMapper.pageToPageDTO(
+				usuarioInstalacionRepository.findAll(UsuarioInstalacionSpecifications.filter(filter), pageable));
 	}
 
 	@Override
@@ -88,7 +92,8 @@ public class UsuarioInstalacionServiceImpl implements UsuarioInstalacionService 
 
 	@Override
 	public List<UsuarioInstalacionDTO> getListDTO(UsuarioInstalacionFilter filter) {
-		return usuarioInstalacionMapper.listModelToListDTO(usuarioInstalacionRepository.findAll(UsuarioInstalacionSpecifications.filter(filter)));
+		return usuarioInstalacionMapper.listModelToListDTO(
+				usuarioInstalacionRepository.findAll(UsuarioInstalacionSpecifications.filter(filter)));
 	}
 
 	@Override
@@ -105,5 +110,15 @@ public class UsuarioInstalacionServiceImpl implements UsuarioInstalacionService 
 	public byte[] exportarExcel(UsuarioInstalacionFilter filter) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public Long asociarUsuarioInstalacion(Long usuarioId, Long instalacionId) {
+		UsuarioInstalacion model = new UsuarioInstalacion();
+		model.setUsuario(new Usuario(usuarioId));
+		model.setInstalacion(new Instalacion(instalacionId));
+		logger.info("Asociando Usuario " + usuarioId + " con instalacion " + instalacionId);
+		usuarioInstalacionRepository.saveAndFlush(model);
+		return model.getId();
 	}
 }

@@ -59,5 +59,7 @@ public class SedeDTO extends MaestraDTO {
 	
 	@Size(max = 1250)
 	private String descripcion;
+	
+	private String empresaSedeNombre;
 
 }

@@ -26,7 +26,7 @@
 						th:text="#{page.title.privado.instalacion}"></span>
 				</h5>
 
-				<a sec:authorize="hasAuthority('GESTION_EMPRESA')"
+				<a sec:authorize="hasAuthority('GESTION_SEDE')"
 					th:href="@{/privado/instalacion/crear}"
 					class="btn btn-primary rounded-3 px-4 py-2 d-flex align-items-center fw-semibold">
 					<i class="bi bi-plus-lg me-2"></i> <span th:text="#{boton.crear}">Crear</span>

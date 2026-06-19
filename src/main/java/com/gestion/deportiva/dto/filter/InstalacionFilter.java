@@ -1,5 +1,7 @@
 package com.gestion.deportiva.dto.filter;
 
+import java.util.List;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,5 +18,11 @@ public class InstalacionFilter extends MaestraFilter {
 	private Long sedeId;
 	
 	private Long instalacionTipoId;
+	
+	private List<Long> listEmpresaIds;
+	
+	private List<Long> listSedeIds;
+	
+	private List<Long> listInstalacionIds;
 
 }

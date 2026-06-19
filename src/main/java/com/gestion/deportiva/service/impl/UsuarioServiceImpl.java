@@ -1,7 +1,6 @@
 package com.gestion.deportiva.service.impl;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -35,7 +34,9 @@ import com.gestion.deportiva.model.RolPermiso;
 import com.gestion.deportiva.model.Usuario;
 import com.gestion.deportiva.model.UsuarioRol;
 import com.gestion.deportiva.repository.UsuarioEmpresaRepository;
+import com.gestion.deportiva.repository.UsuarioInstalacionRepository;
 import com.gestion.deportiva.repository.UsuarioRepository;
+import com.gestion.deportiva.repository.UsuarioSedeRepository;
 import com.gestion.deportiva.service.UsuarioService;
 import com.gestion.deportiva.util.SecurityUtil;
 import com.gestion.deportiva.util.Utils;
@@ -61,6 +62,12 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 
 	@Autowired
 	private UsuarioEmpresaRepository usuarioEmpresaRepository;
+
+	@Autowired
+	private UsuarioSedeRepository usuarioSedeRepository;
+
+	@Autowired
+	private UsuarioInstalacionRepository usuarioInstalacionRepository;
 
 	@Override
 	public Page<UsuarioDTO> getPageByFilter(UsuarioFilter filter, Pageable pageable) {
@@ -121,12 +128,17 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 
 		}
 
-		// Usuario Empresa
 		List<Long> listEmpresaId = usuarioEmpresaRepository.findByActivoTrueAndUsuarioId(usuario.getId()).stream()
 				.map(ue -> ue.getEmpresa().getId()).toList();
 
+		List<Long> listSedeId = usuarioSedeRepository.findByActivoTrueAndUsuarioId(usuario.getId()).stream()
+				.map(ue -> ue.getSede().getId()).toList();
+
+		List<Long> listInstalacionId = usuarioInstalacionRepository.findByActivoTrueAndUsuarioId(usuario.getId())
+				.stream().map(ue -> ue.getInstalacion().getId()).toList();
+
 		return new CustomUserDetails(usuario.getId(), usuario.getNombre(), usuario.getPassword(), authorities,
-				listEmpresaId, new ArrayList<>(), new ArrayList<>());
+				listEmpresaId, listSedeId, listInstalacionId);
 	}
 
 	@Override

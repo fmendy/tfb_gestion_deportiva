@@ -51,6 +51,25 @@ public class InstalacionServiceImpl implements InstalacionService {
 		return instalacionMapper.modelToDTO(instalacionRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid));
 	}
 
+	private InstalacionFilter limitacionesPermisos(InstalacionFilter filter) {
+		if (SecurityUtil.hasAuthority(Constantes.Permiso.GESTION_GLOBAL)) {
+			return filter;
+		}
+
+		if (SecurityUtil.hasAuthority(Constantes.Permiso.Localizacion.GESTION_EMPRESA)) {
+			filter.setListEmpresaIds(SecurityUtil.getCurrentUserListEmpresaId());
+		} else if (SecurityUtil.hasAuthority(Constantes.Permiso.Localizacion.GESTION_SEDE)) {
+			filter.setListSedeIds(SecurityUtil.getCurrentUserListSedeId());
+		} else if (SecurityUtil.hasAuthority(Constantes.Permiso.Localizacion.GESTION_INSTALACION)) {
+			filter.setListInstalacionIds(SecurityUtil.getCurrentUserListInstalacionId());
+		}
+
+		else {
+			filter.setListInstalacionIds(List.of(-1L));
+		}
+		return filter;
+	}
+
 	@Override
 	@Transactional
 	public Long guardar(InstalacionDTO dto) {
@@ -67,8 +86,8 @@ public class InstalacionServiceImpl implements InstalacionService {
 
 	@Override
 	public Page<InstalacionDTO> getPageByFilter(InstalacionFilter filter, Pageable pageable) {
-		return instalacionMapper
-				.pageToPageDTO(instalacionRepository.findAll(InstalacionSpecifications.filter(filter), pageable));
+		return instalacionMapper.pageToPageDTO(instalacionRepository
+				.findAll(InstalacionSpecifications.filter(limitacionesPermisos(filter)), pageable));
 	}
 
 	@Override
@@ -104,8 +123,8 @@ public class InstalacionServiceImpl implements InstalacionService {
 
 	@Override
 	public List<InstalacionDTO> getListDTO(InstalacionFilter filter) {
-		return Utils.sortByNombre(instalacionMapper
-				.listModelToListDTO(instalacionRepository.findAll(InstalacionSpecifications.filter(filter))));
+		return Utils.sortByNombre(instalacionMapper.listModelToListDTO(
+				instalacionRepository.findAll(InstalacionSpecifications.filter(limitacionesPermisos(filter)))));
 	}
 
 	@Override

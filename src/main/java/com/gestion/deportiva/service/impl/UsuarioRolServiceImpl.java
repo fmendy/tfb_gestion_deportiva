@@ -1,8 +1,6 @@
 package com.gestion.deportiva.service.impl;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.gestion.deportiva.dto.UsuarioRolesDTO;
 import com.gestion.deportiva.dto.UsuarioRolDTO;
 import com.gestion.deportiva.dto.filter.UsuarioRolFilter;
 import com.gestion.deportiva.dto.specifications.UsuarioRolSpecifications;
@@ -23,6 +20,7 @@ import com.gestion.deportiva.repository.RolRepository;
 import com.gestion.deportiva.repository.UsuarioRepository;
 import com.gestion.deportiva.repository.UsuarioRolRepository;
 import com.gestion.deportiva.service.UsuarioRolService;
+
 import jakarta.transaction.Transactional;
 
 @Service
@@ -121,61 +119,17 @@ public class UsuarioRolServiceImpl implements UsuarioRolService {
 	}
 
 	@Override
-	public UsuarioRolesDTO findUsuarioRolesDTOByUsuarioUuid(String usuarioUuid) {
-		logger.info("Construyendo usuarioRol con UUID: {}", usuarioUuid);
-		Usuario usuario = usuarioRepository.findByActivoTrueAndUuidEqualsIgnoreCase(usuarioUuid);
-		List<UsuarioRol> listUsuarioRol = usuarioRolRepository
-				.findByActivoTrueAndUsuario_UuidEqualsIgnoreCase(usuarioUuid);
-		return usuarioRolMapper.buildUsuarioRolesDTO(usuario, listUsuarioRol);
-	}
-
-	@Override
-	@Transactional
-	public void guardar(UsuarioRolesDTO dto) {
-		logger.info("Guardando demarcacion para usuario UUID: {}", dto.getUsuarioUuid());
-
-		Usuario usuario = usuarioRepository.findByActivoTrueAndUuidEqualsIgnoreCase(dto.getUsuarioUuid());
-		if (usuario == null) {
-			throw new IllegalArgumentException("Usuario no encontrado o inactivo");
-		}
-
-		// Lista de seleccionados desde el formulario
-		Set<String> seleccionados = new HashSet<>(dto.getListActualRolUuid());
-
-		// Equipamientos actuales (activos e inactivos)
-		List<UsuarioRol> actuales = usuarioRolRepository
-				.findByActivoTrueAndUsuario_UuidEqualsIgnoreCase(dto.getUsuarioUuid());
-
-		for (UsuarioRol existente : actuales) {
-			String rolUuid = existente.getRol().getUuid();
-			boolean marcado = seleccionados.contains(rolUuid);
-
-			if (marcado && !existente.isActivo()) {
-				existente.setActivo(true);
-				usuarioRolRepository.save(existente);
-			} else if (!marcado && existente.isActivo()) {
-				existente.setActivo(false);
-				usuarioRolRepository.save(existente);
-			}
-
-			// Eliminamos del set los ya procesados
-			seleccionados.remove(rolUuid);
-		}
-
-		// Crea nuevos si quedaron UUIDs sin procesar
-		for (String nuevoUuid : seleccionados) {
-			Rol rol = rolRepository.findByActivoTrueAndUuidEqualsIgnoreCase(nuevoUuid);
-			if (rol != null) {
-				UsuarioRol nuevo = new UsuarioRol();
-				nuevo.setUsuario(usuario);
-				nuevo.setRol(rol);
-				usuarioRolRepository.save(nuevo);
-			}
-		}
-	}
-
-	@Override
 	public void asignarRol(Long usuarioId, String rolNombre) {
+		eliminarRolesByUsuarioId(usuarioId);
+		Rol rol = rolRepository.findByActivoTrueAndNombreEqualsIgnoreCase(rolNombre);
+		UsuarioRol usuarioRol = new UsuarioRol();
+		usuarioRol.setUsuario(new Usuario(usuarioId));
+		usuarioRol.setRol(rol);
+		usuarioRolRepository.saveAndFlush(usuarioRol);
+	}
+
+	@Override
+	public void eliminarRolesByUsuarioId(Long usuarioId) {
 		List<UsuarioRol> listUsuarioRol = usuarioRolRepository.findByActivoTrueAndUsuarioId(usuarioId);
 		for (UsuarioRol usuarioRol : listUsuarioRol) {
 			if (usuarioRol.isActivo()) {
@@ -183,12 +137,16 @@ public class UsuarioRolServiceImpl implements UsuarioRolService {
 				usuarioRolRepository.save(usuarioRol);
 			}
 		}
+	}
 
-		Rol rol = rolRepository.findByActivoTrueAndNombreEqualsIgnoreCase(rolNombre);
-		UsuarioRol usuarioRol = new UsuarioRol();
-		usuarioRol.setUsuario(new Usuario(usuarioId));
-		usuarioRol.setRol(rol);
+	@Override
+	@Transactional
+	public Long asignarRol(Long usuarioId, Long rolId) {
+		eliminarRolesByUsuarioId(usuarioId);
+		UsuarioRol usuarioRol = new UsuarioRol(new Usuario(usuarioId), new Rol(rolId));
 		usuarioRolRepository.saveAndFlush(usuarioRol);
+		return usuarioRol.getId();
+
 	}
 
 }

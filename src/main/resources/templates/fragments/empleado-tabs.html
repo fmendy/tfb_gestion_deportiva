@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<style>
+.transition-all {
+	transition: all 0.2s ease-in-out;
+}
+
+.nav-link:hover {
+	color: var(--bs-primary) !important;
+}
+</style>
+</head>
+<body>
+
+<div th:fragment="tabs(id, activeTab)" class="mb-4">
+    <div class="d-flex flex-wrap bg-light p-1 rounded-4 border w-100">
+        
+        <div th:with="baseClass='nav-link px-3 py-2 rounded-3 text-decoration-none fw-semibold transition-all d-flex align-items-center justify-content-center'"
+             class="d-flex flex-row w-100">
+
+            <a th:href="@{/privado/empleado/{id}/editar(id=${id})}"
+               th:classappend="${activeTab == 'info' ? 'bg-white text-primary shadow-sm' : 'text-secondary'}"
+               th:class="${baseClass}"> 
+               <i class="bi bi-info-circle me-1"></i><span class="d-none d-sm-inline" th:text="#{empleado.tab.info}">Info</span>
+            </a> 
+
+            <a th:href="@{/privado/empleado/{id}/horario(id=${id})}"
+               th:classappend="${activeTab == 'horarios' ? 'bg-white text-primary shadow-sm' : 'text-secondary'}"
+               th:class="${baseClass}"> 
+               <i class="bi bi-clock me-1"></i><span class="d-none d-sm-inline" th:text="#{empleado.tab.horario}">Horarios</span>
+            </a> 
+
+            <a th:href="@{/privado/empleado/{id}/horario/especial(id=${id})}"
+               th:classappend="${activeTab == 'horario-especial' ? 'bg-white text-primary shadow-sm' : 'text-secondary'}"
+               th:class="${baseClass}"> 
+               <i class="bi bi-calendar-event me-1"></i><span class="d-none d-sm-inline"th:text="#{empleado.tab.horario.especial}">Especiales</span>
+            </a> 
+
+            <a th:href="@{/privado/empleado/{id}/configuracion/reserva(id=${id})}"
+               th:classappend="${activeTab == 'configuracion-reserva' ? 'bg-white text-primary shadow-sm' : 'text-secondary'}"
+               th:class="${baseClass}"> 
+               <i class="bi bi-gear me-1"></i><span class="d-none d-sm-inline" th:text="#{empleado.tab.configuracion}">Config.</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+
+
+</body>
+</html>

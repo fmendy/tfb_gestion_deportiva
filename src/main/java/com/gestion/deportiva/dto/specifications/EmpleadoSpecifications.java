@@ -29,20 +29,6 @@ public class EmpleadoSpecifications extends BaseSpecifications<Usuario> {
 			specs.add(new UsuarioSpecifications().likeIgnoreCase(filter.getEmail(), "email"));
 		}
 
-		if (filter.getListEmpresaIds() != null && !filter.getListEmpresaIds().isEmpty()) {
-			specs.add(new UsuarioSpecifications().inList("listUsuarioEmpresa", filter.getListEmpresaIds(), "empresa",
-					"id"));
-		}
-
-		if (filter.getListSedeIds() != null && !filter.getListSedeIds().isEmpty()) {
-			specs.add(new UsuarioSpecifications().inList("listUsuarioSede", filter.getListEmpresaIds(), "sede", "id"));
-		}
-
-		if (filter.getListInstalacionIds() != null && !filter.getListInstalacionIds().isEmpty()) {
-			specs.add(new UsuarioSpecifications().inList("listUsuarioInstalacion", filter.getListEmpresaIds(),
-					"instalacion", "id"));
-		}
-
 		if (filter.getEmpresaId() != null) {
 			specs.add(new UsuarioSpecifications().inList("listUsuarioEmpresa", Arrays.asList(filter.getEmpresaId()),
 					"empresa", "id"));
@@ -56,6 +42,34 @@ public class EmpleadoSpecifications extends BaseSpecifications<Usuario> {
 		if (filter.getInstalacionId() != null) {
 			specs.add(new UsuarioSpecifications().inList("listUsuarioInstalacion",
 					Arrays.asList(filter.getInstalacionId()), "instalacion", "id"));
+		}
+
+		// --- GRUPO DE PERMISOS (OR) ---
+		List<Specification<Usuario>> permisosSpecs = new ArrayList<>();
+
+		if (filter.getListEmpresaIds() != null && !filter.getListEmpresaIds().isEmpty()) {
+			permisosSpecs.add(new UsuarioSpecifications().inListLeftJoin("listUsuarioEmpresa", filter.getListEmpresaIds(),
+					"empresa", "id"));
+		}
+
+		if (filter.getListSedeIds() != null && !filter.getListSedeIds().isEmpty()) {
+			permisosSpecs
+					.add(new UsuarioSpecifications().inListLeftJoin("listUsuarioSede", filter.getListSedeIds(), "sede", "id"));
+		}
+
+		if (filter.getListInstalacionIds() != null && !filter.getListInstalacionIds().isEmpty()) {
+			permisosSpecs.add(new UsuarioSpecifications().inListLeftJoin("listUsuarioInstalacion",
+					filter.getListInstalacionIds(), "instalacion", "id"));
+		}
+
+		// Si hay filtros de permisos, los combinamos con OR y los añadimos a la lista
+		// principal
+		if (!permisosSpecs.isEmpty()) {
+			specs.add((root, query, cb) -> {
+				var predicates = permisosSpecs.stream().map(spec -> spec.toPredicate(root, query, cb))
+						.toArray(jakarta.persistence.criteria.Predicate[]::new);
+				return cb.or(predicates);
+			});
 		}
 
 		return new UsuarioSpecifications().combine(specs);
