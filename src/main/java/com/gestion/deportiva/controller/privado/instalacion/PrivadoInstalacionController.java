@@ -81,7 +81,7 @@ public class PrivadoInstalacionController extends BaseController {
 	}
 
 	@GetMapping("/crear")
-	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Localizacion.GESTION_SEDE + "')")
+	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Localizacion.GESTION_INSTALACION + "')")
 	public ModelAndView crear(RedirectAttributes redirectAttributes) {
 
 		return loadForm(null, redirectAttributes);

@@ -55,7 +55,7 @@ public class PrivadoInstalacionHorarioController extends BaseController {
 	}
 
 	@PostMapping("/guardar")
-	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Localizacion.GESTION_INSTALACION + "')")
+	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Localizacion.GESTION_INSTALACION  + "')")
 	public ModelAndView guardar(@Valid @ModelAttribute("form") InstalacionHorarioSemanalDTO dto,
 			BindingResult bindingResult, RedirectAttributes redirectAttributes) throws PermisoException {
 		if (!instalacionService.canWrite(dto.getInstalacionId())) {

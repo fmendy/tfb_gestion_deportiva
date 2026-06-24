@@ -32,7 +32,6 @@ public class Constantes {
 
 	public static final int CUSTOM_ERROR_CODE = 555;
 
-
 	public static class Rol {
 		public static final String ADMINISTRADOR = "ADMINISTRADOR";
 
@@ -47,29 +46,47 @@ public class Constantes {
 	}
 
 	public static class Permiso {
-		
+
 		public static final String GESTION_GLOBAL = "GESTION_GLOBAL";
 
 		public static class Usuario {
+			
+			public static final String GESTION_USUARIO = "GESTION_USUARIO";
+			
 			public static final String GESTION_USUARIO_GLOBAL = "GESTION_USUARIO_GLOBAL";
-			
+
 			public static final String GESTION_USUARIO_EMPRESA = "GESTION_USUARIO_EMPRESA";
-			
+
 			public static final String GESTION_USUARIO_SEDE = "GESTION_USUARIO_SEDE";
-			
+
 			public static final String GESTION_USUARIO_INSTALACION = "GESTION_USUARIO_INSTALACION";
-			
+
 			public static final String MI_PERFIL = "MI_PERFIL";
 
 		}
-		
+
 		public static class Localizacion {
+			
+			public static final String GESTION_LOCALIZACION= "GESTION_LOCALIZACION_INSTALACION";
 
 			public static final String GESTION_EMPRESA = "GESTION_EMPRESA";
-			
+
 			public static final String GESTION_SEDE = "GESTION_SEDE";
-			
+
 			public static final String GESTION_INSTALACION = "GESTION_INSTALACION";
+
+		}
+
+		public static class Rol {
+			public static final String GESTION_ROL = "GESTION_ROL";
+
+			public static final String GESTION_ROL_GLOBAL = "GESTION_ROL_GLOBAL";
+
+			public static final String GESTION_ROL_EMPRESA = "GESTION_ROL_EMPRESA";
+
+			public static final String GESTION_ROL_SEDE = "GESTION_ROL_SEDE";
+
+			public static final String GESTION_ROL_INSTALACION = "GESTION_ROL_INSTALACION";
 
 		}
 
