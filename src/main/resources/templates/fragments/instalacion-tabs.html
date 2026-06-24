@@ -35,6 +35,12 @@
                th:classappend="${activeTab == 'horario-especial' ? 'bg-white text-primary shadow-sm' : 'text-secondary'}"
                th:class="${baseClass}"> 
                <i class="bi bi-calendar-event me-1"></i><span class="d-none d-sm-inline"th:text="#{instalacion.tab.horario.especial}">Especiales</span>
+            </a>
+            
+            <a th:href="@{/privado/instalacion/{id}/horario/bloqueado(id=${id})}"
+               th:classappend="${activeTab == 'horario-bloqueado' ? 'bg-white text-primary shadow-sm' : 'text-secondary'}"
+               th:class="${baseClass}"> 
+               <i class="bi bi-lock me-1"></i><span class="d-none d-sm-inline"th:text="#{instalacion.tab.horario.bloqueado}">bloqueado</span>
             </a> 
 
             <a th:href="@{/privado/instalacion/{id}/configuracion/reserva(id=${id})}"

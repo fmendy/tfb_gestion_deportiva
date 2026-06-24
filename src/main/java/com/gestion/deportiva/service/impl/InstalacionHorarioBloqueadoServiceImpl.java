@@ -114,4 +114,17 @@ public class InstalacionHorarioBloqueadoServiceImpl implements InstalacionHorari
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public InstalacionHorarioBloqueadoDTO findByIdOrNewEmpty(Long id, Long instalacionId) {
+		InstalacionHorarioBloqueadoDTO retVal = null;
+		if (id != null) {
+			retVal = findById(instalacionId);
+		}
+		if (retVal == null) {
+			retVal = new InstalacionHorarioBloqueadoDTO();
+			retVal.setInstalacionId(instalacionId);
+		}
+		return retVal;
+	}
 }

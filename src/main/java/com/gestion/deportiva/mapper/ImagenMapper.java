@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import com.gestion.deportiva.dto.ComboDTO;
@@ -15,6 +16,7 @@ import com.gestion.deportiva.model.Imagen;
 import com.gestion.deportiva.model.Instalacion;
 import com.gestion.deportiva.model.Sede;
 
+@Component
 public class ImagenMapper {
 
 	public ImagenDTO modelToDTO(Imagen model) {

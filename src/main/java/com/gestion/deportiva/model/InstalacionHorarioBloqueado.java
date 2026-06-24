@@ -34,9 +34,9 @@ public class InstalacionHorarioBloqueado extends BaseEntity implements Serializa
 	@Column(name = "fecha", nullable = false)
 	private LocalDate fecha;
 
-	@Column(name = "hora_inicio")
+	@Column(name = "hora_inicio", nullable = false)
 	private LocalTime horaInicio;
 
-	@Column(name = "hora_fin")
+	@Column(name = "hora_fin", nullable = false)
 	private LocalTime horaFin;
 }

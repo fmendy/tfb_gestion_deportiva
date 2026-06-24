@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" lang="es"
+	layout:decorate="~{layout/base}">
+<body>
+	<div layout:fragment="content" class="container-fluid py-5 px-3">
+
+		<div
+			th:replace="~{fragments/breadcrumbs :: breadcrumbs(${breadcrumbs})}"></div>
+
+		<div class="card shadow-lg border-0 rounded-4 p-4">
+			<h3 class="text-center mb-4 fw-bold">
+				<i class="bi bi-calendar-event me-2 text-primary"></i> <span
+					th:text="#{page.title.privado.instalacion.horario.bloqueado}">Horarios</span>
+			</h3>
+
+			<div
+				th:replace="~{fragments/instalacion-tabs :: tabs(${form.instalacionId}, 'horario-bloqueado')}"></div>
+
+			<div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
+				<form
+					th:action="@{/privado/instalacion/{id}/horario/bloqueado/guardar(id=${form.instalacionId})}"
+					th:object="${form}" method="post" class="row g-4">
+
+					<input type="hidden" th:field="*{instalacionId}" /> <input
+						type="hidden" th:field="*{id}" />
+
+					<div class="col-md-4">
+						<label for="fecha" class="form-label fw-semibold text-secondary">
+							<i class="bi bi-calendar-event me-1 text-primary"></i> <span
+							th:text="#{instalacion.horario.bloqueado.form.fecha}">Fecha</span>
+							<span class="text-danger">*</span>
+						</label> <input type="date" th:field="*{fecha}" id="fecha" required
+							class="form-control rounded-3 py-2">
+						<div class="text-danger small mt-1"
+							th:if="${#fields.hasErrors('fecha')}" th:errors="*{fecha}"></div>
+					</div>
+
+					<div class="col-md-2">
+						<label for="horaInicio"
+							class="form-label fw-semibold text-secondary"> <i
+							class="bi bi-clock me-1 text-primary"></i> <span
+							th:text="#{instalacion.horario.bloqueado.form.hora.inicio}">Inicio</span>
+							<span class="text-danger">*</span>
+						</label> <input type="time" th:field="*{horaInicio}" id="horaInicio"
+							required="required" class="form-control rounded-3 py-2">
+						<div class="text-danger small mt-1"
+							th:if="${#fields.hasErrors('horaInicio')}"
+							th:errors="*{horaInicio}"></div>
+					</div>
+
+					<div class="col-md-2">
+						<label for="horaFin" class="form-label fw-semibold text-secondary">
+							<i class="bi bi-clock-fill me-1 text-primary"></i> <span
+							th:text="#{instalacion.horario.bloqueado.form.hora.fin}">Fin</span>
+							<span class="text-danger">*</span>
+						</label> <input type="time" th:field="*{horaFin}" id="horaFin"
+							required="required" class="form-control rounded-3 py-2">
+						<div class="text-danger small mt-1"
+							th:if="${#fields.hasErrors('horaFin')}" th:errors="*{horaFin}"></div>
+					</div>
+
+
+					<div class="col-12 text-end mt-4 pt-3 border-top">
+						<button type="submit"
+							class="btn btn-primary px-5 py-2 fw-semibold shadow-sm">
+							<i class="bi bi-check-circle-fill me-2"></i> <span
+								th:text="#{boton.guardar}">Guardar</span>
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<script th:inline="javascript">
+			const checkboxCerrado = document.getElementById('cerrado');
+			const inputInicio = document.getElementById('horaInicio');
+			const inputFin = document.getElementById('horaFin');
+
+			function gestionarEstadoHoras() {
+				if (checkboxCerrado.checked) {
+					// Limpiar valores
+					inputInicio.value = '';
+					inputFin.value = '';
+					// Deshabilitar inputs
+					inputInicio.disabled = true;
+					inputFin.disabled = true;
+				} else {
+					// Habilitar inputs
+					inputInicio.disabled = false;
+					inputFin.disabled = false;
+				}
+			}
+
+			// Ejecutar al cambiar el switch
+			checkboxCerrado.addEventListener('change', gestionarEstadoHoras);
+
+			// Ejecutar al cargar la página (por si el objeto ya viene marcado como cerrado desde el servidor)
+			window.addEventListener('load', gestionarEstadoHoras);
+		</script>
+
+
+	</div>
+</body>
+</html>
