@@ -17,7 +17,7 @@ import com.gestion.deportiva.dto.UsuarioRegistroDTO;
 import com.gestion.deportiva.dto.ComboDTO;
 import com.gestion.deportiva.dto.MiPerfilDTO;
 import com.gestion.deportiva.dto.MiPerfilPasswordDTO;
-import com.gestion.deportiva.dto.RegistroEmpresaDTO;
+import com.gestion.deportiva.dto.EmpresaRegistroDTO;
 import com.gestion.deportiva.model.Usuario;
 
 @Component
@@ -30,7 +30,7 @@ public class UsuarioMapper {
 	@Autowired
 	private UsuarioRolMapper usuarioRolMapper;
 	
-	public Usuario registroEmpresaDTOToModel(RegistroEmpresaDTO dto) {
+	public Usuario registroEmpresaDTOToModel(EmpresaRegistroDTO dto) {
 		Usuario usuario = new Usuario();
 		usuario.setNombre(dto.getNombre());
 		usuario.setEmail(dto.getEmail());

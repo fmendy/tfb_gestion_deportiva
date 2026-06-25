@@ -22,7 +22,7 @@ import com.gestion.deportiva.config.AuditorAwareContext;
 import com.gestion.deportiva.dto.CustomUserDetails;
 import com.gestion.deportiva.dto.MiPerfilDTO;
 import com.gestion.deportiva.dto.MiPerfilPasswordDTO;
-import com.gestion.deportiva.dto.RegistroEmpresaDTO;
+import com.gestion.deportiva.dto.EmpresaRegistroDTO;
 import com.gestion.deportiva.dto.UsuarioDTO;
 import com.gestion.deportiva.dto.UsuarioRegistroDTO;
 import com.gestion.deportiva.dto.filter.UsuarioFilter;
@@ -33,11 +33,14 @@ import com.gestion.deportiva.model.Rol;
 import com.gestion.deportiva.model.RolPermiso;
 import com.gestion.deportiva.model.Usuario;
 import com.gestion.deportiva.model.UsuarioRol;
+import com.gestion.deportiva.repository.RolRepository;
 import com.gestion.deportiva.repository.UsuarioEmpresaRepository;
 import com.gestion.deportiva.repository.UsuarioInstalacionRepository;
 import com.gestion.deportiva.repository.UsuarioRepository;
+import com.gestion.deportiva.repository.UsuarioRolRepository;
 import com.gestion.deportiva.repository.UsuarioSedeRepository;
 import com.gestion.deportiva.service.UsuarioService;
+import com.gestion.deportiva.util.Constantes;
 import com.gestion.deportiva.util.SecurityUtil;
 import com.gestion.deportiva.util.Utils;
 import jakarta.persistence.EntityManager;
@@ -68,6 +71,12 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 
 	@Autowired
 	private UsuarioInstalacionRepository usuarioInstalacionRepository;
+
+	@Autowired
+	private UsuarioRolRepository usuarioRolRepository;
+
+	@Autowired
+	private RolRepository rolRepository;
 
 	@Override
 	public Page<UsuarioDTO> getPageByFilter(UsuarioFilter filter, Pageable pageable) {
@@ -178,11 +187,14 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 	}
 
 	@Override
-	public String registrar(UsuarioRegistroDTO dto) {
+	@Transactional
+	public Long registrarUsuarioCliente(UsuarioRegistroDTO dto) {
 		Usuario usuario = usuarioMapper.registroDTOToModel(dto);
 		usuarioRepository.saveAndFlush(usuario);
-
-		return usuario.getUuid();
+		Rol rol = rolRepository.findByActivoTrueAndNombreContainsIgnoreCase(Constantes.Rol.USUARIO_CLIENTE);
+		UsuarioRol usuarioRol = new UsuarioRol(usuario, rol);
+		usuarioRolRepository.saveAndFlush(usuarioRol);
+		return usuario.getId();
 	}
 
 	@Override
@@ -245,7 +257,7 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 	}
 
 	@Override
-	public Long registrarUsuario(@Valid RegistroEmpresaDTO dto) {
+	public Long registrarUsuarioEmpresa(@Valid EmpresaRegistroDTO dto) {
 		Usuario usuario = usuarioMapper.registroEmpresaDTOToModel(dto);
 		usuarioRepository.saveAndFlush(usuario);
 

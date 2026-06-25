@@ -1,8 +1,8 @@
 package com.gestion.deportiva.service;
 
-import com.gestion.deportiva.dto.RegistroEmpresaDTO;
+import com.gestion.deportiva.dto.EmpresaRegistroDTO;
 
 public interface RegistroEmpresaService {
 
-	void registrarEmpresa(RegistroEmpresaDTO dto);
+	void registrarEmpresa(EmpresaRegistroDTO dto);
 }

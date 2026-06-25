@@ -2,7 +2,7 @@ package com.gestion.deportiva.dto;
 
 import com.gestion.deportiva.validation.CifValid;
 import com.gestion.deportiva.validation.FieldMatchValid;
-import com.gestion.deportiva.validation.RegistroEmpresaEmailUnicoValid;
+import com.gestion.deportiva.validation.EmpresaRegistroEmailUnicoValid;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
@@ -14,10 +14,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@RegistroEmpresaEmailUnicoValid
+@EmpresaRegistroEmailUnicoValid
 @FieldMatchValid(first = "email", second = "emailConfirmar", message = "{error.validacion.registro.empresa.email.no.coincide}")
 @FieldMatchValid(first = "password", second = "passwordConfirmar", message = "{error.validacion.registro.empresa.password.no.coincide}")
-public class RegistroEmpresaDTO extends MaestraDTO {
+public class EmpresaRegistroDTO extends MaestraDTO {
 
 	private static final long serialVersionUID = 2505824822273595331L;
 

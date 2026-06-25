@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" lang="es"
+	layout:decorate="~{layout/base}">
+<head>
+</head>
+<body>
+	<div layout:fragment="content"
+		class="d-flex justify-content-center align-items-center vh-100">
+
+		<div class="container py-5">
+			<div class="row justify-content-center">
+				<div class="col-lg-8">
+					<div class="card shadow-lg border-0 rounded-4 p-4 p-md-5">
+						<h3 class="text-center fw-bold mb-4 text-primary"
+							th:text="#{registro.empresa.title}">Registro de Empresa</h3>
+
+						<form th:action="@{/publico/registro/empresa/guardar}"
+							method="post" th:object="${form}" th:csrf="true">
+
+							<div class="row g-3">
+								<div class="col-md-6">
+									<div class="form-floating">
+										<input type="text" th:field="*{nombre}"
+											class="form-control rounded-3" id="nombre" required
+											placeholder="Nombre"> <label for="nombre"
+											th:text="#{registro.empresa.nombre}">Nombre</label>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-floating">
+										<input type="text" th:field="*{cif}"
+											class="form-control rounded-3" id="cif" required
+											placeholder="CIF"> <label for="cif"
+											th:text="#{registro.empresa.cif}">CIF</label>
+									</div>
+								</div>
+
+								<div class="col-md-6">
+									<div class="form-floating">
+										<input type="email" th:field="*{email}"
+											class="form-control rounded-3" id="email" required
+											placeholder="Email"> <label for="email"
+											th:text="#{registro.empresa.email}">Email</label>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-floating">
+										<input type="email" th:field="*{emailConfirmar}"
+											class="form-control rounded-3" id="emailConfirmar" required
+											placeholder="Confirmar"> <label for="emailConfirmar"
+											th:text="#{registro.empresa.email.confirmar}">Confirmar
+											Email</label>
+									</div>
+								</div>
+
+								<div class="col-md-6">
+									<div class="form-floating">
+										<input type="password" th:field="*{password}"
+											class="form-control rounded-3" id="password" required
+											placeholder="Password"> <label for="password"
+											th:text="#{registro.empresa.password}">Password</label>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-floating">
+										<input type="password" th:field="*{passwordConfirmar}"
+											class="form-control rounded-3" id="passwordConfirmar"
+											required placeholder="Confirmar"> <label
+											for="passwordConfirmar"
+											th:text="#{registro.empresa.password.confirmar}">Confirmar
+											Password</label>
+									</div>
+								</div>
+
+								<div class="col-12">
+									<div class="form-floating">
+										<input type="url" th:field="*{url}"
+											class="form-control rounded-3" id="url" placeholder="URL">
+										<label for="url" th:text="#{registro.empresa.url}">Web</label>
+									</div>
+								</div>
+
+								<div class="col-12">
+									<div class="form-floating">
+										<textarea th:field="*{descripcion}"
+											class="form-control rounded-3" id="descripcion"
+											placeholder="Descripción" style="height: 120px;"></textarea>
+										<label for="descripcion"
+											th:text="#{registro.empresa.descripcion}">Descripción</label>
+									</div>
+								</div>
+							</div>
+
+							<div class="d-grid mt-4">
+								<button type="submit"
+									class="btn btn-primary btn-lg rounded-3 fw-bold shadow-sm">
+									<span th:text="#{boton.registrarse}">Registrar Empresa</span> <i
+										class="bi bi-check-circle ms-2"></i>
+								</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

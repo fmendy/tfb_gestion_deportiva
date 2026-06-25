@@ -11,7 +11,7 @@ import org.springframework.util.StringUtils;
 
 import com.gestion.deportiva.dto.ComboDTO;
 import com.gestion.deportiva.dto.EmpresaDTO;
-import com.gestion.deportiva.dto.RegistroEmpresaDTO;
+import com.gestion.deportiva.dto.EmpresaRegistroDTO;
 import com.gestion.deportiva.model.Empresa;
 
 @Component
@@ -63,7 +63,7 @@ public class EmpresaMapper {
 		return list.stream().map(bean -> new ComboDTO(bean.getId(), bean.getNombre())).toList();
 	}
 
-	public  Empresa registroEmpresaDTOToModel(RegistroEmpresaDTO dto) {
+	public  Empresa registroEmpresaDTOToModel(EmpresaRegistroDTO dto) {
 		Empresa retVal = new Empresa();
 		retVal.setNombre(dto.getNombre());
 		retVal.setDescripcion(dto.getDescripcion());

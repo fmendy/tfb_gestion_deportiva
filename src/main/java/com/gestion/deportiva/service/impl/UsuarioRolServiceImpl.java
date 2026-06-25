@@ -20,6 +20,8 @@ import com.gestion.deportiva.repository.RolRepository;
 import com.gestion.deportiva.repository.UsuarioRepository;
 import com.gestion.deportiva.repository.UsuarioRolRepository;
 import com.gestion.deportiva.service.UsuarioRolService;
+import com.gestion.deportiva.util.Constantes;
+import com.gestion.deportiva.util.SecurityUtil;
 
 import jakarta.transaction.Transactional;
 
@@ -103,13 +105,68 @@ public class UsuarioRolServiceImpl implements UsuarioRolService {
 	}
 
 	@Override
-	public boolean canWrite(Long id) {
+	public boolean canWrite(Long usuarioId) {
+		if (SecurityUtil.hasAnyAuthority(Constantes.Role.ADMINISTRADOR, Constantes.Permiso.GESTION_GLOBAL,
+				Constantes.Permiso.Rol.GESTION_ROL_GLOBAL)) {
+			return true;
+		}
+
+		Usuario usuario = usuarioRepository.findByActivoTrueAndId(usuarioId);
+		if (usuario == null)
+			return false;
+
+		// Delegamos la validación según el rol
+		if (SecurityUtil.hasAuthority(Constantes.Permiso.Rol.GESTION_ROL_EMPRESA)) {
+			return canAccessByEmpresa(usuario);
+		}
+		if (SecurityUtil.hasAuthority(Constantes.Permiso.Rol.GESTION_ROL_SEDE)) {
+			return canAccessBySede(usuario);
+		}
+		if (SecurityUtil.hasAuthority(Constantes.Permiso.Rol.GESTION_ROL_INSTALACION)) {
+			return canAccessByInstalacion(usuario);
+		}
+
 		return false;
+	}
+	
+	private boolean canAccessByEmpresa(Usuario usuario) {
+		List<Long> allowedEmpresas = SecurityUtil.getCurrentUserListEmpresaId();
+
+		boolean match = usuario.getListUsuarioEmpresa().stream()
+				.anyMatch(ue -> allowedEmpresas.contains(ue.getEmpresa().getId()));
+		if (match)
+			return true;
+
+		match = usuario.getListUsuarioSede().stream()
+				.anyMatch(us -> allowedEmpresas.contains(us.getSede().getEmpresa().getId()));
+		if (match)
+			return true;
+
+		return usuario.getListUsuarioInstalacion().stream()
+				.anyMatch(ui -> allowedEmpresas.contains(ui.getInstalacion().getSede().getEmpresa().getId()));
+	}
+
+	private boolean canAccessBySede(Usuario usuario) {
+		List<Long> allowedSedes = SecurityUtil.getCurrentUserListSedeId();
+
+		boolean match = usuario.getListUsuarioSede().stream()
+				.anyMatch(us -> allowedSedes.contains(us.getSede().getId()));
+		if (match)
+			return true;
+
+		return usuario.getListUsuarioInstalacion().stream()
+				.anyMatch(ui -> allowedSedes.contains(ui.getInstalacion().getSede().getId()));
+	}
+
+	private boolean canAccessByInstalacion(Usuario usuario) {
+		List<Long> allowedInstalaciones = SecurityUtil.getCurrentUserListInstalacionId();
+		return usuario.getListUsuarioInstalacion().stream()
+				.anyMatch(ui -> allowedInstalaciones.contains(ui.getInstalacion().getId()));
 	}
 
 	@Override
 	public boolean canRead(Long id) {
-		return true;
+		return canWrite(id);
 	}
 
 	@Override

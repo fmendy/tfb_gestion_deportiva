@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.gestion.deportiva.dto.RegistroEmpresaDTO;
+import com.gestion.deportiva.dto.EmpresaRegistroDTO;
 import com.gestion.deportiva.service.EmpresaService;
 import com.gestion.deportiva.service.RegistroEmpresaService;
 import com.gestion.deportiva.service.UsuarioEmpresaService;
@@ -29,10 +29,10 @@ public class RegistroEmpresaServiceImpl implements RegistroEmpresaService{
     
 
     @Transactional(rollbackFor = Exception.class)
-    public void registrarEmpresa(RegistroEmpresaDTO dto) {
+    public void registrarEmpresa(EmpresaRegistroDTO dto) {
         Long empresaId = empresaService.registrarEmpresa(dto);
         dto.setPassword(dto.getPassword());
-        Long usuarioId = usuarioService.registrarUsuario(dto);
+        Long usuarioId = usuarioService.registrarUsuarioEmpresa(dto);
         usuarioEmpresaService.asociarUsuarioEmpresa(usuarioId, empresaId);
         usuarioRolService.asignarRol(usuarioId, Constantes.Rol.USUARIO_EMPRESA);
     }

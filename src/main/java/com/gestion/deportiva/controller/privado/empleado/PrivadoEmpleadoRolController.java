@@ -24,6 +24,7 @@ import com.gestion.deportiva.service.EmpresaService;
 import com.gestion.deportiva.service.InstalacionService;
 import com.gestion.deportiva.service.RolService;
 import com.gestion.deportiva.service.SedeService;
+import com.gestion.deportiva.service.UsuarioRolService;
 import com.gestion.deportiva.util.BreadcrumbBuilder;
 import com.gestion.deportiva.util.Constantes;
 import com.gestion.deportiva.util.SecurityUtil;
@@ -45,6 +46,9 @@ public class PrivadoEmpleadoRolController extends BaseController {
 
 	@Autowired
 	private EmpleadoService empleadoService;
+	
+	@Autowired
+	private UsuarioRolService usuarioRolService;
 
 	@Autowired
 	private EmpresaService empresaService;
@@ -59,15 +63,21 @@ public class PrivadoEmpleadoRolController extends BaseController {
 	private RolService rolService;
 
 	@GetMapping("")
-	public ModelAndView ver(@PathVariable Long idEmpleado, RedirectAttributes redirectAttributes) {
+	public ModelAndView ver(@PathVariable Long idEmpleado, RedirectAttributes redirectAttributes) throws PermisoException {
 		logger.info("Mostrando rol para empleado");
+		if (!usuarioRolService.canWrite(idEmpleado)) {
+			logger.error("Empleado {} intentó acceder a una EmpleadoRol  sin permisos: usuario {}",
+					SecurityUtil.getCurrentUserId(), idEmpleado);
+			throw new PermisoException("No tiene permisos para acceder a esta empleado.");
+		}
+
 		return buildDetailsForm(empleadoService.getEmpleadoRolDTO(idEmpleado));
 	}
 
 	@PostMapping("/guardar")
 	public ModelAndView guardar(@Valid @ModelAttribute("form") EmpleadoRolDTO dto, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) throws PermisoException {
-		if (!empleadoService.canWrite(dto.getId())) {
+		if (!usuarioRolService.canWrite(dto.getUsuarioId())) {
 			logger.error("Empleado {} intentó acceder a una Empleado  sin permisos: usuario {}",
 					SecurityUtil.getCurrentUserId(), dto.getId());
 			throw new PermisoException("No tiene permisos para acceder a esta empleado.");

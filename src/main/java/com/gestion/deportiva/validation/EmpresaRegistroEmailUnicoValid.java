@@ -13,10 +13,10 @@ import jakarta.validation.Payload;
 
 
 @Documented
-@Constraint(validatedBy = RegistroEmpresaEmailUnicoValidator.class)
+@Constraint(validatedBy = EmpresaRegistroEmailUnicoValidator.class)
 @Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface RegistroEmpresaEmailUnicoValid {
+public @interface EmpresaRegistroEmailUnicoValid {
     String message() default "{error.validacion.registro.empresa.email.unico}";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};

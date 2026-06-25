@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 import com.gestion.deportiva.dto.MiPerfilDTO;
 import com.gestion.deportiva.dto.MiPerfilPasswordDTO;
-import com.gestion.deportiva.dto.RegistroEmpresaDTO;
+import com.gestion.deportiva.dto.EmpresaRegistroDTO;
 import com.gestion.deportiva.dto.UsuarioDTO;
 import com.gestion.deportiva.dto.UsuarioRegistroDTO;
 import com.gestion.deportiva.dto.filter.UsuarioFilter;
@@ -23,7 +23,7 @@ public interface UsuarioService
 
 	Usuario getUsuarioWithoutAuditor(String nombre);
 
-	String registrar(UsuarioRegistroDTO dto);
+	Long registrarUsuarioCliente(UsuarioRegistroDTO dto);
 
 	Long guardarDatos(UsuarioDTO form);
 
@@ -35,7 +35,7 @@ public interface UsuarioService
 
 	void actualizarPassword(MiPerfilPasswordDTO dto);
 
-	Long registrarUsuario(@Valid RegistroEmpresaDTO dto);
+	Long registrarUsuarioEmpresa(@Valid EmpresaRegistroDTO dto);
 
 	void actualizarMiPerfil(@Valid MiPerfilDTO dto);
 

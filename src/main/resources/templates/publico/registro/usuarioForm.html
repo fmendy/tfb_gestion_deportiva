@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" lang="es"
+	layout:decorate="~{layout/base}">
+<head>
+</head>
+<body>
+	<div layout:fragment="content"
+		class="d-flex justify-content-center align-items-center vh-100">
+		<style>
+.form-floating>.form-control:focus ~ label {
+	color: #0d6efd;
+	font-weight: bold;
+}
+
+.card-glass {
+	background: rgba(255, 255, 255, 0.9);
+	backdrop-filter: blur(10px);
+	border: 1px solid rgba(255, 255, 255, 0.3);
+}
+</style>
+
+		<div class="container py-5">
+			<div class="row justify-content-center">
+				<div class="col-lg-8">
+					<div
+						class="card card-glass shadow-lg border-0 rounded-4 p-4 p-md-5">
+						<h2 class="text-center fw-bold mb-4"
+							th:text="#{registro.usuario.title}">Registro</h2>
+
+						<form th:action="@{/publico/registro/usuario/guardar}"
+							method="post" th:object="${form}">
+
+							<div class="row g-3">
+								<div class="col-12">
+									<div class="form-floating">
+										<input type="text" th:field="*{nombre}"
+											class="form-control rounded-3" id="nombre"
+											placeholder="Nombre"> <label for="nombre"
+											th:text="#{registro.usuario.nombre}"></label>
+									</div>
+								</div>
+
+								<div class="col-md-6">
+									<div class="form-floating">
+										<input type="email" th:field="*{email}"
+											class="form-control rounded-3" id="email"
+											placeholder="name@example.com"> <label for="email"
+											th:text="#{registro.usuario.email}"></label>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-floating">
+										<input type="email" th:field="*{emailConfirmar}"
+											class="form-control rounded-3" id="emailConfirmar"
+											placeholder="name@example.com"> <label
+											for="emailConfirmar"
+											th:text="#{registro.usuario.email.confirmar}"></label>
+									</div>
+								</div>
+
+								<div class="col-md-6">
+									<div class="form-floating">
+										<input type="password" th:field="*{password}"
+											class="form-control rounded-3" id="password"
+											placeholder="Password"> <label for="password"
+											th:text="#{registro.usuario.password}"></label>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-floating">
+										<input type="password" th:field="*{passwordConfirmar}"
+											class="form-control rounded-3" id="passwordConfirmar"
+											placeholder="Confirmar"> <label
+											for="passwordConfirmar"
+											th:text="#{registro.usuario.password.confirmar}"></label>
+									</div>
+								</div>
+							</div>
+
+							<div class="d-grid mt-4">
+								<button type="submit"
+									class="btn btn-primary btn-lg rounded-3 fw-bold shadow-sm">
+									<span th:text="#{boton.registrarse}">Registrar</span> <i
+										class="bi bi-arrow-right-short fs-4 align-middle"></i>
+								</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

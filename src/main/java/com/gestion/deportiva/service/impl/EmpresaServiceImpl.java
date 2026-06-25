@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.gestion.deportiva.dto.ComboDTO;
 import com.gestion.deportiva.dto.EmpresaDTO;
-import com.gestion.deportiva.dto.RegistroEmpresaDTO;
+import com.gestion.deportiva.dto.EmpresaRegistroDTO;
 import com.gestion.deportiva.dto.filter.EmpresaFilter;
 import com.gestion.deportiva.dto.specifications.EmpresaSpecifications;
 import com.gestion.deportiva.mapper.EmpresaMapper;
@@ -170,7 +170,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 	}
 
 	@Override
-	public Long registrarEmpresa(RegistroEmpresaDTO dto) {
+	public Long registrarEmpresa(EmpresaRegistroDTO dto) {
 		logger.info("Registrando nueva empresa nombre: {}", dto.getNombre());
 		Empresa model = empresaMapper.registroEmpresaDTOToModel(dto);
 		model = empresaRepository.saveAndFlush(model);
