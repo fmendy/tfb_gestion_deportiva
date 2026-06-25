@@ -11,6 +11,7 @@
 }
 </style>
 </head>
+
 <body>
 
 	<div th:fragment="tabs(id, activeTab)" class="mb-4">
@@ -25,7 +26,7 @@
 					th:class="${baseClass}"> <i class="bi bi-info-circle me-1"></i><span
 					class="d-none d-sm-inline" th:text="#{empleado.tab.info}">Info</span>
 				</a> <a th:href="@{/privado/empleado/{id}/rol(id=${id})}"
-					th:classappend="${activeTab == 'horarios' ? 'bg-white text-primary shadow-sm' : 'text-secondary'}"
+					th:classappend="${activeTab == 'rol' ? 'bg-white text-primary shadow-sm' : 'text-secondary'}"
 					th:class="${baseClass}"> <i class="bi bi-shield me-1"></i><span
 					class="d-none d-sm-inline" th:text="#{empleado.tab.rol}">rol</span>
 				</a>

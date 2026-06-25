@@ -77,6 +77,17 @@ public class UsuarioEmpresaServiceImpl implements UsuarioEmpresaService {
 	}
 
 	@Override
+	@Transactional
+	public void eliminarByUsuarioId(Long usuarioId) {
+		logger.info("Desactivando UsuarioEmpresa para el usuario ID: {}", usuarioId);
+		List<UsuarioEmpresa> list = usuarioEmpresaRepository.findByActivoTrueAndUsuarioId(usuarioId);
+		if (!list.isEmpty()) {
+			list.forEach(ue -> ue.setActivo(false));
+			usuarioEmpresaRepository.saveAll(list);
+		}
+	}
+
+	@Override
 	public void eliminar(String uuid) {
 		logger.info("Eliminando UsuarioEmpresa por ID: {}");
 		UsuarioEmpresa model = usuarioEmpresaRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid);
@@ -119,5 +130,10 @@ public class UsuarioEmpresaServiceImpl implements UsuarioEmpresaService {
 		logger.info("Asociando Usuario " + usuarioId + " con Empresa " + empresaId);
 		usuarioEmpresaRepository.saveAndFlush(model);
 		return model.getId();
+	}
+
+	@Override
+	public List<UsuarioEmpresa> getListByUsuarioId(Long usuarioId) {
+		return usuarioEmpresaRepository.findByActivoTrueAndUsuarioId(usuarioId);
 	}
 }

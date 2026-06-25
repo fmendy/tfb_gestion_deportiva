@@ -121,4 +121,20 @@ public class UsuarioInstalacionServiceImpl implements UsuarioInstalacionService 
 		usuarioInstalacionRepository.saveAndFlush(model);
 		return model.getId();
 	}
+	
+	@Override
+	public List<UsuarioInstalacion> getListByUsuarioId(Long usuarioId){
+		return usuarioInstalacionRepository.findByActivoTrueAndUsuarioId(usuarioId);
+	}
+	
+	@Override
+	@Transactional
+	public void eliminarByUsuarioId(Long usuarioId) {
+		logger.info("Desactivando usuarioInstalacion para el usuario ID: {}", usuarioId);
+		List<UsuarioInstalacion> list = usuarioInstalacionRepository.findByActivoTrueAndUsuarioId(usuarioId);
+		if (!list.isEmpty()) {
+			list.forEach(ue -> ue.setActivo(false));
+			usuarioInstalacionRepository.saveAll(list);
+		}
+	}
 }

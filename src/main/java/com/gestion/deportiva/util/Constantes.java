@@ -67,7 +67,6 @@ public class Constantes {
 
 		public static class Localizacion {
 			
-			public static final String GESTION_LOCALIZACION= "GESTION_LOCALIZACION_INSTALACION";
 
 			public static final String GESTION_EMPRESA = "GESTION_EMPRESA";
 

@@ -1,6 +1,8 @@
 package com.gestion.deportiva.service.impl;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,11 +14,20 @@ import org.springframework.stereotype.Service;
 import com.gestion.deportiva.dto.ComboDTO;
 import com.gestion.deportiva.dto.EmpleadoDTO;
 import com.gestion.deportiva.dto.EmpleadoRegistroDTO;
+import com.gestion.deportiva.dto.EmpleadoRolDTO;
 import com.gestion.deportiva.dto.filter.EmpleadoFilter;
 import com.gestion.deportiva.dto.specifications.EmpleadoSpecifications;
 import com.gestion.deportiva.mapper.EmpleadoMapper;
+import com.gestion.deportiva.model.Empresa;
+import com.gestion.deportiva.model.Instalacion;
+import com.gestion.deportiva.model.Sede;
 import com.gestion.deportiva.model.Usuario;
+import com.gestion.deportiva.model.UsuarioEmpresa;
+import com.gestion.deportiva.model.UsuarioInstalacion;
+import com.gestion.deportiva.model.UsuarioRol;
+import com.gestion.deportiva.model.UsuarioSede;
 import com.gestion.deportiva.repository.InstalacionRepository;
+import com.gestion.deportiva.repository.RolRepository;
 import com.gestion.deportiva.repository.SedeRepository;
 import com.gestion.deportiva.repository.UsuarioRepository;
 import com.gestion.deportiva.service.EmpleadoService;
@@ -51,18 +62,21 @@ public class EmpleadoServiceImpl implements EmpleadoService {
 
 	@Autowired
 	private InstalacionRepository instalacionRepository;
-	
+
 	@Autowired
 	private UsuarioRolService usuarioRolService;
-	
+
 	@Autowired
 	private UsuarioEmpresaService usuarioEmpresaService;
-	
+
 	@Autowired
 	private UsuarioSedeService usuarioSedeService;
-	
+
 	@Autowired
 	private UsuarioInstalacionService usuarioInstalacionService;
+
+	@Autowired
+	private RolRepository rolRepository;
 
 	@Override
 	public EmpleadoDTO findById(Long id) {
@@ -238,13 +252,13 @@ public class EmpleadoServiceImpl implements EmpleadoService {
 		Usuario usuario = empleadoMapper.empleadoRegistroDTOToUsuario(dto);
 		usuarioRepository.save(usuario);
 		usuarioRolService.asignarRol(usuario.getId(), dto.getRolId());
-		if(dto.getEmpresaId() != null) {
+		if (dto.getEmpresaId() != null) {
 			usuarioEmpresaService.asociarUsuarioEmpresa(usuario.getId(), dto.getEmpresaId());
 		}
-		if(dto.getSedeId() != null) {
+		if (dto.getSedeId() != null) {
 			usuarioSedeService.asociarUsuarioSede(usuario.getId(), dto.getSedeId());
 		}
-		if(dto.getInstalacionId() != null) {
+		if (dto.getInstalacionId() != null) {
 			usuarioInstalacionService.asociarUsuarioInstalacion(usuario.getId(), dto.getInstalacionId());
 		}
 		return usuario.getId();
@@ -255,6 +269,64 @@ public class EmpleadoServiceImpl implements EmpleadoService {
 		logger.info("Buscando Empleado por ID: {}", id);
 		Usuario usuario = usuarioRepository.findByActivoTrueAndId(id);
 		return empleadoMapper.modelToEmpleadoRegistroDTO(usuario);
+	}
+
+	@Override
+	public EmpleadoRolDTO getEmpleadoRolDTO(Long id) {
+		EmpleadoRolDTO retVal = new EmpleadoRolDTO();
+		Usuario usuario = usuarioRepository.findByActivoTrueAndId(id);
+		if (usuario != null) {
+			retVal.setUsuarioId(usuario.getId());
+			retVal.setUuid(usuario.getUuid());
+			UsuarioRol usuarioRol = usuarioRolService.getUsuarioRolByUsuarioId(id);
+			retVal.setRolId(usuarioRol.getRol().getId());
+			String rolNombre = usuarioRol.getRol().getNombre();
+			retVal.setRolNombre(rolNombre);
+			if (Constantes.Rol.USUARIO_INSTALACION.equalsIgnoreCase(rolNombre)) {
+				List<Long> ids = usuarioInstalacionService.getListByUsuarioId(id).stream()
+						.map(UsuarioInstalacion::getInstalacion).filter(Objects::nonNull).map(Instalacion::getId)
+						.collect(Collectors.toList());
+				retVal.setListInstalacionId(ids);
+			} else if (Constantes.Rol.USUARIO_SEDE.equalsIgnoreCase(rolNombre)) {
+				List<Long> ids = usuarioSedeService.getListByUsuarioId(id).stream().map(UsuarioSede::getSede)
+						.filter(Objects::nonNull).map(Sede::getId).collect(Collectors.toList());
+				retVal.setListSedeId(ids);
+			} else if (Constantes.Rol.USUARIO_EMPRESA.equalsIgnoreCase(rolNombre)) {
+				List<Long> ids = usuarioEmpresaService.getListByUsuarioId(id).stream().map(UsuarioEmpresa::getEmpresa)
+						.filter(Objects::nonNull).map(Empresa::getId).collect(Collectors.toList());
+				retVal.setListEmpresaId(ids);
+			}
+		}
+		return retVal;
+	}
+
+	@Override
+	@Transactional
+	public void guardarEmpleadoRol(@Valid EmpleadoRolDTO dto) {
+		usuarioRolService.asignarRol(dto.getUsuarioId(), dto.getRolId());
+
+		usuarioEmpresaService.eliminarByUsuarioId(dto.getUsuarioId());
+		usuarioSedeService.eliminarByUsuarioId(dto.getUsuarioId());
+		usuarioInstalacionService.eliminarByUsuarioId(dto.getUsuarioId());
+
+		String rolNombre = rolRepository.findByActivoTrueAndId(dto.getRolId()).getNombre();
+
+		if (rolNombre.equalsIgnoreCase(Constantes.Rol.USUARIO_EMPRESA)) {
+			for (Long id : dto.getListEmpresaId()) {
+				usuarioEmpresaService.asociarUsuarioEmpresa(dto.getUsuarioId(), id);
+			}
+		}
+		if (rolNombre.equalsIgnoreCase(Constantes.Rol.USUARIO_SEDE)) {
+			for (Long id : dto.getListSedeId()) {
+				usuarioSedeService.asociarUsuarioSede(dto.getUsuarioId(), id);
+			}
+		}
+		if (rolNombre.equalsIgnoreCase(Constantes.Rol.USUARIO_INSTALACION)) {
+			for (Long id : dto.getListInstalacionId()) {
+				usuarioInstalacionService.asociarUsuarioInstalacion(dto.getUsuarioId(), id);
+			}
+		}
+
 	}
 
 }

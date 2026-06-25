@@ -32,7 +32,7 @@ import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping(value = "/privado/empresa")
-@PreAuthorize("hasAuthority('" + Constantes.Permiso.Localizacion.GESTION_LOCALIZACION+ "')")
+@PreAuthorize("hasAuthority('" + Constantes.Permiso.Localizacion.GESTION_INSTALACION+ "')")
 public class PrivadoEmpresaController extends BaseController {
 
 	private static final Logger logger = LoggerFactory.getLogger(PrivadoEmpresaController.class);

@@ -149,4 +149,9 @@ public class UsuarioRolServiceImpl implements UsuarioRolService {
 
 	}
 
+	@Override
+	public UsuarioRol getUsuarioRolByUsuarioId(Long usuarioId) {
+		return usuarioRolRepository.findByActivoTrueAndUsuarioId(usuarioId).getFirst();
+	}
+
 }

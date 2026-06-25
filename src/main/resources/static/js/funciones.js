@@ -28,6 +28,7 @@ function resetSelect(id) {
     document.getElementById(id).innerHTML = '<option value="">Seleccione...</option>';
 }
 
+
 function actualizarVisibilidadRegistroEmpleado() {
     const select = document.getElementById('selectRol');
     const rol = select.options[select.selectedIndex].text;
@@ -55,3 +56,31 @@ function actualizarVisibilidadRegistroEmpleado() {
         contInstalacion.querySelector('select').setAttribute('required', 'required');
     }
 }
+
+
+function actualizarVisibilidadEmpleadoRol() {
+    const select = document.getElementById('selectRol');
+    const rolNombre = select.options[select.selectedIndex].text;
+
+    const contenedores = {
+        'USUARIO_EMPRESA': document.getElementById('containerEmpresa'),
+        'USUARIO_SEDE': document.getElementById('containerSede'),
+        'USUARIO_INSTALACION': document.getElementById('containerInstalacion')
+    };
+
+    // 1. Ocultar todos y quitar 'required'
+    Object.keys(contenedores).forEach(key => {
+        const div = contenedores[key];
+        const sel = div.querySelector('select');
+        div.classList.add('d-none');
+        sel.removeAttribute('required');
+    });
+
+    // 2. Mostrar el correcto y poner 'required'
+    const divActivo = contenedores[rolNombre];
+    if (divActivo) {
+        divActivo.classList.remove('d-none');
+        divActivo.querySelector('select').setAttribute('required', 'required');
+    }
+}
+

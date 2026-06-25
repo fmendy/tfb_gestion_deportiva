@@ -120,4 +120,20 @@ public class UsuarioSedeServiceImpl implements UsuarioSedeService {
 		usuarioSedeRepository.saveAndFlush(model);
 		return model.getId();
 	}
+
+	@Override
+	public List<UsuarioSede> getListByUsuarioId(Long usuarioId) {
+		return usuarioSedeRepository.findByActivoTrueAndUsuarioId(usuarioId);
+	}
+	
+	@Override
+	@Transactional
+	public void eliminarByUsuarioId(Long usuarioId) {
+		logger.info("Desactivando usuarioSede para el usuario ID: {}", usuarioId);
+		List<UsuarioSede> list = usuarioSedeRepository.findByActivoTrueAndUsuarioId(usuarioId);
+		if (!list.isEmpty()) {
+			list.forEach(ue -> ue.setActivo(false));
+			usuarioSedeRepository.saveAll(list);
+		}
+	}
 }

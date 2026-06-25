@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" lang="es"
+	layout:decorate="~{layout/base}">
+<head>
+
+<link rel="stylesheet"
+	href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+	document.addEventListener('DOMContentLoaded',
+			actualizarVisibilidadEmpleadoRol);
+</script>
+
+
+</head>
+<body>
+	<div layout:fragment="content" class="container-fluid py-5 px-3">
+
+		<div
+			th:replace="~{fragments/breadcrumbs :: breadcrumbs(${breadcrumbs})}"></div>
+
+		<div class="card shadow-lg border-0 rounded-4 p-4">
+
+			<!-- Título -->
+			<h3 class="text-center mb-4 fw-bold">
+				<i class="bi bi-person-square me-2 text-gradient-primary"></i> <span
+					th:text="#{page.title.privado.empleado.rol}"> </span>
+			</h3>
+
+			<div
+				th:if="${form.id != null and form.id.toString() != '' and form.id > 0}"
+				th:replace="~{fragments/empleado-tabs :: tabs(${form.id}, 'rol')}">
+			</div>
+
+			<div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
+			<form
+					th:action="@{/privado/empleado/{id}/rol/guardar(id=${form.usuarioId})}"
+					th:object="${form}" method="post" class="row g-4">
+
+
+					<input type="hidden" th:field="*{usuarioId}" />
+
+
+
+
+
+
+
+
+
+
+					<div class="col-md-4">
+						<label for="rolId" class="form-label fw-bold"
+							th:text="#{empleado.rol.form.rol}"></label> <span
+							class="text-danger">*</span>
+						<div class="input-group">
+							<span class="input-group-text"><i
+								class="bi bi-card-heading"></i></span> <select class="form-select"
+								id="selectRol" onchange="actualizarVisibilidadEmpleadoRol()"
+								required="required" th:field="*{rolId}">
+								<option th:each="rol : ${listRoles}" th:value="${rol.id}"
+									th:text="${rol.nombre}"></option>
+							</select>
+						</div>
+					</div>
+
+					<div id="containerEmpresa" class="col-md-4">
+						<label for="selectEmpresa" class="form-label fw-bold"
+							th:text="#{empleado.rol.form.empresa}"></label>
+						<div class="input-group">
+							<span class="input-group-text"><i
+								class="bi bi-card-heading"></i></span> <select class="form-select"
+								id="selectEmpresa" th:field="*{listEmpresaId}"
+								multiple="multiple" size="5">
+								<option th:each="empresa : ${listEmpresas}"
+									th:value="${empresa.id}" th:text="${empresa.nombre}">
+								</option>
+							</select>
+						</div>
+						<small class="text-muted"
+							th:text="#{global.select.multiple.instruccion}"></small>
+					</div>
+
+					<div id="containerSede" class="col-md-4">
+						<label for="selectSede" class="form-label fw-bold"
+							th:text="#{empleado.rol.form.sede}"></label>
+						<div class="input-group">
+							<span class="input-group-text"><i
+								class="bi bi-card-heading"></i></span> <select class="form-select"
+								id="selectSede" th:field="*{listSedeId}" multiple="multiple"
+								size="5">
+								<option th:each="sede : ${listSedes}" th:value="${sede.id}"
+									th:text="${sede.empresaSedeNombre}"></option>
+							</select>
+						</div>
+						<small class="text-muted"
+							th:text="#{global.select.multiple.instruccion}"></small>
+					</div>
+
+
+
+					<div id="containerInstalacion" class="col-md-4">
+						<label for="selectInstalacion" class="form-label fw-bold"
+							th:text="#{empleado.rol.form.instalacion}"></label>
+						<div class="input-group">
+							<span class="input-group-text"><i
+								class="bi bi-card-heading"></i></span> <select class="form-select"
+								id="selectInstalacion" th:field="*{listInstalacionId}"
+								multiple="multiple" size="5">
+								<option th:each="instalacion : ${listInstalaciones}"
+									th:value="${instalacion.id}"
+									th:text="${instalacion.empresaSedeInstalacionNombre}">
+								</option>
+							</select>
+						</div>
+						<small class="text-muted"
+							th:text="#{global.select.multiple.instruccion}"></small>
+					</div>
+
+
+
+
+
+
+					<div
+						class="col-12 d-grid d-md-flex justify-content-md-end gap-3 mt-4">
+						<a th:href="@{/privado/empleado}"
+							class="btn btn-outline-secondary rounded-3 px-4 py-2 d-inline-flex align-items-center justify-content-center fw-semibold">
+							<i class="bi bi-x-lg me-2"></i> <span th:text="#{boton.cancelar}">Cancelar</span>
+						</a>
+
+						<button type="submit"
+							class="btn btn-moderno-guardar px-5 py-2 fw-semibold">
+							<i class="bi bi-check-circle-fill me-2"></i> <span
+								th:text="#{boton.guardar}">Guardar</span>
+						</button>
+					</div>
+
+				</form>
+			</div>
+
+
+
+
+
+
+		</div>
+	</div>
+</body>
+</html>
