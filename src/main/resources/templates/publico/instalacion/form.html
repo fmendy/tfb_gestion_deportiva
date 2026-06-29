@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" lang="es"
+	layout:decorate="~{layout/base}">
+<head>
+
+<link rel="stylesheet"
+	href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script
+	src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+
+<style>
+/* Ajustes estéticos para FullCalendar */
+.fc .fc-toolbar-title {
+	font-size: 1.25rem !important;
+	font-weight: 700;
+}
+
+.fc .fc-button-primary {
+	background-color: #0d6efd;
+	border-color: #0d6efd;
+}
+
+.fc .fc-button-primary:hover {
+	background-color: #0b5ed7;
+}
+
+#calendar {
+	height: 600px;
+} /* Altura fija para que no se deforme */
+</style>
+
+</head>
+<body>
+	<div layout:fragment="content" class="container py-5">
+		<div class="row g-4 mb-4">
+			<div class="col-lg-7">
+				<div class="card border-0 shadow-sm rounded-4 p-4 h-100">
+					<div class="d-flex align-items-start mb-3">
+						<div class="bg-primary bg-opacity-10 p-3 rounded-3 me-3">
+							<i class="bi bi-buildings text-primary fs-3"></i>
+						</div>
+						<div>
+							<h2 class="fw-bold mb-1" th:text="${instalacion.nombre}">Nombre
+								Instalación</h2>
+							<span class="badge bg-primary text-white"
+								th:text="${instalacion.instalacionTipoNombre}">Tipo</span>
+						</div>
+					</div>
+					<p class="text-muted" th:text="${instalacion.descripcion}">Descripción
+						detallada...</p>
+				</div>
+			</div>
+
+			<div class="col-lg-5">
+				<div class="card border-0 shadow-sm rounded-4 p-4 h-100">
+					<h5 class="fw-bold mb-4">
+						<i class="bi bi-geo-alt-fill text-primary me-2"></i>Ubicación
+					</h5>
+					<div class="mb-4">
+						<p class="text-muted small text-uppercase fw-bold mb-1">Empresa</p>
+						<p class="fw-semibold text-dark mb-0"
+							th:text="${instalacion.empresaNombre}"></p>
+					</div>
+					<div class="bg-light p-3 rounded-3">
+						<p class="mb-1 fw-bold" th:text="${instalacion.sedeNombre}">Sede</p>
+						<p class="mb-1 text-muted small"
+							th:text="${instalacion.sedeDireccion}"></p>
+						<p class="mb-0 text-muted small"
+							th:text="${instalacion.sedeMunicipioNombre + ' (' + instalacion.sedeMunicipioProvinciaNombre + ')'}"></p>
+						<p class="mb-0 text-primary small fw-bold"
+							th:text="${instalacion.sedeMunicipioProvinciaComunidadAutonomaNombre}"></p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-12">
+				<div class="card border-0 shadow-sm rounded-4 p-4">
+					<h4 class="fw-bold mb-4 text-dark">
+						<i class="bi bi-calendar-event me-2 text-primary"></i>Calendario
+						de Horarios
+					</h4>
+					<div id="instalacionCalendar" class="bg-white"></div>
+				</div>
+			</div>
+		</div>
+
+		<script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            const calendarEl = document.getElementById('instalacionCalendar');
+            const eventosEspeciales = /*[[${instalacion.horarioCalculado}]]*/ {};
+            
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                locale: 'es',
+                height: 'auto',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,listMonth'
+                },
+                eventDisplay: 'block',
+                events: Object.entries(eventosEspeciales).map(([fecha, horario]) => ({
+                    title: horario.cerrado ? 'Cerrado' : (horario.horaInicio.substring(0,5) + ' - ' + horario.horaFin.substring(0,5)),
+                    start: fecha,
+                    backgroundColor: horario.cerrado ? '#f8d7da' : '#d1e7dd',
+                    borderColor: horario.cerrado ? '#dc3545' : '#0f5132',
+                    textColor: horario.cerrado ? '#842029' : '#0f5132',
+                    className: 'px-2'
+                }))
+            });
+            calendar.render();
+        });
+    </script>
+	</div>
+</body>
+</html>

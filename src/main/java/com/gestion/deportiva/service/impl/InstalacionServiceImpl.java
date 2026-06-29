@@ -12,10 +12,15 @@ import org.springframework.stereotype.Service;
 
 import com.gestion.deportiva.dto.ComboDTO;
 import com.gestion.deportiva.dto.InstalacionDTO;
+import com.gestion.deportiva.dto.InstalacionPublicoDTO;
 import com.gestion.deportiva.dto.filter.InstalacionFilter;
 import com.gestion.deportiva.dto.specifications.InstalacionSpecifications;
 import com.gestion.deportiva.mapper.InstalacionMapper;
 import com.gestion.deportiva.model.Instalacion;
+import com.gestion.deportiva.model.InstalacionHorario;
+import com.gestion.deportiva.model.InstalacionHorarioEspecial;
+import com.gestion.deportiva.repository.InstalacionHorarioEspecialRepository;
+import com.gestion.deportiva.repository.InstalacionHorarioRepository;
 import com.gestion.deportiva.repository.InstalacionRepository;
 import com.gestion.deportiva.service.InstalacionService;
 import com.gestion.deportiva.util.Constantes;
@@ -32,6 +37,12 @@ public class InstalacionServiceImpl implements InstalacionService {
 
 	@Autowired
 	private InstalacionRepository instalacionRepository;
+
+	@Autowired
+	private InstalacionHorarioRepository instalacionHorarioRepository;
+
+	@Autowired
+	private InstalacionHorarioEspecialRepository instalacionHorarioEspecialRepository;
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -168,5 +179,15 @@ public class InstalacionServiceImpl implements InstalacionService {
 		}
 		Utils.sortByCampo(retVal, InstalacionDTO::getEmpresaSedeInstalacionNombre);
 		return Utils.addEmptyOption(retVal, InstalacionDTO.class);
+	}
+
+	@Override
+	public InstalacionPublicoDTO getPublicoDTOById(Long id) {
+		Instalacion instalacion = instalacionRepository.findByActivoTrueAndId(id);
+		List<InstalacionHorario> listInstalacionHorarios = instalacionHorarioRepository
+				.findByActivoTrueAndInstalacionId(id);
+		List<InstalacionHorarioEspecial> listInstalacionHorarioEspecials = instalacionHorarioEspecialRepository
+				.findByActivoTrueAndInstalacionId(id);
+		return instalacionMapper.toPublicDTO(instalacion, listInstalacionHorarios, listInstalacionHorarioEspecials);
 	}
 }

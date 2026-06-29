@@ -29,7 +29,7 @@ public class InstalacionHorarioEspecialValidator
 
 		}
 
-		if (dto.getHoraFin().isBefore(dto.getHoraInicio())) {
+		if (!dto.getCerrado() && dto.getHoraFin().isBefore(dto.getHoraInicio())) {
 			context.disableDefaultConstraintViolation();
 			context.buildConstraintViolationWithTemplate(
 					Utils.getMessage("error.validacion.instalacion.horario.hora.inicio.mayor.hora.fin"))
