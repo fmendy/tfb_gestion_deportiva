@@ -12,6 +12,7 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 
+
 <style>
 /* Ajustes estéticos para FullCalendar */
 .fc .fc-toolbar-title {
@@ -50,33 +51,46 @@
 								th:text="${instalacion.instalacionTipoNombre}">Tipo</span>
 						</div>
 					</div>
-					<p class="text-muted" th:text="${instalacion.descripcion}">Descripción
-						detallada...</p>
+					<p class="text-muted" th:text="${instalacion.descripcion}">Descripción...</p>
 				</div>
 			</div>
 
 			<div class="col-lg-5">
 				<div class="card border-0 shadow-sm rounded-4 p-4 h-100">
-					<h5 class="fw-bold mb-4">
+					<h5 class="fw-bold mb-3">
 						<i class="bi bi-geo-alt-fill text-primary me-2"></i>Ubicación
 					</h5>
-					<div class="mb-4">
-						<p class="text-muted small text-uppercase fw-bold mb-1">Empresa</p>
-						<p class="fw-semibold text-dark mb-0"
-							th:text="${instalacion.empresaNombre}"></p>
-					</div>
-					<div class="bg-light p-3 rounded-3">
+
+					<div class="bg-light p-3 rounded-3 mb-3">
 						<p class="mb-1 fw-bold" th:text="${instalacion.sedeNombre}">Sede</p>
-						<p class="mb-1 text-muted small"
-							th:text="${instalacion.sedeDireccion}"></p>
 						<p class="mb-0 text-muted small"
-							th:text="${instalacion.sedeMunicipioNombre + ' (' + instalacion.sedeMunicipioProvinciaNombre + ')'}"></p>
-						<p class="mb-0 text-primary small fw-bold"
-							th:text="${instalacion.sedeMunicipioProvinciaComunidadAutonomaNombre}"></p>
+							th:text="${instalacion.sedeDireccion}"></p>
 					</div>
+
+					<div id="map" class="rounded-3 shadow-sm"
+						style="height: 200px; width: 100%;"></div>
 				</div>
 			</div>
 		</div>
+
+		<script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+        // 1. Inicializar Mapa
+        const lat = /*[[${instalacion.sedeLatitud}]]*/ 40.4167;
+        const lng = /*[[${instalacion.sedeLongitud}]]*/ -3.7037;
+        
+        const map = L.map('map').setView([lat, lng], 15);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+        
+        L.marker([lat, lng]).addTo(map).bindPopup("Ubicación de la sede");
+
+        // 2. Inicializar Calendario (tu código anterior)
+        const calendarEl = document.getElementById('instalacionCalendar');
+        // ... (resto de tu lógica de FullCalendar)
+    });
+</script>
 
 		<div class="row">
 			<div class="col-12">

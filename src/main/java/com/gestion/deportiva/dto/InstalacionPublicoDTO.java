@@ -21,6 +21,10 @@ public class InstalacionPublicoDTO extends MaestraDTO {
     
     private String empresaNombre;
     
+    private String sedeLatitud;
+    
+    private String sedeLongitud;
+    
     private Long sedeId;
     
     private String sedeNombre;

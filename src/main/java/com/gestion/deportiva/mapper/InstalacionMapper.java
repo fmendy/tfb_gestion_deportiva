@@ -93,6 +93,8 @@ public class InstalacionMapper {
 		dto.setSedeMunicipioProvinciaComunidadAutonomaNombre(
 				instalacion.getSede().getMunicipio().getProvincia().getComunidadAutonoma().getNombre());
 		dto.setEmpresaNombre(instalacion.getSede().getEmpresa().getNombre());
+		dto.setSedeLatitud(instalacion.getSede().getLatitud());
+		dto.setSedeLongitud(instalacion.getSede().getLongitud());
 
 		// 1️⃣ Horario semanal base
 		Map<Long, InstalacionHorario> mapaSemanal = listHorarios.stream()
