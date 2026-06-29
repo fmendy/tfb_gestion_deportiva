@@ -14,7 +14,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.gestion.deportiva.controller.BaseController;
 import com.gestion.deportiva.dto.filter.SedePublicoFilter;
 import com.gestion.deportiva.service.ComunidadAutonomaService;
-import com.gestion.deportiva.service.InstalacionTipoService;
 import com.gestion.deportiva.service.MunicipioService;
 import com.gestion.deportiva.service.ProvinciaService;
 import com.gestion.deportiva.service.SedeService;
@@ -26,9 +25,6 @@ import jakarta.servlet.http.HttpServletRequest;
 public class PublicoSedeController extends BaseController {
 
 	private static final Logger logger = LoggerFactory.getLogger(PublicoSedeController.class);
-
-	@Autowired
-	private InstalacionTipoService instalacionTipoService;
 
 	@Autowired
 	private SedeService sedeService;
@@ -43,7 +39,7 @@ public class PublicoSedeController extends BaseController {
 	private MunicipioService municipioService;
 
 	private static final String TITLE_PAGE = "page.title.publico.sede";
-	
+
 	private static final String TITLE_PAGE_MAP = "page.title.publico.sede.mapa";
 
 	private static final String VIEW_MAP = "publico/sede/mapaList";
@@ -64,7 +60,7 @@ public class PublicoSedeController extends BaseController {
 
 	private ModelAndView loadForm(Long id, RedirectAttributes redirectAttributes) {
 		ModelAndView mav = new ModelAndView(VIEW_FORM);
-		mav.addObject("form", sedeService.getSedePublicoDTOById(id));
+		mav.addObject("sede", sedeService.getSedePublicoDTOById(id));
 		addBasicModelDetails(mav, TITLE_PAGE, false);
 		return mav;
 	}
@@ -73,7 +69,6 @@ public class PublicoSedeController extends BaseController {
 		ModelAndView mav = new ModelAndView(VIEW_MAP);
 		mav.addObject("filter", filter);
 		mav.addObject("listSedeMapa", sedeService.getListSedePublicoDTO(filter));
-		mav.addObject("listInstalacionTipo", instalacionTipoService.getListDTO());
 		mav.addObject("listComunidades", comunidadAutonomaService.getListDTO());
 		mav.addObject("listProvincias",
 				provinciaService.getListDTOByComunidadAutonomaId(filter.getComunidadAutonomaId()));

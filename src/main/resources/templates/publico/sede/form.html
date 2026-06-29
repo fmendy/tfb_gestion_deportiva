@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" lang="es"
+	layout:decorate="~{layout/base}">
+<head>
+
+<link rel="stylesheet"
+	href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+
+<style>
+/* Efecto Hover Moderno */
+.hover-card {
+	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	cursor: pointer;
+	text-decoration: none; /* Quitamos el subrayado del enlace */
+}
+
+.hover-card:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+	background-color: #f8f9fa !important;
+}
+
+.hover-card:hover .text-primary {
+	color: #0d6efd !important;
+}
+</style>
+
+</head>
+<body>
+	<div layout:fragment="content" class="container py-5">
+		<div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+
+			<div
+				class="bg-primary bg-gradient text-white p-4 p-md-5 d-flex align-items-center">
+				<div th:if="${sede.logo}" class="me-4">
+					<img th:src="${sede.logo}"
+						class="rounded-circle bg-white p-1 shadow" width="90" height="90"
+						alt="Logo">
+				</div>
+				<div>
+					<h1 class="h3 fw-bold mb-1" th:text="${sede.nombre}">Nombre
+						Sede</h1>
+					<p class="mb-0 opacity-75" th:text="${sede.empresaNombre}">Empresa</p>
+				</div>
+			</div>
+
+			<div class="p-4 p-md-5">
+				<div class="row g-5">
+					<div class="col-lg-7">
+						<h5 class="fw-bold mb-3 text-primary">
+							<i class="bi bi-card-text me-2"></i>Descripción
+						</h5>
+						<p class="text-muted mb-5" th:text="${sede.descripcion}">Descripción...</p>
+
+						<h5 class="fw-bold mb-3 text-primary">
+							<i class="bi bi-tools me-2"></i>Instalaciones
+						</h5>
+						<div class="row g-3">
+							<div th:each="inst : ${sede.listInstalacion}" class="col-md-6">
+								<a th:href="@{/instalacion/{id}/detalle(id=${inst.id})}"
+									class="text-decoration-none">
+									<div
+										class="card border-0 bg-light p-3 h-100 shadow-sm rounded-3 hover-card">
+										<div class="d-flex align-items-center">
+											<i class="bi bi-gear-wide-connected text-primary fs-4 me-3"></i>
+											<div>
+												<h6 class="fw-bold mb-0 text-dark" th:text="${inst.nombre}">Nombre</h6>
+												<small class="text-muted"
+													th:text="${inst.instalacionTipoNombre}">Tipo</small>
+											</div>
+										</div>
+									</div>
+								</a>
+							</div>
+						</div>
+
+
+					</div>
+
+					<div class="col-lg-5">
+						<div id="map" class="rounded-4 shadow-sm mb-4"
+							style="height: 300px; width: 100%;"></div>
+
+						<div class="card border-0 shadow-sm p-4 rounded-4 bg-light">
+							<h6 class="fw-bold mb-3 text-uppercase small text-muted">Ubicación
+								y Contacto</h6>
+							<ul class="list-unstyled mb-0">
+								<li class="mb-3"><i
+									class="bi bi-geo-alt-fill text-primary me-2"></i> <span
+									th:text="${sede.comunidadAutonomaNombre}">Dirección</span>, <span
+									th:text="${sede.provinciaNombre}">Dirección</span>, <span
+									th:text="${sede.municipioNombre}">Dirección</span>, <span
+									th:text="${sede.direccion}">Dirección</span></li>
+								<li class="mb-3"><i
+									class="bi bi-envelope-fill text-primary me-2"></i> <span
+									th:text="${sede.email}">Email</span></li>
+								<li class="mb-0" th:if="${sede.url}"><i
+									class="bi bi-globe text-primary me-2"></i> <a
+									th:href="${sede.url}" target="_blank"
+									class="text-decoration-none">Sitio Web</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script th:inline="javascript">
+			document
+					.addEventListener(
+							"DOMContentLoaded",
+							function() {
+								const lat = /*[[${sede.latitud}]]*/40.4167;
+								const lng = /*[[${sede.longitud}]]*/-3.7037;
+
+								const map = L.map('map').setView([ lat, lng ],
+										15);
+								L
+										.tileLayer(
+												'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
+										.addTo(map);
+
+								// Chincheta con enlace a Google Maps
+								const marker = L.marker([ lat, lng ])
+										.addTo(map);
+								marker
+										.bindPopup(`<b>[[${sede.empresaSedeNombre}]]</b><br><a href="https://www.google.com/maps/search/?api=1&query=${lat},${lng}" target="_blank">Cómo llegar</a>`);
+							});
+		</script>
+	</div>
+</body>
+</html>
