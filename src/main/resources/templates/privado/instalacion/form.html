@@ -33,10 +33,11 @@
 					th:text="#{page.title.privado.instalacion}"> </span>
 			</h3>
 
-			<div
-				th:if="${form.id != null and form.id.toString() != '' and form.id > 0}"
-				th:replace="~{fragments/instalacion-tabs :: tabs(${form.id}, 'info')}">
+			<div th:if="${form.id != null and form.id > 0}">
+				<div
+					th:replace="~{fragments/instalacion-tabs :: tabs(${form.id}, 'info')}"></div>
 			</div>
+
 
 
 			<div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">

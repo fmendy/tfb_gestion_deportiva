@@ -36,7 +36,7 @@
 
 			<div
 				class="bg-primary bg-gradient text-white p-4 p-md-5 d-flex align-items-center">
-				<div th:if="${sede.logo}" class="me-4">
+				<div th:if="${sede.logo != null and sede.logo.trim() != ''}" class="me-4">
 					<img th:src="${sede.logo}"
 						class="rounded-circle bg-white p-1 shadow" width="90" height="90"
 						alt="Logo">
