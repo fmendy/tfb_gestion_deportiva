@@ -12,7 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class SedeMapaDTO extends MaestraDTO {
+public class SedePublicoDTO extends MaestraDTO {
 
 	private static final long serialVersionUID = 4100741280888604015L;
 

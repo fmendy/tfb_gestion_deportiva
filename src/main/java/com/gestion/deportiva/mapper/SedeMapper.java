@@ -12,7 +12,7 @@ import org.springframework.util.StringUtils;
 import com.gestion.deportiva.dto.ComboDTO;
 import com.gestion.deportiva.dto.InstalacionDTO;
 import com.gestion.deportiva.dto.SedeDTO;
-import com.gestion.deportiva.dto.SedeMapaDTO;
+import com.gestion.deportiva.dto.SedePublicoDTO;
 import com.gestion.deportiva.model.Empresa;
 import com.gestion.deportiva.model.Municipio;
 import com.gestion.deportiva.model.Sede;
@@ -82,8 +82,8 @@ public class SedeMapper {
 		return list.stream().map(bean -> new ComboDTO(bean.getId(), bean.getNombre())).toList();
 	}
 	
-	public SedeMapaDTO modelToMapaDTO(Sede model, List<InstalacionDTO> listInstalacionDTO) {
-		SedeMapaDTO retVal = new SedeMapaDTO();
+	public SedePublicoDTO modelToMapaDTO(Sede model, List<InstalacionDTO> listInstalacionDTO) {
+		SedePublicoDTO retVal = new SedePublicoDTO();
 		retVal.setId(model.getId());
 		retVal.setNombre(model.getNombre());
 		retVal.setUuid(model.getUuid());

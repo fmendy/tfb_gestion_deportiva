@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class SedeMapaFilter extends MaestraFilter {
+public class SedePublicoFilter extends MaestraFilter {
 
 	private static final long serialVersionUID = 5901157233852247727L;
 

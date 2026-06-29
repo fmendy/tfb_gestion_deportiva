@@ -15,9 +15,9 @@ import org.springframework.stereotype.Service;
 import com.gestion.deportiva.dto.ComboDTO;
 import com.gestion.deportiva.dto.InstalacionDTO;
 import com.gestion.deportiva.dto.SedeDTO;
-import com.gestion.deportiva.dto.SedeMapaDTO;
+import com.gestion.deportiva.dto.SedePublicoDTO;
 import com.gestion.deportiva.dto.filter.SedeFilter;
-import com.gestion.deportiva.dto.filter.SedeMapaFilter;
+import com.gestion.deportiva.dto.filter.SedePublicoFilter;
 import com.gestion.deportiva.dto.specifications.SedeMapaSpecifications;
 import com.gestion.deportiva.dto.specifications.SedeSpecifications;
 import com.gestion.deportiva.mapper.InstalacionMapper;
@@ -243,8 +243,8 @@ public class SedeServiceImpl implements SedeService {
 	}
 
 	@Override
-	public List<SedeMapaDTO> getListSedeMapaDTO(SedeMapaFilter filter) {
-		List<SedeMapaDTO> retVal = new ArrayList<>();
+	public List<SedePublicoDTO> getListSedePublicoDTO(SedePublicoFilter filter) {
+		List<SedePublicoDTO> retVal = new ArrayList<>();
 		List<Sede> listSede = sedeRepository.findAll(SedeMapaSpecifications.filter(filter), Pageable.unpaged())
 				.getContent();
 		for (Sede sede : listSede) {
@@ -254,5 +254,14 @@ public class SedeServiceImpl implements SedeService {
 		}
 
 		return retVal;
+	}
+
+	@Override
+	public SedePublicoDTO getSedePublicoDTOById(Long id) {
+		logger.info("Buscando Sede por ID: {}", id);
+		Sede sede = sedeRepository.findByActivoTrueAndId(id);
+		List<InstalacionDTO> listInstalacion = instalacionMapper
+				.listModelToListDTO(instalacionRepository.findByActivoTrueAndSedeId(sede.getId()));
+		return sedeMapper.modelToMapaDTO(sede, listInstalacion);
 	}
 }

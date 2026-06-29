@@ -6,12 +6,12 @@ import java.util.ArrayList;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.StringUtils;
 
-import com.gestion.deportiva.dto.filter.SedeMapaFilter;
+import com.gestion.deportiva.dto.filter.SedePublicoFilter;
 import com.gestion.deportiva.model.Sede;
 
 public class SedeMapaSpecifications extends BaseSpecifications<Sede> {
 
-	public static Specification<Sede> filter(SedeMapaFilter filter) {
+	public static Specification<Sede> filter(SedePublicoFilter filter) {
 		List<Specification<Sede>> specs = new ArrayList<>();
 
 		specs.add(new SedeSpecifications().activoTrue());
