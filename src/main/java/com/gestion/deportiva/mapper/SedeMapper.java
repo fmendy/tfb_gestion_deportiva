@@ -10,13 +10,16 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import com.gestion.deportiva.dto.ComboDTO;
+import com.gestion.deportiva.dto.InstalacionDTO;
 import com.gestion.deportiva.dto.SedeDTO;
+import com.gestion.deportiva.dto.SedeMapaDTO;
 import com.gestion.deportiva.model.Empresa;
 import com.gestion.deportiva.model.Municipio;
 import com.gestion.deportiva.model.Sede;
 
 @Component
 public class SedeMapper {
+	
 
 	public SedeDTO modelToDTO(Sede model) {
 		SedeDTO retVal = new SedeDTO();
@@ -77,6 +80,31 @@ public class SedeMapper {
 
 	public List<ComboDTO> listModelToListComboDTO(List<Sede> list) {
 		return list.stream().map(bean -> new ComboDTO(bean.getId(), bean.getNombre())).toList();
+	}
+	
+	public SedeMapaDTO modelToMapaDTO(Sede model, List<InstalacionDTO> listInstalacionDTO) {
+		SedeMapaDTO retVal = new SedeMapaDTO();
+		retVal.setId(model.getId());
+		retVal.setNombre(model.getNombre());
+		retVal.setUuid(model.getUuid());
+		retVal.setEmail(model.getEmail());
+		retVal.setUrl(model.getUrl());
+		retVal.setLogo(model.getLogo());
+		retVal.setDescripcion(model.getDescripcion());
+		retVal.setEmpresaId(model.getEmpresa().getId());
+		retVal.setEmpresaNombre(model.getEmpresa().getNombre());
+		retVal.setDireccion(model.getDireccion());
+		retVal.setLatitud(model.getLatitud());
+		retVal.setLongitud(model.getLongitud());
+		retVal.setMunicipioId(model.getMunicipio().getId());
+		retVal.setMunicipioNombre(model.getMunicipio().getNombre());
+		retVal.setProvinciaId(model.getMunicipio().getProvincia().getId());
+		retVal.setProvinciaNombre(model.getMunicipio().getProvincia().getNombre());
+		retVal.setComunidadAutonomaId(model.getMunicipio().getProvincia().getComunidadAutonoma().getId());
+		retVal.setComunidadAutonomaNombre(model.getMunicipio().getProvincia().getNombre());
+		retVal.setEmpresaSedeNombre(model.getEmpresa().getNombre() + " - " + model.getNombre());
+		retVal.setListInstalacion(listInstalacionDTO);
+		return retVal;
 	}
 
 }

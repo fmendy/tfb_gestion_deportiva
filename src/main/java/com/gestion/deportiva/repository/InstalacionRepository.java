@@ -17,6 +17,8 @@ public interface InstalacionRepository extends MaestraRepository<Instalacion, Lo
 
 	List<Instalacion> findByActivoTrueAndSedeIdIn(List<Long> listSedeId);
 	
+	List<Instalacion> findByActivoTrueAndSedeId(Long sedeId);
+	
 	@Query("SELECT i.id FROM Instalacion i WHERE i.activo = true AND i.sede.activo = true AND i.sede.empresa.activo = true AND i.sede.empresa.id IN :ids")
 	List<Long> findListIdsByListEmpresasIdsIn(@Param("ids") List<Long> ids);
 	

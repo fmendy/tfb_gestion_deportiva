@@ -13,9 +13,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.gestion.deportiva.dto.ComboDTO;
+import com.gestion.deportiva.dto.InstalacionDTO;
 import com.gestion.deportiva.dto.SedeDTO;
+import com.gestion.deportiva.dto.SedeMapaDTO;
 import com.gestion.deportiva.dto.filter.SedeFilter;
+import com.gestion.deportiva.dto.filter.SedeMapaFilter;
+import com.gestion.deportiva.dto.specifications.SedeMapaSpecifications;
 import com.gestion.deportiva.dto.specifications.SedeSpecifications;
+import com.gestion.deportiva.mapper.InstalacionMapper;
 import com.gestion.deportiva.mapper.SedeMapper;
 import com.gestion.deportiva.model.Instalacion;
 import com.gestion.deportiva.model.Sede;
@@ -40,6 +45,9 @@ public class SedeServiceImpl implements SedeService {
 
 	@Autowired
 	private InstalacionRepository instalacionRepository;
+
+	@Autowired
+	private InstalacionMapper instalacionMapper;
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -232,5 +240,19 @@ public class SedeServiceImpl implements SedeService {
 		}
 		Utils.sortByCampo(retVal, SedeDTO::getEmpresaSedeNombre);
 		return Utils.addEmptyOption(retVal, SedeDTO.class);
+	}
+
+	@Override
+	public List<SedeMapaDTO> getListSedeMapaDTO(SedeMapaFilter filter) {
+		List<SedeMapaDTO> retVal = new ArrayList<>();
+		List<Sede> listSede = sedeRepository.findAll(SedeMapaSpecifications.filter(filter), Pageable.unpaged())
+				.getContent();
+		for (Sede sede : listSede) {
+			List<InstalacionDTO> listInstalacion = instalacionMapper
+					.listModelToListDTO(instalacionRepository.findByActivoTrueAndSedeId(sede.getId()));
+			retVal.add(sedeMapper.modelToMapaDTO(sede, listInstalacion));
+		}
+
+		return retVal;
 	}
 }

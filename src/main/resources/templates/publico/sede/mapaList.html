@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" lang="es"
+	layout:decorate="~{layout/base}">
+<head>
+
+<link rel="stylesheet"
+	href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script th:inline="javascript">
+document.addEventListener("DOMContentLoaded", function() {
+    // 1. Inicializar mapa solo una vez
+    const map = L.map('map').setView([40.416775, -3.703790], 6);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // 2. Obtener datos desde Thymeleaf
+    const sedes = /*[[${listSedeMapa}]]*/ [];
+    
+    // 3. Crear grupo de marcadores
+    const markers = L.layerGroup().addTo(map);
+
+    // 4. Lógica de renderizado (asegúrate de que sedes tenga datos)
+    if (sedes && sedes.length > 0) {
+        let latLngs = [];
+
+        sedes.forEach(sede => {
+            if (sede.latitud && sede.longitud) {
+                const lat = parseFloat(sede.latitud);
+                const lng = parseFloat(sede.longitud);
+                latLngs.push([lat, lng]);
+
+                const marker = L.marker([lat, lng]).addTo(markers);
+                
+                let instalacionesHtml = (sede.listInstalacion && sede.listInstalacion.length > 0)
+                    ? `<ul class="list-unstyled mb-0 small">
+                        ${sede.listInstalacion.map(i => `<li><i class="bi bi-check2"></i> ${i.nombre}</li>`).join('')}
+                       </ul>`
+                    : '<p class="small text-muted">Sin instalaciones.</p>';
+
+                marker.bindPopup(`
+                    <div class="p-1" style="min-width: 200px;">
+                        <h6 class="fw-bold text-primary mb-1">${sede.empresaSedeNombre || 'Sede'}</h6>
+                        <p class="mb-1 small"><i class="bi bi-geo-alt"></i> ${sede.direccion || 'Sin dirección'}</p>
+                        <a href="mailto:${sede.email}" class="small text-decoration-none">
+                            <i class="bi bi-envelope"></i> ${sede.email}
+                        </a>
+                        <hr class="my-2">
+                        <p class="mb-1 fw-bold small">Instalaciones:</p>
+                        ${instalacionesHtml}
+                    </div>
+                `);
+            }
+        });
+
+        // 5. Ajustar zoom para ver todas las sedes
+        if (latLngs.length > 0) {
+            map.fitBounds(L.latLngBounds(latLngs), { padding: [50, 50] });
+        }
+    } else {
+        console.warn("La lista de sedes está vacía. Verifica el Controller.");
+    }
+});
+</script>
+
+
+</head>
+<body>
+	<div layout:fragment="content" class="container py-5">
+
+
+		<div class="card shadow-lg border-0 rounded-4 p-4">
+			<!-- Contenedor para título + acción -->
+			<div
+				class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+				<!-- Título -->
+				<h5 class="mb-0 fw-semibold d-flex align-items-center">
+					<i class="bi bi-map text-primary me-2 fs-4"></i> <span
+						th:text="#{page.title.publico.sede.mapa}"></span>
+				</h5>
+
+
+			</div>
+
+			<!-- Filtro de búsqueda -->
+			<div class="card bg-light border-0 shadow-sm mb-4">
+				<div class="card-body">
+					<form th:action="@{/publico/sede/mapa}" method="get"
+						th:object="${filter}" class="row g-3 align-items-center">
+
+
+						<div class="col-md-4">
+							<label class="form-label fw-bold">Comunidad Autónoma</label> <select
+								id="selectComunidad" class="form-select"
+								th:field="*{comunidadAutonomaId}"
+								onchange="cargarDatos(this.value, '/api/provincias', 'selectProvincia'); 
+                  cargarDatos(this.value, '/api/municipios', 'selectMunicipio', 'comunidad')">
+								<option value="">Seleccione...</option>
+								<option th:each="c : ${listComunidades}" th:value="${c.id}"
+									th:text="${c.nombre}"></option>
+							</select>
+						</div>
+
+						<div class="col-md-4">
+							<label class="form-label fw-bold">Provincia</label> <select
+								id="selectProvincia" class="form-select"
+								th:field="*{provinciaId}"
+								onchange="actualizarDependientes(this.value, '/api/municipios', 'selectMunicipio', null)">
+								<option value="">Seleccione...</option>
+								<option th:each="p : ${listProvincias}" th:value="${p.id}"
+									th:text="${p.nombre}"></option>
+							</select>
+						</div>
+
+						<div class="col-md-4">
+							<label class="form-label fw-bold">Municipio</label><select
+								id="selectMunicipio" class="form-select"
+								th:field="*{municipioId}">
+								<option value="">Seleccione...</option>
+								<option th:each="m : ${listMunicipios}" th:value="${m.id}"
+									th:text="${m.nombre}"></option>
+							</select>
+						</div>
+
+
+
+						<div class="col-md-4 d-flex">
+							<button type="submit" class="btn btn-primary me-2">
+								<i class="bi bi-search"></i> <span th:text="#{boton.buscar}"></span>
+							</button>
+							<a th:href="@{/publico/sede/mapa}"
+								class="btn btn-outline-secondary me-2"> <i
+								class="bi bi-x-circle"></i> <span th:text="#{boton.limpiar}"></span>
+							</a>
+						</div>
+
+
+					</form>
+				</div>
+			</div>
+
+			<div id="map"
+				style="height: 600px; width: 100%; border-radius: 1rem;"></div>
+
+
+
+
+
+
+
+
+		</div>
+	</div>
+</body>
+</html>

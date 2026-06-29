@@ -73,7 +73,7 @@
 							<label class="form-label fw-bold">Provincia</label> <select
 								id="selectProvincia" class="form-select"
 								th:field="*{provinciaId}"
-								onchange="actualizarDependientes(this.value, '/api/municipios', 'selectMunicipio', null)">
+								onchange="cargarDatos(this.value, '/api/municipios', 'selectMunicipio', null)">
 								<option value="">Seleccione...</option>
 								<option th:each="p : ${listProvincias}" th:value="${p.id}"
 									th:text="${p.nombre}"></option>
