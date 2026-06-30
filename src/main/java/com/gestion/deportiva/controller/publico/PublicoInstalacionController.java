@@ -60,6 +60,8 @@ public class PublicoInstalacionController extends BaseController {
 		ModelAndView mav = new ModelAndView(VIEW_DISPONIBILIDAD_FORM);
 		mav.addObject("instalacion", instalacionService.getDisponibilidadDTOById(id, fecha));
 		mav.addObject("fecha", fecha);
+		mav.addObject("fechaAyer", fecha.minusDays(1));
+		mav.addObject("fechaManana", fecha.plusDays(1));
 		addBasicModelDetails(mav, TITLE_PAGE, false);
 		return mav;
 	}

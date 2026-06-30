@@ -84,13 +84,18 @@
 
 		<div class="card border-0 shadow-sm rounded-4 p-4">
 			<div class="d-flex justify-content-between align-items-center mb-4">
-				<a class="btn btn-outline-primary"><i class="bi bi-chevron-left"></i></a>
+				<a
+					th:href="@{/publico/instalacion/{id}/disponibilidad(id=${instalacion.id}, fecha=${fechaAyer})}"
+					class="btn btn-outline-primary"> <i class="bi bi-chevron-left"></i>
+				</a>
 
 				<h4 class="fw-bold mb-0"
-					th:text="${#temporals.format(fechaActual, 'dd/MM/yyyy')}">Fecha</h4>
+					th:text="${#temporals.format(fecha, 'dd/MM/yyyy')}">Fecha</h4>
 
-				<a class="btn btn-outline-primary"><i
-					class="bi bi-chevron-right"></i></a>
+				<a
+					th:href="@{/publico/instalacion/{id}/disponibilidad(id=${instalacion.id}, fecha=${fechaManana})}"
+					class="btn btn-outline-primary"> <i class="bi bi-chevron-right"></i>
+				</a>
 			</div>
 
 			<div class="row g-3">
@@ -98,7 +103,8 @@
 					class="col-md-3 col-sm-6">
 					<div class="p-3 border rounded-4 shadow-sm bg-white h-100">
 						<div class="text-center mb-3">
-							<span class="text-muted small text-uppercase fw-bold">Inicio</span>
+							<span class="text-muted small text-uppercase fw-bold"
+								th:text="#{instalacion.publico.disponibilidad.inicio}">Inicio</span>
 							<h4 class="text-primary fw-bold mb-0"
 								th:text="${#temporals.format(f.inicio, 'HH:mm')}">08:00</h4>
 						</div>
@@ -106,8 +112,9 @@
 						<hr class="my-2">
 
 						<div class="d-grid gap-2">
-							<p class="text-muted small text-center mb-1">Elige duración:</p>
-							<a th:each="opcion : ${f.opciones}"
+							<p class="text-muted small text-center mb-1"
+								th:text="#{instalacion.publico.disponibilidad.elige.duracion}+':'"></p>
+							 <a th:each="opcion : ${f.opciones}"
 								th:href="@{/publico/instalacion/{id}/reserva(id=${instalacion.id}, fecha=${fechaActual}, hora=${f.inicio}, duracion=${opcion.minutos})}"
 								class="btn btn-sm btn-outline-success d-flex justify-content-between align-items-center px-3">
 
