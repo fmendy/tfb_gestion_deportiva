@@ -105,32 +105,31 @@
 		</div>
 
 		<script th:inline="javascript">
-        document.addEventListener('DOMContentLoaded', function() {
-            const calendarEl = document.getElementById('instalacionCalendar');
-            const eventosEspeciales = /*[[${instalacion.horarioCalculado}]]*/ {};
-            
-            const calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                locale: 'es',
-                height: 'auto',
-                headerToolbar: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth,listMonth'
-                },
-                eventDisplay: 'block',
-                events: Object.entries(eventosEspeciales).map(([fecha, horario]) => ({
+    document.addEventListener('DOMContentLoaded', function() {
+        const calendarEl = document.getElementById('instalacionCalendar');
+        // Usamos un bloque th:utext para imprimir el JSON correctamente
+        const eventosRaw = /*[[${instalacion.horarioCalculado}]]*/ {};
+        
+        console.log("Datos recibidos del servidor:", eventosRaw);
+        
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+            // ... (resto de configuraciones)
+            events: Object.entries(eventosRaw).flatMap(([fecha, valor]) => {
+                // Aquí forzamos la conversión a array
+                const lista = Array.isArray(valor) ? valor : (valor ? [valor] : []);
+                
+                return lista.map(horario => ({
                     title: horario.cerrado ? 'Cerrado' : (horario.horaInicio.substring(0,5) + ' - ' + horario.horaFin.substring(0,5)),
                     start: fecha,
                     backgroundColor: horario.cerrado ? '#f8d7da' : '#d1e7dd',
                     borderColor: horario.cerrado ? '#dc3545' : '#0f5132',
-                    textColor: horario.cerrado ? '#842029' : '#0f5132',
-                    className: 'px-2'
-                }))
-            });
-            calendar.render();
+                    textColor: horario.cerrado ? '#842029' : '#0f5132'
+                }));
+            })
         });
-    </script>
+        calendar.render();
+    });
+</script>
 	</div>
 </body>
 </html>

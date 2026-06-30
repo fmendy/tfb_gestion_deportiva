@@ -96,9 +96,9 @@ public class InstalacionMapper {
 		dto.setSedeLatitud(instalacion.getSede().getLatitud());
 		dto.setSedeLongitud(instalacion.getSede().getLongitud());
 
-		// 1️⃣ Horario semanal base
-		Map<Long, InstalacionHorario> mapaSemanal = listHorarios.stream()
-				.collect(Collectors.toMap(InstalacionHorario::getDiaSemana, h -> h));
+		// Cambia la recolección a groupingBy
+		Map<Long, List<InstalacionHorario>> mapaSemanal = listHorarios.stream()
+				.collect(Collectors.groupingBy(InstalacionHorario::getDiaSemana));
 
 		List<InstalacionHorarioPublicoDTO> semanal = listHorarios.stream()
 				.map(h -> new InstalacionHorarioPublicoDTO(null, h.getDiaSemana().intValue(), h.getHoraInicio(),
@@ -107,12 +107,11 @@ public class InstalacionMapper {
 
 		dto.setHorarioSemanal(semanal);
 
-		// 2️⃣ Map especiales por fecha
-		Map<LocalDate, InstalacionHorarioEspecial> mapaEspeciales = listHorariosEspeciales.stream()
-				.collect(Collectors.toMap(InstalacionHorarioEspecial::getFecha, e -> e));
+		Map<LocalDate, List<InstalacionHorarioEspecial>> mapaEspeciales = listHorariosEspeciales.stream()
+				.collect(Collectors.groupingBy(InstalacionHorarioEspecial::getFecha));
 
 		// 3️⃣ Generar calendario (ej: próximos 14 días)
-		Map<LocalDate, InstalacionHorarioPublicoDTO> resultado = new LinkedHashMap<>();
+		Map<LocalDate, List<InstalacionHorarioPublicoDTO>> resultado = new LinkedHashMap<>();
 
 		LocalDate hoy = LocalDate.now();
 
@@ -121,31 +120,31 @@ public class InstalacionMapper {
 
 		// 👉 Fin: final del año siguiente
 		LocalDate fin = LocalDate.of(hoy.getYear() + 1, 12, 31);
-
 		for (LocalDate fecha = inicio; !fecha.isAfter(fin); fecha = fecha.plusDays(1)) {
-
 			int diaSemana = fecha.getDayOfWeek().getValue();
 
+			// 1. Prioridad: Horarios Especiales
 			if (mapaEspeciales.containsKey(fecha)) {
-
-				InstalacionHorarioEspecial esp = mapaEspeciales.get(fecha);
-
-				resultado.put(fecha, new InstalacionHorarioPublicoDTO(fecha, diaSemana, esp.getHoraInicio(),
-						esp.getHoraFin(), esp.getCerrado()));
-
-			} else {
-
-				InstalacionHorario normal = mapaSemanal.get((long) diaSemana);
-
-				if (normal != null) {
-					resultado.put(fecha, new InstalacionHorarioPublicoDTO(fecha, diaSemana, normal.getHoraInicio(),
-							normal.getHoraFin(), false));
+				List<InstalacionHorarioEspecial> especiales = mapaEspeciales.get(fecha);
+				for (InstalacionHorarioEspecial esp : especiales) {
+					resultado.computeIfAbsent(fecha, k -> new ArrayList<>()).add(new InstalacionHorarioPublicoDTO(fecha,
+							diaSemana, esp.getHoraInicio(), esp.getHoraFin(), esp.getCerrado()));
+				}
+			}
+			// 2. Si no hay especial, usamos los normales
+			else {
+				List<InstalacionHorario> normales = mapaSemanal.get((long) diaSemana);
+				if (normales != null) {
+					for (InstalacionHorario normal : normales) {
+						resultado.computeIfAbsent(fecha, k -> new ArrayList<>()).add(new InstalacionHorarioPublicoDTO(
+								fecha, diaSemana, normal.getHoraInicio(), normal.getHoraFin(), false));
+					}
 				}
 			}
 		}
-
 		dto.setHorarioCalculado(resultado);
 
 		return dto;
+
 	}
 }

@@ -41,5 +41,5 @@ public class InstalacionPublicoDTO extends MaestraDTO {
     private List<InstalacionHorarioPublicoDTO> horarioSemanal;
 
     // Horario final con especiales aplicados (clave = fecha)
-    private Map<LocalDate, InstalacionHorarioPublicoDTO> horarioCalculado;
+    private Map<LocalDate, List<InstalacionHorarioPublicoDTO>> horarioCalculado;
 }
