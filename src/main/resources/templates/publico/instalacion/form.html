@@ -38,7 +38,7 @@
 <body>
 	<div layout:fragment="content" class="container py-5">
 		<div class="row g-4 mb-4">
-			<div class="col-lg-7">
+			<div class="col-lg-4">
 				<div class="card border-0 shadow-sm rounded-4 p-4 h-100">
 					<div class="d-flex align-items-start mb-3">
 						<div class="bg-primary bg-opacity-10 p-3 rounded-3 me-3">
@@ -55,16 +55,25 @@
 				</div>
 			</div>
 
-			<div class="col-lg-5">
+			<div class="col-lg-6">
 				<div class="card border-0 shadow-sm rounded-4 p-4 h-100">
 					<h5 class="fw-bold mb-3">
-						<i class="bi bi-geo-alt-fill text-primary me-2"></i>Ubicación
+						<i class="bi bi-geo-alt-fill text-primary me-2"></i><span
+							th:text="#{instalacion.publico.ubicacion}"></span>
 					</h5>
 
+
 					<div class="bg-light p-3 rounded-3 mb-3">
-						<p class="mb-1 fw-bold" th:text="${instalacion.sedeNombre}">Sede</p>
-						<p class="mb-0 text-muted small"
-							th:text="${instalacion.sedeDireccion}"></p>
+						<p class="mb-2 fw-bold text-primary"
+							th:text="${instalacion.sedeNombre}">Nombre Sede</p>
+
+						<p class="mb-0 text-muted small">
+							<span
+								th:text="${instalacion.sedeMunicipioProvinciaComunidadAutonomaNombre}">Comunidad</span>,
+							<span th:text="${instalacion.sedeMunicipioProvinciaNombre}">Provincia</span>,
+							<span th:text="${instalacion.sedeMunicipioNombre}">Municipio</span>,
+							<span th:text="${instalacion.sedeDireccion}">Dirección</span>
+						</p>
 					</div>
 
 					<div id="map" class="rounded-3 shadow-sm"
@@ -96,8 +105,8 @@
 			<div class="col-12">
 				<div class="card border-0 shadow-sm rounded-4 p-4">
 					<h4 class="fw-bold mb-4 text-dark">
-						<i class="bi bi-calendar-event me-2 text-primary"></i>Calendario
-						de Horarios
+						<i class="bi bi-calendar-event me-2 text-primary"></i><span
+							th:text="#{instalacion.publico.horario.apertura}"></span>
 					</h4>
 					<div id="instalacionCalendar" class="bg-white"></div>
 				</div>
@@ -109,13 +118,9 @@
         const calendarEl = document.getElementById('instalacionCalendar');
         // Usamos un bloque th:utext para imprimir el JSON correctamente
         const eventosRaw = /*[[${instalacion.horarioCalculado}]]*/ {};
-        
-        console.log("Datos recibidos del servidor:", eventosRaw);
-        
+                
         const calendar = new FullCalendar.Calendar(calendarEl, {
-            // ... (resto de configuraciones)
             events: Object.entries(eventosRaw).flatMap(([fecha, valor]) => {
-                // Aquí forzamos la conversión a array
                 const lista = Array.isArray(valor) ? valor : (valor ? [valor] : []);
                 
                 return lista.map(horario => ({
@@ -125,11 +130,31 @@
                     borderColor: horario.cerrado ? '#dc3545' : '#0f5132',
                     textColor: horario.cerrado ? '#842029' : '#0f5132'
                 }));
-            })
+            }),
+            dateClick: function(info) {
+                const fechaClicada = info.dateStr;
+                const detallesDelDia = eventosRaw[fechaClicada];
+
+                if (detallesDelDia) {
+                	const instalacionId = /*[[${instalacion.id}]]*/ null;
+                	const url = `/publico/instalacion/${instalacionId}/disponibilidad?fecha=${fechaClicada}`;
+                    window.location.href = url;
+                } else {
+                    alert("No hay horarios registrados para esta fecha.");
+                }
+            }
         });
+        
         calendar.render();
+       
     });
+    
+
 </script>
+
+
 	</div>
+
+
 </body>
 </html>

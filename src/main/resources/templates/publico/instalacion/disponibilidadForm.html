@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" lang="es"
+	layout:decorate="~{layout/base}">
+<head>
+
+</head>
+<body>
+	<div layout:fragment="content" class="container py-5">
+		<div class="row g-4 mb-4">
+			<div class="col-lg-4">
+				<div class="card border-0 shadow-sm rounded-4 p-4 h-100">
+					<div class="d-flex align-items-start mb-3">
+						<div class="bg-primary bg-opacity-10 p-3 rounded-3 me-3">
+							<i class="bi bi-buildings text-primary fs-3"></i>
+						</div>
+						<div>
+							<h2 class="fw-bold mb-1" th:text="${instalacion.nombre}">Nombre
+								Instalación</h2>
+							<span class="badge bg-primary text-white"
+								th:text="${instalacion.instalacionTipoNombre}">Tipo</span>
+						</div>
+					</div>
+					<p class="text-muted" th:text="${instalacion.descripcion}">Descripción...</p>
+				</div>
+			</div>
+
+			<div class="col-lg-4">
+				<div class="card border-0 shadow-sm rounded-4 p-4 h-100">
+					<h5 class="fw-bold mb-3">
+						<i class="bi bi-geo-alt-fill text-primary me-2"></i><span
+							th:text="#{instalacion.publico.ubicacion}"></span>
+					</h5>
+
+					<div class="bg-light p-3 rounded-3 mb-3">
+						<p class="mb-2 fw-bold text-primary"
+							th:text="${instalacion.sedeNombre}">Nombre Sede</p>
+
+						<p class="mb-0 text-muted small">
+							<span
+								th:text="${instalacion.sedeMunicipioProvinciaComunidadAutonomaNombre}">Comunidad</span>,
+							<span th:text="${instalacion.sedeMunicipioProvinciaNombre}">Provincia</span>,
+							<span th:text="${instalacion.sedeMunicipioNombre}">Municipio</span>,
+							<span th:text="${instalacion.sedeDireccion}">Dirección</span>
+						</p>
+					</div>
+
+				</div>
+			</div>
+			<div class="col-lg-4">
+				<div class="card border-0 shadow-sm rounded-4 p-4 h-100">
+					<h5 class="fw-bold mb-4">
+						<i class="bi bi-clock-history text-primary me-2"></i> <span
+							th:text="#{instalacion.publico.reserva.tiempos}">Tiempos
+							de Reserva</span>
+					</h5>
+
+					<div class="d-flex flex-column gap-3">
+						<div class="d-flex justify-content-between border-bottom pb-2">
+							<span class="fw-bold"
+								th:text="#{instalacion.publico.reserva.duracion.minima}">Duración
+								Mínima:</span> <span class="text-muted"
+								th:text="${instalacion.instalacionConfiguracionReservaDuracionMin} + ' min'"></span>
+						</div>
+
+						<div class="d-flex justify-content-between border-bottom pb-2">
+							<span class="fw-bold"
+								th:text="#{instalacion.publico.reserva.duracion.maxima}">Duración
+								Máxima:</span> <span class="text-muted"
+								th:text="${instalacion.instalacionConfiguracionReservaDuracionMax} + ' min'"></span>
+						</div>
+
+						<div class="d-flex justify-content-between">
+							<span class="fw-bold"
+								th:text="#{instalacion.publico.reserva.intervalo.horario}">Intervalo
+								Horario:</span> <span class="text-muted"
+								th:text="${instalacion.instalacionConfiguracionReservaIntervaloHorario} + ' min'"></span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="card border-0 shadow-sm rounded-4 p-4">
+			<div class="d-flex justify-content-between align-items-center mb-4">
+				<a class="btn btn-outline-primary"><i class="bi bi-chevron-left"></i></a>
+
+				<h4 class="fw-bold mb-0"
+					th:text="${#temporals.format(fechaActual, 'dd/MM/yyyy')}">Fecha</h4>
+
+				<a class="btn btn-outline-primary"><i
+					class="bi bi-chevron-right"></i></a>
+			</div>
+
+			<div class="row g-3">
+				<div th:each="f : ${instalacion.listFranjaHoraria}"
+					class="col-md-3 col-sm-6">
+					<div class="p-3 border rounded-4 shadow-sm bg-white h-100">
+						<div class="text-center mb-3">
+							<span class="text-muted small text-uppercase fw-bold">Inicio</span>
+							<h4 class="text-primary fw-bold mb-0"
+								th:text="${#temporals.format(f.inicio, 'HH:mm')}">08:00</h4>
+						</div>
+
+						<hr class="my-2">
+
+						<div class="d-grid gap-2">
+							<p class="text-muted small text-center mb-1">Elige duración:</p>
+							<a th:each="opcion : ${f.opciones}"
+								th:href="@{/publico/instalacion/{id}/reserva(id=${instalacion.id}, fecha=${fechaActual}, hora=${f.inicio}, duracion=${opcion.minutos})}"
+								class="btn btn-sm btn-outline-success d-flex justify-content-between align-items-center px-3">
+
+								<span class="fw-bold" th:text="${opcion.minutos} + ' min'">60
+									min</span> <small class="opacity-75"> <i
+									class="bi bi-arrow-right"></i>
+									[[${#temporals.format(opcion.horaFin, 'HH:mm')}]]
+							</small>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+</body>
+</html>

@@ -14,10 +14,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import com.gestion.deportiva.dto.ComboDTO;
+import com.gestion.deportiva.dto.FranjaHorariaDTO;
 import com.gestion.deportiva.dto.InstalacionDTO;
+import com.gestion.deportiva.dto.InstalacionDisponibilidadDTO;
 import com.gestion.deportiva.dto.InstalacionHorarioPublicoDTO;
 import com.gestion.deportiva.dto.InstalacionPublicoDTO;
 import com.gestion.deportiva.model.Instalacion;
+import com.gestion.deportiva.model.InstalacionConfiguracionReserva;
 import com.gestion.deportiva.model.InstalacionHorario;
 import com.gestion.deportiva.model.InstalacionHorarioEspecial;
 import com.gestion.deportiva.model.InstalacionTipo;
@@ -144,6 +147,31 @@ public class InstalacionMapper {
 		}
 		dto.setHorarioCalculado(resultado);
 
+		return dto;
+
+	}
+
+	public InstalacionDisponibilidadDTO toDisponibilidadDTO(Instalacion instalacion,
+			InstalacionConfiguracionReserva instalacionConfiguracionReserva,
+			List<FranjaHorariaDTO> listFranjaHorariaDTOs) {
+
+		InstalacionDisponibilidadDTO dto = new InstalacionDisponibilidadDTO();
+
+		dto.setId(instalacion.getId());
+		dto.setNombre(instalacion.getNombre());
+		dto.setDescripcion(instalacion.getDescripcion());
+		dto.setInstalacionTipoNombre(instalacion.getInstalacionTipo().getNombre());
+		dto.setSedeNombre(instalacion.getSede().getNombre());
+		dto.setSedeDireccion(instalacion.getSede().getDireccion());
+		dto.setSedeMunicipioNombre(instalacion.getSede().getMunicipio().getNombre());
+		dto.setSedeMunicipioProvinciaNombre(instalacion.getSede().getMunicipio().getProvincia().getNombre());
+		dto.setSedeMunicipioProvinciaComunidadAutonomaNombre(
+				instalacion.getSede().getMunicipio().getProvincia().getComunidadAutonoma().getNombre());
+		dto.setEmpresaNombre(instalacion.getSede().getEmpresa().getNombre());
+		dto.setInstalacionConfiguracionReservaDuracionMax(instalacionConfiguracionReserva.getDuracionMax());
+		dto.setInstalacionConfiguracionReservaDuracionMin(instalacionConfiguracionReserva.getDuracionMin());
+		dto.setInstalacionConfiguracionReservaIntervaloHorario(instalacionConfiguracionReserva.getIntervaloHorario());
+		dto.setListFranjaHoraria(listFranjaHorariaDTOs);
 		return dto;
 
 	}

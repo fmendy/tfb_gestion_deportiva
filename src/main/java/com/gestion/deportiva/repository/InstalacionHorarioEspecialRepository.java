@@ -1,5 +1,6 @@
 package com.gestion.deportiva.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
@@ -10,4 +11,6 @@ import com.gestion.deportiva.model.InstalacionHorarioEspecial;
 public interface InstalacionHorarioEspecialRepository extends BaseEntityRepository<InstalacionHorarioEspecial, Long> {
 
 	List<InstalacionHorarioEspecial> findByActivoTrueAndInstalacionId(Long instalacionId);
+
+	List<InstalacionHorarioEspecial> findByInstalacionIdAndFechaAndActivoTrue(Long instalacionId, LocalDate fecha);
 }
