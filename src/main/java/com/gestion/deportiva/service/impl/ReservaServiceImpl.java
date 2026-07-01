@@ -10,10 +10,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.gestion.deportiva.dto.ReservaDTO;
+import com.gestion.deportiva.dto.ReservaInstalacionDTO;
 import com.gestion.deportiva.dto.filter.ReservaFilter;
 import com.gestion.deportiva.dto.specifications.ReservaSpecifications;
 import com.gestion.deportiva.mapper.ReservaMapper;
+import com.gestion.deportiva.model.Instalacion;
 import com.gestion.deportiva.model.Reserva;
+import com.gestion.deportiva.repository.InstalacionRepository;
 import com.gestion.deportiva.repository.ReservaRepository;
 import com.gestion.deportiva.service.ReservaService;
 import jakarta.persistence.EntityManager;
@@ -27,6 +30,9 @@ public class ReservaServiceImpl implements ReservaService {
 
 	@Autowired
 	private ReservaRepository reservaRepository;
+
+	@Autowired
+	private InstalacionRepository instalacionRepository;
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -105,5 +111,13 @@ public class ReservaServiceImpl implements ReservaService {
 	public byte[] exportarExcel(ReservaFilter filter) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public ReservaInstalacionDTO getReservaInstalacionDTOByInstalacionIdAndReservaInstalacionDTO(Long instalacionId,
+			ReservaInstalacionDTO dto) {
+		Instalacion instalacion = instalacionRepository.findByActivoTrueAndId(instalacionId);
+
+		return reservaMapper.instalacionModelToReservaInstalacionDTO(instalacion, dto);
 	}
 }

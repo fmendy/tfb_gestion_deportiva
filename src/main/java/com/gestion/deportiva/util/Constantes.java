@@ -88,6 +88,21 @@ public class Constantes {
 			public static final String GESTION_ROL_INSTALACION = "GESTION_ROL_INSTALACION";
 
 		}
+		
+		public static class Reserva {
+			public static final String GESTION_RESERVA = "GESTION_RESERVA";
+
+			public static final String GESTION_RESERVA_GLOBAL = "GESTION_RESERVA_GLOBAL";
+
+			public static final String GESTION_RESERVA_EMPRESA = "GESTION_RESERVA_EMPRESA";
+
+			public static final String GESTION_RESERVA_SEDE = "GESTION_RESERVA_SEDE";
+
+			public static final String GESTION_RESERVA_INSTALACION = "GESTION_RESERVA_INSTALACION";
+			
+			public static final String GESTION_RESERVA_PROPIA = "GESTION_RESERVA_PROPIA";
+
+		}
 
 	}
 

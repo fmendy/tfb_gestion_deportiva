@@ -11,6 +11,7 @@ import org.springframework.util.StringUtils;
 
 import com.gestion.deportiva.dto.ComboDTO;
 import com.gestion.deportiva.dto.ReservaDTO;
+import com.gestion.deportiva.dto.ReservaInstalacionDTO;
 import com.gestion.deportiva.model.Instalacion;
 import com.gestion.deportiva.model.Reserva;
 import com.gestion.deportiva.model.ReservaEstado;
@@ -67,8 +68,23 @@ public class ReservaMapper {
 	}
 
 	public List<ComboDTO> listModelToListComboDTO(List<Reserva> list) {
-		return list.stream().map(bean -> new ComboDTO(bean.getId(), bean.getHoraFin() + " - " + bean.getHoraFin()))
-				.toList();
+		return null;
+	}
+
+	public ReservaInstalacionDTO instalacionModelToReservaInstalacionDTO(Instalacion instalacion,
+			ReservaInstalacionDTO dto) {
+		ReservaInstalacionDTO retVal = new ReservaInstalacionDTO();
+		retVal.setDuracion(dto.getDuracion());
+		retVal.setFecha(dto.getFecha());
+		retVal.setHora(dto.getHora());
+		retVal.setHoraFin(dto.getHora().plusMinutes(dto.getDuracion()));
+		retVal.setInstalacionId(instalacion.getId());
+		retVal.setInstalacionNombre(instalacion.getNombre());
+		retVal.setInstalacionSedeNombre(instalacion.getSede().getNombre());
+		retVal.setInstalacionSedeEmpresaNombre(instalacion.getSede().getEmpresa().getNombre());
+		retVal.setInstalacionInstalacionTipoNombre(instalacion.getInstalacionTipo().getNombre());
+		return retVal;
+
 	}
 
 }

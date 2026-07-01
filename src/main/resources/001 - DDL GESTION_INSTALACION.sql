@@ -277,7 +277,13 @@ insert into permiso(nombre) values
 ('GESTION_ROL_GLOBAL'),
 ('GESTION_ROL_EMPRESA'),
 ('GESTION_ROL_SEDE'),
-('GESTION_ROL_INSTALACION');
+('GESTION_ROL_INSTALACION'),
+('GESTION_RESERVA'),
+('GESTION_RESERVA_GLOBAL'),
+('GESTION_RESERVA_EMPRESA'),
+('GESTION_RESERVA_SEDE'),
+('GESTION_RESERVA_INSTALACION'),
+('GESTION_RESERVA_PROPIA');
 
 
 create table rol_permiso(
@@ -311,7 +317,14 @@ INSERT INTO rol_permiso(id_rol,id_permiso) values
 ((select id from rol where nombre = 'ADMINISTRADOR'), (select id from permiso where nombre = 'GESTION_ROL_GLOBAL')),
 ((select id from rol where nombre = 'ADMINISTRADOR'), (select id from permiso where nombre = 'GESTION_ROL_EMPRESA')),
 ((select id from rol where nombre = 'ADMINISTRADOR'), (select id from permiso where nombre = 'GESTION_ROL_SEDE')),
-((select id from rol where nombre = 'ADMINISTRADOR'), (select id from permiso where nombre = 'GESTION_ROL_INSTALACION'));
+((select id from rol where nombre = 'ADMINISTRADOR'), (select id from permiso where nombre = 'GESTION_ROL_INSTALACION')),
+((select id from rol where nombre = 'ADMINISTRADOR'), (select id from permiso where nombre = 'GESTION_RESERVA')),
+((select id from rol where nombre = 'ADMINISTRADOR'), (select id from permiso where nombre = 'GESTION_RESERVA_GLOBAL')),
+((select id from rol where nombre = 'ADMINISTRADOR'), (select id from permiso where nombre = 'GESTION_RESERVA_EMPRESA')),
+((select id from rol where nombre = 'ADMINISTRADOR'), (select id from permiso where nombre = 'GESTION_RESERVA_SEDE')),
+((select id from rol where nombre = 'ADMINISTRADOR'), (select id from permiso where nombre = 'GESTION_RESERVA_INSTALACION')),
+((select id from rol where nombre = 'ADMINISTRADOR'), (select id from permiso where nombre = 'GESTION_RESERVA_PROPIA'));
+
 
 INSERT INTO rol_permiso(id_rol,id_permiso) values
 ((select id from rol where nombre = 'USUARIO_EMPRESA'), (select id from permiso where nombre = 'GESTION_EMPRESA')),
@@ -323,7 +336,12 @@ INSERT INTO rol_permiso(id_rol,id_permiso) values
 ((select id from rol where nombre = 'USUARIO_EMPRESA'), (select id from permiso where nombre = 'GESTION_USUARIO_INSTALACION')),
 ((select id from rol where nombre = 'USUARIO_EMPRESA'), (select id from permiso where nombre = 'GESTION_ROL')),
 ((select id from rol where nombre = 'USUARIO_EMPRESA'), (select id from permiso where nombre = 'GESTION_ROL_SEDE')),
-((select id from rol where nombre = 'USUARIO_EMPRESA'), (select id from permiso where nombre = 'GESTION_ROL_INSTALACION'));
+((select id from rol where nombre = 'USUARIO_EMPRESA'), (select id from permiso where nombre = 'GESTION_ROL_INSTALACION')),
+((select id from rol where nombre = 'USUARIO_EMPRESA'), (select id from permiso where nombre = 'GESTION_RESERVA')),
+((select id from rol where nombre = 'USUARIO_EMPRESA'), (select id from permiso where nombre = 'GESTION_RESERVA_EMPRESA')),
+((select id from rol where nombre = 'USUARIO_EMPRESA'), (select id from permiso where nombre = 'GESTION_RESERVA_SEDE')),
+((select id from rol where nombre = 'USUARIO_EMPRESA'), (select id from permiso where nombre = 'GESTION_RESERVA_INSTALACION')),
+((select id from rol where nombre = 'USUARIO_EMPRESA'), (select id from permiso where nombre = 'GESTION_RESERVA_PROPIA'));
 
 INSERT INTO rol_permiso(id_rol,id_permiso) values
 ((select id from rol where nombre = 'USUARIO_SEDE'), (select id from permiso where nombre = 'GESTION_SEDE')),
@@ -332,18 +350,27 @@ INSERT INTO rol_permiso(id_rol,id_permiso) values
 ((select id from rol where nombre = 'USUARIO_SEDE'), (select id from permiso where nombre = 'GESTION_USUARIO_SEDE')),
 ((select id from rol where nombre = 'USUARIO_SEDE'), (select id from permiso where nombre = 'GESTION_USUARIO_INSTALACION')),
 ((select id from rol where nombre = 'USUARIO_SEDE'), (select id from permiso where nombre = 'GESTION_ROL')),
-((select id from rol where nombre = 'USUARIO_SEDE'), (select id from permiso where nombre = 'GESTION_ROL_INSTALACION'));
+((select id from rol where nombre = 'USUARIO_SEDE'), (select id from permiso where nombre = 'GESTION_ROL_INSTALACION')),
+((select id from rol where nombre = 'USUARIO_SEDE'), (select id from permiso where nombre = 'GESTION_RESERVA')),
+((select id from rol where nombre = 'USUARIO_SEDE'), (select id from permiso where nombre = 'GESTION_RESERVA_SEDE')),
+((select id from rol where nombre = 'USUARIO_SEDE'), (select id from permiso where nombre = 'GESTION_RESERVA_INSTALACION')),
+((select id from rol where nombre = 'USUARIO_SEDE'), (select id from permiso where nombre = 'GESTION_RESERVA_PROPIA'));
 
 
 
 INSERT INTO rol_permiso(id_rol,id_permiso) values
 ((select id from rol where nombre = 'USUARIO_INSTALACION'), (select id from permiso where nombre = 'GESTION_INSTALACION')),
 ((select id from rol where nombre = 'USUARIO_INSTALACION'), (select id from permiso where nombre = 'MI_PERFIL')),
-((select id from rol where nombre = 'USUARIO_INSTALACION'), (select id from permiso where nombre = 'GESTION_USUARIO_INSTALACION'));
+((select id from rol where nombre = 'USUARIO_INSTALACION'), (select id from permiso where nombre = 'GESTION_USUARIO_INSTALACION')),
+((select id from rol where nombre = 'USUARIO_INSTALACION'), (select id from permiso where nombre = 'GESTION_RESERVA')),
+((select id from rol where nombre = 'USUARIO_INSTALACION'), (select id from permiso where nombre = 'GESTION_RESERVA_INSTALACION')),
+((select id from rol where nombre = 'USUARIO_INSTALACION'), (select id from permiso where nombre = 'GESTION_RESERVA_PROPIA'));
 
 
 INSERT INTO rol_permiso(id_rol,id_permiso) values
-((select id from rol where nombre = 'USUARIO_CLIENTE'), (select id from permiso where nombre = 'MI_PERFIL'));
+((select id from rol where nombre = 'USUARIO_CLIENTE'), (select id from permiso where nombre = 'MI_PERFIL')),
+((select id from rol where nombre = 'USUARIO_CLIENTE'), (select id from permiso where nombre = 'GESTION_RESERVA')),
+((select id from rol where nombre = 'USUARIO_CLIENTE'), (select id from permiso where nombre = 'GESTION_RESERVA_PROPIA'));
 
 create table empresa(
 	id INT  not null auto_increment primary key,
