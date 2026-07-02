@@ -5,6 +5,7 @@ import java.time.LocalTime;
 
 import com.gestion.deportiva.validation.ReservaSolicitudDisponibilidadValid;
 import com.gestion.deportiva.validation.ReservaSolicitudFechaValid;
+import com.gestion.deportiva.validation.ReservaSolicitudHoraDuracionValid;
 import com.gestion.deportiva.validation.ReservaSolicitudInstalacionAbiertaValid;
 
 import jakarta.validation.constraints.NotNull;
@@ -18,6 +19,7 @@ import lombok.Setter;
 @ReservaSolicitudFechaValid
 @ReservaSolicitudDisponibilidadValid
 @ReservaSolicitudInstalacionAbiertaValid
+@ReservaSolicitudHoraDuracionValid
 public class ReservaSolicitudDTO extends BaseDTO {
 
 	private static final long serialVersionUID = 572748819122752282L;

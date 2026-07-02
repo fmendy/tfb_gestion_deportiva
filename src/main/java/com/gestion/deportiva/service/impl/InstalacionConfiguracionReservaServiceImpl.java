@@ -1,5 +1,6 @@
 package com.gestion.deportiva.service.impl;
 
+import java.time.LocalTime;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -141,4 +142,28 @@ public class InstalacionConfiguracionReservaServiceImpl implements InstalacionCo
 		return instalacionConfiguracionReservaMapper.modelToDTO(bean);
 	}
 
+	@Override
+	public boolean isValid(Long instalacionId, LocalTime hora, Long duracion) {
+		InstalacionConfiguracionReserva configuracion = findByInstalacionId(instalacionId);
+
+		// 1. Validar rangos de duración
+		if (duracion < configuracion.getDuracionMin() || duracion > configuracion.getDuracionMax()) {
+			return false;
+		}
+
+		// 2. Validar que la duración sea múltiplo del intervalo
+		if (duracion % configuracion.getIntervaloHorario() != 0) {
+			return false;
+		}
+
+		// 3. Validar que la hora de inicio sea múltiplo del intervalo
+		// Convertimos la hora a minutos totales desde las 00:00
+		int minutosDesdeMedianoche = hora.getHour() * 60 + hora.getMinute();
+
+		if (minutosDesdeMedianoche % configuracion.getIntervaloHorario() != 0) {
+			return false;
+		}
+
+		return true;
+	}
 }

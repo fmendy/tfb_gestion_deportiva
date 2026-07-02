@@ -22,6 +22,7 @@ public class ReservaSolicitudFechaValidator
 
 		// 1. Validar fecha pasada
 		if (dto.getFecha().isBefore(hoy)) {
+			context.disableDefaultConstraintViolation();
 			context.buildConstraintViolationWithTemplate(Utils.getMessage("error.validacion.reserva.solicitud.fecha"))
 					.addConstraintViolation();
 			return false;
@@ -30,6 +31,7 @@ public class ReservaSolicitudFechaValidator
 		// 2. Si es hoy, validar que la hora no haya pasado
 		// Fallamos si la hora de la reserva es anterior a la hora actual
 		if (dto.getFecha().equals(hoy) && dto.getHora().isBefore(LocalTime.now())) {
+			context.disableDefaultConstraintViolation();
 			context.buildConstraintViolationWithTemplate(
 					Utils.getMessage("error.validacion.reserva.solicitud.fecha.hora")).addConstraintViolation();
 			return false;

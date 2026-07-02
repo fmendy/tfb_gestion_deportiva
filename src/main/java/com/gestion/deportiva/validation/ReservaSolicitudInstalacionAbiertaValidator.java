@@ -29,6 +29,7 @@ public class ReservaSolicitudInstalacionAbiertaValidator
 		// Horario Especial de la instalación
 		if (!instalacionHorarioEspecialService.estaAbierta(dto.getInstalacionId(), dto.getFecha(), dto.getHora(),
 				dto.getDuracion())) {
+			context.disableDefaultConstraintViolation();
 			context.buildConstraintViolationWithTemplate(
 					Utils.getMessage("error.validacion.reserva.instalacion.abierta.horario.especial"))
 					.addConstraintViolation();
@@ -38,6 +39,7 @@ public class ReservaSolicitudInstalacionAbiertaValidator
 		// Horario normal de la instalación
 		if (!instalacionHorarioService.estaAbierta(dto.getInstalacionId(), dto.getFecha(), dto.getHora(),
 				dto.getDuracion())) {
+			context.disableDefaultConstraintViolation();
 			context.buildConstraintViolationWithTemplate(
 					Utils.getMessage("error.validacion.reserva.instalacion.abierta.horario.habitual"))
 					.addConstraintViolation();
@@ -47,6 +49,7 @@ public class ReservaSolicitudInstalacionAbiertaValidator
 		// Horario bloqueado de la instalación
 		if (!instalacionHorarioBloqueadoService.estaDisponible(dto.getInstalacionId(), dto.getFecha(), dto.getHora(),
 				dto.getDuracion())) {
+			context.disableDefaultConstraintViolation();
 			context.buildConstraintViolationWithTemplate(
 					Utils.getMessage("error.validacion.reserva.instalacion.horario.bloqueado"))
 					.addConstraintViolation();

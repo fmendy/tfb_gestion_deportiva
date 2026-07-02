@@ -1,6 +1,5 @@
 package com.gestion.deportiva.validation;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.gestion.deportiva.dto.ReservaSolicitudDTO;
@@ -22,6 +21,7 @@ public class ReservaSolicitudDisponibilidadValidator
 
 		if (!reservaService.isFranjaHorariaDisponibleParaInstalacion(dto.getFecha(), dto.getHora(), dto.getDuracion(),
 				dto.getInstalacionId())) {
+			context.disableDefaultConstraintViolation();
 			context.buildConstraintViolationWithTemplate(
 					Utils.getMessage("error.validacion.reserva.disponibilidad.instalacion")).addConstraintViolation();
 			return false;
@@ -29,6 +29,7 @@ public class ReservaSolicitudDisponibilidadValidator
 
 		if (!reservaService.isFranjaHorariaDisponibleParaUsuario(dto.getFecha(), dto.getHora(), dto.getDuracion(),
 				SecurityUtil.getCurrentUserId())) {
+			context.disableDefaultConstraintViolation();
 			context.buildConstraintViolationWithTemplate(
 					Utils.getMessage("error.validacion.reserva.disponibilidad.usuario")).addConstraintViolation();
 			return false;
