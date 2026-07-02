@@ -1,5 +1,7 @@
 package com.gestion.deportiva.service.impl;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -18,6 +20,8 @@ import com.gestion.deportiva.model.Instalacion;
 import com.gestion.deportiva.model.InstalacionHorario;
 import com.gestion.deportiva.repository.InstalacionHorarioRepository;
 import com.gestion.deportiva.service.InstalacionHorarioService;
+import com.gestion.deportiva.util.Utils;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
@@ -160,5 +164,20 @@ public class InstalacionHorarioServiceImpl implements InstalacionHorarioService 
 			dtoSemanal.getHorarios().get(ent.getDiaSemana().intValue()).add(turnoDto);
 		}
 		return dtoSemanal;
+	}
+
+	@Override
+	public boolean estaAbierta(Long instalacionId, LocalDate fecha, LocalTime horaInicio, Long duracion) {
+		List<InstalacionHorario> horarios = instalacionHorarioRepository.findByActivoTrueAndInstalacionIdAndDiaSemana(
+				instalacionId, Utils.intToLong(fecha.getDayOfWeek().getValue()));
+
+		if (horarios.isEmpty()) {
+			return false;
+		}
+
+		LocalTime horaFinSolicitada = horaInicio.plusMinutes(duracion);
+
+		return horarios.stream()
+				.anyMatch(h -> !horaInicio.isBefore(h.getHoraInicio()) && !horaFinSolicitada.isAfter(h.getHoraFin()));
 	}
 }

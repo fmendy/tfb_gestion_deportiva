@@ -116,16 +116,31 @@
 		<script th:inline="javascript">
     document.addEventListener('DOMContentLoaded', function() {
         const calendarEl = document.getElementById('instalacionCalendar');
-        // Usamos un bloque th:utext para imprimir el JSON correctamente
         const eventosRaw = /*[[${instalacion.horarioCalculado}]]*/ {};
                 
         const calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            locale: 'es', // Idioma español
+            firstDay: 1,  // 1 = Lunes
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek'
+            },
+            buttonText: { // Textos de los botones en español
+                today:    'Hoy',
+                month:    'Mes',
+                week:     'Semana',
+                day:      'Día'
+            },
             events: Object.entries(eventosRaw).flatMap(([fecha, valor]) => {
                 const lista = Array.isArray(valor) ? valor : (valor ? [valor] : []);
                 
                 return lista.map(horario => ({
                     title: horario.cerrado ? 'Cerrado' : (horario.horaInicio.substring(0,5) + ' - ' + horario.horaFin.substring(0,5)),
                     start: fecha,
+                    // Guardamos el estado 'cerrado' en extendedProps para usarlo en el click
+                    extendedProps: { cerrado: horario.cerrado },
                     backgroundColor: horario.cerrado ? '#f8d7da' : '#d1e7dd',
                     borderColor: horario.cerrado ? '#dc3545' : '#0f5132',
                     textColor: horario.cerrado ? '#842029' : '#0f5132'
@@ -133,11 +148,18 @@
             }),
             dateClick: function(info) {
                 const fechaClicada = info.dateStr;
-                const detallesDelDia = eventosRaw[fechaClicada];
+                const eventosEnDia = calendar.getEvents().filter(e => e.startStr === fechaClicada);
+                
+                // Verificar si hay algún evento en ese día que esté marcado como cerrado
+                const estaCerrado = eventosEnDia.some(e => e.extendedProps.cerrado === true);
+                
+                if (estaCerrado) {
+                    return; // No hacemos nada
+                }
 
-                if (detallesDelDia) {
-                	const instalacionId = /*[[${instalacion.id}]]*/ null;
-                	const url = `/publico/instalacion/${instalacionId}/disponibilidad?fecha=${fechaClicada}`;
+                if (eventosEnDia.length > 0) {
+                    const instalacionId = /*[[${instalacion.id}]]*/ null;
+                    url = `/publico/instalacion/${instalacionId}/disponibilidad?fecha=${fechaClicada}`;
                     window.location.href = url;
                 } else {
                     alert("No hay horarios registrados para esta fecha.");
@@ -146,10 +168,7 @@
         });
         
         calendar.render();
-       
     });
-    
-
 </script>
 
 

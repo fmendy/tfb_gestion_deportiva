@@ -1,5 +1,7 @@
 package com.gestion.deportiva.service.impl;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -126,5 +128,29 @@ public class InstalacionHorarioEspecialServiceImpl implements InstalacionHorario
 			retVal.setInstalacionId(instalacionId);
 		}
 		return retVal;
+	}
+
+	/**
+	 * Devuelve true si no hay horarios especiales para la instalación en la fecha
+	 * indicada, true si hay algún horario especial que coincida con la fecha y hora
+	 * indicada false si esta cerrado false si la hora se sale de rango
+	 */
+	@Override
+	public Boolean estaAbierta(Long instalacionId, LocalDate fecha, LocalTime horaInicio, Long duracion) {
+		List<InstalacionHorarioEspecial> horarios = instalacionHorarioEspecialRepository
+				.findByInstalacionIdAndFechaAndActivoTrue(instalacionId, fecha);
+
+		if (horarios.isEmpty()) {
+			return true;
+		}
+
+		if (horarios.stream().anyMatch(h -> h.getCerrado())) {
+			return false;
+		}
+
+		LocalTime horaFinSolicitada = horaInicio.plusMinutes(duracion);
+
+		return horarios.stream()
+				.anyMatch(h -> !horaInicio.isBefore(h.getHoraInicio()) && !horaFinSolicitada.isAfter(h.getHoraFin()));
 	}
 }

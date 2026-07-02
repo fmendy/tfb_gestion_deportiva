@@ -1,5 +1,7 @@
 package com.gestion.deportiva.service.impl;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -10,18 +12,22 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.gestion.deportiva.dto.ReservaDTO;
-import com.gestion.deportiva.dto.ReservaInstalacionDTO;
+import com.gestion.deportiva.dto.ReservaSolicitudDTO;
 import com.gestion.deportiva.dto.filter.ReservaFilter;
 import com.gestion.deportiva.dto.specifications.ReservaSpecifications;
 import com.gestion.deportiva.mapper.ReservaMapper;
 import com.gestion.deportiva.model.Instalacion;
 import com.gestion.deportiva.model.Reserva;
 import com.gestion.deportiva.repository.InstalacionRepository;
+import com.gestion.deportiva.repository.ReservaEstadoRepository;
 import com.gestion.deportiva.repository.ReservaRepository;
 import com.gestion.deportiva.service.ReservaService;
+import com.gestion.deportiva.util.Constantes;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 
 @Service
 public class ReservaServiceImpl implements ReservaService {
@@ -39,6 +45,9 @@ public class ReservaServiceImpl implements ReservaService {
 
 	@Autowired
 	private ReservaMapper reservaMapper;
+
+	@Autowired
+	private ReservaEstadoRepository reservaEstadoRepository;
 
 	@Override
 	public ReservaDTO findById(Long id) {
@@ -114,10 +123,51 @@ public class ReservaServiceImpl implements ReservaService {
 	}
 
 	@Override
-	public ReservaInstalacionDTO getReservaInstalacionDTOByInstalacionIdAndReservaInstalacionDTO(Long instalacionId,
-			ReservaInstalacionDTO dto) {
-		Instalacion instalacion = instalacionRepository.findByActivoTrueAndId(instalacionId);
-
+	public ReservaSolicitudDTO getFullReservaSolicitudDTOByReservaSolictudDTO(ReservaSolicitudDTO dto) {
+		Instalacion instalacion = instalacionRepository.findByActivoTrueAndId(dto.getInstalacionId());
 		return reservaMapper.instalacionModelToReservaInstalacionDTO(instalacion, dto);
+	}
+
+	@Override
+	public boolean isFranjaHorariaDisponibleParaInstalacion(LocalDate fecha, LocalTime horaInicio, Long duracion,
+			Long instalacionId) {
+		LocalTime horaFinSolicitada = horaInicio.plusMinutes(duracion);
+		List<String> listReservaEstados = List.of(Constantes.ReservaEstado.PENDIENTE,
+				Constantes.ReservaEstado.CONFIRMADA);
+		List<Reserva> reservas = reservaRepository.findByActivoTrueAndFechaAndInstalacionIdAndReservaEstadoNombreIn(
+				fecha, instalacionId, listReservaEstados);
+		boolean haySolapamiento = reservas.stream()
+				.anyMatch(reserva -> reserva.getHoraInicio().isBefore(horaFinSolicitada)
+						&& reserva.getHoraFin().isAfter(horaInicio));
+
+		return !haySolapamiento;
+	}
+
+	@Override
+	public boolean isFranjaHorariaDisponibleParaUsuario(LocalDate fecha, LocalTime horaInicio, Long duracion,
+			Long usuarioId) {
+		LocalTime horaFinSolicitada = horaInicio.plusMinutes(duracion);
+		List<String> listReservaEstados = List.of(Constantes.ReservaEstado.PENDIENTE,
+				Constantes.ReservaEstado.CONFIRMADA);
+		List<Reserva> reservas = reservaRepository.findByActivoTrueAndFechaAndUsuarioCreacionIdAndReservaEstadoNombreIn(
+				fecha, usuarioId, listReservaEstados);
+		boolean haySolapamiento = reservas.stream()
+				.anyMatch(reserva -> reserva.getHoraInicio().isBefore(horaFinSolicitada)
+						&& reserva.getHoraFin().isAfter(horaInicio));
+
+		return !haySolapamiento;
+	}
+
+	@Override
+	public Long crearReservaEstadoPendiente(@Valid ReservaSolicitudDTO dto) {
+		Reserva reserva = new Reserva();
+		reserva.setFecha(dto.getFecha());
+		reserva.setHoraFin(dto.getHora().plusMinutes(dto.getDuracion()));
+		reserva.setHoraInicio(dto.getHora());
+		reserva.setInstalacion(new Instalacion(dto.getInstalacionId()));
+		reserva.setReservaEstado(
+				reservaEstadoRepository.findByActivoTrueAndNombreEqualsIgnoreCase(Constantes.ReservaEstado.PENDIENTE));
+		reservaRepository.saveAndFlush(reserva);
+		return reserva.getId();
 	}
 }

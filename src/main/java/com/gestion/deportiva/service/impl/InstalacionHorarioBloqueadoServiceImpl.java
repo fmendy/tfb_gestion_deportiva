@@ -1,5 +1,7 @@
 package com.gestion.deportiva.service.impl;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -126,5 +128,22 @@ public class InstalacionHorarioBloqueadoServiceImpl implements InstalacionHorari
 			retVal.setInstalacionId(instalacionId);
 		}
 		return retVal;
+	}
+
+	@Override
+	public boolean estaDisponible(Long instalacionId, LocalDate fecha, LocalTime horaInicio, Long duracion) {
+		List<InstalacionHorarioBloqueado> horariosBloqueados = instalacionHorarioBloqueadoRepository
+				.findByActivoTrueAndInstalacionIdAndFecha(instalacionId, fecha);
+
+		if (horariosBloqueados.isEmpty()) {
+			return true;
+		}
+
+		LocalTime horaFinSolicitada = horaInicio.plusMinutes(duracion);
+
+		boolean haySolapamiento = horariosBloqueados.stream()
+				.anyMatch(bloque -> bloque.getHoraInicio().isBefore(horaFinSolicitada)
+						&& bloque.getHoraFin().isAfter(horaInicio));
+		return !haySolapamiento;
 	}
 }

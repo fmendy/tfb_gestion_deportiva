@@ -13,11 +13,11 @@ import jakarta.validation.Payload;
 
 
 @Documented
-@Constraint(validatedBy = EmpresaEmailUnicoValidator.class)
+@Constraint(validatedBy = ReservaSolicitudDisponibilidadValidator.class)
 @Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface EmpresaEmailUnicoValid {
-    String message() default "{error.validacion.reserva.solicitud.fecha}";
+public @interface ReservaSolicitudDisponibilidadValid {
+    String message() default "{error.validacion.reserva.disponibilidad}";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

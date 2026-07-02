@@ -105,6 +105,16 @@ public class Constantes {
 		}
 
 	}
+	
+	public static class ReservaEstado {
+		public static final String PENDIENTE = "PENDIENTE";
+
+		public static final String CONFIRMADA = "CONFIRMADA";
+
+		public static final String CANCELADA = "CANCELADA";
+
+		public static final String FINALIZADA = "FINALIZADA";
+	}
 
 	public static class Role {
 		public static final String ADMINISTRADOR = "ROLE_ADMINISTRADOR";

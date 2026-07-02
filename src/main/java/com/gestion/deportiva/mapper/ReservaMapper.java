@@ -11,7 +11,7 @@ import org.springframework.util.StringUtils;
 
 import com.gestion.deportiva.dto.ComboDTO;
 import com.gestion.deportiva.dto.ReservaDTO;
-import com.gestion.deportiva.dto.ReservaInstalacionDTO;
+import com.gestion.deportiva.dto.ReservaSolicitudDTO;
 import com.gestion.deportiva.model.Instalacion;
 import com.gestion.deportiva.model.Reserva;
 import com.gestion.deportiva.model.ReservaEstado;
@@ -71,9 +71,9 @@ public class ReservaMapper {
 		return null;
 	}
 
-	public ReservaInstalacionDTO instalacionModelToReservaInstalacionDTO(Instalacion instalacion,
-			ReservaInstalacionDTO dto) {
-		ReservaInstalacionDTO retVal = new ReservaInstalacionDTO();
+	public ReservaSolicitudDTO instalacionModelToReservaInstalacionDTO(Instalacion instalacion,
+			ReservaSolicitudDTO dto) {
+		ReservaSolicitudDTO retVal = new ReservaSolicitudDTO();
 		retVal.setDuracion(dto.getDuracion());
 		retVal.setFecha(dto.getFecha());
 		retVal.setHora(dto.getHora());

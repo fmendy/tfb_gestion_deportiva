@@ -3,14 +3,12 @@ package com.gestion.deportiva.controller.privado.reserva;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -18,15 +16,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.gestion.deportiva.controller.BaseController;
-import com.gestion.deportiva.dto.ReservaDTO;
-import com.gestion.deportiva.dto.ReservaInstalacionDTO;
+import com.gestion.deportiva.dto.ReservaSolicitudDTO;
 import com.gestion.deportiva.exception.PermisoException;
 import com.gestion.deportiva.service.ReservaService;
-import com.gestion.deportiva.util.BreadcrumbBuilder;
 import com.gestion.deportiva.util.Constantes;
 import com.gestion.deportiva.util.SecurityUtil;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 @Controller
@@ -40,25 +35,50 @@ public class PrivadoReservaController extends BaseController {
 
 	private static final String TITLE_PAGE = "page.title.privado.reserva.instalacion";
 
-	private static final String VIEW_FORM = "privado/reserva/reservaForm";
+	private static final String VIEW_SOLICITUD_FORM = "privado/reserva/solicitudForm";
 
 	@Autowired
 	private ReservaService reservaService;
 
-	@GetMapping("/instalacion/{instalacionId}")
+	@GetMapping("/solicitud")
 	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Reserva.GESTION_RESERVA_PROPIA + "')")
-	public ModelAndView reservaInstalacion(@PathVariable Long instalacionId, RedirectAttributes redirectAttributes,
-			ReservaInstalacionDTO dto) {
-		logger.info("accediendo a la reserva de una instalacionid {}, por el usuario {}", instalacionId,
+	public ModelAndView solicitud(RedirectAttributes redirectAttributes, ReservaSolicitudDTO dto) {
+		logger.info("accediendo a la reserva de una instalacionid {}, por el usuario {}", dto.getInstalacionId(),
 				SecurityUtil.getCurrentUserId());
-		return buildDetailsForm(instalacionId, dto);
+		return buildDetailsSolicitudForm(dto, null);
 
 	}
 
-	private ModelAndView buildDetailsForm(Long instalacionId, ReservaInstalacionDTO dto) {
-		ModelAndView mav = new ModelAndView(VIEW_FORM);
-		mav.addObject("form",
-				reservaService.getReservaInstalacionDTOByInstalacionIdAndReservaInstalacionDTO(instalacionId, dto));
+	@PostMapping("/solicitar")
+	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Reserva.GESTION_RESERVA_PROPIA + "')")
+	public ModelAndView solicitar(@Valid @ModelAttribute("form") ReservaSolicitudDTO dto, BindingResult bindingResult,
+			RedirectAttributes redirectAttributes) throws PermisoException {
+
+		logger.info("Creando solicitud de reserva en la instalacion id: {}, para el usuario id", dto.getInstalacionId(),
+				SecurityUtil.getCurrentUserId());
+		if (bindingResult.hasErrors()) {
+			return buildDetailsSolicitudForm(dto, bindingResult);
+		}
+		try {
+			Long id = reservaService.crearReservaEstadoPendiente(dto);
+			redirectAttributes.addFlashAttribute(Constantes.HTTP_STATUS, HttpStatus.OK.value());
+			return new ModelAndView(new RedirectView(BASE_URL + "/" + id + "/editar"));
+		} catch (Exception e) {
+			logger.error("Error al guardar la Instalacion : {}", e.getMessage(), e);
+			ModelAndView mav = buildDetailsSolicitudForm(dto, null);
+			mav.addObject(Constantes.HTTP_STATUS, HttpStatus.INTERNAL_SERVER_ERROR.value());
+			return mav;
+		}
+
+	}
+
+	private ModelAndView buildDetailsSolicitudForm(ReservaSolicitudDTO dto, BindingResult bindingResult) {
+		ModelAndView mav = new ModelAndView(VIEW_SOLICITUD_FORM);
+		mav.addObject("form", reservaService.getFullReservaSolicitudDTOByReservaSolictudDTO(dto));
+
+		if (bindingResult != null) {
+			mav.addObject("org.springframework.validation.BindingResult.form", bindingResult);
+		}
 		addBasicModelDetails(mav, TITLE_PAGE, false);
 		return mav;
 	}

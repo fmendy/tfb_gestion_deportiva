@@ -8,8 +8,8 @@
 		<div class="row justify-content-center">
 			<div class="col-lg-6">
 
-				<form th:action="@{/privado/reserva/instalacion/{id}/confirmar(id=*{instalacionId})}"
-					th:object="${form}" method="post" class="needs-validation">
+				<form th:action="@{/privado/reserva/solicitar}" th:object="${form}"
+					method="post" class="needs-validation">
 					<input type="hidden" th:field="*{instalacionId}" /> <input
 						type="hidden" th:field="*{fecha}" /> <input type="hidden"
 						th:field="*{hora}" /> <input type="hidden" th:field="*{duracion}" />
@@ -69,6 +69,19 @@
 										</div>
 									</div>
 								</div>
+
+								<div th:if="${#fields.hasErrors('*')}" class="col-12 mt-3">
+									<div
+										class="bg-danger bg-opacity-10 border-start border-4 border-danger rounded-3 p-3">
+										<div class="d-flex align-items-center text-danger mb-2">
+											<i class="bi bi-exclamation-triangle-fill me-2"></i> <span
+												class="fw-bold" th:text="#{error.reserva.no.puede.procesar}"></span>:
+										</div>
+										<ul class="mb-0 ps-3 text-danger small">
+											<li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
+										</ul>
+									</div>
+								</div>
 							</div>
 						</div>
 
@@ -81,11 +94,6 @@
 										th:text="#{boton.confirmar.reserva}">Confirmar</span>
 								</button>
 
-								<div sec:authorize="!hasAuthority('GESTION_RESERVA_PROPIA')"
-									class="alert alert-warning mb-0 text-center">
-									<i class="bi bi-exclamation-triangle"></i> No tiene permisos
-									para confirmar reservas.
-								</div>
 
 								<a
 									th:href="@{/publico/instalacion/{id}/disponibilidad?fecha={fecha}(id=*{instalacionId},fecha=*{fecha})}"
