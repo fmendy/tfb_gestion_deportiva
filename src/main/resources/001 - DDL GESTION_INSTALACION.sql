@@ -548,7 +548,7 @@ alter table reserva_estado add foreign key fk_reserva_estado_usuario_creacion (i
 alter table reserva_estado add foreign key fk_reserva_estado_usuario_modificacion (id_usuario_modificacion) references usuario(id);
 
 insert into reserva_estado(nombre) values 
-('PENDIENTE'),('APROBADA'),('COMPLETADA'),('CANCELADA POR USUARIO'),('CANCELADA POR EMPRESA'),('DENEGADA'),('USUARIO NO COMPARECE');
+('PENDIENTE'),('APROBADA'),('COMPLETADA'),('CANCELADA POR USUARIO'),('CANCELADA POR EMPRESA'),('DENEGADA'),('INCOMPLETADA');
 
 create table reserva(
 	id INT  not null auto_increment primary key,

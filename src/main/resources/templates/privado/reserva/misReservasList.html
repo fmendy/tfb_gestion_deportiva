@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" lang="es"
+	layout:decorate="~{layout/base}">
+<head>
+
+<script>
+	document.addEventListener("DOMContentLoaded", function() {
+		var popoverTriggerList = [].slice.call(document
+				.querySelectorAll('[data-bs-toggle="popover"]'))
+		var popoverList = popoverTriggerList.map(function(popoverTriggerEl) {
+			return new bootstrap.Popover(popoverTriggerEl, {
+				trigger : 'hover focus' // Se abre al pasar el ratón o hacer clic
+			})
+		});
+	});
+</script>
+
+</head>
+<body>
+	<div layout:fragment="content" class="container py-5">
+
+		<div
+			th:replace="~{fragments/breadcrumbs :: breadcrumbs(${breadcrumbs})}"></div>
+
+		<div class="card shadow-lg border-0 rounded-4 p-4">
+
+
+			<div
+				class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+
+				<h5 class="mb-0 fw-bold text-dark d-flex align-items-center">
+					<i class="bi bi-calendar-check text-primary me-2 fs-4"></i> <span
+						th:text="#{page.title.privado.reserva}"></span>
+				</h5>
+
+				<div th:replace="~{fragments/misreservas-tabs :: tabs('proximas')}"></div>
+			</div>
+
+
+
+
+			<div class="table-responsive">
+				<div class="table-responsive">
+					<table class="table table-hover align-middle mb-0">
+						<thead class="table-primary border-0">
+							<tr>
+								<th
+									th:replace="~{fragments/th-sort :: sort(#{reserva.tabla.fecha}, 'fecha')}"></th>
+								<th
+									th:replace="~{fragments/th-sort :: sort(#{reserva.tabla.hora.inicio}, 'horaInicio')}"></th>
+								<th
+									th:replace="~{fragments/th-sort :: sort(#{reserva.tabla.hora.fin}, 'horaFin')}"></th>
+								<th
+									th:replace="~{fragments/th-sort :: sort(#{reserva.tabla.instalacion}, 'instalacion.nombre')}"></th>
+								<th
+									th:replace="~{fragments/th-sort :: sort(#{reserva.tabla.estado}, 'reservaEstado.nombre')}"></th>
+								<th class="text-center"><i class="bi bi-gear"></i></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="element : ${page.content}">
+								<td class="text-muted"
+									th:text="${#temporals.format(element.fecha, 'dd/MM/yyyy')}"></td>
+								<td class="fw-bold"
+									th:text="${#temporals.format(element.horaInicio, 'HH:mm')}"></td>
+								<td class="fw-bold"
+									th:text="${#temporals.format(element.horaFin, 'HH:mm')}"></td>
+
+								<td><span class="text-primary cursor-pointer fw-semibold"
+									data-bs-toggle="popover" data-bs-placement="top"
+									data-bs-html="true"
+									th:data-bs-title="${element.instalacionNombre}"
+									th:data-bs-content="'<div class=&quot;small&quot;><div><strong>Tipo:</strong> ' + ${element.instalacionInstalacionTipoNombre} + '</div><div><strong>Sede:</strong> ' + ${element.instalacionSedeNombre} + '</div><div class=&quot;text-muted&quot;><strong>Empresa:</strong> ' + ${element.instalacionSedeEmpresaNombre} + '</div></div>'">
+										<span th:text="${element.instalacionNombre}"></span> <i
+										class="bi bi-info-circle ms-1 opacity-50"></i>
+								</span></td>
+
+								<td><span class="badge rounded-pill border"
+									th:classappend="${element.ReservaEstadoCss}"
+									th:text="${element.reservaEstadoNombre}"> </span></td>
+
+								<td class="text-center">
+
+									<div th:if="${element.mostrarEliminar}">
+
+										<button type="button"
+											class="btn btn-sm btn-outline-danger rounded-circle d-inline-flex align-items-center justify-content-center hover-scale"
+											style="width: 32px; height: 32px;" data-bs-toggle="modal"
+											th:attr="data-bs-target='#confirmarEliminarModal-' + ${element.id}"
+											th:title="#{reserva.modal.boton.eliminar}">
+											<i class="bi bi-trash"></i>
+										</button>
+
+										<div
+											th:replace="~{fragments/modals :: modalConfirmacion(
+                        'confirmarEliminarModal-' + ${element.id},
+                        #{reserva.modal.titulo.eliminar},
+                        #{reserva.modal.body.eliminar},
+                        @{/privado/reserva/{id}/eliminar(id=${element.id})},
+                        #{reserva.modal.boton.eliminar}
+                      )}">
+										</div>
+									</div>
+									<div th:if="${element.mostrarCancelarPorUsuario}">
+										<button type="button"
+											class="btn btn-sm rounded-circle d-inline-flex align-items-center justify-content-center hover-scale"
+											style="width: 32px; height: 32px;" data-bs-toggle="modal"
+											th:attr="data-bs-target='#confirmarEliminarModal-' + ${element.id}"
+											th:title="#{reserva.modal.boton.cancelar.usuario}">
+											<i class="bi bi-x-circle"></i>
+										</button>
+
+										<div
+											th:replace="~{fragments/modals :: modalConfirmacion(
+                        'confirmarEliminarModal-' + ${element.id},
+                        #{reserva.modal.titulo.cancelar.usuario},
+                        #{reserva.modal.body.cancelar.usuario},
+                        @{/privado/reserva/{id}/cancelarporusuario(id=${element.id})},
+                        #{reserva.modal.boton.cancelar.usuario}
+                      )}">
+										</div>
+									</div>
+
+
+
+
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			<div
+				th:replace="~{fragments/pagination :: pagination(${page}, ${url}, ${sort})}"></div>
+
+
+
+		</div>
+	</div>
+</body>
+</html>

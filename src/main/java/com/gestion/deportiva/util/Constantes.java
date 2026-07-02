@@ -109,11 +109,17 @@ public class Constantes {
 	public static class ReservaEstado {
 		public static final String PENDIENTE = "PENDIENTE";
 
-		public static final String CONFIRMADA = "CONFIRMADA";
+		public static final String APROBADA = "APROBADA";
 
-		public static final String CANCELADA = "CANCELADA";
+		public static final String CANCELADA_POR_USUARIO = "CANCELADA POR USUARIO";
+		
+		public static final String CANCELADA_POR_EMPRESA = "CANCELADA POR EMPRESA";
 
-		public static final String FINALIZADA = "FINALIZADA";
+		public static final String COMPLETADA = "COMPLETADA";
+		
+		public static final String INCOMPLETADA = "INCOMPLETADA";
+		
+		public static final String DENEGADA = "DENEGADA";
 	}
 
 	public static class Role {

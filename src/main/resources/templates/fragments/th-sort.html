@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+<style>
+</style>
+<body>
+	<th th:fragment="sort(titulo, campo)" class="text-nowrap"><span
+		th:text="${titulo}"></span> <span class="sort-icons"> <a
+			class="text-decoration-none text-muted"
+			th:href="${url}+'&sort='+${campo}+',ASC'"><i
+				class="bi bi-arrow-down-short"></i></a> <a
+			class="text-decoration-none text-muted"
+			th:href="${url}+'&sort='+${campo}+',DESC'"><i
+				class="bi bi-arrow-up-short"></i></a>
+	</span></th>
+</body>
+</html>

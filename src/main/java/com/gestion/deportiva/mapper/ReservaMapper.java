@@ -10,11 +10,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import com.gestion.deportiva.dto.ComboDTO;
+import com.gestion.deportiva.dto.MiReservaDTO;
 import com.gestion.deportiva.dto.ReservaDTO;
 import com.gestion.deportiva.dto.ReservaSolicitudDTO;
 import com.gestion.deportiva.model.Instalacion;
 import com.gestion.deportiva.model.Reserva;
 import com.gestion.deportiva.model.ReservaEstado;
+import com.gestion.deportiva.util.Constantes;
 
 @Component
 public class ReservaMapper {
@@ -23,12 +25,14 @@ public class ReservaMapper {
 		ReservaDTO retVal = new ReservaDTO();
 		retVal.setId(model.getId());
 		retVal.setUuid(model.getUuid());
-		retVal.setEmpresaId(model.getInstalacion().getSede().getEmpresa().getId());
-		retVal.setEmpresaNombre(model.getInstalacion().getSede().getEmpresa().getNombre());
-		retVal.setSedeId(model.getInstalacion().getSede().getId());
-		retVal.setSedeNombre(model.getInstalacion().getSede().getNombre());
+		retVal.setInstalacionSedeEmpresaId(model.getInstalacion().getSede().getEmpresa().getId());
+		retVal.setInstalacionSedeEmpresaNombre(model.getInstalacion().getSede().getEmpresa().getNombre());
+		retVal.setInstalacionSedeId(model.getInstalacion().getSede().getId());
+		retVal.setInstalacionSedeNombre(model.getInstalacion().getSede().getNombre());
 		retVal.setInstalacionId(model.getInstalacion().getId());
 		retVal.setInstalacionNombre(model.getInstalacion().getNombre());
+		retVal.setInstalacionInstalacionTipoId(model.getInstalacion().getInstalacionTipo().getId());
+		retVal.setInstalacionInstalacionTipoNombre(model.getInstalacion().getInstalacionTipo().getNombre());
 		retVal.setHoraInicio(model.getHoraInicio());
 		retVal.setHoraFin(model.getHoraFin());
 		retVal.setFecha(model.getFecha());
@@ -42,6 +46,14 @@ public class ReservaMapper {
 		List<ReservaDTO> retVal = new ArrayList<>();
 		for (Reserva bean : list) {
 			retVal.add(modelToDTO(bean));
+		}
+		return retVal;
+	}
+
+	public List<MiReservaDTO> listModelToListMiReservaDTO(List<Reserva> list) {
+		List<MiReservaDTO> retVal = new ArrayList<>();
+		for (Reserva bean : list) {
+			retVal.add(modelToMiReservaDTO(bean));
 		}
 		return retVal;
 	}
@@ -85,6 +97,39 @@ public class ReservaMapper {
 		retVal.setInstalacionInstalacionTipoNombre(instalacion.getInstalacionTipo().getNombre());
 		return retVal;
 
+	}
+
+	public MiReservaDTO modelToMiReservaDTO(Reserva model) {
+		MiReservaDTO retVal = new MiReservaDTO();
+		retVal.setId(model.getId());
+		retVal.setUuid(model.getUuid());
+		retVal.setInstalacionSedeEmpresaId(model.getInstalacion().getSede().getEmpresa().getId());
+		retVal.setInstalacionSedeEmpresaNombre(model.getInstalacion().getSede().getEmpresa().getNombre());
+		retVal.setInstalacionSedeId(model.getInstalacion().getSede().getId());
+		retVal.setInstalacionSedeNombre(model.getInstalacion().getSede().getNombre());
+		retVal.setInstalacionId(model.getInstalacion().getId());
+		retVal.setInstalacionNombre(model.getInstalacion().getNombre());
+		retVal.setInstalacionInstalacionTipoId(model.getInstalacion().getInstalacionTipo().getId());
+		retVal.setInstalacionInstalacionTipoNombre(model.getInstalacion().getInstalacionTipo().getNombre());
+		retVal.setHoraInicio(model.getHoraInicio());
+		retVal.setHoraFin(model.getHoraFin());
+		retVal.setFecha(model.getFecha());
+		retVal.setReservaEstadoId(model.getReservaEstado().getId());
+		retVal.setReservaEstadoNombre(model.getReservaEstado().getNombre());
+		retVal.setMostrarEliminar(model.getReservaEstado().getNombre().equalsIgnoreCase(Constantes.ReservaEstado.PENDIENTE));
+		retVal.setMostrarCancelarPorUsuario(model.getReservaEstado().getNombre().equalsIgnoreCase(Constantes.ReservaEstado.APROBADA));
+		retVal.setReservaEstadoCss(model.getReservaEstado().getNombre().equals(Constantes.ReservaEstado.APROBADA)
+				? "bg-success-subtle text-success border-success-subtle"
+				: model.getReservaEstado().getNombre().equals(Constantes.ReservaEstado.PENDIENTE)
+						? "bg-warning-subtle text-warning border-warning-subtle"
+						: "bg-secondary-subtle text-secondary border-secondary-subtle");
+
+		return retVal;
+	}
+
+	public Page<MiReservaDTO> pageToPageMiReservaDTO(Page<Reserva> page) {
+		return new PageImpl<MiReservaDTO>(listModelToListMiReservaDTO(page.getContent()), page.getPageable(),
+				page.getTotalElements());
 	}
 
 }

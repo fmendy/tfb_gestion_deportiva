@@ -243,7 +243,6 @@ label {
 	letter-spacing: 0.5px;
 }
 
-
 /* Dropdowns: fondo claro con sombras suaves */
 .navbar-dark .dropdown-menu {
 	background-color: #fff !important;
@@ -268,42 +267,75 @@ label {
 	border: none;
 }
 
-
 /* Botón Guardar Moderno */
 .btn-moderno-guardar {
-    background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
-    color: #ffffff;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    padding: 0.6rem 1.8rem;
-    border: none;
-    border-radius: 10px; /* Bordes suaves modernos */
-    box-shadow: 0 4px 14px rgba(13, 110, 253, 0.3);
-    transition: all 0.25s ease-in-out;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+	background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+	color: #ffffff;
+	font-weight: 600;
+	letter-spacing: 0.5px;
+	padding: 0.6rem 1.8rem;
+	border: none;
+	border-radius: 10px; /* Bordes suaves modernos */
+	box-shadow: 0 4px 14px rgba(13, 110, 253, 0.3);
+	transition: all 0.25s ease-in-out;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .btn-moderno-guardar:hover {
-    background: linear-gradient(135deg, #1175fc 0%, #0c63e4 100%);
-    color: #ffffff;
-    transform: translateY(-2px); /* Se eleva sutilmente */
-    box-shadow: 0 6px 20px rgba(13, 110, 253, 0.4);
+	background: linear-gradient(135deg, #1175fc 0%, #0c63e4 100%);
+	color: #ffffff;
+	transform: translateY(-2px); /* Se eleva sutilmente */
+	box-shadow: 0 6px 20px rgba(13, 110, 253, 0.4);
 }
 
 .btn-moderno-guardar:active {
-    transform: translateY(1px); /* Efecto de hundimiento */
-    box-shadow: 0 2px 10px rgba(13, 110, 253, 0.2);
+	transform: translateY(1px); /* Efecto de hundimiento */
+	box-shadow: 0 2px 10px rgba(13, 110, 253, 0.2);
 }
 
 .btn-moderno-guardar i {
-    font-size: 1.1rem;
-    transition: transform 0.2s ease;
+	font-size: 1.1rem;
+	transition: transform 0.2s ease;
 }
 
 .btn-moderno-guardar:hover i {
-    transform: scale(1.15);
+	transform: scale(1.15);
 }
 
 /* End Botón Guardar Moderno */
+
+/* Limpieza de cabecera */
+th .sort-icons {
+	opacity: 0;
+	transition: opacity 0.2s;
+}
+
+th:hover .sort-icons {
+	opacity: 1;
+}
+
+/* Mejora de botones */
+.btn-outline-primary, .btn-outline-danger {
+	transition: all 0.2s;
+}
+
+.btn-outline-primary:hover {
+	transform: scale(1.1);
+}
+
+.btn-outline-danger:hover {
+	transform: scale(1.1);
+}
+
+/* Ajuste móvil */
+@media ( max-width : 768px) {
+	.table-responsive {
+		border: 0;
+	}
+	/* Si tienes muchas columnas, oculta las menos importantes en móvil */
+	.hide-mobile {
+		display: none;
+	}
+}

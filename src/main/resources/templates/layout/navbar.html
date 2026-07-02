@@ -91,12 +91,21 @@
 							<span th:text="#{navbar.login}">Iniciar sesión</span>
 					</a></li>
 					
-					<!-- Empresa -->
+					<!-- Mapa de sedes -->
 					<li class="nav-item" ><a
 						class="nav-link text-white d-flex align-items-center"
 						th:href="@{/publico/sede/mapa}"> <i
 							class="bi bi-map me-1"></i> <span
 							th:text="#{navbar.sede.mapa}">Sede sede</span>
+					</a></li>
+					
+					
+						<!-- Mis reservas -->
+					<li class="nav-item" sec:authorize="hasAuthority('GESTION_RESERVA_PROPIA')"><a
+						class="nav-link text-white d-flex align-items-center"
+						th:href="@{/privado/reserva/misreservas}"> <i
+							class="bi bi-clock-history me-1"></i> <span
+							th:text="#{navbar.mis.reservas}">Mis Reservas</span>
 					</a></li>
 					
 					

@@ -15,13 +15,17 @@ public class ReservaDTO extends BaseDTO {
 
 	private static final long serialVersionUID = 5026431591115314363L;
 
-	private String empresaNombre;
+	private String instalacionSedeEmpresaNombre;
 
-	private Long empresaId;
-	
-	private String sedeNombre;
+	private Long instalacionSedeEmpresaId;
 
-	private Long sedeId;
+	private String instalacionSedeNombre;
+
+	private String instalacionInstalacionTipoNombre;
+
+	private Long instalacionInstalacionTipoId;
+
+	private Long instalacionSedeId;
 
 	private String instalacionNombre;
 
@@ -29,19 +33,19 @@ public class ReservaDTO extends BaseDTO {
 	private Long instalacionId;
 
 	private LocalTime horaInicio;
-	
+
 	private LocalTime horaFin;
-	
+
 	@NotNull
 	private LocalDate fecha;
-	
+
 	@NotNull
 	private Long reservaEstadoId;
-	
+
 	private String reservaEstadoNombre;
-	
+
 	@NotNull
 	private Long usuarioId;
-	
+
 	private String usuarioNombre;
 }

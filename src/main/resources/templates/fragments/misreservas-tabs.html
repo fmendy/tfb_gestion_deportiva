@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<style>
+.transition-all {
+	transition: all 0.2s ease-in-out;
+}
+
+.nav-link:hover {
+	color: var(--bs-primary) !important;
+}
+</style>
+</head>
+<body>
+
+<div th:fragment="tabs(activeTab)" class="d-inline-flex">
+    <div class="nav nav-pills bg-light p-1 rounded-pill shadow-sm border border-light">
+        
+        <a th:href="@{/privado/reserva/misreservas}"
+           class="nav-link rounded-pill px-4 transition-all"
+           th:classappend="${activeTab == 'proximas' ? 'active bg-primary text-white' : 'text-secondary'}">
+           <i class="bi bi-calendar-event me-2"></i>
+           <span th:text="#{reserva.tab.proximas}">Próximas</span>
+        </a>
+
+        <a th:href="@{/privado/reserva/misreservas/pasadas}"
+           class="nav-link rounded-pill px-4 transition-all"
+           th:classappend="${activeTab == 'pasadas' ? 'active bg-primary text-white' : 'text-secondary'}">
+           <i class="bi bi-clock-history me-2"></i>
+           <span th:text="#{reserva.tab.pasadas}">Pasadas</span>
+        </a>
+        
+    </div>
+</div>
+
+
+
+</body>
+</html>
