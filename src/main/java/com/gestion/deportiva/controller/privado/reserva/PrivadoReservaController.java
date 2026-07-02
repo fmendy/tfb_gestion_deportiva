@@ -82,9 +82,18 @@ public class PrivadoReservaController extends BaseController {
 
 	@GetMapping("/misreservas")
 	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Reserva.GESTION_RESERVA_PROPIA + "')")
-	public ModelAndView misReservas(Pageable pageable, HttpServletRequest request, ReservaFilter filter) {
+	public ModelAndView misReservas(Pageable pageable, HttpServletRequest request) {
 		logger.info("accediendo a las reservas actuales del usuario {}", SecurityUtil.getCurrentUserId());
-		return buildListMisReservasView(filter, pageable, request);
+		return buildListMisReservasView(reservaService.getReservaFilterParaMisReservas(), pageable, request, false);
+
+	}
+
+	@GetMapping("/misreservas/pasadas")
+	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Reserva.GESTION_RESERVA_PROPIA + "')")
+	public ModelAndView misReservasPasAndView(Pageable pageable, HttpServletRequest request) {
+		logger.info("accediendo a las reservas actuales del usuario {}", SecurityUtil.getCurrentUserId());
+		return buildListMisReservasView(reservaService.getReservaFilterParaMisReservasPasadas(), pageable, request,
+				true);
 
 	}
 
@@ -140,10 +149,13 @@ public class PrivadoReservaController extends BaseController {
 		return mav;
 	}
 
-	private ModelAndView buildListMisReservasView(ReservaFilter filter, Pageable pageable, HttpServletRequest request) {
+	private ModelAndView buildListMisReservasView(ReservaFilter filter, Pageable pageable, HttpServletRequest request,
+			boolean reservasPasadas) {
 		ModelAndView mav = new ModelAndView(VIEW_MIS_RESERVAS_LIST);
-		mav.addObject("page", reservaService.getPageMiReservaDTOByFilter(filter, pageable));
+		mav.addObject("page", reservasPasadas ? reservaService.getPageMiReservaDTOByFilter(filter, pageable)
+				: reservaService.getPageMiReservaDTOByFilter(filter, pageable));
 		mav.addObject("filter", filter);
+		mav.addObject("reservasPasadas", reservasPasadas);
 		mav.addObject("url", ReservaUtil.cleanUrlPageFilter(filter, request.getRequestURI()));
 		mav.addObject("breadcrumbs",
 				BreadcrumbBuilder.start().includeHome().add("breadcrumb.reservas.mis.reservas", null).build());

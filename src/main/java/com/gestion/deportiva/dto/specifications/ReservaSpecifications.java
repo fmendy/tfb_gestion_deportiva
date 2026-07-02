@@ -28,7 +28,7 @@ public class ReservaSpecifications extends BaseSpecifications<Reserva> {
 		}
 
 		if (filter.getFechaHasta() != null) {
-			specs.add(new ReservaSpecifications().greaterThanOrEqualTo("fecha", filter.getFechaHasta()));
+			specs.add(new ReservaSpecifications().lessThanOrEqualTo("fecha", filter.getFechaHasta()));
 		}
 
 		if (filter.getReservaEstadoId() != null) {

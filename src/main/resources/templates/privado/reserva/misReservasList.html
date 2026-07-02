@@ -35,7 +35,7 @@
 						th:text="#{page.title.privado.reserva}"></span>
 				</h5>
 
-				<div th:replace="~{fragments/misreservas-tabs :: tabs('proximas')}"></div>
+				<div th:replace="~{fragments/misreservas-tabs :: tabs(${reservasPasadas})}"></div>
 			</div>
 
 
@@ -56,7 +56,7 @@
 									th:replace="~{fragments/th-sort :: sort(#{reserva.tabla.instalacion}, 'instalacion.nombre')}"></th>
 								<th
 									th:replace="~{fragments/th-sort :: sort(#{reserva.tabla.estado}, 'reservaEstado.nombre')}"></th>
-								<th class="text-center"><i class="bi bi-gear"></i></th>
+								<th th:if="${!reservasPasadas}" class="text-center"><i class="bi bi-gear"></i></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -81,7 +81,7 @@
 									th:classappend="${element.ReservaEstadoCss}"
 									th:text="${element.reservaEstadoNombre}"> </span></td>
 
-								<td class="text-center">
+								<td th:if="${!reservasPasadas}" class="text-center">
 
 									<div th:if="${element.mostrarEliminar}">
 
