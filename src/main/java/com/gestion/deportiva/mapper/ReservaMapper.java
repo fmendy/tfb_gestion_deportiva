@@ -104,6 +104,8 @@ public class ReservaMapper {
 		ReservaListadoDTO retVal = new ReservaListadoDTO();
 		retVal.setId(model.getId());
 		retVal.setUuid(model.getUuid());
+		retVal.setUsuarioId(model.getUsuarioCreacion().getId());
+		retVal.setUsuarioNombre(model.getUsuarioCreacion().getNombre());
 		retVal.setInstalacionSedeEmpresaId(model.getInstalacion().getSede().getEmpresa().getId());
 		retVal.setInstalacionSedeEmpresaNombre(model.getInstalacion().getSede().getEmpresa().getNombre());
 		retVal.setInstalacionSedeId(model.getInstalacion().getSede().getId());

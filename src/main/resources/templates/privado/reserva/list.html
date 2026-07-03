@@ -124,6 +124,9 @@
 								th:replace="~{fragments/th-sort :: sort(#{reserva.tabla.hora.inicio}, 'horaInicio')}"></th>
 							<th
 								th:replace="~{fragments/th-sort :: sort(#{reserva.tabla.hora.fin}, 'horaFin')}"></th>
+
+							<th
+								th:replace="~{fragments/th-sort :: sort(#{reserva.tabla.usuario}, 'usuarioCreacion.nombre')}"></th>
 							<th
 								th:replace="~{fragments/th-sort :: sort(#{reserva.tabla.empresa}, 'instalacion.sede.empresa.nombre')}"></th>
 							<th
@@ -144,6 +147,11 @@
 								th:text="${#temporals.format(element.horaInicio, 'HH:mm')}"></td>
 							<td class="fw-bold"
 								th:text="${#temporals.format(element.horaFin, 'HH:mm')}"></td>
+							<td class="fw-bold"><a
+								class="text-decoration-none text-muted opacity-75"
+								th:href="${url}+'&usuarioCreacionId='+${element.usuarioId}">
+									<span th:text="${element.usuarioNombre}"></span>
+							</a></td>
 							<td class="fw-bold"
 								th:text="${element.instalacionSedeEmpresaNombre}"></td>
 							<td class="fw-bold" th:text="${element.instalacionSedeNombre}"></td>
