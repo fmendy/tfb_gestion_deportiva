@@ -53,13 +53,13 @@
 						</div>
 						<div class="col-md-4">
 							<small class="text-muted d-block"><span
-								th:text="#{sancion.form.empresa}"></span></small> <span
-								class="fw-bold" th:text="${form.reservaInstalacionSedeEmpresaNombre}">Empresa</span>
+								th:text="#{sancion.form.empresa}"></span></small> <span class="fw-bold"
+								th:text="${form.reservaInstalacionSedeEmpresaNombre}">Empresa</span>
 						</div>
 						<div class="col-md-4">
 							<small class="text-muted d-block"><span
-								th:text="#{sancion.form.sede}"></span></small> <span
-								class="fw-bold" th:text="${form.reservaInstalacionSedeNombre}">Sede</span>
+								th:text="#{sancion.form.sede}"></span></small> <span class="fw-bold"
+								th:text="${form.reservaInstalacionSedeNombre}">Sede</span>
 						</div>
 						<div class="col-md-4">
 							<small class="text-muted d-block"><span
@@ -74,7 +74,8 @@
 						<div class="col-md-4">
 							<small class="text-muted d-block"><span
 								th:text="#{sancion.form.reserva.estado}"></span></small> <span
-								class="fw-bold" th:text="${form.reservaReservaEstadoNombre}">Reserva estado</span>
+								class="fw-bold" th:text="${form.reservaReservaEstadoNombre}">Reserva
+								estado</span>
 						</div>
 					</div>
 				</div>
@@ -97,7 +98,7 @@
 							class="text-danger">*</span></label> <input type="date"
 							th:field="*{fechaInicio}" class="form-control rounded-pill"
 							required>
-							<div class="text-danger small mt-1"
+						<div class="text-danger small mt-1"
 							th:if="${#fields.hasErrors('fechaInicio')}"
 							th:errors="*{fechaInicio}">
 							<i class="bi bi-exclamation-circle me-1"></i> Error
@@ -108,9 +109,8 @@
 						<label class="form-label fw-bold">Fecha Fin <span
 							class="text-danger">*</span></label> <input type="date"
 							th:field="*{fechaFin}" class="form-control rounded-pill" required>
-							<div class="text-danger small mt-1"
-							th:if="${#fields.hasErrors('fechaFin')}"
-							th:errors="*{fechaFin}">
+						<div class="text-danger small mt-1"
+							th:if="${#fields.hasErrors('fechaFin')}" th:errors="*{fechaFin}">
 							<i class="bi bi-exclamation-circle me-1"></i> Error
 						</div>
 					</div>
@@ -143,9 +143,11 @@
 
 					<div class="col-12 d-flex justify-content-end gap-2 mt-4">
 						<a th:href="@{/privado/sancion}"
-							class="btn btn-outline-secondary rounded-pill px-4"><span th:text="#{boton.cancelar}"></span></a>
+							class="btn btn-outline-secondary rounded-pill px-4"><span
+							th:text="#{boton.cancelar}"></span></a>
 						<button type="submit" class="btn btn-primary rounded-pill px-5">
-							<span th:text="#{boton.guardar}"></span></button>
+							<span th:text="#{boton.guardar}"></span>
+						</button>
 					</div>
 				</form>
 			</div>
