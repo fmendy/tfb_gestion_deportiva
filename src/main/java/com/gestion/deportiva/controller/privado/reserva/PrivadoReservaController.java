@@ -18,14 +18,19 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.gestion.deportiva.controller.BaseController;
+import com.gestion.deportiva.dto.InstalacionTipoDTO;
+import com.gestion.deportiva.dto.ReservaEstadoDTO;
 import com.gestion.deportiva.dto.ReservaSolicitudDTO;
 import com.gestion.deportiva.dto.filter.ReservaFilter;
 import com.gestion.deportiva.exception.PermisoException;
+import com.gestion.deportiva.service.InstalacionTipoService;
+import com.gestion.deportiva.service.ReservaEstadoService;
 import com.gestion.deportiva.service.ReservaService;
 import com.gestion.deportiva.util.BreadcrumbBuilder;
 import com.gestion.deportiva.util.Constantes;
 import com.gestion.deportiva.util.ReservaUtil;
 import com.gestion.deportiva.util.SecurityUtil;
+import com.gestion.deportiva.util.Utils;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -44,9 +49,17 @@ public class PrivadoReservaController extends BaseController {
 	private static final String VIEW_SOLICITUD_FORM = "privado/reserva/solicitudForm";
 
 	private static final String VIEW_MIS_RESERVAS_LIST = "privado/reserva/misReservasList";
+	
+	private static final String VIEW_LIST = "privado/reserva/list";
 
 	@Autowired
 	private ReservaService reservaService;
+
+	@Autowired
+	private InstalacionTipoService instalacionTipoService;
+
+	@Autowired
+	private ReservaEstadoService reservaEstadoService;
 
 	@GetMapping("/solicitud")
 	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Reserva.GESTION_RESERVA_PROPIA + "')")
@@ -138,6 +151,28 @@ public class PrivadoReservaController extends BaseController {
 
 	}
 
+	@GetMapping("")
+	public ModelAndView search(Pageable pageable, HttpServletRequest request, ReservaFilter filter) {
+		logger.info("Mostrando vista de listado de reserva con filtros, usuario {}", SecurityUtil.getCurrentUserId());
+		return buildListView(filter, pageable, request);
+	}
+
+	private ModelAndView buildListView(ReservaFilter filter, Pageable pageable, HttpServletRequest request) {
+		ModelAndView mav = new ModelAndView(VIEW_LIST);
+		mav.addObject("page", reservaService.getPageByFilter(filter, pageable));
+		mav.addObject("filter", filter);
+		mav.addObject("url", ReservaUtil.cleanUrlPageFilter(filter, request.getRequestURI()));
+		mav.addObject("breadcrumbs",
+				BreadcrumbBuilder.start().includeHome().add("breadcrumb.gestion.reserva", null).build());
+		mav.addObject("listInstalacionTipo",
+				Utils.addEmptyOptionIfMoreThanOneOption(instalacionTipoService.getListDTO(), InstalacionTipoDTO.class));
+		mav.addObject("listInstalacionTipo",
+				Utils.addEmptyOptionIfMoreThanOneOption(reservaEstadoService.getListDTO(), ReservaEstadoDTO.class));
+		addSortParameter(mav, pageable);
+		addBasicModelDetails(mav, TITLE_PAGE, false);
+		return mav;
+	}
+
 	private ModelAndView buildDetailsSolicitudForm(ReservaSolicitudDTO dto, BindingResult bindingResult) {
 		ModelAndView mav = new ModelAndView(VIEW_SOLICITUD_FORM);
 		mav.addObject("form", reservaService.getFullReservaSolicitudDTOByReservaSolictudDTO(dto));
@@ -152,8 +187,8 @@ public class PrivadoReservaController extends BaseController {
 	private ModelAndView buildListMisReservasView(ReservaFilter filter, Pageable pageable, HttpServletRequest request,
 			boolean reservasPasadas) {
 		ModelAndView mav = new ModelAndView(VIEW_MIS_RESERVAS_LIST);
-		mav.addObject("page", reservasPasadas ? reservaService.getPageMiReservaDTOByFilter(filter, pageable)
-				: reservaService.getPageMiReservaDTOByFilter(filter, pageable));
+		mav.addObject("page", reservasPasadas ? reservaService.getPageMiReservaListadoDTOByFilter(filter, pageable)
+				: reservaService.getPageMiReservaListadoDTOByFilter(filter, pageable));
 		mav.addObject("filter", filter);
 		mav.addObject("reservasPasadas", reservasPasadas);
 		mav.addObject("url", ReservaUtil.cleanUrlPageFilter(filter, request.getRequestURI()));

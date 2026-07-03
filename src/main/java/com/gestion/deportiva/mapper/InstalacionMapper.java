@@ -118,8 +118,8 @@ public class InstalacionMapper {
 
 		LocalDate hoy = LocalDate.now();
 
-		// 👉 Inicio: 2 meses atrás
-		LocalDate inicio = hoy.minusMonths(2);
+		// 👉 Inicio:
+		LocalDate inicio = hoy;
 
 		// 👉 Fin: final del año siguiente
 		LocalDate fin = LocalDate.of(hoy.getYear() + 1, 12, 31);

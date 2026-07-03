@@ -6,7 +6,7 @@ import java.time.LocalTime;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.gestion.deportiva.dto.MiReservaDTO;
+import com.gestion.deportiva.dto.ReservaListadoDTO;
 import com.gestion.deportiva.dto.ReservaDTO;
 import com.gestion.deportiva.dto.ReservaSolicitudDTO;
 import com.gestion.deportiva.dto.filter.ReservaFilter;
@@ -27,12 +27,14 @@ public interface ReservaService extends BaseService<ReservaDTO, ReservaFilter> {
 
 	ReservaFilter getReservaFilterParaMisReservasPasadas();
 
-	Page<MiReservaDTO> getPageMiReservaDTOByFilter(ReservaFilter filter, Pageable pageable);
+	Page<ReservaListadoDTO> getPageMiReservaListadoDTOByFilter(ReservaFilter filter, Pageable pageable);
 
 	boolean canEliminarReserva(Long reservaId);
 
 	boolean canCancelarReservaPropia(Long reservaId);
 
 	void cancelarPorUsuario(Long id);
+
+	Page<ReservaListadoDTO> getPageListadoByFilter(ReservaFilter filter, Pageable pageable);
 
 }

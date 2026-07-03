@@ -11,7 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.gestion.deportiva.dto.MiReservaDTO;
+import com.gestion.deportiva.dto.ReservaListadoDTO;
 import com.gestion.deportiva.dto.ReservaDTO;
 import com.gestion.deportiva.dto.ReservaSolicitudDTO;
 import com.gestion.deportiva.dto.filter.ReservaFilter;
@@ -80,12 +80,37 @@ public class ReservaServiceImpl implements ReservaService {
 
 	@Override
 	public Page<ReservaDTO> getPageByFilter(ReservaFilter filter, Pageable pageable) {
-		return reservaMapper.pageToPageDTO(reservaRepository.findAll(ReservaSpecifications.filter(filter), pageable));
+		return reservaMapper.pageToPageDTO(
+				reservaRepository.findAll(ReservaSpecifications.filter(limitacionesPermisos(filter)), pageable));
 	}
-	
+
 	@Override
-	public Page<MiReservaDTO> getPageMiReservaDTOByFilter(ReservaFilter filter, Pageable pageable) {
-		return reservaMapper.pageToPageMiReservaDTO(reservaRepository.findAll(ReservaSpecifications.filter(filter), pageable));
+	public Page<ReservaListadoDTO> getPageListadoByFilter(ReservaFilter filter, Pageable pageable) {
+		return reservaMapper.pageToPageReservaListadoDTO(
+				reservaRepository.findAll(ReservaSpecifications.filter(limitacionesPermisos(filter)), pageable));
+	}
+
+	private ReservaFilter limitacionesPermisos(ReservaFilter filter) {
+		if (SecurityUtil.hasAuthority(Constantes.Permiso.GESTION_GLOBAL)
+				|| SecurityUtil.hasAuthority(Constantes.Permiso.Reserva.GESTION_RESERVA_EMPRESA)) {
+			return filter;
+		}
+		if (SecurityUtil.hasAuthority(Constantes.Permiso.Reserva.GESTION_RESERVA_EMPRESA)) {
+			filter.setListEmpresaIds(SecurityUtil.getCurrentUserListEmpresaId());
+		} else if (SecurityUtil.hasAuthority(Constantes.Permiso.Reserva.GESTION_RESERVA_SEDE)) {
+			filter.setListSedeIds(SecurityUtil.getCurrentUserListSedeId());
+		} else if (SecurityUtil.hasAuthority(Constantes.Permiso.Reserva.GESTION_RESERVA_INSTALACION)) {
+			filter.setListInstalacionIds(SecurityUtil.getCurrentUserListInstalacionId());
+		} else {
+			filter.setListInstalacionIds(List.of(-1L));
+		}
+		return filter;
+	}
+
+	@Override
+	public Page<ReservaListadoDTO> getPageMiReservaListadoDTOByFilter(ReservaFilter filter, Pageable pageable) {
+		return reservaMapper
+				.pageToPageReservaListadoDTO(reservaRepository.findAll(ReservaSpecifications.filter(filter), pageable));
 	}
 
 	@Override
@@ -186,7 +211,7 @@ public class ReservaServiceImpl implements ReservaService {
 		filter.setFechaDesde(LocalDate.now());
 		return filter;
 	}
-	
+
 	@Override
 	public ReservaFilter getReservaFilterParaMisReservasPasadas() {
 		ReservaFilter filter = new ReservaFilter();
@@ -194,33 +219,35 @@ public class ReservaServiceImpl implements ReservaService {
 		filter.setFechaHasta(LocalDate.now().minusDays(1L));
 		return filter;
 	}
-	
+
 	@Override
 	public boolean canEliminarReserva(Long reservaId) {
 		Reserva reserva = reservaRepository.findByActivoTrueAndId(reservaId);
 		if (reserva == null) {
 			return false;
 		}
-		return reserva.getUsuarioCreacion().getId().equals(SecurityUtil.getCurrentUserId()) && reserva.getReservaEstado().getNombre().equals(Constantes.ReservaEstado.PENDIENTE);
+		return reserva.getUsuarioCreacion().getId().equals(SecurityUtil.getCurrentUserId())
+				&& reserva.getReservaEstado().getNombre().equals(Constantes.ReservaEstado.PENDIENTE);
 	}
-	
+
 	@Override
 	public boolean canCancelarReservaPropia(Long reservaId) {
 		Reserva reserva = reservaRepository.findByActivoTrueAndId(reservaId);
 		if (reserva == null) {
 			return false;
 		}
-		return reserva.getUsuarioCreacion().getId().equals(SecurityUtil.getCurrentUserId()) && reserva.getReservaEstado().getNombre().equals(Constantes.ReservaEstado.APROBADA);
+		return reserva.getUsuarioCreacion().getId().equals(SecurityUtil.getCurrentUserId())
+				&& reserva.getReservaEstado().getNombre().equals(Constantes.ReservaEstado.APROBADA);
 	}
 
 	@Override
 	public void cancelarPorUsuario(Long id) {
 		Reserva reserva = reservaRepository.findByActivoTrueAndId(id);
-		ReservaEstado estadoCancelado = reservaEstadoRepository.findByActivoTrueAndNombreEqualsIgnoreCase(Constantes.ReservaEstado.CANCELADA_POR_USUARIO);
+		ReservaEstado estadoCancelado = reservaEstadoRepository
+				.findByActivoTrueAndNombreEqualsIgnoreCase(Constantes.ReservaEstado.CANCELADA_POR_USUARIO);
 		reserva.setReservaEstado(estadoCancelado);
 		reservaRepository.saveAndFlush(reserva);
-		
-		
+
 	}
-	
+
 }

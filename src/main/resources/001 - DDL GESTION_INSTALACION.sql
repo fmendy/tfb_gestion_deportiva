@@ -340,8 +340,7 @@ INSERT INTO rol_permiso(id_rol,id_permiso) values
 ((select id from rol where nombre = 'USUARIO_EMPRESA'), (select id from permiso where nombre = 'GESTION_RESERVA')),
 ((select id from rol where nombre = 'USUARIO_EMPRESA'), (select id from permiso where nombre = 'GESTION_RESERVA_EMPRESA')),
 ((select id from rol where nombre = 'USUARIO_EMPRESA'), (select id from permiso where nombre = 'GESTION_RESERVA_SEDE')),
-((select id from rol where nombre = 'USUARIO_EMPRESA'), (select id from permiso where nombre = 'GESTION_RESERVA_INSTALACION')),
-((select id from rol where nombre = 'USUARIO_EMPRESA'), (select id from permiso where nombre = 'GESTION_RESERVA_PROPIA'));
+((select id from rol where nombre = 'USUARIO_EMPRESA'), (select id from permiso where nombre = 'GESTION_RESERVA_INSTALACION'));
 
 INSERT INTO rol_permiso(id_rol,id_permiso) values
 ((select id from rol where nombre = 'USUARIO_SEDE'), (select id from permiso where nombre = 'GESTION_SEDE')),
@@ -353,8 +352,7 @@ INSERT INTO rol_permiso(id_rol,id_permiso) values
 ((select id from rol where nombre = 'USUARIO_SEDE'), (select id from permiso where nombre = 'GESTION_ROL_INSTALACION')),
 ((select id from rol where nombre = 'USUARIO_SEDE'), (select id from permiso where nombre = 'GESTION_RESERVA')),
 ((select id from rol where nombre = 'USUARIO_SEDE'), (select id from permiso where nombre = 'GESTION_RESERVA_SEDE')),
-((select id from rol where nombre = 'USUARIO_SEDE'), (select id from permiso where nombre = 'GESTION_RESERVA_INSTALACION')),
-((select id from rol where nombre = 'USUARIO_SEDE'), (select id from permiso where nombre = 'GESTION_RESERVA_PROPIA'));
+((select id from rol where nombre = 'USUARIO_SEDE'), (select id from permiso where nombre = 'GESTION_RESERVA_INSTALACION'));
 
 
 
@@ -363,8 +361,7 @@ INSERT INTO rol_permiso(id_rol,id_permiso) values
 ((select id from rol where nombre = 'USUARIO_INSTALACION'), (select id from permiso where nombre = 'MI_PERFIL')),
 ((select id from rol where nombre = 'USUARIO_INSTALACION'), (select id from permiso where nombre = 'GESTION_USUARIO_INSTALACION')),
 ((select id from rol where nombre = 'USUARIO_INSTALACION'), (select id from permiso where nombre = 'GESTION_RESERVA')),
-((select id from rol where nombre = 'USUARIO_INSTALACION'), (select id from permiso where nombre = 'GESTION_RESERVA_INSTALACION')),
-((select id from rol where nombre = 'USUARIO_INSTALACION'), (select id from permiso where nombre = 'GESTION_RESERVA_PROPIA'));
+((select id from rol where nombre = 'USUARIO_INSTALACION'), (select id from permiso where nombre = 'GESTION_RESERVA_INSTALACION'));
 
 
 INSERT INTO rol_permiso(id_rol,id_permiso) values

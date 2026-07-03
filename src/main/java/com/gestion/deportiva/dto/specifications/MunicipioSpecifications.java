@@ -19,14 +19,6 @@ public class MunicipioSpecifications extends BaseSpecifications<Municipio> {
 		if (StringUtils.hasText(filter.getNombre())) {
 			specs.add(new MunicipioSpecifications().likeIgnoreCase( filter.getNombre(),"nombre"));
 		}
-		if (StringUtils.hasText(filter.getProvinciaUuid())) {
-			specs.add(new MunicipioSpecifications().equalsIgnoreCase("provincia", "uuid", filter.getProvinciaUuid()));
-		}
-
-		if (StringUtils.hasText(filter.getComunidadAutonomaUuid())) {
-			specs.add(new MunicipioSpecifications().equalsIgnoreCase("provincia", "comunidadAutonoma", "uuid",
-					filter.getComunidadAutonomaUuid()));
-		}
 
 		return new MunicipioSpecifications().combine(specs);
 	}

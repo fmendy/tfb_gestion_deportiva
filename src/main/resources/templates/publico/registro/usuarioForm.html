@@ -39,6 +39,10 @@
 											placeholder="Nombre"> <label for="nombre"
 											th:text="#{registro.usuario.nombre}"></label>
 									</div>
+									<div class="text-danger small mt-1"
+										th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}">
+										<i class="bi bi-exclamation-circle me-1"></i> Error
+									</div>
 								</div>
 
 								<div class="col-md-6">
@@ -47,6 +51,10 @@
 											class="form-control rounded-3" id="email"
 											placeholder="name@example.com"> <label for="email"
 											th:text="#{registro.usuario.email}"></label>
+									</div>
+									<div class="text-danger small mt-1"
+										th:if="${#fields.hasErrors('email')}" th:errors="*{email}">
+										<i class="bi bi-exclamation-circle me-1"></i> Error
 									</div>
 								</div>
 								<div class="col-md-6">
@@ -57,6 +65,11 @@
 											for="emailConfirmar"
 											th:text="#{registro.usuario.email.confirmar}"></label>
 									</div>
+									<div class="text-danger small mt-1"
+										th:if="${#fields.hasErrors('emailConfirmar')}"
+										th:errors="*{emailConfirmar}">
+										<i class="bi bi-exclamation-circle me-1"></i> Error
+									</div>
 								</div>
 
 								<div class="col-md-6">
@@ -66,6 +79,11 @@
 											placeholder="Password"> <label for="password"
 											th:text="#{registro.usuario.password}"></label>
 									</div>
+									<div class="text-danger small mt-1"
+										th:if="${#fields.hasErrors('password')}"
+										th:errors="*{password}">
+										<i class="bi bi-exclamation-circle me-1"></i> Error
+									</div>
 								</div>
 								<div class="col-md-6">
 									<div class="form-floating">
@@ -74,6 +92,11 @@
 											placeholder="Confirmar"> <label
 											for="passwordConfirmar"
 											th:text="#{registro.usuario.password.confirmar}"></label>
+									</div>
+									<div class="text-danger small mt-1"
+										th:if="${#fields.hasErrors('passwordConfirmar')}"
+										th:errors="*{passwordConfirmar}">
+										<i class="bi bi-exclamation-circle me-1"></i> Error
 									</div>
 								</div>
 							</div>

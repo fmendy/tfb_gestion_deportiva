@@ -36,8 +36,21 @@ public class ReservaSpecifications extends BaseSpecifications<Reserva> {
 		}
 
 		if (filter.getUsuarioCreacionId() != null) {
-			specs.add(new ReservaSpecifications().equalsFieldLong(
-					filter.getUsuarioCreacionId(),"usuarioCreacion", "id"));
+			specs.add(new ReservaSpecifications().equalsFieldLong(filter.getUsuarioCreacionId(), "usuarioCreacion",
+					"id"));
+		}
+
+		if (filter.getListEmpresaIds() != null && !filter.getListEmpresaIds().isEmpty()) {
+			specs.add(new ReservaSpecifications().fieldInLong(filter.getListEmpresaIds(), "instalacion", "sede",
+					"empresa", "id"));
+		}
+
+		if (filter.getListSedeIds() != null && !filter.getListSedeIds().isEmpty()) {
+			specs.add(new ReservaSpecifications().fieldInLong(filter.getListSedeIds(), "instalacion", "sede", "id"));
+		}
+
+		if (filter.getListInstalacionIds() != null && !filter.getListInstalacionIds().isEmpty()) {
+			specs.add(new ReservaSpecifications().fieldInLong(filter.getListInstalacionIds(), "instalacion", "id"));
 		}
 
 		return new ReservaSpecifications().combine(specs);

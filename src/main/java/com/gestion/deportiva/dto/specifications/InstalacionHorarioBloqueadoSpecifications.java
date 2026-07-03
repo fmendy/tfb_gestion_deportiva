@@ -31,7 +31,7 @@ public class InstalacionHorarioBloqueadoSpecifications extends BaseSpecification
 		}
 
 		if (filter.getFechaHasta() != null) {
-			specs.add(new InstalacionHorarioBloqueadoSpecifications().greaterThanOrEqualTo("fecha",
+			specs.add(new InstalacionHorarioBloqueadoSpecifications().lessThanOrEqualTo("fecha",
 					filter.getFechaHasta()));
 		}
 

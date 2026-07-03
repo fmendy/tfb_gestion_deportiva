@@ -10,13 +10,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import com.gestion.deportiva.dto.ComboDTO;
-import com.gestion.deportiva.dto.MiReservaDTO;
+import com.gestion.deportiva.dto.ReservaListadoDTO;
 import com.gestion.deportiva.dto.ReservaDTO;
 import com.gestion.deportiva.dto.ReservaSolicitudDTO;
 import com.gestion.deportiva.model.Instalacion;
 import com.gestion.deportiva.model.Reserva;
 import com.gestion.deportiva.model.ReservaEstado;
 import com.gestion.deportiva.util.Constantes;
+import com.gestion.deportiva.util.SecurityUtil;
 
 @Component
 public class ReservaMapper {
@@ -50,10 +51,10 @@ public class ReservaMapper {
 		return retVal;
 	}
 
-	public List<MiReservaDTO> listModelToListMiReservaDTO(List<Reserva> list) {
-		List<MiReservaDTO> retVal = new ArrayList<>();
+	public List<ReservaListadoDTO> listModelToListReservaListadoDTO(List<Reserva> list) {
+		List<ReservaListadoDTO> retVal = new ArrayList<>();
 		for (Reserva bean : list) {
-			retVal.add(modelToMiReservaDTO(bean));
+			retVal.add(modelToReservaListadoDTO(bean));
 		}
 		return retVal;
 	}
@@ -99,8 +100,8 @@ public class ReservaMapper {
 
 	}
 
-	public MiReservaDTO modelToMiReservaDTO(Reserva model) {
-		MiReservaDTO retVal = new MiReservaDTO();
+	public ReservaListadoDTO modelToReservaListadoDTO(Reserva model) {
+		ReservaListadoDTO retVal = new ReservaListadoDTO();
 		retVal.setId(model.getId());
 		retVal.setUuid(model.getUuid());
 		retVal.setInstalacionSedeEmpresaId(model.getInstalacion().getSede().getEmpresa().getId());
@@ -116,8 +117,11 @@ public class ReservaMapper {
 		retVal.setFecha(model.getFecha());
 		retVal.setReservaEstadoId(model.getReservaEstado().getId());
 		retVal.setReservaEstadoNombre(model.getReservaEstado().getNombre());
-		retVal.setMostrarEliminar(model.getReservaEstado().getNombre().equalsIgnoreCase(Constantes.ReservaEstado.PENDIENTE));
-		retVal.setMostrarCancelarPorUsuario(model.getReservaEstado().getNombre().equalsIgnoreCase(Constantes.ReservaEstado.APROBADA));
+		retVal.setMostrarEliminar(
+				model.getReservaEstado().getNombre().equalsIgnoreCase(Constantes.ReservaEstado.PENDIENTE));
+		retVal.setMostrarCancelarPorUsuario(
+				model.getReservaEstado().getNombre().equalsIgnoreCase(Constantes.ReservaEstado.APROBADA)
+						&& model.getUsuarioCreacion().getId().equals(SecurityUtil.getCurrentUserId()));
 		retVal.setReservaEstadoCss(model.getReservaEstado().getNombre().equals(Constantes.ReservaEstado.APROBADA)
 				? "bg-success-subtle text-success border-success-subtle"
 				: model.getReservaEstado().getNombre().equals(Constantes.ReservaEstado.PENDIENTE)
@@ -127,8 +131,8 @@ public class ReservaMapper {
 		return retVal;
 	}
 
-	public Page<MiReservaDTO> pageToPageMiReservaDTO(Page<Reserva> page) {
-		return new PageImpl<MiReservaDTO>(listModelToListMiReservaDTO(page.getContent()), page.getPageable(),
+	public Page<ReservaListadoDTO> pageToPageReservaListadoDTO(Page<Reserva> page) {
+		return new PageImpl<ReservaListadoDTO>(listModelToListReservaListadoDTO(page.getContent()), page.getPageable(),
 				page.getTotalElements());
 	}
 

@@ -17,14 +17,11 @@ public class ProvinciaSpecifications extends BaseSpecifications<Provincia> {
 		specs.add(new ProvinciaSpecifications().activoTrue());
 
 		if (StringUtils.hasText(filter.getNombre())) {
-			specs.add(new ProvinciaSpecifications().likeIgnoreCase( filter.getNombre(),"nombre"));
+			specs.add(new ProvinciaSpecifications().likeIgnoreCase(filter.getNombre(), "nombre"));
 		}
-		if (StringUtils.hasText(filter.getComunidadAutonomaUuid())) {
-			specs.add(new ProvinciaSpecifications().equalsIgnoreCase("comunidadAutonoma", "uuid",
-					filter.getComunidadAutonomaUuid()));
-		}
+
 		if (filter.getCodigoIne() != null) {
-			specs.add(new ProvinciaSpecifications().equalsFieldLong( filter.getCodigoIne(),"codigoIne"));
+			specs.add(new ProvinciaSpecifications().equalsFieldLong(filter.getCodigoIne(), "codigoIne"));
 		}
 
 		return new ProvinciaSpecifications().combine(specs);

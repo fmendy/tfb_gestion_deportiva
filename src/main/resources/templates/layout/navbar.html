@@ -108,6 +108,14 @@
 							th:text="#{navbar.mis.reservas}">Mis Reservas</span>
 					</a></li>
 					
+						<!-- Gestionar reservas -->
+					<li class="nav-item" sec:authorize="hasAuthority('GESTION_RESERVA_INSTALACION')"><a
+						class="nav-link text-white d-flex align-items-center"
+						th:href="@{/privado/reserva}"> <i
+							class="bi bi-clock-history me-1"></i> <span
+							th:text="#{navbar.gestion.reservas}">Gestion Reservas</span>
+					</a></li>
+					
 					
 					<!-- Empresa -->
 					<li class="nav-item" sec:authorize="hasAuthority('GESTION_USUARIO_INSTALACION')"><a

@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class MiReservaDTO extends ReservaDTO {
+public class ReservaListadoDTO extends ReservaDTO {
 
 	private static final long serialVersionUID = 6379839239499903284L;
 
