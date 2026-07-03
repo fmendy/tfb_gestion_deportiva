@@ -135,6 +135,8 @@ public class Constantes {
 		public static final String INCOMPLETADA = "INCOMPLETADA";
 		
 		public static final String DENEGADA = "DENEGADA";
+		
+		public static final String CANCELADA_POR_SANCION = "CANCELADA POR SANCION";
 	}
 
 	public static class Role {

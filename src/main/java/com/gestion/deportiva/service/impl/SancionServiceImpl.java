@@ -17,6 +17,7 @@ import com.gestion.deportiva.model.Reserva;
 import com.gestion.deportiva.model.Sancion;
 import com.gestion.deportiva.repository.ReservaRepository;
 import com.gestion.deportiva.repository.SancionRepository;
+import com.gestion.deportiva.service.ReservaService;
 import com.gestion.deportiva.service.SancionService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -35,9 +36,12 @@ public class SancionServiceImpl implements SancionService {
 
 	@Autowired
 	private SancionMapper sancionMapper;
-	
+
 	@Autowired
 	private ReservaRepository reservaRepository;
+
+	@Autowired
+	private ReservaService reservaService;
 
 	@Override
 	public SancionDTO findById(Long id) {
@@ -72,6 +76,7 @@ public class SancionServiceImpl implements SancionService {
 		}
 		model = sancionMapper.dtoToModel(dto, model);
 		sancionRepository.saveAndFlush(model);
+		reservaService.cancelarSancion(dto.getUsuarioId(), dto.getFechaInicio(), dto.getFechaFin());
 		return model.getId();
 	}
 

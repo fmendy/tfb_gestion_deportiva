@@ -51,4 +51,8 @@ public interface ReservaService extends BaseService<ReservaDTO, ReservaFilter> {
 
 	void cancelarEmpresa(Long id);
 
+	void cancelarSancion(Long id);
+
+	void cancelarSancion(Long usuarioId, LocalDate fechaInicio, LocalDate fechaFin);
+
 }

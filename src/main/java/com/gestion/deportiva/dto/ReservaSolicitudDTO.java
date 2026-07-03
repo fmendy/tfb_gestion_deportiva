@@ -7,6 +7,7 @@ import com.gestion.deportiva.validation.ReservaSolicitudDisponibilidadValid;
 import com.gestion.deportiva.validation.ReservaSolicitudFechaValid;
 import com.gestion.deportiva.validation.ReservaSolicitudHoraDuracionValid;
 import com.gestion.deportiva.validation.ReservaSolicitudInstalacionAbiertaValid;
+import com.gestion.deportiva.validation.ReservaSolicitudSancionValid;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -20,6 +21,7 @@ import lombok.Setter;
 @ReservaSolicitudDisponibilidadValid
 @ReservaSolicitudInstalacionAbiertaValid
 @ReservaSolicitudHoraDuracionValid
+@ReservaSolicitudSancionValid
 public class ReservaSolicitudDTO extends BaseDTO {
 
 	private static final long serialVersionUID = 572748819122752282L;

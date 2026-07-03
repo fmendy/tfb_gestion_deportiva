@@ -2,6 +2,7 @@ package com.gestion.deportiva.service.impl;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Arrays;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -299,6 +300,22 @@ public class ReservaServiceImpl implements ReservaService {
 	@Override
 	public void incompletar(Long id) {
 		actualizarReservaEstado(id, Constantes.ReservaEstado.INCOMPLETADA);
+	}
+
+	@Override
+	public void cancelarSancion(Long id) {
+		actualizarReservaEstado(id, Constantes.ReservaEstado.CANCELADA_POR_SANCION);
+	}
+
+	@Override
+	public void cancelarSancion(Long usuarioId, LocalDate fechaInicio, LocalDate fechaFin) {
+		List<Reserva> reservas = reservaRepository
+				.findByActivoTrueAndUsuarioCreacionIdAndFechaGreaterThanEqualAndFechaLessThanEqualAndReservaEstadoNombreIn(
+						usuarioId, fechaInicio, fechaFin,
+						Arrays.asList(Constantes.ReservaEstado.APROBADA, Constantes.ReservaEstado.PENDIENTE));
+		for (Reserva reserva : reservas) {
+			cancelarSancion(reserva.getId());
+		}
 	}
 
 	@Override

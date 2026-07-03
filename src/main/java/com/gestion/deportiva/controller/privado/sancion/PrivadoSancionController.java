@@ -16,7 +16,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.gestion.deportiva.controller.BaseController;
-import com.gestion.deportiva.dto.InstalacionDTO;
 import com.gestion.deportiva.dto.SancionDTO;
 import com.gestion.deportiva.dto.SancionTipoDTO;
 import com.gestion.deportiva.exception.PermisoException;

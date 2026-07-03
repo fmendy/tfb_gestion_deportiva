@@ -21,4 +21,7 @@ public interface ReservaRepository extends BaseEntityRepository<Reserva, Long> {
 	List<Reserva> findByActivoTrueAndFechaAndUsuarioCreacionIdAndReservaEstadoNombreIn(LocalDate fecha, Long usuarioId,
 			List<String> listReservaEstados);
 
+	List<Reserva> findByActivoTrueAndUsuarioCreacionIdAndFechaGreaterThanEqualAndFechaLessThanEqualAndReservaEstadoNombreIn(
+			Long usuarioId, LocalDate fechaInicio, LocalDate fechaFin, List<String> asList);
+
 }

@@ -70,18 +70,9 @@
 									</div>
 								</div>
 
-								<div th:if="${#fields.hasErrors('*')}" class="col-12 mt-3">
-									<div
-										class="bg-danger bg-opacity-10 border-start border-4 border-danger rounded-3 p-3">
-										<div class="d-flex align-items-center text-danger mb-2">
-											<i class="bi bi-exclamation-triangle-fill me-2"></i> <span
-												class="fw-bold" th:text="#{error.reserva.no.puede.procesar}"></span>:
-										</div>
-										<ul class="mb-0 ps-3 text-danger small">
-											<li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
-										</ul>
-									</div>
-								</div>
+								<div
+									th:replace="~{fragments/field-error :: alertas-errores('error.reserva.no.puede.procesar')}"></div>
+
 							</div>
 						</div>
 
