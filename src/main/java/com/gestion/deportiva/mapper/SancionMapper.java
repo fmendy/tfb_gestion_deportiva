@@ -11,7 +11,7 @@ import org.springframework.util.StringUtils;
 
 import com.gestion.deportiva.dto.ComboDTO;
 import com.gestion.deportiva.dto.SancionDTO;
-import com.gestion.deportiva.model.Empresa;
+import com.gestion.deportiva.model.Reserva;
 import com.gestion.deportiva.model.Sancion;
 import com.gestion.deportiva.model.SancionTipo;
 import com.gestion.deportiva.model.Usuario;
@@ -26,10 +26,9 @@ public class SancionMapper {
 		retVal.setFechaFin(model.getFechaFin());
 		retVal.setFechaInicio(model.getFechaInicio());
 		retVal.setDescripcion(model.getDescripcion());
-		retVal.setEmpresaId(model.getEmpresa().getId());
+		retVal.setReservaId(model.getReserva().getId());
 		retVal.setUsuarioId(model.getUsuario().getId());
 		retVal.setSancionTipoId(model.getSancionTipo().getId());
-		retVal.setEmpresaNombre(model.getEmpresa().getNombre());
 		retVal.setUsuarioNombre(model.getUsuario().getNombre());
 		retVal.setSancionTipoNombre(model.getSancionTipo().getNombre());
 
@@ -59,7 +58,7 @@ public class SancionMapper {
 		model.setFechaFin(dto.getFechaFin());
 		model.setFechaInicio(dto.getFechaInicio());
 		model.setDescripcion(dto.getDescripcion());
-		model.setEmpresa(new Empresa(dto.getEmpresaId()));
+		model.setReserva(new Reserva(dto.getReservaId()));
 		model.setUsuario(new Usuario(dto.getUsuarioId()));
 		model.setSancionTipo(new SancionTipo(dto.getSancionTipoId()));
 

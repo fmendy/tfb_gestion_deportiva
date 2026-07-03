@@ -10,6 +10,7 @@ import org.springframework.util.StringUtils;
 import com.gestion.deportiva.util.SecurityUtil;
 
 import jakarta.persistence.criteria.From;
+import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Path;
 
@@ -18,57 +19,51 @@ public abstract class BaseSpecifications<T> {
 	protected Specification<T> activoTrue() {
 		return (root, query, cb) -> cb.equal(root.get("activo"), true);
 	}
+	
+	private From<?, ?> joinAndFilterActivo(From<?, ?> root, String... fields) {
+	    From<?, ?> current = root;
+	    // Iteramos hasta el penúltimo campo (las relaciones)
+	    for (int i = 0; i < fields.length - 1; i++) {
+	        // Hacemos el Join
+	        Join<Object, Object> join = current.join(fields[i], JoinType.INNER);
+	        // Filtramos que la relación intermedia esté activa
+	        join.on(join.get("activo").in(true)); 
+	        current = join;
+	    }
+	    return current;
+	}
 
 	protected Specification<T> likeIgnoreCase(String value, String... fields) {
-		return (root, query, cb) -> {
-			if (!StringUtils.hasText(value)) {
-				return null;
-			}
-			// 'current' empieza siendo el Root (que implementa From)
-			From<?, ?> current = root;
-			// Iteramos hasta el penúltimo elemento para hacer los joins
-			for (int i = 0; i < fields.length - 1; i++) {
-				// Hacemos el join y actualizamos 'current'
-				current = current.join(fields[i], JoinType.INNER);
-			}
-			// El último elemento es el campo final (el atributo a comparar)
-			String fieldFinal = fields[fields.length - 1];
-			Path<String> path = current.get(fieldFinal);
-
-			return cb.like(cb.upper(path), "%" + value.toUpperCase() + "%");
-		};
+	    return (root, query, cb) -> {
+	        if (!StringUtils.hasText(value)) return null;
+	        
+	        From<?, ?> current = joinAndFilterActivo(root, fields);
+	        Path<String> path = current.get(fields[fields.length - 1]);
+	        
+	        return cb.like(cb.upper(path), "%" + value.toUpperCase() + "%");
+	    };
 	}
 
 	protected Specification<T> fieldInString(List<String> listString, String... fields) {
-		return (root, query, cb) -> {
-			if (listString == null || listString.isEmpty() || fields == null || fields.length == 0) {
-				return null;
-			}
-
-			// Caminamos dinámicamente a través de los campos
-			Path<?> path = root;
-			for (String field : fields) {
-				path = path.get(field);
-			}
-
-			return path.in(listString);
-		};
+	    return (root, query, cb) -> {
+	        if (listString == null || listString.isEmpty()) return null;
+	        
+	        From<?, ?> current = joinAndFilterActivo(root, fields);
+	        Path<String> path = current.get(fields[fields.length - 1]);
+	        
+	        return path.in(listString);
+	    };
 	}
 
 	protected Specification<T> fieldInLong(List<Long> listLong, String... fields) {
-		return (root, query, cb) -> {
-			if (listLong == null || listLong.isEmpty() || fields == null || fields.length == 0) {
-				return null;
-			}
-
-			// Caminamos dinámicamente a través de los campos
-			Path<?> path = root;
-			for (String field : fields) {
-				path = path.get(field);
-			}
-
-			return path.in(listLong);
-		};
+	    return (root, query, cb) -> {
+	        if (listLong == null || listLong.isEmpty()) return null;
+	        
+	        From<?, ?> current = joinAndFilterActivo(root, fields);
+	        Path<Long> path = current.get(fields[fields.length - 1]);
+	        
+	        return path.in(listLong);
+	    };
 	}
 
 	protected Specification<T> greaterThanOrEqualTo(String field, LocalDate value) {
@@ -96,17 +91,17 @@ public abstract class BaseSpecifications<T> {
 	}
 
 	protected Specification<T> equalsFieldLong(Long value, String... fields) {
-		return (root, query, cb) -> {
-			// Obtenemos el path inicial empezando por el primer campo
-			Path<Object> path = root.get(fields[0]);
+	    return (root, query, cb) -> {
+	        Path<Object> path = root.get(fields[0]);
+	        for (int i = 0; i < fields.length - 1; i++) {
+	            Join<Object, Object> join = root.join(fields[i]);
+	            join.on(cb.isTrue(join.get("activo")));
+	            
+	            path = join.get(fields[i+1]);
+	        }
 
-			// Iteramos sobre los campos restantes para ir haciendo "get" encadenados
-			for (int i = 1; i < fields.length; i++) {
-				path = path.get(fields[i]);
-			}
-
-			return cb.equal(path, value);
-		};
+	        return cb.equal(path, value);
+	    };
 	}
 
 	protected Specification<T> equalsFieldBoolean(Boolean value, String... fields) {
@@ -114,11 +109,12 @@ public abstract class BaseSpecifications<T> {
 			// Obtenemos el path inicial empezando por el primer campo
 			Path<Object> path = root.get(fields[0]);
 
-			// Iteramos sobre los campos restantes para ir haciendo "get" encadenados
-			for (int i = 1; i < fields.length; i++) {
-				path = path.get(fields[i]);
-			}
-
+			for (int i = 0; i < fields.length - 1; i++) {
+	            Join<Object, Object> join = root.join(fields[i]);
+	            join.on(cb.isTrue(join.get("activo")));
+	            
+	            path = join.get(fields[i+1]);
+	        }
 			return cb.equal(path, value);
 		};
 	}

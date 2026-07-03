@@ -103,6 +103,21 @@ public class Constantes {
 			public static final String GESTION_RESERVA_PROPIA = "GESTION_RESERVA_PROPIA";
 
 		}
+		
+		public static class Sancion {
+			public static final String GESTION_SANCION = "GESTION_SANCION";
+
+			public static final String GESTION_SANCION_GLOBAL = "GESTION_SANCION_GLOBAL";
+
+			public static final String GESTION_SANCION_EMPRESA = "GESTION_SANCION_EMPRESA";
+
+			public static final String GESTION_SANCION_SEDE = "GESTION_SANCION_SEDE";
+
+			public static final String GESTION_SANCION_INSTALACION = "GESTION_SANCION_INSTALACION";
+			
+			public static final String GESTION_SANCION_PROPIA = "GESTION_SANCION_PROPIA";
+
+		}
 
 	}
 	

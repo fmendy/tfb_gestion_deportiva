@@ -11,7 +11,7 @@ public class SancionFilter extends BaseEntityFilter {
 
 	private static final long serialVersionUID = 9221019637732455446L;
 
-	private Long empresaId;
+	private Long reservaId;
 
 	private Long usuarioId;
 

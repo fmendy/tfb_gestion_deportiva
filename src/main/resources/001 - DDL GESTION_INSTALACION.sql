@@ -683,7 +683,7 @@ create table sancion(
 	id INT  not null auto_increment primary key,
 	uuid CHAR(36) NOT NULL DEFAULT (UUID()),
     id_usuario int not null,
-    id_empresa int not null,
+    id_reserva int not null,
     id_sancion_tipo int not null,
     fecha_inicio DATE not null ,
     fecha_fin DATE not null,
@@ -698,6 +698,6 @@ create table sancion(
 alter table sancion add foreign key fk_sancion_usuario_creacion (id_usuario_creacion) references usuario(id);
 alter table sancion add foreign key fk_sancion_usuario_modificacion (id_usuario_modificacion) references usuario(id);
 alter table sancion add foreign key fk_sancion_usuario(id_usuario) references usuario(id);
-alter table sancion add foreign key fk_sancion_empresa (id_empresa) references empresa(id);
+alter table sancion add foreign key fk_sancion_reserva (id_reserva) references reserva(id);
 alter table sancion add foreign key fk_sancion_tipo (id_sancion_tipo) references sancion_tipo(id);
 

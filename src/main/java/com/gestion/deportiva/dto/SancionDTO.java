@@ -15,10 +15,9 @@ public class SancionDTO extends BaseDTO {
 
 	private static final long serialVersionUID = 8964260052246620996L;
 
-	private String empresaNombre;
 
 	@NotNull
-	private Long empresaId;
+	private Long reservaId;
 
 	private String usuarioNombre;
 

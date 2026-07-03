@@ -123,23 +123,59 @@ public class ReservaMapper {
 				model.getReservaEstado().getNombre().equalsIgnoreCase(Constantes.ReservaEstado.PENDIENTE)
 						&& model.getUsuarioCreacion().getId().equals(SecurityUtil.getCurrentUserId()));
 		retVal.setMostrarAprobar(
-				model.getReservaEstado().getNombre().equalsIgnoreCase(Constantes.ReservaEstado.PENDIENTE));
+				model.getReservaEstado().getNombre().equalsIgnoreCase(Constantes.ReservaEstado.PENDIENTE)
+						&& (SecurityUtil.hasAnyAuthority(Constantes.Permiso.GESTION_GLOBAL,
+								Constantes.Permiso.Reserva.GESTION_RESERVA_GLOBAL,
+								Constantes.Permiso.Reserva.GESTION_RESERVA_EMPRESA,
+								Constantes.Permiso.Reserva.GESTION_RESERVA_SEDE,
+								Constantes.Permiso.Reserva.GESTION_RESERVA_INSTALACION)));
 
 		retVal.setMostrarDenegar(
-				model.getReservaEstado().getNombre().equalsIgnoreCase(Constantes.ReservaEstado.PENDIENTE));
+				model.getReservaEstado().getNombre().equalsIgnoreCase(Constantes.ReservaEstado.PENDIENTE)
+						&& (SecurityUtil.hasAnyAuthority(Constantes.Permiso.GESTION_GLOBAL,
+								Constantes.Permiso.Reserva.GESTION_RESERVA_GLOBAL,
+								Constantes.Permiso.Reserva.GESTION_RESERVA_EMPRESA,
+								Constantes.Permiso.Reserva.GESTION_RESERVA_SEDE,
+								Constantes.Permiso.Reserva.GESTION_RESERVA_INSTALACION)));
 
 		retVal.setMostrarCancelarPorUsuario(
 				model.getReservaEstado().getNombre().equalsIgnoreCase(Constantes.ReservaEstado.APROBADA)
-						&& model.getUsuarioCreacion().getId().equals(SecurityUtil.getCurrentUserId()));
+						&& model.getUsuarioCreacion().getId().equals(SecurityUtil.getCurrentUserId())
+						&& (SecurityUtil.hasAnyAuthority(Constantes.Permiso.Reserva.GESTION_RESERVA_PROPIA)));
 
 		retVal.setMostrarCancelarPorEmpresa(
-				model.getReservaEstado().getNombre().equalsIgnoreCase(Constantes.ReservaEstado.APROBADA));
+				model.getReservaEstado().getNombre().equalsIgnoreCase(Constantes.ReservaEstado.APROBADA)
+						&& (SecurityUtil.hasAnyAuthority(Constantes.Permiso.GESTION_GLOBAL,
+								Constantes.Permiso.Reserva.GESTION_RESERVA_GLOBAL,
+								Constantes.Permiso.Reserva.GESTION_RESERVA_EMPRESA,
+								Constantes.Permiso.Reserva.GESTION_RESERVA_SEDE,
+								Constantes.Permiso.Reserva.GESTION_RESERVA_INSTALACION)));
 
 		retVal.setMostrarCompletar(
-				model.getReservaEstado().getNombre().equalsIgnoreCase(Constantes.ReservaEstado.APROBADA));
+				model.getReservaEstado().getNombre().equalsIgnoreCase(Constantes.ReservaEstado.APROBADA)
+						&& (SecurityUtil.hasAnyAuthority(Constantes.Permiso.GESTION_GLOBAL,
+								Constantes.Permiso.Reserva.GESTION_RESERVA_GLOBAL,
+								Constantes.Permiso.Reserva.GESTION_RESERVA_EMPRESA,
+								Constantes.Permiso.Reserva.GESTION_RESERVA_SEDE,
+								Constantes.Permiso.Reserva.GESTION_RESERVA_INSTALACION)));
 
 		retVal.setMostrarIncompletar(
-				model.getReservaEstado().getNombre().equalsIgnoreCase(Constantes.ReservaEstado.APROBADA));
+				model.getReservaEstado().getNombre().equalsIgnoreCase(Constantes.ReservaEstado.APROBADA)
+						&& (SecurityUtil.hasAnyAuthority(Constantes.Permiso.GESTION_GLOBAL,
+								Constantes.Permiso.Reserva.GESTION_RESERVA_GLOBAL,
+								Constantes.Permiso.Reserva.GESTION_RESERVA_EMPRESA,
+								Constantes.Permiso.Reserva.GESTION_RESERVA_SEDE,
+								Constantes.Permiso.Reserva.GESTION_RESERVA_INSTALACION)));
+
+		retVal.setMostrarSancionar(
+				(model.getReservaEstado().getNombre().equalsIgnoreCase(Constantes.ReservaEstado.CANCELADA_POR_USUARIO)
+						|| model.getReservaEstado().getNombre().equalsIgnoreCase(Constantes.ReservaEstado.COMPLETADA)
+						|| model.getReservaEstado().getNombre().equalsIgnoreCase(Constantes.ReservaEstado.INCOMPLETADA))
+						&& (SecurityUtil.hasAnyAuthority(Constantes.Permiso.GESTION_GLOBAL,
+								Constantes.Permiso.Sancion.GESTION_SANCION_GLOBAL,
+								Constantes.Permiso.Sancion.GESTION_SANCION_EMPRESA,
+								Constantes.Permiso.Sancion.GESTION_SANCION_SEDE,
+								Constantes.Permiso.Sancion.GESTION_SANCION_INSTALACION)));
 
 		String estadoCss;
 		switch (model.getReservaEstado().getNombre()) {

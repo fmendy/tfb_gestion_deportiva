@@ -31,8 +31,8 @@ public class Sancion extends BaseEntity implements Serializable {
 	private Usuario usuario;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_empresa", nullable = false)
-	private Empresa empresa;
+	@JoinColumn(name = "id_reserva", nullable = false)
+	private Reserva reserva;
 
 	@Column(name = "fecha_inicio", nullable = false)
 	private LocalDate fechaInicio;
