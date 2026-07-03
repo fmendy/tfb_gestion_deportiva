@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+<style>
+</style>
+<body>
+	<div th:fragment="field-error(fieldName)"
+		class="text-danger small mt-1" th:if="${#fields.hasErrors(fieldName)}"
+		th:errors="*{__${fieldName}__}">
+		<i class="bi bi-exclamation-circle me-1"></i> Error
+	</div>
+
+	<div th:fragment="alertas-errores(mensajeClave)"
+		th:if="${#fields.hasErrors('*')}" class="col-12 mt-3">
+		<div
+			class="bg-danger bg-opacity-10 border-start border-4 border-danger rounded-3 p-3">
+			<div class="d-flex align-items-center text-danger mb-2">
+				<i class="bi bi-exclamation-triangle-fill me-2"></i> <span
+					class="fw-bold" th:text="#{__${mensajeClave}__}"></span>:
+			</div>
+			<ul class="mb-0 ps-3 text-danger small">
+				<li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
+			</ul>
+		</div>
+	</div>
+
+</body>
+</html>

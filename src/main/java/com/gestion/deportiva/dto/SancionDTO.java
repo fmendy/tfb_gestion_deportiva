@@ -3,6 +3,8 @@ package com.gestion.deportiva.dto;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import com.gestion.deportiva.validation.SancionValid;
+
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -12,6 +14,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@SancionValid
 public class SancionDTO extends BaseDTO {
 
 	private static final long serialVersionUID = 8964260052246620996L;

@@ -98,21 +98,16 @@
 							class="text-danger">*</span></label> <input type="date"
 							th:field="*{fechaInicio}" class="form-control rounded-pill"
 							required>
-						<div class="text-danger small mt-1"
-							th:if="${#fields.hasErrors('fechaInicio')}"
-							th:errors="*{fechaInicio}">
-							<i class="bi bi-exclamation-circle me-1"></i> Error
-						</div>
+						<div
+							th:replace="~{fragments/field-error :: field-error('fechaInicio')}"></div>
 					</div>
 
 					<div class="col-md-4">
 						<label class="form-label fw-bold">Fecha Fin <span
 							class="text-danger">*</span></label> <input type="date"
 							th:field="*{fechaFin}" class="form-control rounded-pill" required>
-						<div class="text-danger small mt-1"
-							th:if="${#fields.hasErrors('fechaFin')}" th:errors="*{fechaFin}">
-							<i class="bi bi-exclamation-circle me-1"></i> Error
-						</div>
+						<div
+							th:replace="~{fragments/field-error :: field-error('fechaFin')}"></div>
 					</div>
 
 					<div class="col-md-4">
@@ -122,11 +117,8 @@
 							<option th:each="p : ${listSancionTipo}" th:value="${p.id}"
 								th:text="${p.nombre}"></option>
 						</select>
-						<div class="text-danger small mt-1"
-							th:if="${#fields.hasErrors('sancionTipoId')}"
-							th:errors="*{sancionTipoId}">
-							<i class="bi bi-exclamation-circle me-1"></i> Error
-						</div>
+						<div
+							th:replace="~{fragments/field-error :: field-error('sancionTipoId')}"></div>
 					</div>
 
 					<div class="col-12">
@@ -134,12 +126,13 @@
 						<textarea th:field="*{descripcion}" class="form-control rounded-3"
 							rows="4" maxlength="1250"></textarea>
 						<div class="form-text text-end"></div>
-						<div class="text-danger small mt-1"
-							th:if="${#fields.hasErrors('descripcion')}"
-							th:errors="*{descripcion}">
-							<i class="bi bi-exclamation-circle me-1"></i> Error
-						</div>
+						<div
+							th:replace="~{fragments/field-error :: field-error('descripcion')}"></div>
 					</div>
+
+					<div
+						th:replace="~{fragments/field-error :: alertas-errores('error.sancion.no.puede.procesar')}"></div>
+
 
 					<div class="col-12 d-flex justify-content-end gap-2 mt-4">
 						<a th:href="@{/privado/sancion}"

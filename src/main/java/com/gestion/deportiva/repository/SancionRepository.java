@@ -7,4 +7,6 @@ import com.gestion.deportiva.model.Sancion;
 @Repository
 public interface SancionRepository extends BaseEntityRepository<Sancion, Long> {
 
+	Sancion findByActivoTrueAndReservaId(Long reservaId);
+
 }

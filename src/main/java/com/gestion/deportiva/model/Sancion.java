@@ -41,7 +41,7 @@ public class Sancion extends BaseEntity implements Serializable {
 	private LocalDate fechaFin;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "sancion_tipo", nullable = false)
+	@JoinColumn(name = "id_sancion_tipo", nullable = false)
 	private SancionTipo sancionTipo;
 
 	@Column(name = "descripcion", length = 1250)
