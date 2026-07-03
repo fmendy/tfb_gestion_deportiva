@@ -31,10 +31,24 @@ public interface ReservaService extends BaseService<ReservaDTO, ReservaFilter> {
 
 	boolean canEliminarReserva(Long reservaId);
 
-	boolean canCancelarReservaPropia(Long reservaId);
+	boolean canCancelarUsuario(Long reservaId);
 
-	void cancelarPorUsuario(Long id);
+	void cancelarUsuario(Long id);
 
 	Page<ReservaListadoDTO> getPageListadoByFilter(ReservaFilter filter, Pageable pageable);
+
+	boolean canAprobarDenegarReserva(Long reservaId);
+
+	void aprobar(Long id);
+
+	void denegar(Long id);
+
+	boolean canCancelarCompletadaIncompletadaEmpresa(Long reservaId);
+
+	void completar(Long id);
+
+	void incompletar(Long id);
+
+	void cancelarEmpresa(Long id);
 
 }

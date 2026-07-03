@@ -1,5 +1,7 @@
 package com.gestion.deportiva.controller.privado.reserva;
 
+import java.util.function.BooleanSupplier;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +51,7 @@ public class PrivadoReservaController extends BaseController {
 	private static final String VIEW_SOLICITUD_FORM = "privado/reserva/solicitudForm";
 
 	private static final String VIEW_MIS_RESERVAS_LIST = "privado/reserva/misReservasList";
-	
+
 	private static final String VIEW_LIST = "privado/reserva/list";
 
 	@Autowired
@@ -110,46 +112,61 @@ public class PrivadoReservaController extends BaseController {
 
 	}
 
-	@GetMapping("/{id}/eliminar")
-	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Reserva.GESTION_RESERVA_PROPIA + "')")
-	public ModelAndView eliminar(@PathVariable Long id, RedirectAttributes redirectAttributes) throws PermisoException {
-		if (!reservaService.canEliminarReserva(id)) {
-			logger.error("Reserva {} intentó acceder a una reserva  sin permisos: usuario {}, reserva {}",
-					SecurityUtil.getCurrentUserId(), id);
-			throw new PermisoException("No tiene permisos para cancelar esta reserva.");
-		}
-		try {
-			reservaService.eliminar(id);
-			redirectAttributes.addFlashAttribute(Constantes.HTTP_STATUS, HttpStatus.OK.value());
-			return new ModelAndView(new RedirectView(String.format(BASE_URL + "/misreservas")));
-		} catch (Exception e) {
-			logger.error("Error al eliminar la reserva {}", id, e);
-			return redirectWithError(BASE_URL + "/misreservas", redirectAttributes,
-					HttpStatus.INTERNAL_SERVER_ERROR.value(), null);
+	private ModelAndView ejecutarAccion(Long id, RedirectAttributes ra, String redirectUrl,
+			BooleanSupplier checkPermiso, Runnable accion, String errorMsg) throws PermisoException {
+
+		if (!checkPermiso.getAsBoolean()) {
+			logger.error("Usuario {} intentó acceder sin permisos a la reserva {}", SecurityUtil.getCurrentUserId(),
+					id);
+			throw new PermisoException("No tiene permisos para realizar esta acción.");
 		}
 
+		try {
+			accion.run();
+			ra.addFlashAttribute(Constantes.HTTP_STATUS, HttpStatus.OK.value());
+			return new ModelAndView(new RedirectView(redirectUrl));
+		} catch (Exception e) {
+			logger.error(errorMsg + " {}", id, e);
+			return redirectWithError(redirectUrl, ra, HttpStatus.INTERNAL_SERVER_ERROR.value(), null);
+		}
+	}
+	
+	@GetMapping("/{id}/cancelarusuario")
+	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Reserva.GESTION_RESERVA_PROPIA + "')")
+	public ModelAndView cancelarUsuario(@PathVariable Long id, RedirectAttributes ra) throws PermisoException {
+		return ejecutarAccion(id, ra, BASE_URL+"/misreservas", () -> reservaService.canCancelarUsuario(id),
+				() -> reservaService.cancelarUsuario(id), "Error al cancelar la reserva por usuario");
 	}
 
-	@GetMapping("/{id}/cancelarporusuario")
-	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Reserva.GESTION_RESERVA_PROPIA + "')")
-	public ModelAndView cancelarusuario(@PathVariable Long id, RedirectAttributes redirectAttributes)
-			throws PermisoException {
-		if (!reservaService.canCancelarReservaPropia(id)) {
-			logger.error("Reserva {} intentó acceder a una reserva  sin permisos: usuario {}, reserva {}",
-					SecurityUtil.getCurrentUserId(), id);
-			throw new PermisoException("No tiene permisos para cancelar esta reserva.");
-		}
-		try {
-			reservaService.cancelarPorUsuario(id);
-			redirectAttributes.addFlashAttribute(Constantes.HTTP_STATUS, HttpStatus.OK.value());
-			return new ModelAndView(new RedirectView(String.format(BASE_URL + "/misreservas")));
-		} catch (Exception e) {
-			logger.error("Error al eliminar la reserva {}", id, e);
-			return redirectWithError(BASE_URL + "/misreservas", redirectAttributes,
-					HttpStatus.INTERNAL_SERVER_ERROR.value(), null);
-		}
 
+	@GetMapping("/{id}/aprobar")
+	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Reserva.GESTION_RESERVA_INSTALACION + "')")
+	public ModelAndView aprobar(@PathVariable Long id, RedirectAttributes ra) throws PermisoException {
+		return ejecutarAccion(id, ra, BASE_URL, () -> reservaService.canAprobarDenegarReserva(id),
+				() -> reservaService.aprobar(id), "Error al aprobar la reserva");
 	}
+
+	@GetMapping("/{id}/cancelarempresa")
+	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Reserva.GESTION_RESERVA_INSTALACION + "')")
+	public ModelAndView cancelarEmpresa(@PathVariable Long id, RedirectAttributes ra) throws PermisoException {
+		return ejecutarAccion(id, ra, BASE_URL, () -> reservaService.canCancelarCompletadaIncompletadaEmpresa(id),
+				() -> reservaService.cancelarEmpresa(id), "Error al cancelar la reserva por empresa");
+	}
+
+	@GetMapping("/{id}/completar")
+	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Reserva.GESTION_RESERVA_INSTALACION + "')")
+	public ModelAndView completar(@PathVariable Long id, RedirectAttributes ra) throws PermisoException {
+		return ejecutarAccion(id, ra, BASE_URL, () -> reservaService.canCancelarCompletadaIncompletadaEmpresa(id),
+				() -> reservaService.completar(id), "Error al completar la reserva");
+	}
+	
+	@GetMapping("/{id}/incompletar")
+	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Reserva.GESTION_RESERVA_INSTALACION + "')")
+	public ModelAndView incompletar(@PathVariable Long id, RedirectAttributes ra) throws PermisoException {
+		return ejecutarAccion(id, ra, BASE_URL, () -> reservaService.canCancelarCompletadaIncompletadaEmpresa(id),
+				() -> reservaService.incompletar(id), "Error al completar la reserva");
+	}
+
 
 	@GetMapping("")
 	public ModelAndView search(Pageable pageable, HttpServletRequest request, ReservaFilter filter) {
@@ -159,14 +176,14 @@ public class PrivadoReservaController extends BaseController {
 
 	private ModelAndView buildListView(ReservaFilter filter, Pageable pageable, HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView(VIEW_LIST);
-		mav.addObject("page", reservaService.getPageByFilter(filter, pageable));
+		mav.addObject("page", reservaService.getPageListadoByFilter(filter, pageable));
 		mav.addObject("filter", filter);
 		mav.addObject("url", ReservaUtil.cleanUrlPageFilter(filter, request.getRequestURI()));
 		mav.addObject("breadcrumbs",
 				BreadcrumbBuilder.start().includeHome().add("breadcrumb.gestion.reserva", null).build());
 		mav.addObject("listInstalacionTipo",
 				Utils.addEmptyOptionIfMoreThanOneOption(instalacionTipoService.getListDTO(), InstalacionTipoDTO.class));
-		mav.addObject("listInstalacionTipo",
+		mav.addObject("listReservaEstado",
 				Utils.addEmptyOptionIfMoreThanOneOption(reservaEstadoService.getListDTO(), ReservaEstadoDTO.class));
 		addSortParameter(mav, pageable);
 		addBasicModelDetails(mav, TITLE_PAGE, false);

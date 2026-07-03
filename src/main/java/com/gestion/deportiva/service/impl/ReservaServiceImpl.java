@@ -28,6 +28,7 @@ import com.gestion.deportiva.util.Constantes;
 import com.gestion.deportiva.util.SecurityUtil;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -141,12 +142,34 @@ public class ReservaServiceImpl implements ReservaService {
 
 	@Override
 	public boolean canWrite(Long id) {
-		return true;
+		if (SecurityUtil.hasAuthority(Constantes.Permiso.GESTION_GLOBAL)
+				|| SecurityUtil.hasAuthority(Constantes.Permiso.Reserva.GESTION_RESERVA_GLOBAL)) {
+			return true;
+		}
+
+		Reserva reserva = reservaRepository.findByActivoTrueAndId(id);
+		if (reserva != null) {
+
+			if (SecurityUtil.hasAuthority(Constantes.Permiso.Reserva.GESTION_RESERVA_EMPRESA)) {
+				return SecurityUtil.getCurrentUserListEmpresaId()
+						.contains(reserva.getInstalacion().getSede().getEmpresa().getId());
+			}
+			if (SecurityUtil.hasAuthority(Constantes.Permiso.Reserva.GESTION_RESERVA_SEDE)) {
+				return SecurityUtil.getCurrentUserListSedeId().contains(reserva.getInstalacion().getSede().getId());
+			}
+			if (SecurityUtil.hasAuthority(Constantes.Permiso.Reserva.GESTION_RESERVA_INSTALACION)) {
+				return SecurityUtil.getCurrentUserListInstalacionId().contains(reserva.getInstalacion().getId());
+			}
+			if (SecurityUtil.hasAuthority(Constantes.Permiso.Reserva.GESTION_RESERVA_PROPIA)) {
+				return reserva.getUsuarioCreacion().getId().equals(SecurityUtil.getCurrentUserId());
+			}
+		}
+		return false;
 	}
 
 	@Override
 	public boolean canRead(Long id) {
-		return true;
+		return canWrite(id);
 	}
 
 	@Override
@@ -231,7 +254,16 @@ public class ReservaServiceImpl implements ReservaService {
 	}
 
 	@Override
-	public boolean canCancelarReservaPropia(Long reservaId) {
+	public boolean canAprobarDenegarReserva(Long reservaId) {
+		Reserva reserva = reservaRepository.findByActivoTrueAndId(reservaId);
+		if (reserva != null && reserva.getReservaEstado().getNombre().equals(Constantes.ReservaEstado.PENDIENTE)) {
+			return canWrite(reservaId);
+		}
+		return false;
+	}
+
+	@Override
+	public boolean canCancelarUsuario(Long reservaId) {
 		Reserva reserva = reservaRepository.findByActivoTrueAndId(reservaId);
 		if (reserva == null) {
 			return false;
@@ -241,13 +273,53 @@ public class ReservaServiceImpl implements ReservaService {
 	}
 
 	@Override
-	public void cancelarPorUsuario(Long id) {
-		Reserva reserva = reservaRepository.findByActivoTrueAndId(id);
-		ReservaEstado estadoCancelado = reservaEstadoRepository
-				.findByActivoTrueAndNombreEqualsIgnoreCase(Constantes.ReservaEstado.CANCELADA_POR_USUARIO);
-		reserva.setReservaEstado(estadoCancelado);
-		reservaRepository.saveAndFlush(reserva);
+	public boolean canCancelarCompletadaIncompletadaEmpresa(Long reservaId) {
+		Reserva reserva = reservaRepository.findByActivoTrueAndId(reservaId);
+		if (reserva == null) {
+			return false;
+		}
+		return reserva.getReservaEstado().getNombre().equals(Constantes.ReservaEstado.APROBADA) && canWrite(reservaId);
+	}
 
+	@Override
+	public void cancelarUsuario(Long id) {
+		actualizarReservaEstado(id, Constantes.ReservaEstado.CANCELADA_POR_USUARIO);
+	}
+
+	@Override
+	public void aprobar(Long id) {
+		actualizarReservaEstado(id, Constantes.ReservaEstado.APROBADA);
+	}
+
+	@Override
+	public void completar(Long id) {
+		actualizarReservaEstado(id, Constantes.ReservaEstado.COMPLETADA);
+	}
+
+	@Override
+	public void incompletar(Long id) {
+		actualizarReservaEstado(id, Constantes.ReservaEstado.INCOMPLETADA);
+	}
+
+	@Override
+	public void cancelarEmpresa(Long id) {
+		actualizarReservaEstado(id, Constantes.ReservaEstado.CANCELADA_POR_EMPRESA);
+	}
+
+	@Override
+	public void denegar(Long id) {
+		actualizarReservaEstado(id, Constantes.ReservaEstado.DENEGADA);
+	}
+
+	private void actualizarReservaEstado(Long id, String nombreEstado) {
+		Reserva reserva = reservaRepository.findByActivoTrueAndId(id);
+		if (reserva == null) {
+			throw new EntityNotFoundException("Reserva no encontrada");
+		}
+
+		ReservaEstado estado = reservaEstadoRepository.findByActivoTrueAndNombreEqualsIgnoreCase(nombreEstado);
+		reserva.setReservaEstado(estado);
+		reservaRepository.saveAndFlush(reserva);
 	}
 
 }

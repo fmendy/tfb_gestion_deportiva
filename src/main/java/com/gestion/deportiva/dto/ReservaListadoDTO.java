@@ -16,5 +16,15 @@ public class ReservaListadoDTO extends ReservaDTO {
 	private boolean mostrarEliminar;
 
 	private boolean mostrarCancelarPorUsuario;
+	
+	private boolean mostrarAprobar;
+	
+	private boolean mostrarDenegar;
+	
+	private boolean mostrarCompletar;
+	
+	private boolean mostrarIncompletar;
+	
+	private boolean mostrarCancelarPorEmpresa;
 
 }

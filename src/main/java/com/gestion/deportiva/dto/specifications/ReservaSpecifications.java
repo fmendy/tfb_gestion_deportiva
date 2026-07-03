@@ -22,6 +22,10 @@ public class ReservaSpecifications extends BaseSpecifications<Reserva> {
 		if (filter.getInstalacionId() != null) {
 			specs.add(new ReservaSpecifications().equalsFieldLong(filter.getInstalacionId(), "instalacion", "id"));
 		}
+		
+		if (filter.getInstalacionTipoId() != null) {
+			specs.add(new ReservaSpecifications().equalsFieldLong(filter.getInstalacionTipoId(), "instalacion","instalacionTipo", "id"));
+		}
 
 		if (filter.getFechaDesde() != null) {
 			specs.add(new ReservaSpecifications().greaterThanOrEqualTo("fecha", filter.getFechaDesde()));

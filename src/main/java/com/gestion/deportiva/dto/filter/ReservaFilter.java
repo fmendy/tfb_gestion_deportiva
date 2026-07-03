@@ -19,6 +19,8 @@ public class ReservaFilter extends BaseEntityFilter {
 	private Long sedeId;
 
 	private Long instalacionId;
+	
+	private Long instalacionTipoId;
 
 	private LocalDate fechaDesde;
 

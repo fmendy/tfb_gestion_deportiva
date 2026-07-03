@@ -118,15 +118,60 @@ public class ReservaMapper {
 		retVal.setReservaEstadoId(model.getReservaEstado().getId());
 		retVal.setReservaEstadoNombre(model.getReservaEstado().getNombre());
 		retVal.setMostrarEliminar(
+				model.getReservaEstado().getNombre().equalsIgnoreCase(Constantes.ReservaEstado.PENDIENTE)
+						&& model.getUsuarioCreacion().getId().equals(SecurityUtil.getCurrentUserId()));
+		retVal.setMostrarAprobar(
 				model.getReservaEstado().getNombre().equalsIgnoreCase(Constantes.ReservaEstado.PENDIENTE));
+
+		retVal.setMostrarDenegar(
+				model.getReservaEstado().getNombre().equalsIgnoreCase(Constantes.ReservaEstado.PENDIENTE));
+
 		retVal.setMostrarCancelarPorUsuario(
 				model.getReservaEstado().getNombre().equalsIgnoreCase(Constantes.ReservaEstado.APROBADA)
 						&& model.getUsuarioCreacion().getId().equals(SecurityUtil.getCurrentUserId()));
-		retVal.setReservaEstadoCss(model.getReservaEstado().getNombre().equals(Constantes.ReservaEstado.APROBADA)
-				? "bg-success-subtle text-success border-success-subtle"
-				: model.getReservaEstado().getNombre().equals(Constantes.ReservaEstado.PENDIENTE)
-						? "bg-warning-subtle text-warning border-warning-subtle"
-						: "bg-secondary-subtle text-secondary border-secondary-subtle");
+
+		retVal.setMostrarCancelarPorEmpresa(
+				model.getReservaEstado().getNombre().equalsIgnoreCase(Constantes.ReservaEstado.APROBADA));
+
+		retVal.setMostrarCompletar(
+				model.getReservaEstado().getNombre().equalsIgnoreCase(Constantes.ReservaEstado.APROBADA));
+
+		retVal.setMostrarIncompletar(
+				model.getReservaEstado().getNombre().equalsIgnoreCase(Constantes.ReservaEstado.APROBADA));
+
+		String estadoCss;
+		switch (model.getReservaEstado().getNombre()) {
+		case Constantes.ReservaEstado.APROBADA:
+			estadoCss = "bg-success-subtle text-success border-success-subtle";
+			break;
+
+		case Constantes.ReservaEstado.PENDIENTE:
+			estadoCss = "bg-warning-subtle text-warning border-warning-subtle";
+			break;
+
+		case Constantes.ReservaEstado.CANCELADA_POR_USUARIO:
+		case Constantes.ReservaEstado.CANCELADA_POR_EMPRESA:
+			estadoCss = "bg-danger-subtle text-danger border-danger-subtle";
+			break;
+
+		case Constantes.ReservaEstado.COMPLETADA:
+			estadoCss = "bg-primary-subtle text-primary border-primary-subtle";
+			break;
+
+		case Constantes.ReservaEstado.INCOMPLETADA:
+			estadoCss = "bg-dark-subtle text-dark border-dark-subtle";
+			break;
+
+		case Constantes.ReservaEstado.DENEGADA:
+			estadoCss = "bg-secondary-subtle text-secondary border-secondary-subtle";
+			break;
+
+		default:
+			estadoCss = "bg-light text-dark border";
+			break;
+		}
+
+		retVal.setReservaEstadoCss(estadoCss);
 
 		return retVal;
 	}
