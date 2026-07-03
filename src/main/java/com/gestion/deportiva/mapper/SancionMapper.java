@@ -28,9 +28,17 @@ public class SancionMapper {
 		retVal.setDescripcion(model.getDescripcion());
 		retVal.setReservaId(model.getReserva().getId());
 		retVal.setUsuarioId(model.getUsuario().getId());
-		retVal.setSancionTipoId(model.getSancionTipo().getId());
 		retVal.setUsuarioNombre(model.getUsuario().getNombre());
+		retVal.setSancionTipoId(model.getSancionTipo().getId());
 		retVal.setSancionTipoNombre(model.getSancionTipo().getNombre());
+		retVal.setReservaReservaEstadoNombre(model.getReserva().getReservaEstado().getNombre());
+		retVal.setReservaHoraInicio(model.getReserva().getHoraInicio());
+		retVal.setReservaHoraFin(model.getReserva().getHoraFin());
+		retVal.setReservaFecha(model.getReserva().getFecha());
+		retVal.setReservaInstalacionNombre(model.getReserva().getInstalacion().getNombre());
+		retVal.setReservaInstalacionSedeNombre(model.getReserva().getInstalacion().getSede().getNombre());
+		retVal.setReservaInstalacionSedeEmpresaNombre(
+				model.getReserva().getInstalacion().getSede().getEmpresa().getNombre());
 
 		return retVal;
 	}
@@ -67,6 +75,19 @@ public class SancionMapper {
 
 	public List<ComboDTO> listModelToListComboDTO(List<Sancion> list) {
 		return list.stream().map(bean -> new ComboDTO(bean.getId(), bean.getSancionTipo().getNombre())).toList();
+	}
+
+	public SancionDTO dtoAndReservaToDTO(SancionDTO dto, Reserva reserva) {
+		dto.setReservaId(reserva.getId());
+		dto.setUsuarioNombre(reserva.getUsuarioCreacion().getNombre());
+		dto.setReservaHoraInicio(reserva.getHoraInicio());
+		dto.setReservaHoraFin(reserva.getHoraFin());
+		dto.setReservaFecha(reserva.getFecha());
+		dto.setReservaInstalacionNombre(reserva.getInstalacion().getNombre());
+		dto.setReservaInstalacionSedeNombre(reserva.getInstalacion().getSede().getNombre());
+		dto.setReservaInstalacionSedeEmpresaNombre(reserva.getInstalacion().getSede().getEmpresa().getNombre());
+		dto.setReservaReservaEstadoNombre(reserva.getReservaEstado().getNombre());
+		return dto;
 	}
 
 }

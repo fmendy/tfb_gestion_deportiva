@@ -269,7 +269,7 @@
 								</div>
 								<div th:if="${element.mostrarSancionar}">
 									<a
-										th:href="@{/privado/sancion/crear(usuarioId=${element.usuarioId})}"
+										th:href="@{/privado/sancion/crear(reservaId=${element.id}, usuarioId=${element.usuarioId})}"
 										class="btn btn-outline-warning btn-sm rounded-circle d-inline-flex align-items-center justify-content-center hover-scale"
 										style="width: 32px; height: 32px;"
 										th:title="#{reserva.modal.boton.sancionar}"> <i

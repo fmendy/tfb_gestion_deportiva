@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" lang="es"
+	layout:decorate="~{layout/base}">
+<head>
+
+<link rel="stylesheet"
+	href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+	
+</script>
+
+
+
+</head>
+<body>
+	<div layout:fragment="content" class="container-fluid py-5 px-3">
+
+		<div
+			th:replace="~{fragments/breadcrumbs :: breadcrumbs(${breadcrumbs})}"></div>
+
+		<div class="card shadow-lg border-0 rounded-4 p-4">
+
+
+
+
+			<!-- Título -->
+			<h3 class="text-center mb-4 fw-bold">
+				<i class="bi bi-buildings me-2 text-gradient-primary"></i> <span
+					th:text="#{page.title.privado.sancion}"> </span>
+			</h3>
+
+			<div th:if="${form.id != null and form.id > 0}">
+				<div
+					th:replace="~{fragments/sancion-tabs :: tabs(${form.id}, 'info')}"></div>
+			</div>
+
+			<div class="card border-0 shadow-sm mb-4 bg-light">
+				<div class="card-body">
+					<h6 class="text-primary fw-bold mb-3">
+						<i class="bi bi-info-circle me-2"></i><span
+							th:text="#{sancion.form.detalles.reserva}"></span>
+					</h6>
+					<div class="row g-3">
+						<div class="col-md-4">
+							<small class="text-muted d-block"><span
+								th:text="#{sancion.form.usuario.nombre}"></span></small> <span
+								class="fw-bold" th:text="${form.usuarioNombre}">Nombre
+								Usuario</span>
+						</div>
+						<div class="col-md-4">
+							<small class="text-muted d-block"><span
+								th:text="#{sancion.form.empresa}"></span></small> <span
+								class="fw-bold" th:text="${form.reservaInstalacionSedeEmpresaNombre}">Empresa</span>
+						</div>
+						<div class="col-md-4">
+							<small class="text-muted d-block"><span
+								th:text="#{sancion.form.sede}"></span></small> <span
+								class="fw-bold" th:text="${form.reservaInstalacionSedeNombre}">Sede</span>
+						</div>
+						<div class="col-md-4">
+							<small class="text-muted d-block"><span
+								th:text="#{sancion.form.instalacion}"></span></small> <span
+								class="fw-bold" th:text="${form.reservaInstalacionNombre}">Instalación</span>
+						</div>
+						<div class="col-md-4">
+							<small class="text-muted d-block">Fecha y Hora</small> <span
+								class="fw-bold"
+								th:text="${#temporals.format(form.reservaFecha, 'dd/MM/yyyy')} + ' ' + ${#temporals.format(form.reservaHoraInicio, 'HH:mm')}"></span>
+						</div>
+						<div class="col-md-4">
+							<small class="text-muted d-block"><span
+								th:text="#{sancion.form.reserva.estado}"></span></small> <span
+								class="fw-bold" th:text="${form.reservaReservaEstadoNombre}">Reserva estado</span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
+
+				<form th:action="@{/privado/sancion/guardar}" th:object="${form}"
+					method="post" class="row g-4 p-4 bg-white rounded ">
+					<input type="hidden" th:field="*{id}" /> <input type="hidden"
+						th:field="*{usuarioId}" /> <input type="hidden"
+						th:field="*{reservaId}" />
+
+					<h5 class="mb-0 text-secondary border-bottom pb-2">Configuración
+						de la Sanción</h5>
+
+					<div class="col-md-4">
+						<label class="form-label fw-bold">Fecha Inicio <span
+							class="text-danger">*</span></label> <input type="date"
+							th:field="*{fechaInicio}" class="form-control rounded-pill"
+							required>
+							<div class="text-danger small mt-1"
+							th:if="${#fields.hasErrors('fechaInicio')}"
+							th:errors="*{fechaInicio}">
+							<i class="bi bi-exclamation-circle me-1"></i> Error
+						</div>
+					</div>
+
+					<div class="col-md-4">
+						<label class="form-label fw-bold">Fecha Fin <span
+							class="text-danger">*</span></label> <input type="date"
+							th:field="*{fechaFin}" class="form-control rounded-pill" required>
+							<div class="text-danger small mt-1"
+							th:if="${#fields.hasErrors('fechaFin')}"
+							th:errors="*{fechaFin}">
+							<i class="bi bi-exclamation-circle me-1"></i> Error
+						</div>
+					</div>
+
+					<div class="col-md-4">
+						<label class="form-label fw-bold">Tipo de Sanción <span
+							class="text-danger">*</span></label> <select th:field="*{sancionTipoId}"
+							class="form-select rounded-pill" required>
+							<option th:each="p : ${listSancionTipo}" th:value="${p.id}"
+								th:text="${p.nombre}"></option>
+						</select>
+						<div class="text-danger small mt-1"
+							th:if="${#fields.hasErrors('sancionTipoId')}"
+							th:errors="*{sancionTipoId}">
+							<i class="bi bi-exclamation-circle me-1"></i> Error
+						</div>
+					</div>
+
+					<div class="col-12">
+						<label class="form-label fw-bold">Descripción</label>
+						<textarea th:field="*{descripcion}" class="form-control rounded-3"
+							rows="4" maxlength="1250"></textarea>
+						<div class="form-text text-end"></div>
+						<div class="text-danger small mt-1"
+							th:if="${#fields.hasErrors('descripcion')}"
+							th:errors="*{descripcion}">
+							<i class="bi bi-exclamation-circle me-1"></i> Error
+						</div>
+					</div>
+
+					<div class="col-12 d-flex justify-content-end gap-2 mt-4">
+						<a th:href="@{/privado/sancion}"
+							class="btn btn-outline-secondary rounded-pill px-4"><span th:text="#{boton.cancelar}"></span></a>
+						<button type="submit" class="btn btn-primary rounded-pill px-5">
+							<span th:text="#{boton.guardar}"></span></button>
+					</div>
+				</form>
+			</div>
+
+
+
+
+
+
+		</div>
+	</div>
+</body>
+</html>

@@ -13,7 +13,9 @@ import com.gestion.deportiva.dto.SancionDTO;
 import com.gestion.deportiva.dto.filter.SancionFilter;
 import com.gestion.deportiva.dto.specifications.SancionSpecifications;
 import com.gestion.deportiva.mapper.SancionMapper;
+import com.gestion.deportiva.model.Reserva;
 import com.gestion.deportiva.model.Sancion;
+import com.gestion.deportiva.repository.ReservaRepository;
 import com.gestion.deportiva.repository.SancionRepository;
 import com.gestion.deportiva.service.SancionService;
 import jakarta.persistence.EntityManager;
@@ -33,11 +35,24 @@ public class SancionServiceImpl implements SancionService {
 
 	@Autowired
 	private SancionMapper sancionMapper;
+	
+	@Autowired
+	private ReservaRepository reservaRepository;
 
 	@Override
 	public SancionDTO findById(Long id) {
 		logger.info("Buscando Sancion por ID: {}", id);
 		return sancionMapper.modelToDTO(sancionRepository.findByActivoTrueAndId(id));
+	}
+
+	@Override
+	public SancionDTO findByDTO(SancionDTO dto) {
+		logger.info("Buscando Sancion por ID: {}", dto.getId());
+		if (dto.getId() != null) {
+			return sancionMapper.modelToDTO(sancionRepository.findByActivoTrueAndId(dto.getId()));
+		}
+		Reserva reserva = reservaRepository.findByActivoTrueAndId(dto.getReservaId());
+		return sancionMapper.dtoAndReservaToDTO(dto, reserva);
 	}
 
 	@Override

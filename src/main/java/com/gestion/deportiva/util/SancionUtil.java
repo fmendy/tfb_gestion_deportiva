@@ -13,8 +13,8 @@ public class SancionUtil {
 			retVal = retVal + "?";
 		}
 		if (filter != null) {
-			if (filter.getEmpresaId() != null) {
-				retVal = retVal + "&empresaId=" + filter.getEmpresaId();
+			if (filter.getReservaId() != null) {
+				retVal = retVal + "&reservaId=" + filter.getReservaId();
 			}
 
 			if (filter.getUsuarioId() != null) {
