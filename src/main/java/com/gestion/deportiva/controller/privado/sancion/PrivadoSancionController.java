@@ -3,12 +3,14 @@ package com.gestion.deportiva.controller.privado.sancion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -18,13 +20,17 @@ import org.springframework.web.servlet.view.RedirectView;
 import com.gestion.deportiva.controller.BaseController;
 import com.gestion.deportiva.dto.SancionDTO;
 import com.gestion.deportiva.dto.SancionTipoDTO;
+import com.gestion.deportiva.dto.filter.SancionFilter;
 import com.gestion.deportiva.exception.PermisoException;
 import com.gestion.deportiva.service.SancionService;
 import com.gestion.deportiva.service.SancionTipoService;
+import com.gestion.deportiva.util.BreadcrumbBuilder;
 import com.gestion.deportiva.util.Constantes;
+import com.gestion.deportiva.util.SancionUtil;
 import com.gestion.deportiva.util.SecurityUtil;
 import com.gestion.deportiva.util.Utils;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 @Controller
@@ -56,9 +62,9 @@ public class PrivadoSancionController extends BaseController {
 		return buildDetailsForm(dto);
 
 	}
-	
+
 	@PostMapping("/guardar")
-	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Sancion.GESTION_SANCION_INSTALACION  + "')")
+	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Sancion.GESTION_SANCION_INSTALACION + "')")
 	public ModelAndView guardar(@Valid @ModelAttribute("form") SancionDTO dto, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) throws PermisoException {
 		if (!sancionService.canWrite(dto.getId())) {
@@ -80,6 +86,49 @@ public class PrivadoSancionController extends BaseController {
 			mav.addObject(Constantes.HTTP_STATUS, HttpStatus.INTERNAL_SERVER_ERROR.value());
 			return mav;
 		}
+	}
+
+	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Sancion.GESTION_SANCION_INSTALACION + "')")
+	@GetMapping("")
+	public ModelAndView search(Pageable pageable, HttpServletRequest request, SancionFilter filter) {
+		logger.info("Mostrando vista de sanciones con filtros, usuario {}", SecurityUtil.getCurrentUserId());
+		return buildListView(filter, pageable, request);
+	}
+
+	@GetMapping("/{id}/anular")
+	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Sancion.GESTION_SANCION_INSTALACION + "')")
+	public ModelAndView aprobar(@PathVariable Long id, RedirectAttributes redirectAttributes) throws PermisoException {
+		if (!sancionService.canWrite(id)) {
+			logger.error("Sancion {} intentó acceder a una sancion  sin permisos: usuario {}",
+					SecurityUtil.getCurrentUserId(), id);
+			throw new PermisoException("No tiene permisos para acceder a esta instalacion.");
+		}
+		logger.info("Anulando sancion id: {}", id);
+
+		try {
+			sancionService.eliminar(id);
+			redirectAttributes.addFlashAttribute(Constantes.HTTP_STATUS, HttpStatus.OK.value());
+			return new ModelAndView(new RedirectView(BASE_URL));
+		} catch (Exception e) {
+			logger.error("Error al anular la Sancion: {}", e.getMessage(), e);
+			ModelAndView mav = new ModelAndView(new RedirectView(BASE_URL));
+			mav.addObject(Constantes.HTTP_STATUS, HttpStatus.INTERNAL_SERVER_ERROR.value());
+			return mav;
+		}
+	}
+
+	private ModelAndView buildListView(SancionFilter filter, Pageable pageable, HttpServletRequest request) {
+		ModelAndView mav = new ModelAndView(VIEW_LIST);
+		mav.addObject("page", sancionService.getPageByFilter(filter, pageable));
+		mav.addObject("filter", filter);
+		mav.addObject("url", SancionUtil.cleanUrlPageFilter(filter, request.getRequestURI()));
+		mav.addObject("breadcrumbs",
+				BreadcrumbBuilder.start().includeHome().add("breadcrumb.gestion.sancion", null).build());
+		mav.addObject("listSancionTipo",
+				Utils.addEmptyOptionIfMoreThanOneOption(sancionTipoService.getListDTO(), SancionTipoDTO.class));
+		addSortParameter(mav, pageable);
+		addBasicModelDetails(mav, TITLE_PAGE, false);
+		return mav;
 	}
 
 	private ModelAndView buildDetailsForm(SancionDTO dto) {

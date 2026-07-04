@@ -110,53 +110,14 @@
 					class="table table-hover align-middle shadow-sm rounded-3 overflow-hidden">
 					<thead class="table-primary">
 						<tr>
-							<th class="text-nowrap"><span
-								th:text="#{instalacion.tabla.empresa}"></span> <a
-								class="ms-1 text-decoration-none text-muted opacity-75"
-								th:href="${url}+'&sort=empresa.sede.nombre,ASC'"
-								th:title="#{tabla.orden.ascendente}"> <i
-									class="bi bi-arrow-down-short"></i>
-							</a> <a class="text-decoration-none text-muted opacity-75"
-								th:href="${url}+'&sort=empresa.sede.nombre,DESC'"
-								th:title="#{tabla.orden.descendente}"> <i
-									class="bi bi-arrow-up-short"></i>
-							</a></th>
-
-							<th class="text-nowrap"><span
-								th:text="#{instalacion.tabla.sede}"></span> <a
-								class="ms-1 text-decoration-none text-muted opacity-75"
-								th:href="${url}+'&sort=sede.nombre,ASC'"
-								th:title="#{tabla.orden.ascendente}"> <i
-									class="bi bi-arrow-down-short"></i>
-							</a> <a class="text-decoration-none text-muted opacity-75"
-								th:href="${url}+'&sort=sede.nombre,DESC'"
-								th:title="#{tabla.orden.descendente}"> <i
-									class="bi bi-arrow-up-short"></i>
-							</a></th>
-
-							<th class="text-nowrap"><span
-								th:text="#{instalacion.tabla.tipo.instalacion}"></span> <a
-								class="ms-1 text-decoration-none text-muted opacity-75"
-								th:href="${url}+'&sort=instalacionTipoNombre.nombre,ASC'"
-								th:title="#{tabla.orden.ascendente}"> <i
-									class="bi bi-arrow-down-short"></i>
-							</a> <a class="text-decoration-none text-muted opacity-75"
-								th:href="${url}+'&sort=instalacionTipoNombre.nombre,DESC'"
-								th:title="#{tabla.orden.descendente}"> <i
-									class="bi bi-arrow-up-short"></i>
-							</a></th>
-
-							<th class="text-nowrap"><span
-								th:text="#{instalacion.tabla.nombre}"></span> <a
-								class="ms-1 text-decoration-none text-muted opacity-75"
-								th:href="${url}+'&sort=nombre,ASC'"
-								th:title="#{tabla.orden.ascendente}"> <i
-									class="bi bi-arrow-down-short"></i>
-							</a> <a class="text-decoration-none text-muted opacity-75"
-								th:href="${url}+'&sort=nombre,DESC'"
-								th:title="#{tabla.orden.descendente}"> <i
-									class="bi bi-arrow-up-short"></i>
-							</a></th>
+							<th
+								th:replace="~{fragments/th-sort :: sort(#{instalacion.tabla.empresa}, 'empresa.sede.nombre')}"></th>
+							<th
+								th:replace="~{fragments/th-sort :: sort(#{instalacion.tabla.sede}, 'sede.nombre')}"></th>
+							<th
+								th:replace="~{fragments/th-sort :: sort(#{instalacion.tabla.tipo.instalacion}, 'instalacionTipoNombre.nombre')}"></th>
+							<th
+								th:replace="~{fragments/th-sort :: sort(#{instalacion.tabla.nombre}, 'nombre')}"></th>
 
 							<th class="text-center" style="width: 60px;"><i
 								class="bi bi-pencil"></i></th>

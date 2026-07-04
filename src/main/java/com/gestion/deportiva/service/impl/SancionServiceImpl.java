@@ -19,6 +19,9 @@ import com.gestion.deportiva.repository.ReservaRepository;
 import com.gestion.deportiva.repository.SancionRepository;
 import com.gestion.deportiva.service.ReservaService;
 import com.gestion.deportiva.service.SancionService;
+import com.gestion.deportiva.util.Constantes;
+import com.gestion.deportiva.util.SecurityUtil;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
@@ -113,12 +116,36 @@ public class SancionServiceImpl implements SancionService {
 
 	@Override
 	public boolean canWrite(Long id) {
-		return true;
+		if (SecurityUtil.hasAnyAuthority(Constantes.Permiso.GESTION_GLOBAL,
+				Constantes.Permiso.Sancion.GESTION_SANCION_GLOBAL)) {
+			return true;
+		}
+		Sancion sancion = sancionRepository.findByActivoTrueAndId(id);
+		if (sancion == null && (SecurityUtil.hasAnyAuthority(Constantes.Permiso.Sancion.GESTION_SANCION_EMPRESA,
+				Constantes.Permiso.Sancion.GESTION_SANCION_SEDE,
+				Constantes.Permiso.Sancion.GESTION_SANCION_INSTALACION))) {
+			return true;
+		}
+		if (sancion == null) {
+			return false;
+		}
+		if (SecurityUtil.hasAuthority(Constantes.Permiso.Sancion.GESTION_SANCION_EMPRESA)) {
+			return SecurityUtil.getCurrentUserListEmpresaId()
+					.contains(sancion.getReserva().getInstalacion().getSede().getEmpresa().getId());
+		}
+		if (SecurityUtil.hasAuthority(Constantes.Permiso.Sancion.GESTION_SANCION_SEDE)) {
+			return SecurityUtil.getCurrentUserListEmpresaId()
+					.contains(sancion.getReserva().getInstalacion().getSede().getId());
+		}
+		if (SecurityUtil.hasAuthority(Constantes.Permiso.Sancion.GESTION_SANCION_INSTALACION)) {
+			return SecurityUtil.getCurrentUserListEmpresaId().contains(sancion.getReserva().getInstalacion().getId());
+		}
+		return false;
 	}
 
 	@Override
 	public boolean canRead(Long id) {
-		return true;
+		return canWrite(id);
 	}
 
 	@Override
@@ -126,4 +153,5 @@ public class SancionServiceImpl implements SancionService {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 }

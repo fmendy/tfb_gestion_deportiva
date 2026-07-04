@@ -108,6 +108,15 @@
 							th:text="#{navbar.mis.reservas}">Mis Reservas</span>
 					</a></li>
 					
+						<!-- Gestionar sancion -->
+					<li class="nav-item" sec:authorize="hasAuthority('GESTION_SANCION_INSTALACION')"><a
+						class="nav-link text-white d-flex align-items-center"
+						th:href="@{/privado/sancion}"> <i
+							class="bi bi-exclamation-triangle me-1"></i> <span
+							th:text="#{navbar.gestion.sanciones}">Gestion sancion</span>
+					</a></li>
+					
+					
 						<!-- Gestionar reservas -->
 					<li class="nav-item" sec:authorize="hasAuthority('GESTION_RESERVA_INSTALACION')"><a
 						class="nav-link text-white d-flex align-items-center"

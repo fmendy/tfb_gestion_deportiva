@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" lang="es"
+	layout:decorate="~{layout/base}">
+<head>
+
+<script>
+	document.addEventListener("DOMContentLoaded", function() {
+		var popoverTriggerList = [].slice.call(document
+				.querySelectorAll('[data-bs-toggle="popover"]'))
+		var popoverList = popoverTriggerList.map(function(popoverTriggerEl) {
+			return new bootstrap.Popover(popoverTriggerEl, {
+				trigger : 'hover focus' // Se abre al pasar el ratón o hacer clic
+			})
+		});
+	});
+</script>
+
+</head>
+<body>
+	<div layout:fragment="content" class="container py-5">
+
+		<div
+			th:replace="~{fragments/breadcrumbs :: breadcrumbs(${breadcrumbs})}"></div>
+
+		<div class="card shadow-lg border-0 rounded-4 p-4">
+			<!-- Contenedor para título + acción -->
+			<div
+				class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+				<!-- Título -->
+				<h5 class="mb-0 fw-semibold d-flex align-items-center">
+					<i class="bi bi-exclamation-triangle text-primary me-2 fs-4"></i> <span
+						th:text="#{page.title.privado.sancion}"></span>
+				</h5>
+
+
+			</div>
+
+			<!-- Filtro de búsqueda -->
+			<div class="card bg-light border-0 shadow-sm mb-4">
+				<div class="card-body">
+					<form th:action="@{/privado/sancion}" method="get"
+						th:object="${filter}" class="row g-3 align-items-center">
+
+						<!-- Fecha Inicio Desde -->
+						<div class="col-md-4">
+							<label for="fechaInicioDesde" class="form-label fw-bold"
+								th:text="#{sancion.filter.fecha.inicio.desde}"></label>
+							<div class="input-group">
+								<span class="input-group-text"><i
+									class="bi bi-calendar-date"></i></span> <input type="date"
+									id="fechaInicioDesde" class="form-control"
+									th:field="*{fechaInicioDesde}"
+									th:placeholder="#{sancion.filter.fecha.inicio.desde}" />
+							</div>
+						</div>
+
+						<!-- Fecha Inicio Hasta -->
+						<div class="col-md-4">
+							<label for="fechaInicioHasta" class="form-label fw-bold"
+								th:text="#{sancion.filter.fecha.inicio.hasta}"></label>
+							<div class="input-group">
+								<span class="input-group-text"><i
+									class="bi bi-calendar-range"></i></span> <input type="date"
+									id="fechaInicioHasta" class="form-control"
+									th:field="*{fechaInicioHasta}"
+									th:placeholder="#{sancion.filter.fecha.inicio.hasta}" />
+							</div>
+						</div>
+
+						<!-- Fecha Fin Desde -->
+						<div class="col-md-4">
+							<label for="fechaFinDesde" class="form-label fw-bold"
+								th:text="#{sancion.filter.fecha.fin.desde}"></label>
+							<div class="input-group">
+								<span class="input-group-text"><i
+									class="bi bi-calendar-check"></i></span> <input type="date"
+									id="fechaFinDesde" class="form-control"
+									th:field="*{fechaFinDesde}"
+									th:placeholder="#{sancion.filter.fecha.fin.desde}" />
+							</div>
+						</div>
+
+						<!-- Fecha Fin Hasta -->
+						<div class="col-md-4">
+							<label for="fechaFinHasta" class="form-label fw-bold"
+								th:text="#{sancion.filter.fecha.fin.hasta}"></label>
+							<div class="input-group">
+								<span class="input-group-text"><i
+									class="bi bi-calendar-x"></i></span> <input type="date"
+									id="fechaFinHasta" class="form-control"
+									th:field="*{fechaFinHasta}"
+									th:placeholder="#{sancion.filter.fecha.fin.hasta}" />
+							</div>
+						</div>
+
+						<!-- Motivo de Sanción (Select) -->
+						<div class="col-md-4">
+							<label for="sancionTipoId" class="form-label fw-bold"
+								th:text="#{sancion.filter.motivo.sancion}"></label>
+							<div class="input-group">
+								<span class="input-group-text"><i
+									class="bi bi-exclamation-triangle"></i></span> <select
+									id="sancionTipoId" class="form-select"
+									th:field="*{sancionTipoId}">
+									<option th:each="estado : ${listSancionTipo}"
+										th:value="${estado.id}" th:text="${estado.nombre}"></option>
+								</select>
+							</div>
+						</div>
+
+						<!-- Nombre de Usuario -->
+						<div class="col-md-4">
+							<label for="usuarioNombre" class="form-label fw-bold"
+								th:text="#{sancion.filter.usuario.nombre}"></label>
+							<div class="input-group">
+								<span class="input-group-text"><i class="bi bi-person"></i></span>
+								<input type="text" id="usuarioNombre" class="form-control"
+									th:field="*{usuarioNombre}"
+									th:placeholder="#{sancion.filter.usuario.nombre}" />
+							</div>
+						</div>
+
+						<!-- Botones de Acción -->
+						<div class="col-md-4 d-flex align-self-end">
+							<button type="submit" class="btn btn-primary me-2">
+								<i class="bi bi-search"></i> <span th:text="#{boton.buscar}"></span>
+							</button>
+							<a th:href="@{/privado/sancion}"
+								class="btn btn-outline-secondary"> <i
+								class="bi bi-arrow-counterclockwise"></i> <span
+								th:text="#{boton.limpiar}"></span>
+							</a>
+						</div>
+
+					</form>
+
+				</div>
+			</div>
+
+
+
+
+			<div class="table-responsive">
+				<table
+					class="table table-hover align-middle shadow-sm rounded-3 overflow-hidden">
+					<thead class="table-primary">
+						<tr>
+							<th
+								th:replace="~{fragments/th-sort :: sort(#{sancion.tabla.fecha.inicio}, 'fechaInicio')}"></th>
+							<th
+								th:replace="~{fragments/th-sort :: sort(#{sancion.tabla.fecha.fin}, 'fechaFin')}"></th>
+							<th
+								th:replace="~{fragments/th-sort :: sort(#{sancion.tabla.motivo}, 'sancionTipo.nombre')}"></th>
+
+							<th
+								th:replace="~{fragments/th-sort :: sort(#{sancion.tabla.descripcion}, 'descripcion')}"></th>
+							<th
+								th:replace="~{fragments/th-sort :: sort(#{sancion.tabla.usuario}, 'reserva.usuarioCreacion.nombre')}"></th>
+
+							<th
+								th:replace="~{fragments/th-sort :: sort(#{sancion.tabla.datos.reserva}, 'reserva.fecha')}"></th>
+
+							<th class="text-center"><i class="bi bi-gear"></i></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="element : ${page.content}">
+							<td class="text-muted"
+								th:text="${#temporals.format(element.fechaInicio, 'dd/MM/yyyy')}"></td>
+							<td class="text-muted"
+								th:text="${#temporals.format(element.fechaFin, 'dd/MM/yyyy')}"></td>
+							<td class="fw-bold" th:text="${element.sancionTipoNombre}"></td>
+							<td class="fw-bold" th:text="${element.descripcion}"></td>
+							<td class="fw-bold" th:text="${element.usuarioNombre}"></td>
+
+							<td><span class="text-primary cursor-pointer fw-semibold"
+								data-bs-toggle="popover" data-bs-placement="top"
+								data-bs-html="true"
+								th:data-bs-title="${element.reservaFecha}+ ' '+${element.reservaHoraInicio}+ '-'+${element.reservaHoraFin}"
+								th:data-bs-content="'<div class=&quot;small&quot;><div><strong>Instalacion:</strong> ' + ${element.reservaInstalacionNombre} + '</div><div><strong>Sede:</strong> ' + 
+									${element.reservaInstalacionSedeNombre} + '</div><div class=&quot;text-muted&quot;><strong>Empresa:</strong> ' + ${element.reservaInstalacionSedeEmpresaNombre} + '</div></div>'">
+									<span
+									th:text="${element.reservaFecha}+ ' - '+${element.reservaHoraInicio}"></span>
+									<i class="bi bi-info-circle ms-1 opacity-50"></i>
+							</span></td>
+							<td>
+
+								<div>
+									<button type="button"
+										class="btn btn-outline-danger btn-sm rounded-circle d-inline-flex align-items-center justify-content-center hover-scale"
+										style="width: 32px; height: 32px;" data-bs-toggle="modal"
+										th:attr="data-bs-target='#confirmarAnularModal-' + ${element.id}"
+										th:title="#{sancion.modal.boton.anular}">
+										<i class="bi bi-x-circle"></i>
+									</button>
+
+
+									<div
+										th:replace="~{fragments/modals :: modalConfirmacion(
+                        'confirmarAnularModal-' + ${element.id},
+                        #{sancion.modal.titulo.anular},
+                        #{sancion.modal.body.anular},
+                        @{/privado/sancion/{id}/anular(id=${element.id})},
+                        #{sancion.modal.boton.anular}
+                      )}">
+									</div>
+								</div>
+							</td>
+
+
+
+						</tr>
+
+						<tr th:if="${#lists.isEmpty(page.content)}">
+							<td colspan="4" class="text-center text-muted py-5"><i
+								class="bi bi-search fs-2 d-block mb-2 text-secondary"></i> <span
+								th:text="#{tabla.no.se.encontraron.resultados}"></span></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<div
+				th:replace="~{fragments/pagination :: pagination(${page}, ${url}, ${sort})}"></div>
+
+
+
+		</div>
+	</div>
+</body>
+</html>
