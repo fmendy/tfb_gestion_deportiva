@@ -90,44 +90,56 @@
 						th:href="@{/login}"> <i class="bi bi-box-arrow-in-right me-1"></i>
 							<span th:text="#{navbar.login}">Iniciar sesión</span>
 					</a></li>
-					
+
 					<!-- Mapa de sedes -->
-					<li class="nav-item" ><a
+					<li class="nav-item"><a
 						class="nav-link text-white d-flex align-items-center"
-						th:href="@{/publico/sede/mapa}"> <i
-							class="bi bi-map me-1"></i> <span
-							th:text="#{navbar.sede.mapa}">Sede sede</span>
+						th:href="@{/publico/sede/mapa}"> <i class="bi bi-map me-1"></i>
+							<span th:text="#{navbar.sede.mapa}">Sede sede</span>
 					</a></li>
-					
-					
-						<!-- Mis reservas -->
-					<li class="nav-item" sec:authorize="hasAuthority('GESTION_RESERVA_PROPIA')"><a
+
+
+					<!-- Mis reservas -->
+					<li class="nav-item"
+						sec:authorize="hasAuthority('GESTION_RESERVA_PROPIA')"><a
 						class="nav-link text-white d-flex align-items-center"
 						th:href="@{/privado/reserva/misreservas}"> <i
 							class="bi bi-clock-history me-1"></i> <span
 							th:text="#{navbar.mis.reservas}">Mis Reservas</span>
 					</a></li>
-					
-						<!-- Gestionar sancion -->
-					<li class="nav-item" sec:authorize="hasAuthority('GESTION_SANCION_INSTALACION')"><a
+
+					<!-- Mis sanciones -->
+					<li class="nav-item"
+						sec:authorize="hasAuthority('GESTION_SANCION_PROPIA')"><a
+						class="nav-link text-white d-flex align-items-center"
+						th:href="@{/privado/sancion/missanciones}"> <i
+							class="bi bi-exclamation-triangle me-1"></i> <span
+							th:text="#{navbar.mis.sanciones}">Mis Sancion</span>
+					</a></li>
+
+					<!-- Gestionar sancion -->
+					<li class="nav-item"
+						sec:authorize="hasAuthority('GESTION_SANCION_INSTALACION')"><a
 						class="nav-link text-white d-flex align-items-center"
 						th:href="@{/privado/sancion}"> <i
 							class="bi bi-exclamation-triangle me-1"></i> <span
 							th:text="#{navbar.gestion.sanciones}">Gestion sancion</span>
 					</a></li>
-					
-					
-						<!-- Gestionar reservas -->
-					<li class="nav-item" sec:authorize="hasAuthority('GESTION_RESERVA_INSTALACION')"><a
+
+
+					<!-- Gestionar reservas -->
+					<li class="nav-item"
+						sec:authorize="hasAuthority('GESTION_RESERVA_INSTALACION')"><a
 						class="nav-link text-white d-flex align-items-center"
 						th:href="@{/privado/reserva}"> <i
 							class="bi bi-clock-history me-1"></i> <span
 							th:text="#{navbar.gestion.reservas}">Gestion Reservas</span>
 					</a></li>
-					
-					
+
+
 					<!-- Empresa -->
-					<li class="nav-item" sec:authorize="hasAuthority('GESTION_USUARIO_INSTALACION')"><a
+					<li class="nav-item"
+						sec:authorize="hasAuthority('GESTION_USUARIO_INSTALACION')"><a
 						class="nav-link text-white d-flex align-items-center"
 						th:href="@{/privado/empleado}"> <i
 							class="bi bi-person-square me-1"></i> <span
@@ -135,27 +147,29 @@
 					</a></li>
 
 					<!-- Empresa -->
-					<li class="nav-item" sec:authorize="hasAuthority('GESTION_EMPRESA')"><a
+					<li class="nav-item"
+						sec:authorize="hasAuthority('GESTION_EMPRESA')"><a
 						class="nav-link text-white d-flex align-items-center"
-						th:href="@{/privado/empresa}"> <i
-							class="bi bi-buildings me-1"></i> <span
-							th:text="#{navbar.gestion.empresas}">Gestionar empresas</span>
+						th:href="@{/privado/empresa}"> <i class="bi bi-buildings me-1"></i>
+							<span th:text="#{navbar.gestion.empresas}">Gestionar
+								empresas</span>
 					</a></li>
-					
+
 					<!-- Sede -->
 					<li class="nav-item" sec:authorize="hasAuthority('GESTION_SEDE')"><a
 						class="nav-link text-white d-flex align-items-center"
-						th:href="@{/privado/sede}"> <i
-							class="bi bi-geo me-1"></i> <span
+						th:href="@{/privado/sede}"> <i class="bi bi-geo me-1"></i> <span
 							th:text="#{navbar.gestion.sedes}">Gestionar sedes</span>
 					</a></li>
-					
+
 					<!-- Sede -->
-					<li class="nav-item" sec:authorize="hasAuthority('GESTION_INSTALACION')"><a
+					<li class="nav-item"
+						sec:authorize="hasAuthority('GESTION_INSTALACION')"><a
 						class="nav-link text-white d-flex align-items-center"
 						th:href="@{/privado/instalacion}"> <i
 							class="bi bi-trophy me-1"></i> <span
-							th:text="#{navbar.gestion.instalaciones}">Gestionar instalacion</span>
+							th:text="#{navbar.gestion.instalaciones}">Gestionar
+								instalacion</span>
 					</a></li>
 
 

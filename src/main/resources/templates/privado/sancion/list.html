@@ -162,7 +162,8 @@
 							<th
 								th:replace="~{fragments/th-sort :: sort(#{sancion.tabla.datos.reserva}, 'reserva.fecha')}"></th>
 
-							<th class="text-center"><i class="bi bi-gear"></i></th>
+							<th sec:authorize="hasRole('GESTION_SANCION_INSTALACION')"
+								class="text-center"><i class="bi bi-gear"></i></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -185,7 +186,7 @@
 									th:text="${element.reservaFecha}+ ' - '+${element.reservaHoraInicio}"></span>
 									<i class="bi bi-info-circle ms-1 opacity-50"></i>
 							</span></td>
-							<td>
+							<td sec:authorize="hasRole('GESTION_SANCION_INSTALACION')">
 
 								<div>
 									<button type="button"

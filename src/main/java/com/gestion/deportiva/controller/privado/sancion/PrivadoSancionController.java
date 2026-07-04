@@ -95,6 +95,16 @@ public class PrivadoSancionController extends BaseController {
 		return buildListView(filter, pageable, request);
 	}
 
+	
+	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Sancion.GESTION_SANCION_PROPIA + "')")
+	@GetMapping("/missanciones")
+	public ModelAndView searchMisSanciones(Pageable pageable, HttpServletRequest request, SancionFilter filter) {
+		logger.info("Mostrando vista de sanciones con filtros, usuario {}", SecurityUtil.getCurrentUserId());
+		filter.setUsuarioId(SecurityUtil.getCurrentUserId());
+		return buildListView(filter, pageable, request);
+	}
+
+	
 	@GetMapping("/{id}/anular")
 	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Sancion.GESTION_SANCION_INSTALACION + "')")
 	public ModelAndView aprobar(@PathVariable Long id, RedirectAttributes redirectAttributes) throws PermisoException {
