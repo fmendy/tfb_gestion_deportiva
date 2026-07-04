@@ -19,51 +19,54 @@ public abstract class BaseSpecifications<T> {
 	protected Specification<T> activoTrue() {
 		return (root, query, cb) -> cb.equal(root.get("activo"), true);
 	}
-	
+
 	private From<?, ?> joinAndFilterActivo(From<?, ?> root, String... fields) {
-	    From<?, ?> current = root;
-	    // Iteramos hasta el penúltimo campo (las relaciones)
-	    for (int i = 0; i < fields.length - 1; i++) {
-	        // Hacemos el Join
-	        Join<Object, Object> join = current.join(fields[i], JoinType.INNER);
-	        // Filtramos que la relación intermedia esté activa
-	        join.on(join.get("activo").in(true)); 
-	        current = join;
-	    }
-	    return current;
+		From<?, ?> current = root;
+		// Iteramos hasta el penúltimo campo (las relaciones)
+		for (int i = 0; i < fields.length - 1; i++) {
+			// Hacemos el Join
+			Join<Object, Object> join = current.join(fields[i], JoinType.INNER);
+			// Filtramos que la relación intermedia esté activa
+			join.on(join.get("activo").in(true));
+			current = join;
+		}
+		return current;
 	}
 
 	protected Specification<T> likeIgnoreCase(String value, String... fields) {
-	    return (root, query, cb) -> {
-	        if (!StringUtils.hasText(value)) return null;
-	        
-	        From<?, ?> current = joinAndFilterActivo(root, fields);
-	        Path<String> path = current.get(fields[fields.length - 1]);
-	        
-	        return cb.like(cb.upper(path), "%" + value.toUpperCase() + "%");
-	    };
+		return (root, query, cb) -> {
+			if (!StringUtils.hasText(value))
+				return null;
+
+			From<?, ?> current = joinAndFilterActivo(root, fields);
+			Path<String> path = current.get(fields[fields.length - 1]);
+
+			return cb.like(cb.upper(path), "%" + value.toUpperCase() + "%");
+		};
 	}
 
 	protected Specification<T> fieldInString(List<String> listString, String... fields) {
-	    return (root, query, cb) -> {
-	        if (listString == null || listString.isEmpty()) return null;
-	        
-	        From<?, ?> current = joinAndFilterActivo(root, fields);
-	        Path<String> path = current.get(fields[fields.length - 1]);
-	        
-	        return path.in(listString);
-	    };
+		return (root, query, cb) -> {
+			if (listString == null || listString.isEmpty())
+				return null;
+
+			From<?, ?> current = joinAndFilterActivo(root, fields);
+			Path<String> path = current.get(fields[fields.length - 1]);
+
+			return path.in(listString);
+		};
 	}
 
 	protected Specification<T> fieldInLong(List<Long> listLong, String... fields) {
-	    return (root, query, cb) -> {
-	        if (listLong == null || listLong.isEmpty()) return null;
-	        
-	        From<?, ?> current = joinAndFilterActivo(root, fields);
-	        Path<Long> path = current.get(fields[fields.length - 1]);
-	        
-	        return path.in(listLong);
-	    };
+		return (root, query, cb) -> {
+			if (listLong == null || listLong.isEmpty())
+				return null;
+
+			From<?, ?> current = joinAndFilterActivo(root, fields);
+			Path<Long> path = current.get(fields[fields.length - 1]);
+
+			return path.in(listLong);
+		};
 	}
 
 	protected Specification<T> greaterThanOrEqualTo(String field, LocalDate value) {
@@ -91,33 +94,53 @@ public abstract class BaseSpecifications<T> {
 	}
 
 	protected Specification<T> equalsFieldLong(Long value, String... fields) {
+		return (root, query, cb) -> {
+			// Si solo viene un campo (ej. "id"), se busca directo en el root
+			if (fields.length == 1) {
+				return cb.equal(root.get(fields[0]), value);
+			}
+
+			// Empezamos el primer Join desde la raíz (ej. root.join("municipio"))
+			Join<Object, Object> currentJoin = root.join(fields[0]);
+			currentJoin.on(cb.isTrue(currentJoin.get("activo")));
+
+			// Encadenamos los siguientes joins de forma secuencial
+			for (int i = 1; i < fields.length - 1; i++) {
+				currentJoin = currentJoin.join(fields[i]);
+				currentJoin.on(cb.isTrue(currentJoin.get("activo")));
+			}
+
+			// El último elemento del array siempre será el atributo final (ej. "id")
+			Path<Object> path = currentJoin.get(fields[fields.length - 1]);
+
+			return cb.equal(path, value);
+		};
+	}
+
+	protected Specification<T> equalsFieldBoolean(Boolean value, String... fields) {
 	    return (root, query, cb) -> {
-	        Path<Object> path = root.get(fields[0]);
-	        for (int i = 0; i < fields.length - 1; i++) {
-	            Join<Object, Object> join = root.join(fields[i]);
-	            join.on(cb.isTrue(join.get("activo")));
-	            
-	            path = join.get(fields[i+1]);
+	        // Si solo viene un campo (ej. "id"), se busca directo en el root
+	        if (fields.length == 1) {
+	            return cb.equal(root.get(fields[0]), value);
 	        }
+
+	        // Empezamos el primer Join desde la raíz (ej. root.join("municipio"))
+	        Join<Object, Object> currentJoin = root.join(fields[0]);
+	        currentJoin.on(cb.isTrue(currentJoin.get("activo")));
+
+	        // Encadenamos los siguientes joins de forma secuencial
+	        for (int i = 1; i < fields.length - 1; i++) {
+	            currentJoin = currentJoin.join(fields[i]);
+	            currentJoin.on(cb.isTrue(currentJoin.get("activo")));
+	        }
+
+	        // El último elemento del array siempre será el atributo final (ej. "id")
+	        Path<Object> path = currentJoin.get(fields[fields.length - 1]);
 
 	        return cb.equal(path, value);
 	    };
 	}
 
-	protected Specification<T> equalsFieldBoolean(Boolean value, String... fields) {
-		return (root, query, cb) -> {
-			// Obtenemos el path inicial empezando por el primer campo
-			Path<Object> path = root.get(fields[0]);
-
-			for (int i = 0; i < fields.length - 1; i++) {
-	            Join<Object, Object> join = root.join(fields[i]);
-	            join.on(cb.isTrue(join.get("activo")));
-	            
-	            path = join.get(fields[i+1]);
-	        }
-			return cb.equal(path, value);
-		};
-	}
 
 	protected Specification<T> createdByUsuarioUuid(String uuid) {
 		return (root, query, cb) -> cb.equal(cb.upper(root.get("usuarioCreacion").get("uuid")), uuid.toUpperCase());
@@ -126,8 +149,6 @@ public abstract class BaseSpecifications<T> {
 	protected Specification<T> combine(List<Specification<T>> specs) {
 		return specs.stream().filter(spec -> spec != null).reduce(Specification::and).orElse(null);
 	}
-
-
 
 	protected Specification<T> inListLeftJoin(String collectionName, List<?> values, String... pathParts) {
 		return (root, query, cb) -> {

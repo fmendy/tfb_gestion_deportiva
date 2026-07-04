@@ -124,14 +124,20 @@ document.addEventListener("DOMContentLoaded", function() {
 
 			<!-- Filtro de búsqueda -->
 			<div class="card bg-light border-0 shadow-sm mb-4">
-				<div class="card-body">
-					<form th:action="@{/publico/sede/mapa}" method="get"
-						th:object="${filter}" class="row g-3 align-items-center">
+				<form th:action="@{/publico/sede/mapa}" method="get"
+					th:object="${filter}"
+					class="row g-3 align-items-center bg-light p-4 rounded shadow-sm">
 
-
-						<div class="col-md-4">
-							<label class="form-label fw-bold">Comunidad Autónoma</label> <select
-								id="selectComunidad" class="form-select"
+					<!-- Comunidad Autónoma -->
+					<div class="col-md-4">
+						<label for="selectComunidad"
+							class="form-label fw-bold text-secondary">Comunidad
+							Autónoma</label>
+						<div class="input-group">
+							<span class="input-group-text bg-white border-end-0 text-muted">
+								<i class="bi bi-map"></i>
+							</span> <select id="selectComunidad"
+								class="form-select border-start-0 ps-0"
 								th:field="*{comunidadAutonomaId}"
 								onchange="cargarDatos(this.value, '/api/provincias', 'selectProvincia'); 
                   cargarDatos(this.value, '/api/municipios', 'selectMunicipio', 'comunidad')">
@@ -140,43 +146,58 @@ document.addEventListener("DOMContentLoaded", function() {
 									th:text="${c.nombre}"></option>
 							</select>
 						</div>
+					</div>
 
-						<div class="col-md-4">
-							<label class="form-label fw-bold">Provincia</label> <select
-								id="selectProvincia" class="form-select"
+					<!-- Provincia -->
+					<div class="col-md-4">
+						<label for="selectProvincia"
+							class="form-label fw-bold text-secondary">Provincia</label>
+						<div class="input-group">
+							<span class="input-group-text bg-white border-end-0 text-muted">
+								<i class="bi bi-pin-map"></i>
+							</span> <select id="selectProvincia"
+								class="form-select border-start-0 ps-0"
 								th:field="*{provinciaId}"
-								onchange="actualizarDependientes(this.value, '/api/municipios', 'selectMunicipio', null)">
+								onchange="cargarDatos(this.value, '/api/municipios', 'selectMunicipio', null)">
 								<option value="">Seleccione...</option>
 								<option th:each="p : ${listProvincias}" th:value="${p.id}"
 									th:text="${p.nombre}"></option>
 							</select>
 						</div>
+					</div>
 
-						<div class="col-md-4">
-							<label class="form-label fw-bold">Municipio</label><select
-								id="selectMunicipio" class="form-select"
+					<!-- Municipio -->
+					<div class="col-md-4">
+						<label for="selectMunicipio"
+							class="form-label fw-bold text-secondary">Municipio</label>
+						<div class="input-group">
+							<span class="input-group-text bg-white border-end-0 text-muted">
+								<i class="bi bi-geo-alt"></i>
+							</span> <select id="selectMunicipio"
+								class="form-select border-start-0 ps-0"
 								th:field="*{municipioId}">
 								<option value="">Seleccione...</option>
 								<option th:each="m : ${listMunicipios}" th:value="${m.id}"
 									th:text="${m.nombre}"></option>
 							</select>
 						</div>
+					</div>
 
+					<!-- Botones de Acción -->
+					<div class="col-md-12 d-flex justify-content-end mt-4">
+						<button type="submit"
+							class="btn btn-primary px-4 me-2 shadow-sm d-inline-flex align-items-center">
+							<i class="bi bi-search me-2"></i> <span th:text="#{boton.buscar}">Buscar</span>
+						</button>
+						<a th:href="@{/publico/sede/mapa}"
+							class="btn btn-outline-secondary px-4 shadow-sm d-inline-flex align-items-center">
+							<i class="bi bi-arrow-counterclockwise me-2"></i> <span
+							th:text="#{boton.limpiar}">Limpiar</span>
+						</a>
+					</div>
 
+				</form>
 
-						<div class="col-md-4 d-flex">
-							<button type="submit" class="btn btn-primary me-2">
-								<i class="bi bi-search"></i> <span th:text="#{boton.buscar}"></span>
-							</button>
-							<a th:href="@{/publico/sede/mapa}"
-								class="btn btn-outline-secondary me-2"> <i
-								class="bi bi-x-circle"></i> <span th:text="#{boton.limpiar}"></span>
-							</a>
-						</div>
-
-
-					</form>
-				</div>
 			</div>
 
 			<div id="map"
