@@ -65,10 +65,16 @@
 							th:text="#{instalacion.horario.especial.form.cerrado}">Cerrado</span>
 						</label>
 						<div class=" d-flex align-items-center py-2 rounded-3 bg-white">
-							<div
-								th:replace="~{fragments/field-error :: field-error('cerrado')}"></div>
+							<div class="form-check form-switch ms-2">
+								<input class="form-check-input" type="checkbox" role="switch"
+									th:field="*{cerrado}" id="cerrado">
+							</div>
 						</div>
+						<div
+							th:replace="~{fragments/field-error :: field-error('cerrado')}"></div>
 					</div>
+
+
 
 					<div
 						th:replace="~{fragments/field-error :: alertas-errores('error.validacion.global')}"></div>
