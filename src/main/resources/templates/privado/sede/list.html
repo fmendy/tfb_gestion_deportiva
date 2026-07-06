@@ -29,8 +29,7 @@
 				<a sec:authorize="hasAuthority('GESTION_EMPRESA')"
 					th:href="@{/privado/sede/crear}"
 					class="btn btn-primary rounded-3 px-4 py-2 d-flex align-items-center fw-semibold">
-					<i class="bi bi-plus-lg me-2"></i> <span
-					th:text="#{boton.crear}">Crear</span>
+					<i class="bi bi-plus-lg me-2"></i> <span th:text="#{boton.crear}">Crear</span>
 				</a>
 
 			</div>
@@ -125,28 +124,13 @@
 					class="table table-hover align-middle shadow-sm rounded-3 overflow-hidden">
 					<thead class="table-primary">
 						<tr>
-							<th class="text-nowrap"><span
-								th:text="#{sede.tabla.empresa}"></span> <a
-								class="ms-1 text-decoration-none text-muted opacity-75"
-								th:href="${url}+'&sort=empresa.nombre,ASC'"
-								th:title="#{tabla.orden.ascendente}"> <i
-									class="bi bi-arrow-down-short"></i>
-							</a> <a class="text-decoration-none text-muted opacity-75"
-								th:href="${url}+'&sort=empresa.nombre,DESC'"
-								th:title="#{tabla.orden.descendente}"> <i
-									class="bi bi-arrow-up-short"></i>
-							</a></th>
 
-							<th class="text-nowrap"><span th:text="#{sede.tabla.nombre}"></span>
-								<a class="ms-1 text-decoration-none text-muted opacity-75"
-								th:href="${url}+'&sort=nombre,ASC'"
-								th:title="#{tabla.orden.ascendente}"> <i
-									class="bi bi-arrow-down-short"></i>
-							</a> <a class="text-decoration-none text-muted opacity-75"
-								th:href="${url}+'&sort=nombre,DESC'"
-								th:title="#{tabla.orden.descendente}"> <i
-									class="bi bi-arrow-up-short"></i>
-							</a></th>
+							<th
+								th:replace="~{fragments/th-sort :: sort(#{sede.tabla.empresa}, 'empresa.nombre')}"></th>
+							<th
+								th:replace="~{fragments/th-sort :: sort(#{sede.tabla.nombre}, 'nombre')}"></th>
+
+
 
 							<th class="text-center" style="width: 60px;"><i
 								class="bi bi-pencil"></i></th>
