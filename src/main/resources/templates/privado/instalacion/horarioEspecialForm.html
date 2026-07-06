@@ -23,6 +23,9 @@
 					th:action="@{/privado/instalacion/{id}/horario/especial/guardar(id=${form.instalacionId})}"
 					th:object="${form}" method="post" class="row g-4">
 
+					<div
+						th:replace="~{fragments/div-advert :: div-alerta('instalacion.horario.especial.warning')}"></div>
+
 					<input type="hidden" th:field="*{instalacionId}" /> <input
 						type="hidden" th:field="*{id}" />
 

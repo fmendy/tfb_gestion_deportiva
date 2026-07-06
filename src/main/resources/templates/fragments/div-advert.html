@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+<style>
+</style>
+<body>
+
+
+	<div th:fragment="div-alerta(mensajeClave)" class="col-12 mt-3">
+		<div
+			class="bg-warning bg-opacity-10 border-start border-4 border-warning rounded-3 p-3">
+			<div class="d-flex align-items-center text-warning mb-2">
+				<i class="bi bi-exclamation-triangle-fill me-2"></i> <span
+					class="fw-bold" th:text="#{__${mensajeClave}__}"></span>:
+			</div>
+		</div>
+
+	</div>
+
+</body>
+</html>

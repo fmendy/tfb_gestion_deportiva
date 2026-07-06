@@ -26,6 +26,11 @@
 					<input type="hidden" th:field="*{instalacionId}" /> <input
 						type="hidden" th:field="*{id}" />
 
+					<div
+						th:replace="~{fragments/div-advert :: div-alerta('instalacion.horario.bloqueado.warning')}"></div>
+
+
+
 					<div class="col-md-4">
 						<label for="fecha" class="form-label fw-semibold text-secondary">
 							<i class="bi bi-calendar-event me-1 text-primary"></i> <span
@@ -35,6 +40,8 @@
 							class="form-control rounded-3 py-2">
 						<div th:replace="~{fragments/field-error :: field-error('fecha')}"></div>
 					</div>
+
+
 
 					<div class="col-md-2">
 						<label for="horaInicio"

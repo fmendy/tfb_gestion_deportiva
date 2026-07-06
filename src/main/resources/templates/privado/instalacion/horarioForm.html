@@ -19,11 +19,16 @@
 				th:replace="~{fragments/instalacion-tabs :: tabs(${form.instalacionId}, 'horarios')}"></div>
 
 			<div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
+
+
 				<form
 					th:action="@{/privado/instalacion/{id}/horario/guardar(id=${form.instalacionId})}"
 					th:object="${form}" method="post" class="row g-4">
-					
+
 					<input type="hidden" th:field="*{instalacionId}" />
+
+					<div
+						th:replace="~{fragments/div-advert :: div-alerta('instalacion.horario.warning')}"></div>
 
 					<div th:each="dia : ${#numbers.sequence(1, 7)}"
 						class="col-12 col-md-6 col-lg-4">
