@@ -2,6 +2,7 @@ package com.gestion.deportiva.service.impl;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -19,8 +20,14 @@ import com.gestion.deportiva.dto.filter.ReservaFilter;
 import com.gestion.deportiva.dto.specifications.ReservaSpecifications;
 import com.gestion.deportiva.mapper.ReservaMapper;
 import com.gestion.deportiva.model.Instalacion;
+import com.gestion.deportiva.model.InstalacionHorario;
+import com.gestion.deportiva.model.InstalacionHorarioBloqueado;
+import com.gestion.deportiva.model.InstalacionHorarioEspecial;
 import com.gestion.deportiva.model.Reserva;
 import com.gestion.deportiva.model.ReservaEstado;
+import com.gestion.deportiva.repository.InstalacionHorarioBloqueadoRepository;
+import com.gestion.deportiva.repository.InstalacionHorarioEspecialRepository;
+import com.gestion.deportiva.repository.InstalacionHorarioRepository;
 import com.gestion.deportiva.repository.InstalacionRepository;
 import com.gestion.deportiva.repository.ReservaEstadoRepository;
 import com.gestion.deportiva.repository.ReservaRepository;
@@ -53,6 +60,15 @@ public class ReservaServiceImpl implements ReservaService {
 
 	@Autowired
 	private ReservaEstadoRepository reservaEstadoRepository;
+
+	@Autowired
+	private InstalacionHorarioBloqueadoRepository instalacionHorarioBloqueadoRepository;
+
+	@Autowired
+	private InstalacionHorarioEspecialRepository instalacionHorarioEspecialRepository;
+
+	@Autowired
+	private InstalacionHorarioRepository instalacionHorarioRepository;
 
 	@Override
 	public ReservaDTO findById(Long id) {
@@ -322,6 +338,13 @@ public class ReservaServiceImpl implements ReservaService {
 	public void cancelarEmpresa(Long id) {
 		actualizarReservaEstado(id, Constantes.ReservaEstado.CANCELADA_POR_EMPRESA);
 	}
+	
+	@Override
+	public void cancelarReservasEmpresa(List<Reserva> list) {
+		for (Reserva reserva: list) {
+			cancelarEmpresa(reserva.getId());
+		}
+	}
 
 	@Override
 	public void denegar(Long id) {
@@ -339,4 +362,60 @@ public class ReservaServiceImpl implements ReservaService {
 		reservaRepository.saveAndFlush(reserva);
 	}
 
+	@Override
+	public void fechaComprobarPorCambioDeHorarios(LocalDate date, Long instalacionId) {
+		List<String> listReservaEstados = List.of(Constantes.ReservaEstado.PENDIENTE,
+				Constantes.ReservaEstado.APROBADA);
+
+		List<Reserva> reservas = reservaRepository.findByActivoTrueAndFechaAndInstalacionIdAndReservaEstadoNombreIn(
+				date, instalacionId, listReservaEstados);
+
+		if (reservas.isEmpty())
+			return;
+
+		// Obtención de datos
+		List<InstalacionHorarioBloqueado> bloqueos = instalacionHorarioBloqueadoRepository
+				.findByActivoTrueAndInstalacionIdAndFecha(instalacionId, date);
+		List<InstalacionHorarioEspecial> especiales = instalacionHorarioEspecialRepository
+				.findByActivoTrueAndInstalacionIdAndFecha(instalacionId, date);
+		List<InstalacionHorario> normales = instalacionHorarioRepository
+				.findByActivoTrueAndInstalacionIdAndDiaSemana(instalacionId, (long) date.getDayOfWeek().getValue());
+
+		List<Reserva> reservasAfectadas = new ArrayList<>();
+
+		if (especiales.stream().anyMatch(e -> e.getCerrado())) {
+			reservasAfectadas.addAll(reservas);
+		} else {
+			for (Reserva reserva : reservas) {
+				// 1. Siempre comprobamos si solapa con algún bloqueo (esto es prioridad
+				// absoluta)
+				boolean solapaConBloqueo = bloqueos.stream()
+						.anyMatch(b -> reserva.getHoraInicio().isBefore(b.getHoraFin())
+								&& reserva.getHoraFin().isAfter(b.getHoraInicio()));
+
+				// 2. Comprobamos validez horaria (si está fuera de rango)
+				boolean fueraDeRango = false;
+
+				if (!especiales.isEmpty()) {
+					// Existe horario especial: la reserva DEBE estar dentro de al menos uno
+					boolean dentroDeEspecial = especiales.stream()
+							.anyMatch(e -> !reserva.getHoraInicio().isBefore(e.getHoraInicio())
+									&& !reserva.getHoraFin().isAfter(e.getHoraFin()));
+					fueraDeRango = !dentroDeEspecial;
+				} else {
+					// No hay especial, comprobamos horario normal
+					boolean dentroDeNormal = normales.stream()
+							.anyMatch(n -> !reserva.getHoraInicio().isBefore(n.getHoraInicio())
+									&& !reserva.getHoraFin().isAfter(n.getHoraFin()));
+					fueraDeRango = !dentroDeNormal;
+				}
+
+				if (solapaConBloqueo || fueraDeRango) {
+					reservasAfectadas.add(reserva);
+				}
+			}
+		}
+		cancelarReservasEmpresa(reservasAfectadas);
+
+	}
 }

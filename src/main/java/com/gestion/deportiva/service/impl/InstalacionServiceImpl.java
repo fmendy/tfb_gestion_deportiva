@@ -226,7 +226,7 @@ public class InstalacionServiceImpl implements InstalacionService {
 	    long intervalo = config.getIntervaloHorario();
 
 	    List<InstalacionHorarioEspecial> especiales = instalacionHorarioEspecialRepository
-	            .findByInstalacionIdAndFechaAndActivoTrue(instalacionId, fecha);
+	            .findByActivoTrueAndInstalacionIdAndFecha(instalacionId, fecha);
 	    List<InstalacionHorarioBloqueado> bloqueos = instalacionHorarioBloqueadoRepository
 	            .findByActivoTrueAndInstalacionIdAndFecha(instalacionId, fecha);
 	    List<Reserva> reservas = reservaRepository.findByInstalacionIdAndFechaAndReservaEstadoNombreIn(instalacionId,

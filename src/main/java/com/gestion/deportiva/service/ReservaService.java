@@ -2,6 +2,7 @@ package com.gestion.deportiva.service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,14 +11,16 @@ import com.gestion.deportiva.dto.ReservaListadoDTO;
 import com.gestion.deportiva.dto.ReservaDTO;
 import com.gestion.deportiva.dto.ReservaSolicitudDTO;
 import com.gestion.deportiva.dto.filter.ReservaFilter;
+import com.gestion.deportiva.model.Reserva;
 
 import jakarta.validation.Valid;
 
 public interface ReservaService extends BaseService<ReservaDTO, ReservaFilter> {
 
-	boolean isFranjaHorariaDisponibleParaInstalacion(LocalDate fecha,LocalTime horaInicio, Long duracion,  Long instalacionId);
+	boolean isFranjaHorariaDisponibleParaInstalacion(LocalDate fecha, LocalTime horaInicio, Long duracion,
+			Long instalacionId);
 
-	boolean isFranjaHorariaDisponibleParaUsuario(LocalDate fecha,  LocalTime horaInicio, Long duracion, Long usuarioId);
+	boolean isFranjaHorariaDisponibleParaUsuario(LocalDate fecha, LocalTime horaInicio, Long duracion, Long usuarioId);
 
 	ReservaSolicitudDTO getFullReservaSolicitudDTOByReservaSolictudDTO(ReservaSolicitudDTO dto);
 
@@ -54,5 +57,9 @@ public interface ReservaService extends BaseService<ReservaDTO, ReservaFilter> {
 	void cancelarSancion(Long id);
 
 	void cancelarSancion(Long usuarioId, LocalDate fechaInicio, LocalDate fechaFin);
+
+	void fechaComprobarPorCambioDeHorarios(LocalDate date, Long instalacionId);
+
+	void cancelarReservasEmpresa(List<Reserva> list);
 
 }

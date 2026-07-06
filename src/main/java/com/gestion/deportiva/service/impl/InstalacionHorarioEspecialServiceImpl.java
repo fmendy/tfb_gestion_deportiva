@@ -18,6 +18,8 @@ import com.gestion.deportiva.mapper.InstalacionHorarioEspecialMapper;
 import com.gestion.deportiva.model.InstalacionHorarioEspecial;
 import com.gestion.deportiva.repository.InstalacionHorarioEspecialRepository;
 import com.gestion.deportiva.service.InstalacionHorarioEspecialService;
+import com.gestion.deportiva.service.ReservaService;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
@@ -35,6 +37,9 @@ public class InstalacionHorarioEspecialServiceImpl implements InstalacionHorario
 
 	@Autowired
 	private InstalacionHorarioEspecialMapper instalacionHorarioEspecialMapper;
+
+	@Autowired
+	private ReservaService reservaService;
 
 	@Override
 	public InstalacionHorarioEspecialDTO findById(Long id) {
@@ -62,6 +67,7 @@ public class InstalacionHorarioEspecialServiceImpl implements InstalacionHorario
 		}
 		model = instalacionHorarioEspecialMapper.dtoToModel(dto, model);
 		instalacionHorarioEspecialRepository.saveAndFlush(model);
+		reservaService.fechaComprobarPorCambioDeHorarios(dto.getFecha(), dto.getInstalacionId());
 		return model.getId();
 	}
 
@@ -138,7 +144,7 @@ public class InstalacionHorarioEspecialServiceImpl implements InstalacionHorario
 	@Override
 	public Boolean estaAbierta(Long instalacionId, LocalDate fecha, LocalTime horaInicio, Long duracion) {
 		List<InstalacionHorarioEspecial> horarios = instalacionHorarioEspecialRepository
-				.findByInstalacionIdAndFechaAndActivoTrue(instalacionId, fecha);
+				.findByActivoTrueAndInstalacionIdAndFecha(instalacionId, fecha);
 
 		if (horarios.isEmpty()) {
 			return true;

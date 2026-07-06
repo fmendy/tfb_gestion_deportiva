@@ -20,6 +20,7 @@ import com.gestion.deportiva.model.Instalacion;
 import com.gestion.deportiva.model.InstalacionHorario;
 import com.gestion.deportiva.repository.InstalacionHorarioRepository;
 import com.gestion.deportiva.service.InstalacionHorarioService;
+import com.gestion.deportiva.service.ReservaService;
 import com.gestion.deportiva.util.Utils;
 
 import jakarta.persistence.EntityManager;
@@ -40,6 +41,9 @@ public class InstalacionHorarioServiceImpl implements InstalacionHorarioService 
 
 	@Autowired
 	private InstalacionHorarioMapper instalacionHorarioMapper;
+
+	@Autowired
+	private ReservaService reservaService;
 
 	@Override
 	public InstalacionHorarioDTO findById(Long id) {
@@ -127,6 +131,7 @@ public class InstalacionHorarioServiceImpl implements InstalacionHorarioService 
 	}
 
 	@Override
+	@Transactional
 	public void guardar(@Valid InstalacionHorarioSemanalDTO dto) {
 		borrarTodosLosHorarios(dto.getInstalacionId());
 
@@ -141,7 +146,12 @@ public class InstalacionHorarioServiceImpl implements InstalacionHorarioService 
 				instalacionHorarioRepository.save(h);
 			}
 		});
+		LocalDate startDate = LocalDate.now();
 
+		for (int i = 0; i < 60; i++) {
+			LocalDate dateToCheck = startDate.plusDays(i);
+			reservaService.fechaComprobarPorCambioDeHorarios(dateToCheck, dto.getInstalacionId());
+		}
 	}
 
 	@Override

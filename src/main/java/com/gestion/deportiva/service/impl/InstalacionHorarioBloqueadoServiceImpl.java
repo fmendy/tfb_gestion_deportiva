@@ -18,6 +18,8 @@ import com.gestion.deportiva.mapper.InstalacionHorarioBloqueadoMapper;
 import com.gestion.deportiva.model.InstalacionHorarioBloqueado;
 import com.gestion.deportiva.repository.InstalacionHorarioBloqueadoRepository;
 import com.gestion.deportiva.service.InstalacionHorarioBloqueadoService;
+import com.gestion.deportiva.service.ReservaService;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
@@ -35,6 +37,10 @@ public class InstalacionHorarioBloqueadoServiceImpl implements InstalacionHorari
 
 	@Autowired
 	private InstalacionHorarioBloqueadoMapper instalacionHorarioBloqueadoMapper;
+	
+	@Autowired
+	private ReservaService reservaService;
+	
 
 	@Override
 	public InstalacionHorarioBloqueadoDTO findById(Long id) {
@@ -62,6 +68,7 @@ public class InstalacionHorarioBloqueadoServiceImpl implements InstalacionHorari
 		}
 		model = instalacionHorarioBloqueadoMapper.dtoToModel(dto, model);
 		instalacionHorarioBloqueadoRepository.saveAndFlush(model);
+		reservaService.fechaComprobarPorCambioDeHorarios(dto.getFecha(), dto.getInstalacionId());
 		return model.getId();
 	}
 

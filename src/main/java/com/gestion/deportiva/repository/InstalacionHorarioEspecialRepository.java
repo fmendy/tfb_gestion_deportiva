@@ -12,7 +12,7 @@ public interface InstalacionHorarioEspecialRepository extends BaseEntityReposito
 
 	List<InstalacionHorarioEspecial> findByActivoTrueAndInstalacionId(Long instalacionId);
 
-	List<InstalacionHorarioEspecial> findByInstalacionIdAndFechaAndActivoTrue(Long instalacionId, LocalDate fecha);
+	List<InstalacionHorarioEspecial> findByActivoTrueAndInstalacionIdAndFecha(Long instalacionId, LocalDate fecha);
 
 	InstalacionHorarioEspecial findByActivoTrueAndCerradoTrueAndFecha(LocalDate fecha);
 }
