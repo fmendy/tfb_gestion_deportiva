@@ -1,5 +1,6 @@
 package com.gestion.deportiva.service.impl;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -31,10 +32,12 @@ import com.gestion.deportiva.repository.InstalacionHorarioRepository;
 import com.gestion.deportiva.repository.InstalacionRepository;
 import com.gestion.deportiva.repository.ReservaEstadoRepository;
 import com.gestion.deportiva.repository.ReservaRepository;
+import com.gestion.deportiva.service.MailService;
 import com.gestion.deportiva.service.ReservaService;
 import com.gestion.deportiva.util.Constantes;
 import com.gestion.deportiva.util.SecurityUtil;
 
+import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
@@ -69,6 +72,9 @@ public class ReservaServiceImpl implements ReservaService {
 
 	@Autowired
 	private InstalacionHorarioRepository instalacionHorarioRepository;
+
+	@Autowired
+	private MailService mailService;
 
 	@Override
 	public ReservaDTO findById(Long id) {
@@ -306,6 +312,11 @@ public class ReservaServiceImpl implements ReservaService {
 	@Override
 	public void aprobar(Long id) {
 		actualizarReservaEstado(id, Constantes.ReservaEstado.APROBADA);
+		try {
+			mailService.mensajeAprobacionReserva(reservaRepository.findByActivoTrueAndId(id));
+		} catch (MessagingException | IOException e) {
+			logger.error("Se ha producido un error al enviar el mensaje de aprobacion de la reserva id {}", id);
+		}
 	}
 
 	@Override
@@ -338,10 +349,10 @@ public class ReservaServiceImpl implements ReservaService {
 	public void cancelarEmpresa(Long id) {
 		actualizarReservaEstado(id, Constantes.ReservaEstado.CANCELADA_POR_EMPRESA);
 	}
-	
+
 	@Override
 	public void cancelarReservasEmpresa(List<Reserva> list) {
-		for (Reserva reserva: list) {
+		for (Reserva reserva : list) {
 			cancelarEmpresa(reserva.getId());
 		}
 	}
