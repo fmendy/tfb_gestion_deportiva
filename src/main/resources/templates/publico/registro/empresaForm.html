@@ -26,11 +26,8 @@
 											placeholder="Nombre"> <label for="nombre"
 											th:text="#{registro.empresa.nombre}">Nombre</label>
 									</div>
-									<div class="text-danger small mt-1"
-										th:if="${#fields.hasErrors('nombre')}"
-										th:errors="*{nombre}">
-										<i class="bi bi-exclamation-circle me-1"></i> Error
-									</div>
+									<div
+										th:replace="~{fragments/field-error :: field-error('nombre')}"></div>
 								</div>
 								<div class="col-md-6">
 									<div class="form-floating">
@@ -39,11 +36,8 @@
 											placeholder="CIF"> <label for="cif"
 											th:text="#{registro.empresa.cif}">CIF</label>
 									</div>
-									<div class="text-danger small mt-1"
-										th:if="${#fields.hasErrors('cif')}"
-										th:errors="*{cif}">
-										<i class="bi bi-exclamation-circle me-1"></i> Error
-									</div>
+									<div
+										th:replace="~{fragments/field-error :: field-error('cif')}"></div>
 								</div>
 
 								<div class="col-md-6">
@@ -53,11 +47,8 @@
 											placeholder="Email"> <label for="email"
 											th:text="#{registro.empresa.email}">Email</label>
 									</div>
-									<div class="text-danger small mt-1"
-										th:if="${#fields.hasErrors('email')}"
-										th:errors="*{email}">
-										<i class="bi bi-exclamation-circle me-1"></i> Error
-									</div>
+									<div
+										th:replace="~{fragments/field-error :: field-error('email')}"></div>
 								</div>
 								<div class="col-md-6">
 									<div class="form-floating">
@@ -67,11 +58,8 @@
 											th:text="#{registro.empresa.email.confirmar}">Confirmar
 											Email</label>
 									</div>
-									<div class="text-danger small mt-1"
-										th:if="${#fields.hasErrors('emailConfirmar')}"
-										th:errors="*{emailConfirmar}">
-										<i class="bi bi-exclamation-circle me-1"></i> Error
-									</div>
+									<div
+										th:replace="~{fragments/field-error :: field-error('emailConfirmar')}"></div>
 								</div>
 
 								<div class="col-md-6">
@@ -81,11 +69,8 @@
 											placeholder="Password"> <label for="password"
 											th:text="#{registro.empresa.password}">Password</label>
 									</div>
-									<div class="text-danger small mt-1"
-										th:if="${#fields.hasErrors('password')}"
-										th:errors="*{password}">
-										<i class="bi bi-exclamation-circle me-1"></i> Error
-									</div>
+									<div
+										th:replace="~{fragments/field-error :: field-error('password')}"></div>
 								</div>
 								<div class="col-md-6">
 									<div class="form-floating">
@@ -96,11 +81,8 @@
 											th:text="#{registro.empresa.password.confirmar}">Confirmar
 											Password</label>
 									</div>
-									<div class="text-danger small mt-1"
-										th:if="${#fields.hasErrors('passwordConfirmar')}"
-										th:errors="*{passwordConfirmar}">
-										<i class="bi bi-exclamation-circle me-1"></i> Error
-									</div>
+									<div
+										th:replace="~{fragments/field-error :: field-error('passwordConfirmar')}"></div>
 								</div>
 
 								<div class="col-12">
@@ -109,11 +91,8 @@
 											class="form-control rounded-3" id="url" placeholder="URL">
 										<label for="url" th:text="#{registro.empresa.url}">Web</label>
 									</div>
-									<div class="text-danger small mt-1"
-										th:if="${#fields.hasErrors('url')}"
-										th:errors="*{url}">
-										<i class="bi bi-exclamation-circle me-1"></i> Error
-									</div>
+									<div
+										th:replace="~{fragments/field-error :: field-error('url')}"></div>
 								</div>
 
 								<div class="col-12">
@@ -124,13 +103,13 @@
 										<label for="descripcion"
 											th:text="#{registro.empresa.descripcion}">Descripción</label>
 									</div>
-									<div class="text-danger small mt-1"
-										th:if="${#fields.hasErrors('descripcion')}"
-										th:errors="*{descripcion}">
-										<i class="bi bi-exclamation-circle me-1"></i> Error
-									</div>
+									<div
+										th:replace="~{fragments/field-error :: field-error('descripcion')}"></div>
 								</div>
 							</div>
+
+							<div
+								th:replace="~{fragments/field-error :: alertas-errores('error.validacion.global')}"></div>
 
 							<div class="d-grid mt-4">
 								<button type="submit"

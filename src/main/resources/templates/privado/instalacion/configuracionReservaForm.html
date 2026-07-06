@@ -23,8 +23,8 @@
 					th:action="@{/privado/instalacion/{id}/configuracion/reserva/guardar(id=${form.instalacionId})}"
 					th:object="${form}" method="post" class="row g-4">
 
-					<input type="hidden" th:field="*{instalacionId}" />
-					<input type="hidden" th:field="*{id}" />
+					<input type="hidden" th:field="*{instalacionId}" /> <input
+						type="hidden" th:field="*{id}" />
 
 					<div class="col-md-4">
 						<label for="duracionMin"
@@ -35,9 +35,8 @@
 						</label> <input type="number" th:field="*{duracionMin}" id="duracionMin"
 							required class="form-control rounded-3 py-2" min="0" max="540"
 							step="1">
-						<div class="text-danger small mt-1"
-							th:if="${#fields.hasErrors('duracionMin')}"
-							th:errors="*{duracionMin}"></div>
+						<div
+							th:replace="~{fragments/field-error :: field-error('duracionMin')}"></div>
 					</div>
 
 					<div class="col-md-4">
@@ -49,9 +48,8 @@
 						</label> <input type="number" th:field="*{duracionMax}" id="duracionMax"
 							required class="form-control rounded-3 py-2" min="0" max="540"
 							step="1">
-						<div class="text-danger small mt-1"
-							th:if="${#fields.hasErrors('duracionMax')}"
-							th:errors="*{duracionMax}"></div>
+						<div
+							th:replace="~{fragments/field-error :: field-error('duracionMax')}"></div>
 					</div>
 
 					<div class="col-md-4">
@@ -63,10 +61,12 @@
 						</label> <input type="number" th:field="*{intervaloHorario}"
 							id="intervaloHorario" required
 							class="form-control rounded-3 py-2" min="0" max="540" step="1">
-						<div class="text-danger small mt-1"
-							th:if="${#fields.hasErrors('intervaloHorario')}"
-							th:errors="*{intervaloHorario}"></div>
+						<div
+							th:replace="~{fragments/field-error :: field-error('intervaloHorario')}"></div>
 					</div>
+
+					<div
+						th:replace="~{fragments/field-error :: alertas-errores('error.validacion.global')}"></div>
 
 					<div class="col-12 text-end mt-4 pt-3 border-top">
 						<button type="submit"

@@ -55,10 +55,9 @@
 						</label> <input type="text" th:field="*{nombre}" id="nombre" required
 							class="form-control rounded-3"
 							th:placeholder="#{mi.perfil.form.nombre}" maxlength="255">
-						<div class="text-danger mt-1"
-							th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}">
-							<i class="bi bi-exclamation-circle me-1"></i> Error
-						</div>
+						<div
+							th:replace="~{fragments/field-error :: field-error('nombre')}"></div>
+
 					</div>
 
 					<div class="col-12 col-md-4 mb-3">
@@ -69,10 +68,7 @@
 						</label> <input type="email" th:field="*{email}" id="email" required
 							class="form-control rounded-3"
 							th:placeholder="#{mi.perfil.form.email}" maxlength="255">
-						<div class="text-danger mt-1"
-							th:if="${#fields.hasErrors('email')}" th:errors="*{email}">
-							<i class="bi bi-exclamation-circle me-1"></i> Error
-						</div>
+						<div th:replace="~{fragments/field-error :: field-error('email')}"></div>
 					</div>
 
 					<div class="col-12 col-md-4 mb-3">
@@ -84,17 +80,12 @@
 							id="emailConfirmar" required class="form-control rounded-3"
 							th:placeholder="#{mi.perfil.form.email.confirmar}"
 							maxlength="255">
-						<div class="text-danger mt-1"
-							th:if="${#fields.hasErrors('emailConfirmar')}"
-							th:errors="*{emailConfirmar}">
-							<i class="bi bi-exclamation-circle me-1"></i> Error
-						</div>
+						<div
+							th:replace="~{fragments/field-error :: field-error('emailConfirmar')}"></div>
 					</div>
 
-
-
-
-
+					<div
+						th:replace="~{fragments/field-error :: alertas-errores('error.validacion.global')}"></div>
 
 					<div
 						class="col-12 d-grid d-md-flex justify-content-md-end gap-3 mt-4">

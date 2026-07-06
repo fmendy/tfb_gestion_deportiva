@@ -33,8 +33,7 @@
 							<span class="text-danger">*</span>
 						</label> <input type="date" th:field="*{fecha}" id="fecha" required
 							class="form-control rounded-3 py-2">
-						<div class="text-danger small mt-1"
-							th:if="${#fields.hasErrors('fecha')}" th:errors="*{fecha}"></div>
+						<div th:replace="~{fragments/field-error :: field-error('fecha')}"></div>
 					</div>
 
 					<div class="col-md-2">
@@ -45,9 +44,8 @@
 							<span class="text-danger">*</span>
 						</label> <input type="time" th:field="*{horaInicio}" id="horaInicio"
 							required="required" class="form-control rounded-3 py-2">
-						<div class="text-danger small mt-1"
-							th:if="${#fields.hasErrors('horaInicio')}"
-							th:errors="*{horaInicio}"></div>
+						<div
+							th:replace="~{fragments/field-error :: field-error('horaInicio')}"></div>
 					</div>
 
 					<div class="col-md-2">
@@ -57,9 +55,12 @@
 							<span class="text-danger">*</span>
 						</label> <input type="time" th:field="*{horaFin}" id="horaFin"
 							required="required" class="form-control rounded-3 py-2">
-						<div class="text-danger small mt-1"
-							th:if="${#fields.hasErrors('horaFin')}" th:errors="*{horaFin}"></div>
+						<div
+							th:replace="~{fragments/field-error :: field-error('horaFin')}"></div>
 					</div>
+
+					<div
+						th:replace="~{fragments/field-error :: alertas-errores('error.validacion.global')}"></div>
 
 
 					<div class="col-12 text-end mt-4 pt-3 border-top">

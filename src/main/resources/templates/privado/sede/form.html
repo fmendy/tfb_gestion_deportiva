@@ -141,11 +141,8 @@
 								th:value="${empresa.id}" th:text="${empresa.nombre}">empresa</option>
 						</select>
 
-						<div class="text-danger small mt-1"
-							th:if="${#fields.hasErrors('empresaId')}"
-							th:errors="*{empresaId}">
-							<i class="bi bi-exclamation-circle me-1"></i> Error
-						</div>
+						<div
+							th:replace="~{fragments/field-error :: field-error('empresaId')}"></div>
 					</div>
 
 					<div class="col-md-4">
@@ -191,6 +188,8 @@
 							<option th:each="m : ${listMunicipios}" th:value="${m.id}"
 								th:text="${m.nombre}"></option>
 						</select>
+						<div
+							th:replace="~{fragments/field-error :: field-error('municipioId')}"></div>
 					</div>
 
 					<div class="col-md-8">
@@ -202,11 +201,8 @@
 						</label> <input type="text" th:field="*{direccion}" id="direccion"
 							required class="form-control rounded-3 py-2"
 							th:placeholder="#{sede.form.direccion}" maxlength="255">
-						<div class="text-danger small mt-1"
-							th:if="${#fields.hasErrors('direccion')}"
-							th:errors="*{direccion}">
-							<i class="bi bi-exclamation-circle me-1"></i> Error
-						</div>
+						<div
+							th:replace="~{fragments/field-error :: field-error('direccion')}"></div>
 					</div>
 
 					<div class="col-md-4">
@@ -214,13 +210,11 @@
 							<i class="bi bi-geo me-1 text-primary"></i> <span
 							th:text="#{sede.form.latitud} ">latitud</span> <span
 							class="text-danger">*</span>
-						</label> <input type="text" th:field="*{latitud}" id="latitud"
-							 required class="form-control rounded-3 py-2"
+						</label> <input type="text" th:field="*{latitud}" id="latitud" required
+							class="form-control rounded-3 py-2"
 							th:placeholder="#{sede.form.latitud}" maxlength="255">
-						<div class="text-danger small mt-1"
-							th:if="${#fields.hasErrors('latitud')}" th:errors="*{latitud}">
-							<i class="bi bi-exclamation-circle me-1"></i> Error
-						</div>
+						<div
+							th:replace="~{fragments/field-error :: field-error('latitud')}"></div>
 					</div>
 
 					<div class="col-md-4">
@@ -229,31 +223,30 @@
 							class="bi bi-geo me-1 text-primary"></i> <span
 							th:text="#{sede.form.longitud} ">longitud</span> <span
 							class="text-danger">*</span>
-						</label> <input type="text" th:field="*{longitud}" id="longitud"
-							 required class="form-control rounded-3 py-2"
+						</label> <input type="text" th:field="*{longitud}" id="longitud" required
+							class="form-control rounded-3 py-2"
 							th:placeholder="#{sede.form.longitud}" maxlength="255">
-						<div class="text-danger small mt-1"
-							th:if="${#fields.hasErrors('longitud')}" th:errors="*{longitud}">
-							<i class="bi bi-exclamation-circle me-1"></i> Error
-						</div>
+						<div
+							th:replace="~{fragments/field-error :: field-error('longitud')}"></div>
 					</div>
 
 
 
 					<div class="col-md-12">
 
-					<button type="button" id="btnMapa"
-						class="btn btn-outline-primary mt-2" onclick="toggleMapa()">
-						<i class="bi bi-geo-alt"></i> <span th:text="#{sede.form.seleccionar.ubicacion.mapa}"></span>
-					</button>
+						<button type="button" id="btnMapa"
+							class="btn btn-outline-primary mt-2" onclick="toggleMapa()">
+							<i class="bi bi-geo-alt"></i> <span
+								th:text="#{sede.form.seleccionar.ubicacion.mapa}"></span>
+						</button>
 
-					<div id="contenedorMapa" style="display: none; margin-top: 15px;">
-						<div id="mapa"
-							style="height: 400px; width: 100%; border-radius: 10px;"
-							class="shadow-sm border"></div>
+						<div id="contenedorMapa" style="display: none; margin-top: 15px;">
+							<div id="mapa"
+								style="height: 400px; width: 100%; border-radius: 10px;"
+								class="shadow-sm border"></div>
+						</div>
 					</div>
-					</div>
-					
+
 					<div class="col-md-4">
 						<label for="nombre" class="form-label fw-semibold text-secondary">
 							<i class="bi bi-building me-1 text-primary"></i> <span
@@ -262,10 +255,8 @@
 						</label> <input type="text" th:field="*{nombre}" id="nombre" required
 							class="form-control rounded-3 py-2"
 							th:placeholder="#{sede.form.nombre}" maxlength="255">
-						<div class="text-danger small mt-1"
-							th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}">
-							<i class="bi bi-exclamation-circle me-1"></i> Error
-						</div>
+						<div
+							th:replace="~{fragments/field-error :: field-error('nombre')}"></div>
 					</div>
 
 					<div class="col-md-4">
@@ -276,10 +267,7 @@
 						</label> <input type="email" th:field="*{email}" id="email" required
 							class="form-control rounded-3 py-2"
 							th:placeholder="#{sede.form.email}" maxlength="255">
-						<div class="text-danger small mt-1"
-							th:if="${#fields.hasErrors('email')}" th:errors="*{email}">
-							<i class="bi bi-exclamation-circle me-1"></i> Error
-						</div>
+						<div th:replace="~{fragments/field-error :: field-error('email')}"></div>
 					</div>
 
 
@@ -330,12 +318,12 @@
 							class="form-control rounded-3"
 							th:placeholder="#{sede.form.descripcion}" maxlength="1250"
 							rows="4" style="resize: vertical;"></textarea>
-						<div class="text-danger small mt-1"
-							th:if="${#fields.hasErrors('descripcion')}"
-							th:errors="*{descripcion}">
-							<i class="bi bi-exclamation-circle me-1"></i> Error
-						</div>
+						<div
+							th:replace="~{fragments/field-error :: field-error('descripcion')}"></div>
 					</div>
+
+					<div
+						th:replace="~{fragments/field-error :: alertas-errores('error.validacion.global')}"></div>
 
 					<div
 						class="col-12 d-grid d-md-flex justify-content-md-end gap-3 mt-4">

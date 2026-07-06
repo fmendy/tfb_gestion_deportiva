@@ -46,10 +46,8 @@
 						</label> <input type="text" th:field="*{nombre}" id="nombre" required
 							class="form-control rounded-3"
 							th:placeholder="#{empleado.registro.form.nombre}" maxlength="255">
-						<div class="text-danger mt-1"
-							th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}">
-							<i class="bi bi-exclamation-circle me-1"></i> Error
-						</div>
+						<div
+							th:replace="~{fragments/field-error :: field-error('nombre')}"></div>
 					</div>
 
 					<div class="col-md-4">
@@ -60,10 +58,7 @@
 						</label> <input type="email" th:field="*{email}" id="email" required
 							class="form-control rounded-3"
 							th:placeholder="#{empleado.registro.form.email}" maxlength="255">
-						<div class="text-danger mt-1"
-							th:if="${#fields.hasErrors('email')}" th:errors="*{email}">
-							<i class="bi bi-exclamation-circle me-1"></i> Error
-						</div>
+						<div th:replace="~{fragments/field-error :: field-error('email')}"></div>
 					</div>
 
 					<div class="col-md-4">
@@ -75,11 +70,8 @@
 							id="emailConfirmar" required class="form-control rounded-3"
 							th:placeholder="#{empleado.registro.form.email.confirmar}"
 							maxlength="255">
-						<div class="text-danger mt-1"
-							th:if="${#fields.hasErrors('emailConfirmar')}"
-							th:errors="*{emailConfirmar}">
-							<i class="bi bi-exclamation-circle me-1"></i> Error
-						</div>
+						<div
+							th:replace="~{fragments/field-error :: field-error('emailConfirmar')}"></div>
 					</div>
 
 					<!-- Password -->
@@ -95,10 +87,8 @@
 							required class="form-control rounded-3 "
 							th:placeholder="#{empleado.registro.form.password}"
 							maxlength="255">
-						<div class="text-danger mt-1"
-							th:if="${#fields.hasErrors('password')}" th:errors="*{password}">
-							<i class="bi bi-exclamation-circle me-1"></i> Error
-						</div>
+						<div
+							th:replace="~{fragments/field-error :: field-error('password')}"></div>
 					</div>
 
 					<!-- Password Confirmar -->
@@ -111,11 +101,8 @@
 							id="passwordConfirmar" required class="form-control rounded-3 "
 							th:placeholder="#{empleado.registro.form.password.confirmar}"
 							maxlength="255">
-						<div class="text-danger mt-1"
-							th:if="${#fields.hasErrors('passwordConfirmar')}"
-							th:errors="*{passwordConfirmar}">
-							<i class="bi bi-exclamation-circle me-1"></i> Error
-						</div>
+						<div
+							th:replace="~{fragments/field-error :: field-error('passwordConfirmar')}"></div>
 					</div>
 
 					<div class="col-md-4">
@@ -132,6 +119,7 @@
 									th:text="${rol.nombre}"></option>
 							</select>
 						</div>
+						<div th:replace="~{fragments/field-error :: field-error('rolId')}"></div>
 					</div>
 
 
@@ -147,6 +135,8 @@
 									th:value="${empresa.id}" th:text="${empresa.nombre}"></option>
 							</select>
 						</div>
+						<div
+							th:replace="~{fragments/field-error :: field-error('empresaId')}"></div>
 					</div>
 
 					<div id="containerSede" class="col-md-4">
@@ -161,6 +151,8 @@
 									th:text="${sede.empresaSedeNombre}"></option>
 							</select>
 						</div>
+						<div
+							th:replace="~{fragments/field-error :: field-error('sedeId')}"></div>
 					</div>
 
 					<div id="containerInstalacion" class="col-md-4">
@@ -176,10 +168,13 @@
 									th:text="${sede.empresaSedeInstalacionNombre}"></option>
 							</select>
 						</div>
+						<div
+							th:replace="~{fragments/field-error :: field-error('instalacionId')}"></div>
 					</div>
 
 
-
+					<div
+						th:replace="~{fragments/field-error :: alertas-errores('error.validacion.global')}"></div>
 
 
 

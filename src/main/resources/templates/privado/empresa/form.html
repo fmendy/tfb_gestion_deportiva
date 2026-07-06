@@ -48,10 +48,8 @@
 						</label> <input type="text" th:field="*{nombre}" id="nombre" required
 							class="form-control rounded-3 py-2"
 							th:placeholder="#{empresa.form.nombre}" maxlength="255">
-						<div class="text-danger small mt-1"
-							th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}">
-							<i class="bi bi-exclamation-circle me-1"></i> Error
-						</div>
+						<div
+							th:replace="~{fragments/field-error :: field-error('nombre')}"></div>
 					</div>
 
 					<div class="col-12 col-md-4">
@@ -62,10 +60,7 @@
 						</label> <input type="text" th:field="*{cif}" id="cif" required
 							class="form-control rounded-3 py-2"
 							th:placeholder="#{empresa.form.cif}" maxlength="20">
-						<div class="text-danger small mt-1"
-							th:if="${#fields.hasErrors('cif')}" th:errors="*{cif}">
-							<i class="bi bi-exclamation-circle me-1"></i> Error
-						</div>
+						<div th:replace="~{fragments/field-error :: field-error('cif')}"></div>
 					</div>
 
 					<div class="col-12 col-md-6">
@@ -76,10 +71,7 @@
 						</label> <input type="email" th:field="*{email}" id="email" required
 							class="form-control rounded-3 py-2"
 							th:placeholder="#{empresa.form.email}" maxlength="255">
-						<div class="text-danger small mt-1"
-							th:if="${#fields.hasErrors('email')}" th:errors="*{email}">
-							<i class="bi bi-exclamation-circle me-1"></i> Error
-						</div>
+						<div th:replace="~{fragments/field-error :: field-error('email')}"></div>
 					</div>
 
 					<div class="col-12 col-md-6">
@@ -89,10 +81,7 @@
 						</label> <input type="url" th:field="*{url}" id="url"
 							class="form-control rounded-3 py-2"
 							th:placeholder="#{empresa.form.url}" maxlength="255">
-						<div class="text-danger small mt-1"
-							th:if="${#fields.hasErrors('url')}" th:errors="*{url}">
-							<i class="bi bi-exclamation-circle me-1"></i> Error
-						</div>
+						<div th:replace="~{fragments/field-error :: field-error('url')}"></div>
 					</div>
 
 					<div class="col-12">
@@ -125,7 +114,8 @@
 										type="checkbox" th:field="*{logoBorrar}" id="logoBorrar">
 									<label
 										class="form-check-label small text-danger fw-semibold cursor-pointer"
-										for="logoBorrar" th:text="#{empresa.form.borrar.logo}">  </label>
+										for="logoBorrar" th:text="#{empresa.form.borrar.logo}">
+									</label>
 								</div>
 							</div>
 
@@ -142,12 +132,12 @@
 							class="form-control rounded-3"
 							th:placeholder="#{empresa.form.descripcion}" maxlength="1250"
 							rows="4" style="resize: vertical;"></textarea>
-						<div class="text-danger small mt-1"
-							th:if="${#fields.hasErrors('descripcion')}"
-							th:errors="*{descripcion}">
-							<i class="bi bi-exclamation-circle me-1"></i> Error
-						</div>
+						<div
+							th:replace="~{fragments/field-error :: field-error('descripcion')}"></div>
 					</div>
+
+					<div
+						th:replace="~{fragments/field-error :: alertas-errores('error.validacion.global')}"></div>
 
 					<div
 						class="col-12 d-grid d-md-flex justify-content-md-end gap-3 mt-4">

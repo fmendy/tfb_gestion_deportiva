@@ -98,54 +98,16 @@
 						class="table table-hover align-middle shadow-sm rounded-3 overflow-hidden">
 						<thead class="table-primary">
 							<tr>
-								<th class="text-nowrap"><span
-									th:text="#{instalacion.horario.especial.tabla.fecha}"></span> <a
-									class="ms-1 text-decoration-none text-muted opacity-75"
-									th:href="${url}+'&sort=fecha,ASC'"
-									th:title="#{tabla.orden.ascendente}"> <i
-										class="bi bi-arrow-down-short"></i>
-								</a> <a class="text-decoration-none text-muted opacity-75"
-									th:href="${url}+'&sort=fecha,DESC'"
-									th:title="#{tabla.orden.descendente}"> <i
-										class="bi bi-arrow-up-short"></i>
-								</a></th>
 
+								<th
+									th:replace="~{fragments/th-sort :: sort(#{instalacion.horario.especial.tabla.fecha}, 'fecha')}"></th>
+								<th
+									th:replace="~{fragments/th-sort :: sort(#{instalacion.horario.especial.tabla.hora.inicio}, 'horaInicio')}"></th>
+								<th
+									th:replace="~{fragments/th-sort :: sort(#{instalacion.horario.especial.tabla.hora.fin}, 'horaFin')}"></th>
+								<th
+									th:replace="~{fragments/th-sort :: sort(#{instalacion.horario.especial.tabla.cerrado}, 'cerrado')}"></th>
 
-								<th class="text-nowrap"><span
-									th:text="#{instalacion.horario.especial.tabla.hora.inicio}"></span>
-									<a class="ms-1 text-decoration-none text-muted opacity-75"
-									th:href="${url}+'&sort=horaInicio,ASC'"
-									th:title="#{tabla.orden.ascendente}"> <i
-										class="bi bi-arrow-down-short"></i>
-								</a> <a class="text-decoration-none text-muted opacity-75"
-									th:href="${url}+'&sort=horaInicio,DESC'"
-									th:title="#{tabla.orden.descendente}"> <i
-										class="bi bi-arrow-up-short"></i>
-								</a></th>
-
-								<th class="text-nowrap"><span
-									th:text="#{instalacion.horario.especial.tabla.hora.fin}"></span>
-									<a class="ms-1 text-decoration-none text-muted opacity-75"
-									th:href="${url}+'&sort=horaFin,ASC'"
-									th:title="#{tabla.orden.ascendente}"> <i
-										class="bi bi-arrow-down-short"></i>
-								</a> <a class="text-decoration-none text-muted opacity-75"
-									th:href="${url}+'&sort=horaFin,DESC'"
-									th:title="#{tabla.orden.descendente}"> <i
-										class="bi bi-arrow-up-short"></i>
-								</a></th>
-
-								<th class="text-nowrap"><span
-									th:text="#{instalacion.horario.especial.tabla.cerrado}"></span>
-									<a class="ms-1 text-decoration-none text-muted opacity-75"
-									th:href="${url}+'&sort=cerrado,ASC'"
-									th:title="#{tabla.orden.ascendente}"> <i
-										class="bi bi-arrow-down-short"></i>
-								</a> <a class="text-decoration-none text-muted opacity-75"
-									th:href="${url}+'&sort=cerrado,DESC'"
-									th:title="#{tabla.orden.descendente}"> <i
-										class="bi bi-arrow-up-short"></i>
-								</a></th>
 
 								<th class="text-center" style="width: 60px;"><i
 									class="bi bi-pencil"></i></th>

@@ -60,6 +60,8 @@
 							<option th:each="c : ${listEmpresas}" th:value="${c.id}"
 								th:text="${c.nombre}"></option>
 						</select>
+						<div
+							th:replace="~{fragments/field-error :: field-error('emrpesaId')}"></div>
 					</div>
 
 					<div class="col-md-4">
@@ -74,6 +76,8 @@
 							<option th:each="p : ${listSedes}" th:value="${p.id}"
 								th:text="${p.nombre}"></option>
 						</select>
+						<div
+							th:replace="~{fragments/field-error :: field-error('sedeId')}"></div>
 					</div>
 
 					<div class="col-md-4">
@@ -88,6 +92,8 @@
 							<option th:each="p : ${listInstalacionTipo}" th:value="${p.id}"
 								th:text="${p.nombre}"></option>
 						</select>
+						<div
+							th:replace="~{fragments/field-error :: field-error('instalacionTipoId')}"></div>
 					</div>
 
 
@@ -99,10 +105,8 @@
 						</label> <input type="text" th:field="*{nombre}" id="nombre" required
 							class="form-control rounded-3 py-2"
 							th:placeholder="#{instalacion.form.nombre}" maxlength="255">
-						<div class="text-danger small mt-1"
-							th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}">
-							<i class="bi bi-exclamation-circle me-1"></i> Error
-						</div>
+						<div
+							th:replace="~{fragments/field-error :: field-error('nombre')}"></div>
 					</div>
 
 
@@ -120,12 +124,13 @@
 							class="form-control rounded-3"
 							th:placeholder="#{instalacion.form.descripcion}" maxlength="1250"
 							rows="4" style="resize: vertical;"></textarea>
-						<div class="text-danger small mt-1"
-							th:if="${#fields.hasErrors('descripcion')}"
-							th:errors="*{descripcion}">
-							<i class="bi bi-exclamation-circle me-1"></i> Error
-						</div>
+						<div
+							th:replace="~{fragments/field-error :: field-error('descripcion')}"></div>
 					</div>
+
+
+					<div
+						th:replace="~{fragments/field-error :: alertas-errores('error.validacion.global')}"></div>
 
 					<div
 						class="col-12 d-grid d-md-flex justify-content-md-end gap-3 mt-4">
