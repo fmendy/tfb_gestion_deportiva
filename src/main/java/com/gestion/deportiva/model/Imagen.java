@@ -2,6 +2,9 @@ package com.gestion.deportiva.model;
 
 import java.io.Serializable;
 
+import org.hibernate.annotations.Audited;
+import org.hibernate.envers.AuditTable;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -17,6 +20,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "imagen")
+@Audited
+@AuditTable(value = "imagen_historico")
 public class Imagen extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = -9213474286551946413L;

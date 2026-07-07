@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.Audited;
+import org.hibernate.envers.AuditTable;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -24,6 +27,8 @@ import lombok.ToString;
 @Table(name = "provincia")
 @EqualsAndHashCode(callSuper = false, exclude = "listMunicipio")
 @ToString(exclude = "listMunicipio")
+@Audited
+@AuditTable(value = "provincia_historico")
 public class Provincia extends Maestra implements Serializable {
 
 	public Provincia(Long id) {

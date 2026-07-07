@@ -3,8 +3,10 @@ package com.gestion.deportiva.model;
 import java.io.Serializable;
 import java.util.List;
 
+import org.hibernate.annotations.Audited;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.ParamDef;
+import org.hibernate.envers.AuditTable;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,6 +28,8 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = false, exclude = { "listUsuarioRol", "listUsuarioEmpresa", "listUsuarioSede",
 		"listUsuarioInstalacion" })
 @ToString(exclude = { "listUsuarioRol", "listUsuarioEmpresa", "listUsuarioSede", "listUsuarioInstalacion" })
+@Audited
+@AuditTable(value = "usuario_historico")
 public class Usuario extends Maestra implements Serializable {
 
 	private static final long serialVersionUID = 3656431595003998229L;

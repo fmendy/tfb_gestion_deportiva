@@ -2,6 +2,9 @@ package com.gestion.deportiva.model;
 
 import java.io.Serializable;
 
+import org.hibernate.annotations.Audited;
+import org.hibernate.envers.AuditTable;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 
@@ -16,6 +19,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "instalacion_tipo")
+@Audited
+@AuditTable(value = "instalacion_tipo_historico")
 @EqualsAndHashCode(callSuper = false)
 public class InstalacionTipo extends Maestra implements Serializable {
 

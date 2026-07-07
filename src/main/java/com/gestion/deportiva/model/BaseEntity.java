@@ -3,6 +3,8 @@ package com.gestion.deportiva.model;
 import java.io.Serializable;
 import java.util.Date;
 
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.RelationTargetAuditMode;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -31,6 +33,7 @@ import lombok.Setter;
 @EntityListeners(AuditingEntityListener.class)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
+@Audited
 public abstract class BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = -5526430364598206935L;
@@ -57,12 +60,14 @@ public abstract class BaseEntity implements Serializable {
 
 	@CreatedBy
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_usuario_creacion", nullable = false,  updatable = false)
+	@JoinColumn(name = "id_usuario_creacion", nullable = false, updatable = false)
+	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	private Usuario usuarioCreacion;
 
 	@LastModifiedBy
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_usuario_modificacion", nullable = false)
+	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	private Usuario usuarioModificacion;
 
 	public BaseEntity(Long id) {

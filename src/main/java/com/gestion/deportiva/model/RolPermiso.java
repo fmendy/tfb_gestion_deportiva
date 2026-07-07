@@ -1,5 +1,8 @@
 package com.gestion.deportiva.model;
 
+import org.hibernate.annotations.Audited;
+import org.hibernate.envers.AuditTable;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -14,6 +17,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@Audited
+@AuditTable(value = "rol_permiso_historico")
 public class RolPermiso extends BaseEntity {
 
 	private static final long serialVersionUID = -2378783107697485835L;

@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import org.hibernate.annotations.Audited;
+import org.hibernate.envers.AuditTable;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -19,6 +22,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "instalacion_horario_bloqueado")
+@Audited
+@AuditTable(value = "instalacion_horario_bloqueado_historico")
 public class InstalacionHorarioBloqueado extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = 6794791456563667181L;

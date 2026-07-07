@@ -3,6 +3,9 @@ package com.gestion.deportiva.model;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+import org.hibernate.annotations.Audited;
+import org.hibernate.envers.AuditTable;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -18,6 +21,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "sancion")
+@Audited
+@AuditTable(value = "sancion_historico")
 public class Sancion extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = -2296012353601977882L;

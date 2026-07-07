@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.Audited;
+import org.hibernate.envers.AuditTable;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -23,6 +25,8 @@ import lombok.ToString;
 @Table(name = "comunidad_autonoma")
 @EqualsAndHashCode(callSuper = false, exclude = "listProvincia")
 @ToString(exclude = "listProvincia")
+@Audited
+@AuditTable(value = "comunidad_autonoma_historico")
 public class ComunidadAutonoma extends Maestra implements Serializable {
 
 	private static final long serialVersionUID = 3379456859352720719L;

@@ -28,6 +28,13 @@ CREATE TABLE SPRING_SESSION_ATTRIBUTES (
 ) ENGINE=InnoDB;
 
 
+CREATE TABLE revision_info (
+    rev INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    revtstmp BIGINT,
+    id_usuario int
+);
+
+
 create table usuario(
 	id INT  not null auto_increment primary key,
 	uuid CHAR(36) NOT NULL DEFAULT (UUID()),
@@ -41,21 +48,31 @@ create table usuario(
     fecha_modificacion datetime not null default now()
 );
 
+CREATE TABLE usuario_historico (
+    id INT NOT NULL,
+    uuid CHAR(36),
+    nombre VARCHAR(255),
+    email VARCHAR(255),
+    password VARCHAR(255),
+    activo TINYINT(1),
+    id_usuario_creacion INT,
+    id_usuario_modificacion INT,
+    fecha_creacion DATETIME,
+    fecha_modificacion DATETIME,
+
+    REV INT NOT NULL,
+    REVTYPE TINYINT NOT NULL,
+
+    PRIMARY KEY (id, REV),
+    CONSTRAINT usuario_historico_rev FOREIGN KEY (REV) REFERENCES revision_info(rev)
+);
+
+
 
 insert into usuario(nombre, email, password)
 values ('admin','admin@gestioninstalacion.com','password');
 
-insert into usuario(nombre, email, password)
-values ('usuario_cliente','ususario_cliente@gestioninstalacion.com','password');
 
-insert into usuario(nombre, email, password)
-values ('usuario_empresa','usuario_empresas@gestioninstalacion.com','password');
-
-insert into usuario(nombre, email, password)
-values ('usuario_sede','usuario_sede@gestioninstalacion.com','password');
-
-insert into usuario(nombre, email, password)
-values ('usuario_instalacion','usuario_instalacion@gestioninstalacion.com','password');
 
 alter table usuario modify id_usuario_creacion int default(1);
 alter table usuario modify id_usuario_modificacion int default(1);
@@ -71,6 +88,23 @@ create table rol(
     id_usuario_modificacion int  default(1),
     fecha_creacion datetime not null default now(),
     fecha_modificacion datetime not null default now()
+);
+
+CREATE TABLE rol_historico (
+    id INT NOT NULL,
+    uuid CHAR(36),
+    nombre VARCHAR(255),
+    activo TINYINT(1),
+    id_usuario_creacion INT,
+    id_usuario_modificacion INT,
+    fecha_creacion DATETIME,
+    fecha_modificacion DATETIME,
+
+    REV INT NOT NULL,
+    REVTYPE TINYINT NOT NULL,
+
+    PRIMARY KEY (id, REV),
+    CONSTRAINT rol_historico_rev FOREIGN KEY (REV) REFERENCES revision_info(rev)
 );
 
 insert into rol(nombre)
@@ -90,6 +124,24 @@ CREATE TABLE usuario_rol (
     id_usuario_modificacion INT DEFAULT 1,
     fecha_creacion DATETIME NOT NULL DEFAULT NOW(),
     fecha_modificacion DATETIME NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE usuario_rol_historico (
+    id INT NOT NULL,
+    uuid CHAR(36),
+    id_usuario INT  ,
+    id_rol INT  ,
+    activo TINYINT(1),
+    id_usuario_creacion INT,
+    id_usuario_modificacion INT,
+    fecha_creacion DATETIME,
+    fecha_modificacion DATETIME,
+
+    REV INT NOT NULL,
+    REVTYPE TINYINT NOT NULL,
+
+    PRIMARY KEY (id, REV),
+    CONSTRAINT usuario_rol_historico_rev FOREIGN KEY (REV) REFERENCES revision_info(rev)
 );
 
 alter table usuario_rol add foreign key fk_usuario_rol_usuario (id_usuario) references usuario(id);
@@ -131,6 +183,24 @@ create table comunidad_autonoma(
     fecha_modificacion datetime not null default now()
 );
 
+CREATE TABLE comunidad_autonoma_historico (
+    id INT NOT NULL,
+    uuid CHAR(36),
+    codigo_ine int ,
+    nombre varchar(255),
+    activo TINYINT(1),
+    id_usuario_creacion INT,
+    id_usuario_modificacion INT,
+    fecha_creacion DATETIME,
+    fecha_modificacion DATETIME,
+
+    REV INT NOT NULL,
+    REVTYPE TINYINT NOT NULL,
+
+    PRIMARY KEY (id, REV),
+    CONSTRAINT comunidad_autonoma_historico_rev FOREIGN KEY (REV) REFERENCES revision_info(rev)
+);
+
 alter table comunidad_autonoma add foreign key fk_comunidad_autonoma_usuario_creacion (id_usuario_creacion) references usuario(id);
 alter table comunidad_autonoma add foreign key fk_comunidad_autonoma_usuario_modificacion (id_usuario_modificacion) references usuario(id);
 
@@ -169,6 +239,25 @@ create table provincia(
     id_usuario_modificacion int not null default(1),
     fecha_creacion datetime not null default now(),
     fecha_modificacion datetime not null default now()
+);
+
+CREATE TABLE provincia_historico (
+    id INT NOT NULL,
+    uuid CHAR(36),
+    id_comunidad_autonoma int,
+    codigo_ine int ,
+    nombre varchar(255),
+    activo TINYINT(1),
+    id_usuario_creacion INT,
+    id_usuario_modificacion INT,
+    fecha_creacion DATETIME,
+    fecha_modificacion DATETIME,
+
+    REV INT NOT NULL,
+    REVTYPE TINYINT NOT NULL,
+
+    PRIMARY KEY (id, REV),
+    CONSTRAINT provincia_historico_rev FOREIGN KEY (REV) REFERENCES revision_info(rev)
 );
 
 alter table provincia add foreign key fk_provincia_usuario_creacion (id_usuario_creacion) references usuario(id);
@@ -244,6 +333,27 @@ create table municipio(
     fecha_modificacion datetime not null default now()
 );
 
+CREATE TABLE municipio_historico (
+    id INT NOT NULL,
+    uuid CHAR(36),
+    id_provincia int,
+    codigo_ine int ,
+    dc int ,
+    nombre varchar(255),
+    activo TINYINT(1),
+    id_usuario_creacion INT,
+    id_usuario_modificacion INT,
+    fecha_creacion DATETIME,
+    fecha_modificacion DATETIME,
+
+    REV INT NOT NULL,
+    REVTYPE TINYINT NOT NULL,
+
+    PRIMARY KEY (id, REV),
+    CONSTRAINT municipio_historico_rev FOREIGN KEY (REV) REFERENCES revision_info(rev)
+);
+
+
 alter table municipio add foreign key fk_municipio_usuario_creacion (id_usuario_creacion) references usuario(id);
 alter table municipio add foreign key fk_municipio_usuario_modificacion (id_usuario_modificacion) references usuario(id);
 alter table municipio add foreign key fk_municipio_provincia (id_provincia) references provincia(id);
@@ -258,6 +368,23 @@ create table permiso(
     id_usuario_modificacion int  default(1),
     fecha_creacion datetime not null default now(),
     fecha_modificacion datetime not null default now()
+);
+
+CREATE TABLE permiso_historico (
+    id INT NOT NULL,
+    uuid CHAR(36),
+    nombre varchar(255),
+    activo TINYINT(1),
+    id_usuario_creacion INT,
+    id_usuario_modificacion INT,
+    fecha_creacion DATETIME,
+    fecha_modificacion DATETIME,
+
+    REV INT NOT NULL,
+    REVTYPE TINYINT NOT NULL,
+
+    PRIMARY KEY (id, REV),
+    CONSTRAINT permiso_historico_rev FOREIGN KEY (REV) REFERENCES revision_info(rev)
 );
 
 alter table permiso add foreign key fk_permiso_usuario_creacion (id_usuario_creacion) references usuario(id);
@@ -302,6 +429,24 @@ create table rol_permiso(
     id_usuario_modificacion int  default(1),
     fecha_creacion datetime not null default now(),
     fecha_modificacion datetime not null default now()
+);
+
+CREATE TABLE rol_permiso_historico (
+    id INT NOT NULL,
+    uuid CHAR(36),
+    id_rol int ,
+	id_permiso int ,
+    activo TINYINT(1),
+    id_usuario_creacion INT,
+    id_usuario_modificacion INT,
+    fecha_creacion DATETIME,
+    fecha_modificacion DATETIME,
+
+    REV INT NOT NULL,
+    REVTYPE TINYINT NOT NULL,
+
+    PRIMARY KEY (id, REV),
+    CONSTRAINT rol_permiso_historico_rev FOREIGN KEY (REV) REFERENCES revision_info(rev)
 );
 
 alter table rol_permiso add foreign key fk_rol_permiso_usuario_creacion (id_usuario_creacion) references usuario(id);
@@ -408,6 +553,28 @@ create table empresa(
     fecha_modificacion datetime not null default now()
 );
 
+CREATE TABLE empresa_historico (
+    id INT NOT NULL,
+    uuid CHAR(36),
+    nombre varchar(255),
+    email varchar(255) ,
+    cif varchar(255),
+    logo varchar(255) ,
+    url varchar(255),
+    descripcion varchar(1250) null,
+    activo TINYINT(1),
+    id_usuario_creacion INT,
+    id_usuario_modificacion INT,
+    fecha_creacion DATETIME,
+    fecha_modificacion DATETIME,
+
+    REV INT NOT NULL,
+    REVTYPE TINYINT NOT NULL,
+
+    PRIMARY KEY (id, REV),
+    CONSTRAINT empresa_historico_rev FOREIGN KEY (REV) REFERENCES revision_info(rev)
+);
+
 alter table empresa add foreign key fk_empresa_usuario_creacion (id_usuario_creacion) references usuario(id);
 alter table empresa add foreign key fk_empresa_usuario_modificacion (id_usuario_modificacion) references usuario(id);
 
@@ -431,6 +598,31 @@ create table sede(
     fecha_modificacion datetime not null default now()
 );
 
+CREATE TABLE sede_historico (
+    id INT NOT NULL,
+    uuid CHAR(36),
+    id_empresa int ,
+    id_municipio int ,
+    direccion varchar(350) null,
+    latitud varchar(255)  null,
+    longitud varchar(255)  null,
+    nombre varchar(255)  null,
+    email varchar(255)  null,
+    logo varchar(255) null,
+    url varchar(255),
+    activo TINYINT(1),
+    id_usuario_creacion INT,
+    id_usuario_modificacion INT,
+    fecha_creacion DATETIME,
+    fecha_modificacion DATETIME,
+
+    REV INT NOT NULL,
+    REVTYPE TINYINT NOT NULL,
+
+    PRIMARY KEY (id, REV),
+    CONSTRAINT sede_historico_rev FOREIGN KEY (REV) REFERENCES revision_info(rev)
+);
+
 alter table sede add foreign key fk_sede_usuario_creacion (id_usuario_creacion) references usuario(id);
 alter table sede add foreign key fk_sede_usuario_modificacion (id_usuario_modificacion) references usuario(id);
 alter table sede add foreign key fk_sede_empresa (id_empresa) references empresa(id);
@@ -447,6 +639,24 @@ create table instalacion_tipo(
     id_usuario_modificacion int not null default(1),
     fecha_creacion datetime not null default now(),
     fecha_modificacion datetime not null default now()
+);
+
+CREATE TABLE instalacion_tipo_historico (
+    id INT NOT NULL,
+    uuid CHAR(36),
+    nombre varchar(255)  null,
+    descripcion varchar(1250) null,
+    activo TINYINT(1),
+    id_usuario_creacion INT,
+    id_usuario_modificacion INT,
+    fecha_creacion DATETIME,
+    fecha_modificacion DATETIME,
+
+    REV INT NOT NULL,
+    REVTYPE TINYINT NOT NULL,
+
+    PRIMARY KEY (id, REV),
+    CONSTRAINT instalacion_tipo_historico_rev FOREIGN KEY (REV) REFERENCES revision_info(rev)
 );
 
 alter table instalacion_tipo add foreign key fk_instalacion_tipo_usuario_creacion (id_usuario_creacion) references usuario(id);
@@ -470,6 +680,26 @@ create table instalacion(
     fecha_modificacion datetime not null default now()
 );
 
+CREATE TABLE instalacion_historico (
+    id INT NOT NULL,
+    uuid CHAR(36),
+   	id_sede int  null,
+    id_instalacion_tipo int  null,
+    nombre varchar(255)  null,
+    descripcion varchar(1250) null,
+    activo TINYINT(1),
+    id_usuario_creacion INT,
+    id_usuario_modificacion INT,
+    fecha_creacion DATETIME,
+    fecha_modificacion DATETIME,
+
+    REV INT NOT NULL,
+    REVTYPE TINYINT NOT NULL,
+
+    PRIMARY KEY (id, REV),
+    CONSTRAINT instalacion_historico_rev FOREIGN KEY (REV) REFERENCES revision_info(rev)
+);
+
 alter table instalacion add foreign key fk_instalacion_usuario_creacion (id_usuario_creacion) references usuario(id);
 alter table instalacion add foreign key fk_instalacion_usuario_modificacion (id_usuario_modificacion) references usuario(id);
 alter table instalacion add foreign key fk_instalacion_sede (id_sede) references sede(id);
@@ -488,6 +718,27 @@ create table imagen(
     fecha_creacion datetime not null default now(),
     fecha_modificacion datetime not null default now()
 );
+
+CREATE TABLE imagen_historico (
+    id INT NOT NULL,
+    uuid CHAR(36),
+   	id_empresa int null ,
+    id_sede int  null,
+    id_instalacion int  null,
+    url varchar(255)  null,
+    activo TINYINT(1),
+    id_usuario_creacion INT,
+    id_usuario_modificacion INT,
+    fecha_creacion DATETIME,
+    fecha_modificacion DATETIME,
+
+    REV INT NOT NULL,
+    REVTYPE TINYINT NOT NULL,
+
+    PRIMARY KEY (id, REV),
+    CONSTRAINT imagen_historico_rev FOREIGN KEY (REV) REFERENCES revision_info(rev)
+);
+
 
 alter table imagen add foreign key fk_imagen_usuario_creacion (id_usuario_creacion) references usuario(id);
 alter table imagen add foreign key fk_imagen_usuario_modificacion (id_usuario_modificacion) references usuario(id);
@@ -511,6 +762,26 @@ create table instalacion_horario (
     fecha_modificacion datetime not null default now()
 );
 
+CREATE TABLE instalacion_horario_historico (
+    id INT NOT NULL,
+    uuid CHAR(36),
+   	id_instalacion int  null,
+    dia_semana int  null,
+    hora_inicio TIME  null,
+    hora_fin TIME  null,
+    activo TINYINT(1),
+    id_usuario_creacion INT,
+    id_usuario_modificacion INT,
+    fecha_creacion DATETIME,
+    fecha_modificacion DATETIME,
+
+    REV INT NOT NULL,
+    REVTYPE TINYINT NOT NULL,
+
+    PRIMARY KEY (id, REV),
+    CONSTRAINT instalacion_horario_historico_rev FOREIGN KEY (REV) REFERENCES revision_info(rev)
+);
+
 alter table instalacion_horario add foreign key fk_instalacion_horario_usuario_creacion (id_usuario_creacion) references usuario(id);
 alter table instalacion_horario add foreign key fk_instalacion_horario_usuario_modificacion (id_usuario_modificacion) references usuario(id);
 alter table instalacion_horario add foreign key fk_instalacion_horario_instalacion (id_instalacion) references instalacion(id);
@@ -528,6 +799,27 @@ create table instalacion_horario_especial (
     id_usuario_modificacion int not null default(1),
     fecha_creacion datetime not null default now(),
     fecha_modificacion datetime not null default now()
+);
+
+CREATE TABLE instalacion_horario_especial_historico (
+    id INT NOT NULL,
+    uuid CHAR(36),
+    id_instalacion int not null,
+    fecha DATE not null,
+    hora_inicio TIME  null,
+    hora_fin TIME  null,
+    cerrado TINYINT(1) not null default(0),
+    activo TINYINT(1),
+    id_usuario_creacion INT,
+    id_usuario_modificacion INT,
+    fecha_creacion DATETIME,
+    fecha_modificacion DATETIME,
+
+    REV INT NOT NULL,
+    REVTYPE TINYINT NOT NULL,
+
+    PRIMARY KEY (id, REV),
+    CONSTRAINT instalacion_horario_especial_historico_rev FOREIGN KEY (REV) REFERENCES revision_info(rev)
 );
 
 alter table instalacion_horario_especial add foreign key fk_instalacion_horario_especial_usuario_creacion (id_usuario_creacion) references usuario(id);
@@ -548,6 +840,26 @@ create table instalacion_configuracion_reserva (
     fecha_modificacion datetime not null default now()
 );
 
+CREATE TABLE instalacion_configuracion_reserva_historico (
+    id INT NOT NULL,
+    uuid CHAR(36),
+    id_instalacion int  null,
+    duracion_min int  null,
+    duracion_max int  null,
+    intervalo_horario int not null,
+    activo TINYINT(1),
+    id_usuario_creacion INT,
+    id_usuario_modificacion INT,
+    fecha_creacion DATETIME,
+    fecha_modificacion DATETIME,
+
+    REV INT NOT NULL,
+    REVTYPE TINYINT NOT NULL,
+
+    PRIMARY KEY (id, REV),
+    CONSTRAINT instalacion_configuracion_reserva_historico_rev FOREIGN KEY (REV) REFERENCES revision_info(rev)
+);
+
 alter table instalacion_configuracion_reserva add foreign key fk_instalacion_configuracion_reserva_usuario_creacion (id_usuario_creacion) references usuario(id);
 alter table instalacion_configuracion_reserva add foreign key fk_instalacion_configuracion_reserva_usuario_modificacion (id_usuario_modificacion) references usuario(id);
 alter table instalacion_configuracion_reserva add foreign key fk_instalacion_configuracion_reserva_instalacion (id_instalacion) references instalacion(id);
@@ -562,6 +874,23 @@ create table reserva_estado(
     id_usuario_modificacion int not null default(1),
     fecha_creacion datetime not null default now(),
     fecha_modificacion datetime not null default now()
+);
+
+CREATE TABLE reserva_estado_historico (
+    id INT NOT NULL,
+    uuid CHAR(36),
+    nombre varchar(255)  null ,
+    activo TINYINT(1),
+    id_usuario_creacion INT,
+    id_usuario_modificacion INT,
+    fecha_creacion DATETIME,
+    fecha_modificacion DATETIME,
+
+    REV INT NOT NULL,
+    REVTYPE TINYINT NOT NULL,
+
+    PRIMARY KEY (id, REV),
+    CONSTRAINT reserva_estado_historico_rev FOREIGN KEY (REV) REFERENCES revision_info(rev)
 );
 
 alter table reserva_estado add foreign key fk_reserva_estado_usuario_creacion (id_usuario_creacion) references usuario(id);
@@ -585,6 +914,27 @@ create table reserva(
     fecha_modificacion datetime not null default now()
 );
 
+CREATE TABLE reserva_historico (
+    id INT NOT NULL,
+    uuid CHAR(36),
+    id_reserva_estado int  null,
+    id_instalacion int  null,
+    fecha DATE  null,
+    hora_inicio TIME  null,
+    hora_fin TIME  null,
+    activo TINYINT(1),
+    id_usuario_creacion INT,
+    id_usuario_modificacion INT,
+    fecha_creacion DATETIME,
+    fecha_modificacion DATETIME,
+
+    REV INT NOT NULL,
+    REVTYPE TINYINT NOT NULL,
+
+    PRIMARY KEY (id, REV),
+    CONSTRAINT reserva_historico_rev FOREIGN KEY (REV) REFERENCES revision_info(rev)
+);
+
 alter table reserva add foreign key fk_reserva_usuario_creacion (id_usuario_creacion) references usuario(id);
 alter table reserva add foreign key fk_reserva_usuario_modificacion (id_usuario_modificacion) references usuario(id);
 alter table reserva add foreign key fk_reserva_instalacion (id_instalacion) references instalacion(id);
@@ -600,6 +950,24 @@ create table usuario_empresa(
     id_usuario_modificacion int not null default(1),
     fecha_creacion datetime not null default now(),
     fecha_modificacion datetime not null default now()
+);
+
+CREATE TABLE usuario_empresa_historico (
+    id INT NOT NULL,
+    uuid CHAR(36),
+    id_usuario int  null,
+    id_empresa int  null,
+    activo TINYINT(1),
+    id_usuario_creacion INT,
+    id_usuario_modificacion INT,
+    fecha_creacion DATETIME,
+    fecha_modificacion DATETIME,
+
+    REV INT NOT NULL,
+    REVTYPE TINYINT NOT NULL,
+
+    PRIMARY KEY (id, REV),
+    CONSTRAINT usuario_empresa_historico_rev FOREIGN KEY (REV) REFERENCES revision_info(rev)
 );
 
 alter table usuario_empresa add foreign key fk_usuario_empresa_usuario_creacion (id_usuario_creacion) references usuario(id);
@@ -619,6 +987,24 @@ create table usuario_sede(
     fecha_modificacion datetime not null default now()
 );
 
+CREATE TABLE usuario_sede_historico (
+    id INT NOT NULL,
+    uuid CHAR(36),
+    id_usuario int  null,
+    id_sede int  null,
+    activo TINYINT(1),
+    id_usuario_creacion INT,
+    id_usuario_modificacion INT,
+    fecha_creacion DATETIME,
+    fecha_modificacion DATETIME,
+
+    REV INT NOT NULL,
+    REVTYPE TINYINT NOT NULL,
+
+    PRIMARY KEY (id, REV),
+    CONSTRAINT usuario_sede_historico_rev FOREIGN KEY (REV) REFERENCES revision_info(rev)
+);
+
 alter table usuario_sede add foreign key fk_usuario_sede_usuario_creacion (id_usuario_creacion) references usuario(id);
 alter table usuario_sede add foreign key fk_usuario_sede_modificacion (id_usuario_modificacion) references usuario(id);
 alter table usuario_sede add foreign key fk_usuario_sede_sede(id_sede) references sede(id);
@@ -636,6 +1022,25 @@ create table usuario_instalacion(
     fecha_creacion datetime not null default now(),
     fecha_modificacion datetime not null default now()
 );
+
+CREATE TABLE usuario_instalacion_historico (
+    id INT NOT NULL,
+    uuid CHAR(36),
+    id_usuario int  null,
+    id_instalacion int  null,
+    activo TINYINT(1),
+    id_usuario_creacion INT,
+    id_usuario_modificacion INT,
+    fecha_creacion DATETIME,
+    fecha_modificacion DATETIME,
+
+    REV INT NOT NULL,
+    REVTYPE TINYINT NOT NULL,
+
+    PRIMARY KEY (id, REV),
+    CONSTRAINT usuario_instalacion_historico_rev FOREIGN KEY (REV) REFERENCES revision_info(rev)
+);
+
 
 alter table usuario_instalacion add foreign key fk_usuario_instalacion_usuario_creacion (id_usuario_creacion) references usuario(id);
 alter table usuario_instalacion add foreign key fk_usuario_instalacion_modificacion (id_usuario_modificacion) references usuario(id);
@@ -657,6 +1062,27 @@ create table instalacion_horario_bloqueado(
     fecha_modificacion datetime not null default now()
 );
 
+
+CREATE TABLE usuario_horario_bloqueado_historico (
+    id INT NOT NULL,
+    uuid CHAR(36),
+    id_instalacion int  null,
+    fecha DATE  null,
+    hora_inicio TIME  null,
+    hora_fin TIME  null,
+    activo TINYINT(1),
+    id_usuario_creacion INT,
+    id_usuario_modificacion INT,
+    fecha_creacion DATETIME,
+    fecha_modificacion DATETIME,
+
+    REV INT NOT NULL,
+    REVTYPE TINYINT NOT NULL,
+
+    PRIMARY KEY (id, REV),
+    CONSTRAINT usuario_horario_bloqueado_historico_rev FOREIGN KEY (REV) REFERENCES revision_info(rev)
+);
+
 alter table instalacion_horario_bloqueado add foreign key fk_instalacion_horario_bloqueado_usuario_creacion (id_usuario_creacion) references usuario(id);
 alter table instalacion_horario_bloqueado add foreign key fk_instalacion_horario_bloqueado_modificacion (id_usuario_modificacion) references usuario(id);
 alter table instalacion_horario_bloqueado add foreign key fk_instalacion_horario_bloqueado_instalacion (id_instalacion) references instalacion(id);
@@ -676,6 +1102,23 @@ create table sancion_tipo(
 alter table sancion_tipo add foreign key fk_sancion_tipo_usuario_creacion (id_usuario_creacion) references usuario(id);
 alter table sancion_tipo add foreign key fk_sancion_tipo_usuario_modificacion (id_usuario_modificacion) references usuario(id);
 
+CREATE TABLE sancion_tipo_historico (
+    id INT NOT NULL,
+    uuid CHAR(36),
+    nombre varchar(255)  null ,
+    activo TINYINT(1),
+    id_usuario_creacion INT,
+    id_usuario_modificacion INT,
+    fecha_creacion DATETIME,
+    fecha_modificacion DATETIME,
+
+    REV INT NOT NULL,
+    REVTYPE TINYINT NOT NULL,
+
+    PRIMARY KEY (id, REV),
+    CONSTRAINT sancion_tipo_historico_rev FOREIGN KEY (REV) REFERENCES revision_info(rev)
+);
+
 insert into sancion_tipo(nombre) values 
 ('FALTA DE RESPETO'),('DESPERFECTOS EN LAS INSTALACIONES'), ('NO COMPARECENCIA');
 
@@ -693,6 +1136,28 @@ create table sancion(
     id_usuario_modificacion int not null default(1),
     fecha_creacion datetime not null default now(),
     fecha_modificacion datetime not null default now()
+);
+
+CREATE TABLE sancion_historico (
+    id INT NOT NULL,
+    uuid CHAR(36),
+    id_usuario int  null,
+    id_reserva int  null,
+    id_sancion_tipo int  null,
+    fecha_inicio DATE  null ,
+    fecha_fin DATE  null,
+    descripcion varchar(1250) null,
+    activo TINYINT(1),
+    id_usuario_creacion INT,
+    id_usuario_modificacion INT,
+    fecha_creacion DATETIME,
+    fecha_modificacion DATETIME,
+
+    REV INT NOT NULL,
+    REVTYPE TINYINT NOT NULL,
+
+    PRIMARY KEY (id, REV),
+    CONSTRAINT sancion_historico_rev FOREIGN KEY (REV) REFERENCES revision_info(rev)
 );
 
 alter table sancion add foreign key fk_sancion_usuario_creacion (id_usuario_creacion) references usuario(id);

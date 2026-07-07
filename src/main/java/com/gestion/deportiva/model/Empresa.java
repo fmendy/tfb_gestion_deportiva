@@ -2,6 +2,9 @@ package com.gestion.deportiva.model;
 
 import java.io.Serializable;
 
+import org.hibernate.envers.AuditTable;
+import org.hibernate.envers.Audited;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -14,6 +17,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "empresa")
+@Audited
+@AuditTable(value = "empresa_historico")
 public class Empresa extends Maestra implements Serializable {
 
 	private static final long serialVersionUID = 2705137788402525702L;

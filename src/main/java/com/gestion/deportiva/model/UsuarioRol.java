@@ -1,5 +1,8 @@
 package com.gestion.deportiva.model;
 
+import org.hibernate.annotations.Audited;
+import org.hibernate.envers.AuditTable;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -16,6 +19,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false, exclude = "usuario")
+@Audited
+@AuditTable(value = "usuario_rol_historico")
 public class UsuarioRol extends BaseEntity {
 
 	private static final long serialVersionUID = -2378783107697485835L;

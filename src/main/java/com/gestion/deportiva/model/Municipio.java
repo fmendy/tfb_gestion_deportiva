@@ -2,6 +2,8 @@ package com.gestion.deportiva.model;
 
 import java.io.Serializable;
 
+import org.hibernate.annotations.Audited;
+import org.hibernate.envers.AuditTable;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,6 +20,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "municipio")
+@Audited
+@AuditTable(value = "municipio_historico")
 public class Municipio extends Maestra implements Serializable {
 
 	public Municipio(Long id) {

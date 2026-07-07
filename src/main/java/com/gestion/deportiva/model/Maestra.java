@@ -2,6 +2,7 @@ package com.gestion.deportiva.model;
 
 import java.io.Serializable;
 
+import org.hibernate.envers.Audited;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import jakarta.persistence.Column;
@@ -19,6 +20,7 @@ import lombok.Setter;
 @MappedSuperclass
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @EntityListeners(AuditingEntityListener.class)
+@Audited
 public abstract class Maestra extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = 1623328377059858749L;
