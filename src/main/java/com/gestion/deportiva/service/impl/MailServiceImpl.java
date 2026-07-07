@@ -87,7 +87,8 @@ public class MailServiceImpl implements MailService {
 
 		// 1. Construcción del asunto y cuerpo HTML del correo
 		String asunto = Utils.getMessage("mail.reserva.asunto.aprobada");
-		String cuerpo = "<h1>" + Utils.getMessage("mail.reserva.cuerpo.datos") + "</h1></br>";
+		String cuerpo = Utils.getMessage("mail.reserva.cuerpo.aprobada") + "<br>";
+		cuerpo = cuerpo + "<h1>" + Utils.getMessage("mail.reserva.cuerpo.datos") + "</h1></br>";
 		cuerpo = cuerpo + "<b>" + Utils.getMessage("mail.reserva.cuerpo.localizacion") + "</b>: "
 				+ reserva.getInstalacion().getSede().getMunicipio().getProvincia().getComunidadAutonoma().getNombre()
 				+ " - " + reserva.getInstalacion().getSede().getMunicipio().getProvincia().getNombre() + " - "
@@ -109,16 +110,117 @@ public class MailServiceImpl implements MailService {
 				reserva.getHoraInicio(), reserva.getHoraFin());
 
 		// 2. Generación del contenido del calendario (.ics) dinámico
-		String tituloCita = "Reserva: " + reserva.getInstalacion().getNombre();
-		String descripcionCita = "Tu reserva ha sido aprobada para la instalación "
+		String tituloCita = Utils.getMessage("mail.reserva.ics") + ": " + reserva.getInstalacion().getNombre();
+		String descripcionCita = Utils.getMessage("mail.reserva.ics.titulo.aprobada") + " "
 				+ reserva.getInstalacion().getNombre();
-		String idCita = "reserva-" + reserva.getId(); // Asegúrate de tener reserva.getId() o el identificador único
+		String idCita = "reserva-" + reserva.getUuid();
 
-		String icsContent = generarIcsContentAprobacion(reserva.getFecha(), reserva.getHoraInicio(), reserva.getHoraFin(),
-				tituloCita, descripcionCita, idCita);
+		String icsContent = generarIcsContentAprobacion(reserva.getFecha(), reserva.getHoraInicio(),
+				reserva.getHoraFin(), tituloCita, descripcionCita, idCita);
 
 		// 3. Envío del correo pasando también el contenido del calendario
 		enviarMail(Arrays.asList(reserva.getUsuarioCreacion().getEmail()), asunto, cuerpo, icsContent);
+	}
+
+	@Override
+	public void mensajeDenegacionReserva(Reserva reserva) throws MessagingException, IOException {
+
+		// 1. Construcción del asunto y cuerpo HTML del correo
+		String asunto = Utils.getMessage("mail.reserva.asunto.denegada");
+		String cuerpo = Utils.getMessage("mail.reserva.cuerpo.denegada") + "<br>";
+		cuerpo = cuerpo + "<h1>" + Utils.getMessage("mail.reserva.cuerpo.datos") + "</h1></br>";
+		cuerpo = cuerpo + Utils.getMessage("mail.reserva.asunto.denegada") + "<br>";
+		cuerpo = cuerpo + "<b>" + Utils.getMessage("mail.reserva.cuerpo.localizacion") + "</b>: "
+				+ reserva.getInstalacion().getSede().getMunicipio().getProvincia().getComunidadAutonoma().getNombre()
+				+ " - " + reserva.getInstalacion().getSede().getMunicipio().getProvincia().getNombre() + " - "
+				+ reserva.getInstalacion().getSede().getMunicipio().getNombre() + " - "
+				+ reserva.getInstalacion().getSede().getDireccion() + "<br>";
+		cuerpo = cuerpo + "<b>" + Utils.getMessage("mail.reserva.cuerpo.instalacion") + "</b>: "
+				+ reserva.getInstalacion().getNombre() + "(" + reserva.getInstalacion().getInstalacionTipo().getNombre()
+				+ ")<br>";
+		cuerpo = cuerpo + "<b>" + Utils.getMessage("mail.reserva.cuerpo.fecha") + "</b>: " + reserva.getFecha()
+				+ "<br>";
+		cuerpo = cuerpo + "<b>" + Utils.getMessage("mail.reserva.cuerpo.hora.inicio") + "</b>: "
+				+ reserva.getHoraInicio() + "<br>";
+		cuerpo = cuerpo + "<b>" + Utils.getMessage("mail.reserva.cuerpo.hora.fin") + "</b>: " + reserva.getHoraFin()
+				+ "<br>";
+		cuerpo = cuerpo + "<br><small>" + Utils.getMessage("mail.reserva.cuerpo.contacto.email") + "</small> "
+				+ reserva.getInstalacion().getSede().getEmail();
+
+		cuerpo = MessageFormat.format(cuerpo, reserva.getInstalacion().getNombre(), reserva.getFecha(),
+				reserva.getHoraInicio(), reserva.getHoraFin());
+
+		enviarMail(Arrays.asList(reserva.getUsuarioCreacion().getEmail()), asunto, cuerpo, null);
+	}
+
+	@Override
+	public void mensajeCanceladaEmpresaReserva(Reserva reserva) throws MessagingException, IOException {
+
+		// 1. Construcción del asunto y cuerpo HTML del correo
+		String asunto = Utils.getMessage("mail.reserva.asunto.cancelada.empresa");
+		String cuerpo = Utils.getMessage("mail.reserva.cuerpo.cancelada.empresa") + "<br>";
+		cuerpo = cuerpo + "<h1>" + Utils.getMessage("mail.reserva.cuerpo.datos") + "</h1></br>";
+		cuerpo = cuerpo + "<b>" + Utils.getMessage("mail.reserva.cuerpo.localizacion") + "</b>: "
+				+ reserva.getInstalacion().getSede().getMunicipio().getProvincia().getComunidadAutonoma().getNombre()
+				+ " - " + reserva.getInstalacion().getSede().getMunicipio().getProvincia().getNombre() + " - "
+				+ reserva.getInstalacion().getSede().getMunicipio().getNombre() + " - "
+				+ reserva.getInstalacion().getSede().getDireccion() + "<br>";
+		cuerpo = cuerpo + "<b>" + Utils.getMessage("mail.reserva.cuerpo.instalacion") + "</b>: "
+				+ reserva.getInstalacion().getNombre() + "(" + reserva.getInstalacion().getInstalacionTipo().getNombre()
+				+ ")<br>";
+		cuerpo = cuerpo + "<b>" + Utils.getMessage("mail.reserva.cuerpo.fecha") + "</b>: " + reserva.getFecha()
+				+ "<br>";
+		cuerpo = cuerpo + "<b>" + Utils.getMessage("mail.reserva.cuerpo.hora.inicio") + "</b>: "
+				+ reserva.getHoraInicio() + "<br>";
+		cuerpo = cuerpo + "<b>" + Utils.getMessage("mail.reserva.cuerpo.hora.fin") + "</b>: " + reserva.getHoraFin()
+				+ "<br>";
+		cuerpo = cuerpo + "<br><small>" + Utils.getMessage("mail.reserva.cuerpo.contacto.email") + "</small> "
+				+ reserva.getInstalacion().getSede().getEmail();
+
+		cuerpo = MessageFormat.format(cuerpo, reserva.getInstalacion().getNombre(), reserva.getFecha(),
+				reserva.getHoraInicio(), reserva.getHoraFin());
+
+		// 2. Generación del contenido del calendario (.ics) dinámico
+		String tituloCita = Utils.getMessage("mail.reserva.ics") + ": " + reserva.getInstalacion().getNombre();
+		String descripcionCita = Utils.getMessage("mail.reserva.ics.titulo.cancelada") + " "
+				+ reserva.getInstalacion().getNombre();
+		String idCita = "reserva-" + reserva.getUuid();
+
+		String icsContent = generarIcsContentCancelacion(reserva.getFecha(), reserva.getHoraInicio(),
+				reserva.getHoraFin(), tituloCita, descripcionCita, idCita);
+
+		// 3. Envío del correo pasando también el contenido del calendario
+		enviarMail(Arrays.asList(reserva.getUsuarioCreacion().getEmail()), asunto, cuerpo, icsContent);
+	}
+
+	private String generarIcsContentCancelacion(LocalDate fecha, LocalTime horaInicio, LocalTime horaFin, String titulo,
+			String descripcion, String idReserva) {
+
+		LocalDateTime inicio = fecha.atTime(horaInicio);
+		LocalDateTime fin = fecha.atTime(horaFin);
+
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss");
+
+		String fechaInicioStr = inicio.format(formatter);
+		String fechaFinStr = fin.format(formatter);
+		String ahoraStr = LocalDateTime.now().format(formatter);
+
+		return "BEGIN:VCALENDAR\n" + "VERSION:2.0\n" + "PRODID:-//Tu Empresa//Mi Aplicacion//ES\n" + "METHOD:CANCEL\n" + // <---
+																															// Cambiado
+																															// a
+																															// CANCEL
+				"BEGIN:VEVENT\n" + "UID:" + idReserva + "@tuapp.com\n" + "DTSTAMP:" + ahoraStr + "\n" + "DTSTART:"
+				+ fechaInicioStr + "\n" + "DTEND:" + fechaFinStr + "\n" + "SUMMARY:CANCELADO: " + titulo + "\n" + // Útil
+																													// para
+																													// que
+																													// el
+																													// usuario
+																													// vea
+																													// el
+																													// cambio
+				"DESCRIPTION:" + descripcion + "\n" + "STATUS:CANCELLED\n" + // <--- Obligatorio para cancelar
+				"SEQUENCE:1\n" + // <--- Indica una actualización sobre el original
+				"END:VEVENT\n" + "END:VCALENDAR";
 	}
 
 	private String generarIcsContentAprobacion(LocalDate fecha, LocalTime horaInicio, LocalTime horaFin, String titulo,

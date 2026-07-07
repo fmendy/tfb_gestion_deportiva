@@ -16,4 +16,8 @@ public interface MailService {
 
 	void mensajeAprobacionReserva(Reserva reserva) throws MessagingException, IOException;
 
+	void mensajeDenegacionReserva(Reserva reserva) throws MessagingException, IOException;
+
+	void mensajeCanceladaEmpresaReserva(Reserva reserva) throws MessagingException, IOException;
+
 }

@@ -348,6 +348,11 @@ public class ReservaServiceImpl implements ReservaService {
 	@Override
 	public void cancelarEmpresa(Long id) {
 		actualizarReservaEstado(id, Constantes.ReservaEstado.CANCELADA_POR_EMPRESA);
+		try {
+			mailService.mensajeCanceladaEmpresaReserva(reservaRepository.findByActivoTrueAndId(id));
+		} catch (MessagingException | IOException e) {
+			logger.error("Error al notificar al usuario que la reserva ha sido cancelada, id reserva {}", id);
+		}
 	}
 
 	@Override
@@ -360,6 +365,11 @@ public class ReservaServiceImpl implements ReservaService {
 	@Override
 	public void denegar(Long id) {
 		actualizarReservaEstado(id, Constantes.ReservaEstado.DENEGADA);
+		try {
+			mailService.mensajeDenegacionReserva(reservaRepository.findByActivoTrueAndId(id));
+		} catch (MessagingException | IOException e) {
+			logger.error("Error al notificar al usuario que la reserva ha sido denegada, id reserva {}", id);
+		}
 	}
 
 	private void actualizarReservaEstado(Long id, String nombreEstado) {

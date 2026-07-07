@@ -130,14 +130,13 @@ public class PrivadoReservaController extends BaseController {
 			return redirectWithError(redirectUrl, ra, HttpStatus.INTERNAL_SERVER_ERROR.value(), null);
 		}
 	}
-	
+
 	@GetMapping("/{id}/cancelarusuario")
 	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Reserva.GESTION_RESERVA_PROPIA + "')")
 	public ModelAndView cancelarUsuario(@PathVariable Long id, RedirectAttributes ra) throws PermisoException {
-		return ejecutarAccion(id, ra, BASE_URL+"/misreservas", () -> reservaService.canCancelarUsuario(id),
+		return ejecutarAccion(id, ra, BASE_URL + "/misreservas", () -> reservaService.canCancelarUsuario(id),
 				() -> reservaService.cancelarUsuario(id), "Error al cancelar la reserva por usuario");
 	}
-
 
 	@GetMapping("/{id}/aprobar")
 	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Reserva.GESTION_RESERVA_INSTALACION + "')")
@@ -159,14 +158,20 @@ public class PrivadoReservaController extends BaseController {
 		return ejecutarAccion(id, ra, BASE_URL, () -> reservaService.canCancelarCompletadaIncompletadaEmpresa(id),
 				() -> reservaService.completar(id), "Error al completar la reserva");
 	}
-	
+
+	@GetMapping("/{id}/denegar")
+	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Reserva.GESTION_RESERVA_INSTALACION + "')")
+	public ModelAndView denegar(@PathVariable Long id, RedirectAttributes ra) throws PermisoException {
+		return ejecutarAccion(id, ra, BASE_URL, () -> reservaService.canAprobarDenegarReserva(id),
+				() -> reservaService.denegar(id), "Error al denegar la reserva");
+	}
+
 	@GetMapping("/{id}/incompletar")
 	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Reserva.GESTION_RESERVA_INSTALACION + "')")
 	public ModelAndView incompletar(@PathVariable Long id, RedirectAttributes ra) throws PermisoException {
 		return ejecutarAccion(id, ra, BASE_URL, () -> reservaService.canCancelarCompletadaIncompletadaEmpresa(id),
 				() -> reservaService.incompletar(id), "Error al completar la reserva");
 	}
-
 
 	@GetMapping("")
 	public ModelAndView search(Pageable pageable, HttpServletRequest request, ReservaFilter filter) {
