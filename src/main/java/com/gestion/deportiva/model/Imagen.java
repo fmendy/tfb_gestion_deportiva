@@ -2,8 +2,8 @@ package com.gestion.deportiva.model;
 
 import java.io.Serializable;
 
-import org.hibernate.annotations.Audited;
 import org.hibernate.envers.AuditTable;
+import org.hibernate.envers.Audited;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

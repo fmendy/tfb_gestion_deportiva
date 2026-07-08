@@ -3,7 +3,7 @@ package com.gestion.deportiva.model;
 import java.io.Serializable;
 import java.util.List;
 
-import org.hibernate.annotations.Audited;
+import org.hibernate.envers.Audited;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.ParamDef;
 import org.hibernate.envers.AuditTable;

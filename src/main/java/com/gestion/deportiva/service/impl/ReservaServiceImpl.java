@@ -238,15 +238,16 @@ public class ReservaServiceImpl implements ReservaService {
 	}
 
 	@Override
+	@Transactional
 	public Long crearReservaEstadoPendiente(@Valid ReservaSolicitudDTO dto) {
 		Reserva reserva = new Reserva();
 		reserva.setFecha(dto.getFecha());
 		reserva.setHoraFin(dto.getHora().plusMinutes(dto.getDuracion()));
 		reserva.setHoraInicio(dto.getHora());
-		reserva.setInstalacion(new Instalacion(dto.getInstalacionId()));
+		reserva.setInstalacion(instalacionRepository.findByActivoTrueAndId(dto.getInstalacionId()));
 		reserva.setReservaEstado(
 				reservaEstadoRepository.findByActivoTrueAndNombreEqualsIgnoreCase(Constantes.ReservaEstado.PENDIENTE));
-		reservaRepository.saveAndFlush(reserva);
+		reservaRepository.save(reserva);
 		return reserva.getId();
 	}
 

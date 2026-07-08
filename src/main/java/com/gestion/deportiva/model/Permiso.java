@@ -1,6 +1,6 @@
 package com.gestion.deportiva.model;
 
-import org.hibernate.annotations.Audited;
+import org.hibernate.envers.Audited;
 import org.hibernate.envers.AuditTable;
 
 import jakarta.persistence.Entity;

@@ -111,7 +111,10 @@ public class InstalacionServiceImpl implements InstalacionService {
 			model = new Instalacion();
 		}
 		model = instalacionMapper.dtoToModel(dto, model);
-		instalacionRepository.saveAndFlush(model);
+		
+		entityManager.persist(model);
+		System.out.println("ID después del save = " + model.getId());
+		entityManager.flush();
 		return model.getId();
 	}
 

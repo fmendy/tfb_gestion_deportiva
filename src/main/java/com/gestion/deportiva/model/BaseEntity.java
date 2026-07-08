@@ -39,7 +39,7 @@ public abstract class BaseEntity implements Serializable {
 	private static final long serialVersionUID = -5526430364598206935L;
 
 	@Id
-	@Column(name = "id")
+	@Column(name = "id", nullable = false, updatable = false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@EqualsAndHashCode.Include
 	private Long id;

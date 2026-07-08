@@ -3,7 +3,7 @@ package com.gestion.deportiva.model;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-import org.hibernate.annotations.Audited;
+import org.hibernate.envers.Audited;
 import org.hibernate.envers.AuditTable;
 
 import jakarta.persistence.Column;

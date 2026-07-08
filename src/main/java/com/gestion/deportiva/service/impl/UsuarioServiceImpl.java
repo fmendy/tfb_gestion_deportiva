@@ -257,6 +257,7 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 	}
 
 	@Override
+	@Transactional
 	public Long registrarUsuarioEmpresa(@Valid EmpresaRegistroDTO dto) {
 		Usuario usuario = usuarioMapper.registroEmpresaDTOToModel(dto);
 		usuarioRepository.saveAndFlush(usuario);

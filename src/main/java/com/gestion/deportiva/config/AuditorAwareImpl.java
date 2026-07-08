@@ -25,7 +25,7 @@ public class AuditorAwareImpl implements AuditorAware<Usuario> {
 			return Optional.empty();
 		}
 
-		Usuario proxyUser = entityManager.getReference(Usuario.class, userId);
+		Usuario proxyUser = entityManager.find(Usuario.class, userId);
 
 		return Optional.of(proxyUser);
 	}
