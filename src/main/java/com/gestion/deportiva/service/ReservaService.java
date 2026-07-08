@@ -11,6 +11,7 @@ import com.gestion.deportiva.dto.ReservaListadoDTO;
 import com.gestion.deportiva.dto.ReservaDTO;
 import com.gestion.deportiva.dto.ReservaSolicitudDTO;
 import com.gestion.deportiva.dto.filter.ReservaFilter;
+import com.gestion.deportiva.dto.historico.HistoricoReservaDTO;
 import com.gestion.deportiva.model.Reserva;
 
 import jakarta.validation.Valid;
@@ -61,5 +62,7 @@ public interface ReservaService extends BaseService<ReservaDTO, ReservaFilter> {
 	void fechaComprobarPorCambioDeHorarios(LocalDate date, Long instalacionId);
 
 	void cancelarReservasEmpresa(List<Reserva> list);
+
+	List<HistoricoReservaDTO> getListHistorico(Long id);
 
 }

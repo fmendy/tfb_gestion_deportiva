@@ -49,6 +49,8 @@ public class PrivadoReservaController extends BaseController {
 	private static final String TITLE_PAGE = "page.title.privado.reserva.instalacion";
 
 	private static final String VIEW_SOLICITUD_FORM = "privado/reserva/solicitudForm";
+	
+	private static final String VIEW_HISTORICO_LIST = "privado/reserva/historicoList";
 
 	private static final String VIEW_MIS_RESERVAS_LIST = "privado/reserva/misReservasList";
 
@@ -109,6 +111,14 @@ public class PrivadoReservaController extends BaseController {
 		logger.info("accediendo a las reservas actuales del usuario {}", SecurityUtil.getCurrentUserId());
 		return buildListMisReservasView(reservaService.getReservaFilterParaMisReservasPasadas(), pageable, request,
 				true);
+
+	}
+
+	@GetMapping("/{id}/historico")
+	public ModelAndView verHistorico(@PathVariable Long id, RedirectAttributes ra) {
+		logger.info("accediendo a las reserva {} para ver historico del usuario {}", id,
+				SecurityUtil.getCurrentUserId());
+		return buildListHistoricoView(id);
 
 	}
 
@@ -217,6 +227,13 @@ public class PrivadoReservaController extends BaseController {
 		mav.addObject("breadcrumbs",
 				BreadcrumbBuilder.start().includeHome().add("breadcrumb.reservas.mis.reservas", null).build());
 		addSortParameter(mav, pageable);
+		addBasicModelDetails(mav, TITLE_PAGE, false);
+		return mav;
+	}
+	
+	private ModelAndView buildListHistoricoView(Long reservaId) {
+		ModelAndView mav = new ModelAndView(VIEW_HISTORICO_LIST);
+		mav.addObject("historico", reservaService.getListHistorico(reservaId));
 		addBasicModelDetails(mav, TITLE_PAGE, false);
 		return mav;
 	}

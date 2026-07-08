@@ -5,8 +5,11 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
+import org.hibernate.envers.AuditReader;
+import org.hibernate.envers.AuditReaderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,7 @@ import com.gestion.deportiva.dto.ReservaListadoDTO;
 import com.gestion.deportiva.dto.ReservaDTO;
 import com.gestion.deportiva.dto.ReservaSolicitudDTO;
 import com.gestion.deportiva.dto.filter.ReservaFilter;
+import com.gestion.deportiva.dto.historico.HistoricoReservaDTO;
 import com.gestion.deportiva.dto.specifications.ReservaSpecifications;
 import com.gestion.deportiva.mapper.ReservaMapper;
 import com.gestion.deportiva.model.Instalacion;
@@ -26,12 +30,14 @@ import com.gestion.deportiva.model.InstalacionHorarioBloqueado;
 import com.gestion.deportiva.model.InstalacionHorarioEspecial;
 import com.gestion.deportiva.model.Reserva;
 import com.gestion.deportiva.model.ReservaEstado;
+import com.gestion.deportiva.model.RevisionInfoEntity;
 import com.gestion.deportiva.repository.InstalacionHorarioBloqueadoRepository;
 import com.gestion.deportiva.repository.InstalacionHorarioEspecialRepository;
 import com.gestion.deportiva.repository.InstalacionHorarioRepository;
 import com.gestion.deportiva.repository.InstalacionRepository;
 import com.gestion.deportiva.repository.ReservaEstadoRepository;
 import com.gestion.deportiva.repository.ReservaRepository;
+import com.gestion.deportiva.repository.UsuarioRepository;
 import com.gestion.deportiva.service.MailService;
 import com.gestion.deportiva.service.ReservaService;
 import com.gestion.deportiva.util.Constantes;
@@ -75,6 +81,9 @@ public class ReservaServiceImpl implements ReservaService {
 
 	@Autowired
 	private MailService mailService;
+
+	@Autowired
+	private UsuarioRepository usuarioRepository;
 
 	@Override
 	public ReservaDTO findById(Long id) {
@@ -439,5 +448,35 @@ public class ReservaServiceImpl implements ReservaService {
 		}
 		cancelarReservasEmpresa(reservasAfectadas);
 
+	}
+
+	@Override
+	public List<HistoricoReservaDTO> getListHistorico(Long id) {
+		AuditReader reader = AuditReaderFactory.get(entityManager);
+
+		List<Number> revisiones = reader.getRevisions(Reserva.class, id);
+
+		return revisiones.stream().sorted((a, b) -> b.intValue() - a.intValue()) // últimas revisiones primero
+				.map(rev -> {
+					Reserva entity = reader.find(Reserva.class, id, rev);
+					RevisionInfoEntity revInfo = reader.findRevision(RevisionInfoEntity.class, rev);
+
+					HistoricoReservaDTO dto = new HistoricoReservaDTO();
+					dto.setId(entity.getId());
+					dto.setFecha(entity.getFecha());
+					dto.setHoraFin(entity.getHoraFin());
+					dto.setHoraInicio(entity.getHoraInicio());
+					Instalacion instalacion =  instalacionRepository.findByActivoTrueAndId(entity.getInstalacion().getId());
+					dto.setInstalacionInstalacionTipoNombre(instalacion.getInstalacionTipo().getNombre());
+					dto.setInstalacionNombre(instalacion.getNombre());
+					dto.setInstalacionSedeEmpresaNombre(instalacion.getSede().getEmpresa().getNombre());
+					dto.setInstalacionSedeNombre(instalacion.getSede().getNombre());
+					ReservaEstado reservaEstado = reservaEstadoRepository.findByActivoTrueAndId(entity.getReservaEstado().getId());
+					dto.setReservaEstadoNombre(reservaEstado.getNombre());
+					dto.setUsuarioModificacion(usuarioRepository.findById(revInfo.getUsuarioId())
+							.map(u -> u.getNombre()).orElse("Desconocido"));
+					dto.setFechaModificacion(new Date(revInfo.getRevtstmp()));
+					return dto;
+				}).toList();
 	}
 }

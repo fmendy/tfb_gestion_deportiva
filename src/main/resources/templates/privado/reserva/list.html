@@ -137,6 +137,7 @@
 							<th
 								th:replace="~{fragments/th-sort :: sort(#{reserva.tabla.estado}, 'reservaEstado.nombre')}"></th>
 							<th class="text-center"><i class="bi bi-gear"></i></th>
+							<th class="text-center"><i class="bi-clock-history"></i></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -277,6 +278,13 @@
 									</a>
 								</div>
 							</td>
+							<td class="text-center"><a
+								th:href="@{/privado/reserva/{id}/historico(id=${element.id})}"
+								class="btn btn-outline-primary btn-sm rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm"
+								style="width: 36px; height: 36px;"
+								th:title="#{reserva.tabla.historico}"> <i
+									class="bi bi-clock-history"></i>
+							</a></td>
 						</tr>
 
 						<tr th:if="${#lists.isEmpty(page.content)}">
