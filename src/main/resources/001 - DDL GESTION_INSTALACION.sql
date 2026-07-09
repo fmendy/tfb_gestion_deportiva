@@ -153,22 +153,6 @@ INSERT INTO usuario_rol (id_usuario, id_rol) VALUES (
     (SELECT id FROM usuario WHERE nombre = 'admin'), (SELECT id FROM rol WHERE nombre = 'ADMINISTRADOR')
 );
 
-INSERT INTO usuario_rol (id_usuario, id_rol) VALUES (
-    (SELECT id FROM usuario WHERE nombre = 'usuario_cliente'), (SELECT id FROM rol WHERE nombre = 'USUARIO_CLIENTE')
-);
-
-INSERT INTO usuario_rol (id_usuario, id_rol) VALUES (
-    (SELECT id FROM usuario WHERE nombre = 'usuario_empresa'), (SELECT id FROM rol WHERE nombre = 'USUARIO_EMPRESA')
-);
-
-INSERT INTO usuario_rol (id_usuario, id_rol) VALUES (
-    (SELECT id FROM usuario WHERE nombre = 'usuario_sede'), (SELECT id FROM rol WHERE nombre = 'USUARIO_SEDE')
-);
-
-INSERT INTO usuario_rol (id_usuario, id_rol) VALUES (
-    (SELECT id FROM usuario WHERE nombre = 'usuario_instalacion'), (SELECT id FROM rol WHERE nombre = 'USUARIO_INSTALACION')
-);
-
 
 
 create table comunidad_autonoma(
