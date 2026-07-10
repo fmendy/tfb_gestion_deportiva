@@ -689,49 +689,6 @@ alter table instalacion add foreign key fk_instalacion_usuario_modificacion (id_
 alter table instalacion add foreign key fk_instalacion_sede (id_sede) references sede(id);
 alter table instalacion add foreign key fk_instalacion_instalacion_tipo (id_instalacion_tipo) references instalacion_tipo(id);
 
-create table imagen(
-	id INT  not null auto_increment primary key,
-	uuid CHAR(36) NOT NULL DEFAULT (UUID()),
-    id_empresa int null ,
-    id_sede int  null,
-    id_instalacion int  null,
-    url varchar(255) not null,
-    activo TINYINT(1) not null default(1) ,
-    id_usuario_creacion int not null default(1),
-    id_usuario_modificacion int not null default(1),
-    fecha_creacion datetime not null default now(),
-    fecha_modificacion datetime not null default now()
-);
-
-CREATE TABLE imagen_historico (
-    id INT NOT NULL,
-    uuid CHAR(36),
-   	id_empresa int null ,
-    id_sede int  null,
-    id_instalacion int  null,
-    url varchar(255)  null,
-    activo TINYINT(1),
-    id_usuario_creacion INT,
-    id_usuario_modificacion INT,
-    fecha_creacion DATETIME,
-    fecha_modificacion DATETIME,
-
-    REV INT NOT NULL,
-    REVTYPE TINYINT NOT NULL,
-
-    PRIMARY KEY (id, REV),
-    CONSTRAINT imagen_historico_rev FOREIGN KEY (REV) REFERENCES revision_info(rev)
-);
-
-
-alter table imagen add foreign key fk_imagen_usuario_creacion (id_usuario_creacion) references usuario(id);
-alter table imagen add foreign key fk_imagen_usuario_modificacion (id_usuario_modificacion) references usuario(id);
-alter table imagen add foreign key fk_imagen_empresa (id_empresa) references empresa(id);
-alter table imagen add foreign key fk_imagen_sede (id_sede) references sede(id);
-alter table imagen add foreign key fk_imagen_instalacion (id_instalacion) references instalacion(id);
-alter table imagen add CONSTRAINT chk_imagen_relacion CHECK ((id_empresa IS NOT NULL) +(id_sede IS NOT NULL) +(id_instalacion IS NOT NULL) = 1);
-
-
 create table instalacion_horario (
 	id INT  not null auto_increment primary key,
 	uuid CHAR(36) NOT NULL DEFAULT (UUID()),
