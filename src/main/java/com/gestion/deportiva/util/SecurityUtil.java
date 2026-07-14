@@ -16,10 +16,19 @@ public class SecurityUtil {
 
 	public static CustomUserDetails getCurrentUser() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if (authentication == null || !authentication.isAuthenticated()) {
-			throw new IllegalStateException("No hay usuario autenticado");
+
+		// 1. Si hay un usuario autenticado real, lo devolvemos
+		if (authentication != null && authentication.isAuthenticated()) {
+			Object principal = authentication.getPrincipal();
+			if (principal instanceof CustomUserDetails) {
+				return (CustomUserDetails) principal;
+			}
 		}
-		return (CustomUserDetails) authentication.getPrincipal();
+
+		// 2. Si es anónimo o no hay autenticación, creamos y devolvemos el usuario con
+		// ID 1
+		CustomUserDetails defaultUser = new CustomUserDetails(1L,null,null,null);
+		return defaultUser;
 	}
 
 	public boolean isAuthenticated() {
@@ -69,7 +78,7 @@ public class SecurityUtil {
 	}
 
 	public static boolean hasAnyAuthority(String... authorities) {
-		for (String auth: authorities) {
+		for (String auth : authorities) {
 			if (hasAuthority(auth)) {
 				return true;
 			}

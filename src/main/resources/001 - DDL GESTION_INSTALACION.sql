@@ -594,6 +594,7 @@ CREATE TABLE sede_historico (
     email varchar(255)  null,
     logo varchar(255) null,
     url varchar(255),
+    descripcion varchar(1250) null,
     activo TINYINT(1),
     id_usuario_creacion INT,
     id_usuario_modificacion INT,
