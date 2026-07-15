@@ -26,6 +26,7 @@ import com.gestion.deportiva.service.EmpresaService;
 import com.gestion.deportiva.service.InstalacionService;
 import com.gestion.deportiva.service.RolService;
 import com.gestion.deportiva.service.SedeService;
+import com.gestion.deportiva.service.UsuarioService;
 import com.gestion.deportiva.util.BreadcrumbBuilder;
 import com.gestion.deportiva.util.Constantes;
 import com.gestion.deportiva.util.EmpleadoUtil;
@@ -65,6 +66,9 @@ public class PrivadoEmpleadoController extends BaseController {
 
 	@Autowired
 	private InstalacionService instalacionService;
+	
+	@Autowired
+	private UsuarioService usuarioService;
 
 	@GetMapping("")
 	public ModelAndView search(Pageable pageable, HttpServletRequest request, EmpleadoFilter filter) {
@@ -80,6 +84,24 @@ public class PrivadoEmpleadoController extends BaseController {
 			throw new PermisoException("No tiene permisos para acceder a esta empleado.");
 		}
 		return loadForm(id, redirectAttributes);
+
+	}
+	
+	@GetMapping("/{id}/eliminar")
+	public ModelAndView eliminar(@PathVariable Long id, RedirectAttributes redirectAttributes) throws PermisoException {
+		if (!empleadoService.canRead(id)) {
+			logger.error("Sede {} intentó acceder a una empleado  sin permisos: usuario {}",
+					SecurityUtil.getCurrentUserId(), id);
+			throw new PermisoException("No tiene permisos para acceder a este empleado.");
+		}
+		try {
+			usuarioService.eliminar(id);
+			redirectAttributes.addFlashAttribute(Constantes.HTTP_STATUS, HttpStatus.OK.value());
+			return new ModelAndView(new RedirectView(BASE_URL));
+		} catch (Exception e) {
+			logger.error("Se ha producido un error al eliminar el empleado con id {}", id, e);
+			return redirectWithError(BASE_URL, redirectAttributes, HttpStatus.INTERNAL_SERVER_ERROR.value(), null);
+		}
 
 	}
 

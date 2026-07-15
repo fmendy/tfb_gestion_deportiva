@@ -1,5 +1,6 @@
 package com.gestion.deportiva.controller.privado.sede;
 
+import com.gestion.deportiva.service.impl.SedeServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,7 @@ import jakarta.validation.Valid;
 @PreAuthorize("hasAuthority('" + Constantes.Permiso.Localizacion.GESTION_SEDE + "')")
 public class PrivadoSedeController extends BaseController {
 
+
 	private static final Logger logger = LoggerFactory.getLogger(PrivadoSedeController.class);
 
 	private static final String BASE_URL = "/privado/sede";
@@ -65,6 +67,8 @@ public class PrivadoSedeController extends BaseController {
 	@Autowired
 	private MunicipioService municipioService;
 
+
+
 	@GetMapping("")
 	public ModelAndView search(Pageable pageable, HttpServletRequest request, SedeFilter filter) {
 		logger.info("Mostrando vista de listado de sede con filtros");
@@ -80,6 +84,25 @@ public class PrivadoSedeController extends BaseController {
 			throw new PermisoException("No tiene permisos para acceder a esta sede.");
 		}
 		return loadForm(id, redirectAttributes);
+
+	}
+
+	@GetMapping("/{id}/eliminar")
+	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Localizacion.GESTION_SEDE + "')")
+	public ModelAndView eliminar(@PathVariable Long id, RedirectAttributes redirectAttributes) throws PermisoException {
+		if (!sedeService.canRead(id)) {
+			logger.error("Sede {} intentó acceder a una Sede  sin permisos: usuario {}",
+					SecurityUtil.getCurrentUserId(), id);
+			throw new PermisoException("No tiene permisos para acceder a esta sede.");
+		}
+		try {
+			sedeService.eliminar(id);
+			redirectAttributes.addFlashAttribute(Constantes.HTTP_STATUS, HttpStatus.OK.value());
+			return new ModelAndView(new RedirectView(BASE_URL));
+		} catch (Exception e) {
+			logger.error("Se ha producido un error al eliminar la sede con id {}", id, e);
+			return redirectWithError(BASE_URL, redirectAttributes, HttpStatus.INTERNAL_SERVER_ERROR.value(), null);
+		}
 
 	}
 

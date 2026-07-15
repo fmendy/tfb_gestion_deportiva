@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.gestion.deportiva.dto.BaseDTO;
+import com.gestion.deportiva.dto.UsuarioPasswordDTO;
 import com.gestion.deportiva.dto.filter.BaseEntityFilter;
 
 public interface BaseService<T extends BaseDTO, F extends BaseEntityFilter> {

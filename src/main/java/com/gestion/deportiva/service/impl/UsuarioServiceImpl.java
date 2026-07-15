@@ -1,9 +1,11 @@
 package com.gestion.deportiva.service.impl;
 
 import java.io.IOException;
+import java.lang.System.Logger;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gestion.deportiva.config.AuditorAwareContext;
+import com.gestion.deportiva.controller.privado.instalacion.PrivadoInstalacionHorarioController;
 import com.gestion.deportiva.dto.ComboDTO;
 import com.gestion.deportiva.dto.ComunidadAutonomaDTO;
 import com.gestion.deportiva.dto.CustomUserDetails;
@@ -26,6 +29,7 @@ import com.gestion.deportiva.dto.MiPerfilDTO;
 import com.gestion.deportiva.dto.MiPerfilPasswordDTO;
 import com.gestion.deportiva.dto.EmpresaRegistroDTO;
 import com.gestion.deportiva.dto.UsuarioDTO;
+import com.gestion.deportiva.dto.UsuarioPasswordDTO;
 import com.gestion.deportiva.dto.UsuarioRegistroDTO;
 import com.gestion.deportiva.dto.filter.ComunidadAutonomaFilter;
 import com.gestion.deportiva.dto.filter.UsuarioFilter;
@@ -46,16 +50,20 @@ import com.gestion.deportiva.repository.UsuarioInstalacionRepository;
 import com.gestion.deportiva.repository.UsuarioRepository;
 import com.gestion.deportiva.repository.UsuarioRolRepository;
 import com.gestion.deportiva.repository.UsuarioSedeRepository;
+import com.gestion.deportiva.service.MailService;
 import com.gestion.deportiva.service.UsuarioService;
 import com.gestion.deportiva.util.Constantes;
 import com.gestion.deportiva.util.SecurityUtil;
 import com.gestion.deportiva.util.Utils;
+
+import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.validation.Valid;
 
 @Service
 public class UsuarioServiceImpl extends MaestraServiceImpl<UsuarioDTO, UsuarioFilter> implements UsuarioService, UserDetailsService {
+	
 
 	@Autowired
 	private UsuarioRepository usuarioRepository;
@@ -84,6 +92,9 @@ public class UsuarioServiceImpl extends MaestraServiceImpl<UsuarioDTO, UsuarioFi
 
 	@Autowired
 	private RolRepository rolRepository;
+	
+	@Autowired
+	private MailService mailService;
 
 	@Override
 	public Page<UsuarioDTO> getPageByFilter(UsuarioFilter filter, Pageable pageable) {
@@ -294,6 +305,34 @@ public class UsuarioServiceImpl extends MaestraServiceImpl<UsuarioDTO, UsuarioFi
 	public List<ComboDTO> getListComboDTO() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	@Override
+	public void enviarMailPasswordOlvidada(UsuarioPasswordDTO dto) {
+		Usuario usuario = usuarioRepository.findByActivoTrueAndEmailEqualsIgnoreCase(dto.getEmail());
+		if(usuario != null) {
+			try {
+				mailService.mensajeUsuarioPasswordOlvidada(usuario);
+			} catch (Exception e) {
+				System.out.println(e);
+			}
+		}	
+	}
+	
+	@Override
+	public void generarPasswordYEnviarMail(UsuarioPasswordDTO dto) {
+		Usuario usuario = usuarioRepository.findByActivoTrueAndUuidEqualsIgnoreCase(dto.getUuid());
+		
+		if(usuario != null) {
+			String password = Utils.generarStringAleatorio(12);
+			usuario.setPassword(passwordEncoder.encode(password));
+			usuarioRepository.saveAndFlush(usuario);
+			try {
+				mailService.mensajeUsuarioNuevaPassword(usuario, password);
+			} catch (Exception e) {
+				System.out.println(e);
+			}
+		}	
 	}
 
 }

@@ -8,6 +8,7 @@ import com.gestion.deportiva.dto.MiPerfilDTO;
 import com.gestion.deportiva.dto.MiPerfilPasswordDTO;
 import com.gestion.deportiva.dto.EmpresaRegistroDTO;
 import com.gestion.deportiva.dto.UsuarioDTO;
+import com.gestion.deportiva.dto.UsuarioPasswordDTO;
 import com.gestion.deportiva.dto.UsuarioRegistroDTO;
 import com.gestion.deportiva.dto.filter.UsuarioFilter;
 import com.gestion.deportiva.model.Usuario;
@@ -38,5 +39,9 @@ public interface UsuarioService
 	Long registrarUsuarioEmpresa(@Valid EmpresaRegistroDTO dto);
 
 	void actualizarMiPerfil(@Valid MiPerfilDTO dto);
+
+	void enviarMailPasswordOlvidada(UsuarioPasswordDTO dto);
+
+	void generarPasswordYEnviarMail(UsuarioPasswordDTO dto);
 
 }

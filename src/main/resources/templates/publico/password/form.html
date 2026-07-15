@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" lang="es"
+	layout:decorate="~{layout/base}">
+<head>
+</head>
+<body>
+	<div layout:fragment="content"
+		class="container-fluid min-vh-100 d-flex align-items-center justify-content-center bg-light px-3">
+
+		<style>
+/* Mejora de la estética Glassmorphism */
+.card-glass {
+	background: rgba(255, 255, 255, 0.85);
+	backdrop-filter: blur(15px);
+	border: 1px solid rgba(255, 255, 255, 0.4);
+	border-radius: 1.5rem !important;
+}
+/* Ajuste responsivo para el formulario */
+.form-floating>label {
+	padding-left: 1.25rem;
+}
+
+.btn-lg {
+	padding: 0.75rem 1.5rem;
+}
+</style>
+
+		<div class="row w-100 justify-content-center">
+			<div class="col-12 col-md-8 col-lg-6 col-xl-5">
+				<div class="card card-glass shadow-lg border-0 p-4 p-md-5">
+
+					<div class="text-center mb-4">
+						<h2 class="fw-bold" th:text="#{usuario.password.form.title}">Restablecer
+							Contraseña</h2>
+					</div>
+
+					<form th:action="@{/publico/password/reset}" method="post"
+						th:object="${form}">
+
+						<div class="form-floating mb-3">
+							<div class="position-absolute end-0 top-0 mt-2 me-2">
+								<div
+									th:replace="~{fragments/componentes :: info-tooltip('usuario.password.form.email.info')}"></div>
+							</div>
+
+							<input type="email" th:field="*{email}"
+								th:classappend="${#fields.hasErrors('email')} ? 'is-invalid' : ''"
+								class="form-control rounded-3" id="email"
+								placeholder="name@example.com"> <label for="email"
+								th:text="#{usuario.password.form.email}"></label>
+
+							<div
+								th:replace="~{fragments/field-error :: field-error('email')}"></div>
+						</div>
+
+						<div
+							th:replace="~{fragments/field-error :: alertas-errores('error.validacion.global')}"></div>
+
+						<div class="d-grid mt-4">
+							<button type="submit"
+								class="btn btn-primary btn-lg rounded-pill shadow-sm">
+								<span th:text="#{boton.resetear}">Resetear</span> <i
+									class="bi bi-arrow-right-short ms-2 align-middle"></i>
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

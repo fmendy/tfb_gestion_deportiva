@@ -38,4 +38,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long>, JpaSpec
 	Usuario findByActivoTrueAndUuidEqualsIgnoreCase(String uuid);
 
 	Usuario findByActivoTrueAndEmailEqualsIgnoreCaseAndIdNot(String email, Long id);
+
+	Usuario findByActivoTrueAndEmailEqualsIgnoreCase(String email);
 }

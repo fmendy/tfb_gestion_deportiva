@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.gestion.deportiva.model.Reserva;
+import com.gestion.deportiva.model.Usuario;
 import com.gestion.deportiva.service.MailService;
 import com.gestion.deportiva.util.Utils;
 
@@ -184,6 +185,29 @@ public class MailServiceImpl implements MailService {
 		ics.append("END:VEVENT\n").append("END:VCALENDAR");
 
 		return ics.toString();
+	}
+
+	@Override
+	public void mensajeUsuarioPasswordOlvidada(Usuario usuario) throws MessagingException, IOException {
+		String asunto = Utils.getMessage("mail.usuario.password.olvidada.asunto");
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(Utils.getMessage("mail.usuario.password.olvidada.cuerpo")).append("<br>")
+				.append("<a href='http://localhost:8080/publico/password/resetear?uuid=").append(usuario.getUuid())
+				.append("'>").append(Utils.getMessage("boton.resetear")).append("</a><br>")
+				.append(Utils.getMessage("mail.usuario.password.olvidada.cuerpo.dos"));
+		enviarMail(Arrays.asList(usuario.getEmail()), asunto, sb.toString(), null);
+	}
+
+	@Override
+	public void mensajeUsuarioNuevaPassword(Usuario usuario, String password) throws MessagingException, IOException {
+		String asunto = Utils.getMessage("mail.usuario.password.nueva.asunto");
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(Utils.getMessage("mail.usuario.password.olvidada.cuerpo")).append("<br>").append(password)
+				.append("<br>").append("<a href='http://localhost:8080/login'>").append(Utils.getMessage("boton.iniciar.sesion"))
+				.append("</a><br>");
+		enviarMail(Arrays.asList(usuario.getEmail()), asunto, sb.toString(), null);
 	}
 
 }

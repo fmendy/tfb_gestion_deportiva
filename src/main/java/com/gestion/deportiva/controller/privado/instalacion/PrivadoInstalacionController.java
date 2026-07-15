@@ -79,6 +79,25 @@ public class PrivadoInstalacionController extends BaseController {
 		return loadForm(id, redirectAttributes);
 
 	}
+	
+	@GetMapping("/{id}/eliminar")
+	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Localizacion.GESTION_INSTALACION + "')")
+	public ModelAndView eliminar(@PathVariable Long id, RedirectAttributes redirectAttributes) throws PermisoException {
+		if (!instalacionService.canRead(id)) {
+			logger.error("Sede {} intentó acceder a una Instalacion  sin permisos: usuario {}",
+					SecurityUtil.getCurrentUserId(), id);
+			throw new PermisoException("No tiene permisos para acceder a esta instalacion.");
+		}
+		try {
+			instalacionService.eliminar(id);
+			redirectAttributes.addFlashAttribute(Constantes.HTTP_STATUS, HttpStatus.OK.value());
+			return new ModelAndView(new RedirectView(BASE_URL));
+		} catch (Exception e) {
+			logger.error("Se ha producido un error al eliminar la instalacion con id {}", id, e);
+			return redirectWithError(BASE_URL, redirectAttributes, HttpStatus.INTERNAL_SERVER_ERROR.value(), null);
+		}
+
+	}
 
 	@GetMapping("/crear")
 	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Localizacion.GESTION_INSTALACION + "')")

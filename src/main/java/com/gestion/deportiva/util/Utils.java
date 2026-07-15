@@ -1,5 +1,6 @@
 package com.gestion.deportiva.util;
 
+import java.security.SecureRandom;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -192,6 +193,17 @@ public class Utils {
 			this.border = border;
 			this.text = text;
 		}
+	}
+
+	public static String generarStringAleatorio(int longitud) {
+		String CARACTERES = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+		SecureRandom RANDOM = new SecureRandom();
+		StringBuilder sb = new StringBuilder(longitud);
+		for (int i = 0; i < longitud; i++) {
+			int indice = RANDOM.nextInt(CARACTERES.length());
+			sb.append(CARACTERES.charAt(indice));
+		}
+		return sb.toString();
 	}
 
 }
