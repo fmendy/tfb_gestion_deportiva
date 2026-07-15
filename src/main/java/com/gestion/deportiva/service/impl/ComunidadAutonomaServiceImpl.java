@@ -25,7 +25,8 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 
 @Service
-public class ComunidadAutonomaServiceImpl implements ComunidadAutonomaService {
+public class ComunidadAutonomaServiceImpl extends MaestraServiceImpl<ComunidadAutonomaDTO, ComunidadAutonomaFilter>
+		implements ComunidadAutonomaService {
 
 	private static final Logger logger = LoggerFactory.getLogger(ComunidadAutonomaServiceImpl.class);
 

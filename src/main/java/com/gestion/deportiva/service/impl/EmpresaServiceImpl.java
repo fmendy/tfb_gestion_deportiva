@@ -1,6 +1,7 @@
 package com.gestion.deportiva.service.impl;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,7 @@ import com.gestion.deportiva.repository.InstalacionRepository;
 import com.gestion.deportiva.repository.SedeRepository;
 import com.gestion.deportiva.service.EmpresaService;
 import com.gestion.deportiva.service.ImageStoreService;
+import com.gestion.deportiva.service.ReservaService;
 import com.gestion.deportiva.util.Constantes;
 import com.gestion.deportiva.util.SecurityUtil;
 import com.gestion.deportiva.util.Utils;
@@ -55,6 +57,9 @@ public class EmpresaServiceImpl implements EmpresaService {
 
 	@Autowired
 	private SedeRepository sedeRepository;
+	
+	@Autowired
+	private ReservaService reservaService;
 
 	@Override
 	public EmpresaDTO findById(Long id) {
@@ -118,14 +123,15 @@ public class EmpresaServiceImpl implements EmpresaService {
 		Empresa model = empresaRepository.findByActivoTrueAndId(id);
 		model.setActivo(false);
 		empresaRepository.saveAndFlush(model);
+		reservaService.cancelarReservasEmpresa(reservaService.getListByFechaDesdeInstalacionSedeEmpresaIdAndReservaEstados(
+				LocalDate.now(), id, List.of(Constantes.ReservaEstado.PENDIENTE, Constantes.ReservaEstado.APROBADA)));
 	}
 
 	@Override
 	public void eliminar(String uuid) {
 		logger.info("Eliminando Empresa por ID: {}");
 		Empresa model = empresaRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid);
-		model.setActivo(false);
-		empresaRepository.saveAndFlush(model);
+		eliminar(model.getId());
 	}
 
 	@Override

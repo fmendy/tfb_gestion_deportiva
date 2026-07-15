@@ -65,4 +65,13 @@ public interface ReservaService extends BaseService<ReservaDTO, ReservaFilter> {
 
 	List<HistoricoReservaDTO> getListHistorico(Long id);
 
+	List<Reserva> getListByFechaDesdeInstalacionIdAndReservaEstados(LocalDate fechaDesde, Long instalacionId,
+			List<String> listReservaEstados);
+
+	List<Reserva> getListByFechaDesdeInstalacionSedeEmpresaIdAndReservaEstados(LocalDate fechaDesde, Long empresaId,
+			List<String> listReservaEstados);
+
+	List<Reserva> getListByFechaDesdeInstalacionSedeIdAndReservaEstados(LocalDate fechaDesde, Long sedeId,
+			List<String> listReservaEstados);
+
 }

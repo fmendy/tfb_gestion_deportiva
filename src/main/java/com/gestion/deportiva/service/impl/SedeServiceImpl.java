@@ -1,6 +1,7 @@
 package com.gestion.deportiva.service.impl;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,7 @@ import com.gestion.deportiva.model.Sede;
 import com.gestion.deportiva.repository.InstalacionRepository;
 import com.gestion.deportiva.repository.SedeRepository;
 import com.gestion.deportiva.service.ImageStoreService;
+import com.gestion.deportiva.service.ReservaService;
 import com.gestion.deportiva.service.SedeService;
 import com.gestion.deportiva.util.Constantes;
 import com.gestion.deportiva.util.SecurityUtil;
@@ -57,6 +59,9 @@ public class SedeServiceImpl implements SedeService {
 
 	@Autowired
 	private ImageStoreService imageStoreService;
+
+	@Autowired
+	private ReservaService reservaService;
 
 	@Override
 	public SedeDTO findById(Long id) {
@@ -125,14 +130,15 @@ public class SedeServiceImpl implements SedeService {
 		Sede model = sedeRepository.findByActivoTrueAndId(id);
 		model.setActivo(false);
 		sedeRepository.saveAndFlush(model);
+		reservaService.cancelarReservasEmpresa(reservaService.getListByFechaDesdeInstalacionSedeIdAndReservaEstados(
+				LocalDate.now(), id, List.of(Constantes.ReservaEstado.PENDIENTE, Constantes.ReservaEstado.APROBADA)));
 	}
 
 	@Override
 	public void eliminar(String uuid) {
 		logger.info("Eliminando Sede por ID: {}");
 		Sede model = sedeRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid);
-		model.setActivo(false);
-		sedeRepository.saveAndFlush(model);
+		eliminar(model.getId());
 	}
 
 	@Override

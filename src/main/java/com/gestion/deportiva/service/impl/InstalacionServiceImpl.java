@@ -34,6 +34,7 @@ import com.gestion.deportiva.repository.InstalacionHorarioRepository;
 import com.gestion.deportiva.repository.InstalacionRepository;
 import com.gestion.deportiva.repository.ReservaRepository;
 import com.gestion.deportiva.service.InstalacionService;
+import com.gestion.deportiva.service.ReservaService;
 import com.gestion.deportiva.util.Constantes;
 import com.gestion.deportiva.util.SecurityUtil;
 import com.gestion.deportiva.util.Utils;
@@ -69,6 +70,9 @@ public class InstalacionServiceImpl implements InstalacionService {
 
 	@Autowired
 	private ReservaRepository reservaRepository;
+
+	@Autowired
+	private ReservaService reservaService;
 
 	@Override
 	public InstalacionDTO findById(Long id) {
@@ -111,7 +115,7 @@ public class InstalacionServiceImpl implements InstalacionService {
 			model = new Instalacion();
 		}
 		model = instalacionMapper.dtoToModel(dto, model);
-		
+
 		entityManager.persist(model);
 		System.out.println("ID después del save = " + model.getId());
 		entityManager.flush();
@@ -130,14 +134,17 @@ public class InstalacionServiceImpl implements InstalacionService {
 		Instalacion model = instalacionRepository.findByActivoTrueAndId(id);
 		model.setActivo(false);
 		instalacionRepository.saveAndFlush(model);
+
+		reservaService.cancelarReservasEmpresa(reservaService.getListByFechaDesdeInstalacionIdAndReservaEstados(
+				LocalDate.now(), id, List.of(Constantes.ReservaEstado.PENDIENTE, Constantes.ReservaEstado.APROBADA)));
+
 	}
 
 	@Override
 	public void eliminar(String uuid) {
 		logger.info("Eliminando Instalacion por ID: {}");
 		Instalacion model = instalacionRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid);
-		model.setActivo(false);
-		instalacionRepository.saveAndFlush(model);
+		eliminar(model.getId());
 	}
 
 	@Override
@@ -224,67 +231,74 @@ public class InstalacionServiceImpl implements InstalacionService {
 	}
 
 	public List<FranjaHorariaDTO> calcularDisponibilidad(Long instalacionId, LocalDate fecha) {
-	    InstalacionConfiguracionReserva config = instalacionConfiguracionReservaRepository
-	            .findByActivoTrueAndInstalacionId(instalacionId);
-	    long intervalo = config.getIntervaloHorario();
+		InstalacionConfiguracionReserva config = instalacionConfiguracionReservaRepository
+				.findByActivoTrueAndInstalacionId(instalacionId);
+		long intervalo = config.getIntervaloHorario();
 
-	    List<InstalacionHorarioEspecial> especiales = instalacionHorarioEspecialRepository
-	            .findByActivoTrueAndInstalacionIdAndFecha(instalacionId, fecha);
-	    List<InstalacionHorarioBloqueado> bloqueos = instalacionHorarioBloqueadoRepository
-	            .findByActivoTrueAndInstalacionIdAndFecha(instalacionId, fecha);
-	    List<Reserva> reservas = reservaRepository.findByInstalacionIdAndFechaAndReservaEstadoNombreIn(instalacionId,
-	            fecha, List.of("PENDIENTE", "APROBADA", "COMPLETADA", "USUARIO NO COMPARECE"));
+		List<InstalacionHorarioEspecial> especiales = instalacionHorarioEspecialRepository
+				.findByActivoTrueAndInstalacionIdAndFecha(instalacionId, fecha);
+		List<InstalacionHorarioBloqueado> bloqueos = instalacionHorarioBloqueadoRepository
+				.findByActivoTrueAndInstalacionIdAndFecha(instalacionId, fecha);
+		List<Reserva> reservas = reservaRepository.findByInstalacionIdAndFechaAndReservaEstadoNombreIn(instalacionId,
+				fecha, List.of("PENDIENTE", "APROBADA", "COMPLETADA", "USUARIO NO COMPARECE"));
 
-	    List<InstalacionHorario> horariosActivos = new ArrayList<>();
-	    if (!especiales.isEmpty()) {
-	        if (especiales.get(0).getCerrado()) return new ArrayList<>();
-	        for (InstalacionHorarioEspecial e : especiales) {
-	            InstalacionHorario ih = new InstalacionHorario();
-	            ih.setHoraInicio(e.getHoraInicio());
-	            ih.setHoraFin(e.getHoraFin());
-	            horariosActivos.add(ih);
-	        }
-	    } else {
-	        horariosActivos = buscarHorarioAplicable(instalacionId, fecha);
-	    }
+		List<InstalacionHorario> horariosActivos = new ArrayList<>();
+		if (!especiales.isEmpty()) {
+			if (especiales.get(0).getCerrado())
+				return new ArrayList<>();
+			for (InstalacionHorarioEspecial e : especiales) {
+				InstalacionHorario ih = new InstalacionHorario();
+				ih.setHoraInicio(e.getHoraInicio());
+				ih.setHoraFin(e.getHoraFin());
+				horariosActivos.add(ih);
+			}
+		} else {
+			horariosActivos = buscarHorarioAplicable(instalacionId, fecha);
+		}
 
-	    List<FranjaHorariaDTO> resultado = new ArrayList<>();
+		List<FranjaHorariaDTO> resultado = new ArrayList<>();
 
-	    // --- NUEVA LÓGICA DE GENERACIÓN ---
-	    for (InstalacionHorario h : horariosActivos) {
-	        for (LocalTime inicio = h.getHoraInicio(); inicio.plusMinutes(config.getDuracionMin()).isBefore(h.getHoraFin()) 
-	             || inicio.plusMinutes(config.getDuracionMin()).equals(h.getHoraFin()); inicio = inicio.plusMinutes(intervalo)) {
-	            
-	            List<FranjaHorariaDuracionDTO> opcionesValidas = new ArrayList<>();
+		// --- NUEVA LÓGICA DE GENERACIÓN ---
+		for (InstalacionHorario h : horariosActivos) {
+			for (LocalTime inicio = h.getHoraInicio(); inicio.plusMinutes(config.getDuracionMin())
+					.isBefore(h.getHoraFin())
+					|| inicio.plusMinutes(config.getDuracionMin())
+							.equals(h.getHoraFin()); inicio = inicio.plusMinutes(intervalo)) {
 
-	            for (long duracion = config.getDuracionMin(); duracion <= config.getDuracionMax(); duracion += intervalo) {
-	                LocalTime fin = inicio.plusMinutes(duracion);
-	                
-	                // No permitir que la reserva exceda el horario de cierre
-	                if (fin.isAfter(h.getHoraFin())) break;
+				List<FranjaHorariaDuracionDTO> opcionesValidas = new ArrayList<>();
 
-	                if (estaLibre(inicio, fin, reservas, bloqueos)) {
-	                    opcionesValidas.add(new FranjaHorariaDuracionDTO(duracion, fin));
-	                }
+				for (long duracion = config.getDuracionMin(); duracion <= config
+						.getDuracionMax(); duracion += intervalo) {
+					LocalTime fin = inicio.plusMinutes(duracion);
 
-	                if (config.getDuracionMin().equals(config.getDuracionMax())) break;
-	            }
+					// No permitir que la reserva exceda el horario de cierre
+					if (fin.isAfter(h.getHoraFin()))
+						break;
 
-	            if (!opcionesValidas.isEmpty()) {
-	                resultado.add(new FranjaHorariaDTO(inicio, opcionesValidas, "DISPONIBLE"));
-	            }
-	        }
-	    }
-	    return resultado;
+					if (estaLibre(inicio, fin, reservas, bloqueos)) {
+						opcionesValidas.add(new FranjaHorariaDuracionDTO(duracion, fin));
+					}
+
+					if (config.getDuracionMin().equals(config.getDuracionMax()))
+						break;
+				}
+
+				if (!opcionesValidas.isEmpty()) {
+					resultado.add(new FranjaHorariaDTO(inicio, opcionesValidas, "DISPONIBLE"));
+				}
+			}
+		}
+		return resultado;
 	}
 
 	// Función auxiliar para verificar disponibilidad del rango completo
-	private boolean estaLibre(LocalTime inicio, LocalTime fin, List<Reserva> reservas, List<InstalacionHorarioBloqueado> bloqueos) {
-	    boolean ocupadoPorReserva = reservas.stream()
-	            .anyMatch(r -> r.getHoraInicio().isBefore(fin) && r.getHoraFin().isAfter(inicio));
-	    boolean ocupadoPorBloqueo = bloqueos.stream()
-	            .anyMatch(b -> b.getHoraInicio().isBefore(fin) && b.getHoraFin().isAfter(inicio));
-	    return !ocupadoPorReserva && !ocupadoPorBloqueo;
+	private boolean estaLibre(LocalTime inicio, LocalTime fin, List<Reserva> reservas,
+			List<InstalacionHorarioBloqueado> bloqueos) {
+		boolean ocupadoPorReserva = reservas.stream()
+				.anyMatch(r -> r.getHoraInicio().isBefore(fin) && r.getHoraFin().isAfter(inicio));
+		boolean ocupadoPorBloqueo = bloqueos.stream()
+				.anyMatch(b -> b.getHoraInicio().isBefore(fin) && b.getHoraFin().isAfter(inicio));
+		return !ocupadoPorReserva && !ocupadoPorBloqueo;
 	}
 
 	private List<InstalacionHorario> buscarHorarioAplicable(Long instalacionId, LocalDate fecha) {

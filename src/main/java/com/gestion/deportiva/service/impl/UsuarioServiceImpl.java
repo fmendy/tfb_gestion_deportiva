@@ -19,20 +19,27 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gestion.deportiva.config.AuditorAwareContext;
+import com.gestion.deportiva.dto.ComboDTO;
+import com.gestion.deportiva.dto.ComunidadAutonomaDTO;
 import com.gestion.deportiva.dto.CustomUserDetails;
 import com.gestion.deportiva.dto.MiPerfilDTO;
 import com.gestion.deportiva.dto.MiPerfilPasswordDTO;
 import com.gestion.deportiva.dto.EmpresaRegistroDTO;
 import com.gestion.deportiva.dto.UsuarioDTO;
 import com.gestion.deportiva.dto.UsuarioRegistroDTO;
+import com.gestion.deportiva.dto.filter.ComunidadAutonomaFilter;
 import com.gestion.deportiva.dto.filter.UsuarioFilter;
 import com.gestion.deportiva.dto.specifications.UsuarioSpecifications;
 import com.gestion.deportiva.mapper.UsuarioMapper;
+import com.gestion.deportiva.model.BaseEntity;
 import com.gestion.deportiva.model.Permiso;
 import com.gestion.deportiva.model.Rol;
 import com.gestion.deportiva.model.RolPermiso;
 import com.gestion.deportiva.model.Usuario;
+import com.gestion.deportiva.model.UsuarioEmpresa;
+import com.gestion.deportiva.model.UsuarioInstalacion;
 import com.gestion.deportiva.model.UsuarioRol;
+import com.gestion.deportiva.model.UsuarioSede;
 import com.gestion.deportiva.repository.RolRepository;
 import com.gestion.deportiva.repository.UsuarioEmpresaRepository;
 import com.gestion.deportiva.repository.UsuarioInstalacionRepository;
@@ -48,7 +55,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.validation.Valid;
 
 @Service
-public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
+public class UsuarioServiceImpl extends MaestraServiceImpl<UsuarioDTO, UsuarioFilter> implements UsuarioService, UserDetailsService {
 
 	@Autowired
 	private UsuarioRepository usuarioRepository;
@@ -166,8 +173,13 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 	public void eliminar(Long id) {
 		Usuario usuario = usuarioRepository.findByActivoTrueAndId(id);
 		usuario.setActivo(false);
-		usuarioRepository.saveAndFlush(usuario);
+
+		desactivar(usuarioEmpresaRepository.findByActivoTrueAndUsuarioId(id));
+		desactivar(usuarioSedeRepository.findByActivoTrueAndUsuarioId(id));
+		desactivar(usuarioInstalacionRepository.findByActivoTrueAndUsuarioId(id));
+		desactivar(usuarioRolRepository.findByActivoTrueAndUsuarioId(id));
 	}
+
 
 	@Override
 	public Long guardarDatos(UsuarioDTO form) {
@@ -205,8 +217,7 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 	@Override
 	public void eliminar(String uuid) {
 		Usuario usuario = usuarioRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid);
-		usuario.setActivo(false);
-		usuarioRepository.saveAndFlush(usuario);
+		eliminar(usuario.getId());
 
 	}
 
@@ -271,6 +282,18 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 		usuario.setNombre(dto.getNombre());
 		usuario.setEmail(dto.getEmail());
 		usuarioRepository.saveAndFlush(usuario);
+	}
+
+	@Override
+	public UsuarioDTO findByNombreEqualsIgnoreCase(String nombre) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<ComboDTO> getListComboDTO() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

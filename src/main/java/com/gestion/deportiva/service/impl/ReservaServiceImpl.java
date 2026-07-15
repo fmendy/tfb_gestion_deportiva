@@ -451,6 +451,27 @@ public class ReservaServiceImpl implements ReservaService {
 	}
 
 	@Override
+	public List<Reserva> getListByFechaDesdeInstalacionIdAndReservaEstados(LocalDate fechaDesde, Long instalacionId,
+			List<String> listReservaEstados) {
+		return reservaRepository.findByActivoTrueAndFechaAndInstalacionIdAndReservaEstadoNombreIn(fechaDesde,
+				instalacionId, listReservaEstados);
+	}
+	
+	@Override
+	public List<Reserva> getListByFechaDesdeInstalacionSedeEmpresaIdAndReservaEstados(LocalDate fechaDesde, Long empresaId,
+			List<String> listReservaEstados) {
+		return reservaRepository.findByActivoTrueAndFechaAndInstalacionSedeEmpresaIdAndReservaEstadoNombreIn(fechaDesde,
+				empresaId, listReservaEstados);
+	}
+	
+	@Override
+	public List<Reserva> getListByFechaDesdeInstalacionSedeIdAndReservaEstados(LocalDate fechaDesde, Long sedeId,
+			List<String> listReservaEstados) {
+		return reservaRepository.findByActivoTrueAndFechaAndInstalacionSedeIdAndReservaEstadoNombreIn(fechaDesde,
+				sedeId, listReservaEstados);
+	}
+
+	@Override
 	public List<HistoricoReservaDTO> getListHistorico(Long id) {
 		AuditReader reader = AuditReaderFactory.get(entityManager);
 
@@ -466,12 +487,14 @@ public class ReservaServiceImpl implements ReservaService {
 					dto.setFecha(entity.getFecha());
 					dto.setHoraFin(entity.getHoraFin());
 					dto.setHoraInicio(entity.getHoraInicio());
-					Instalacion instalacion =  instalacionRepository.findByActivoTrueAndId(entity.getInstalacion().getId());
+					Instalacion instalacion = instalacionRepository
+							.findByActivoTrueAndId(entity.getInstalacion().getId());
 					dto.setInstalacionInstalacionTipoNombre(instalacion.getInstalacionTipo().getNombre());
 					dto.setInstalacionNombre(instalacion.getNombre());
 					dto.setInstalacionSedeEmpresaNombre(instalacion.getSede().getEmpresa().getNombre());
 					dto.setInstalacionSedeNombre(instalacion.getSede().getNombre());
-					ReservaEstado reservaEstado = reservaEstadoRepository.findByActivoTrueAndId(entity.getReservaEstado().getId());
+					ReservaEstado reservaEstado = reservaEstadoRepository
+							.findByActivoTrueAndId(entity.getReservaEstado().getId());
 					dto.setReservaEstadoNombre(reservaEstado.getNombre());
 					dto.setUsuarioModificacion(usuarioRepository.findById(revInfo.getUsuarioId())
 							.map(u -> u.getNombre()).orElse("Desconocido"));
