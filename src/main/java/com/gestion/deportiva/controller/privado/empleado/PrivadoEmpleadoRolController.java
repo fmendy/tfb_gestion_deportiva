@@ -107,7 +107,7 @@ public class PrivadoEmpleadoRolController extends BaseController {
 		mav.addObject("listSedes", sedeService.getListDTOParaEmpleado(null));
 		mav.addObject("listInstalaciones", instalacionService.getListDTOParaEmpleado(null, null));
 		mav.addObject("breadcrumbs", BreadcrumbBuilder.start().includeHome()
-				.add("breadcrumb.gestion.empleado", BASE_URL).add("breadcrumb.gestion.empleado.editar", null).build());
+				.add("breadcrumb.gestion.empleado", String.format(BASE_URL, dto.getUsuarioId().toString())).add("breadcrumb.gestion.empleado.editar", null).build());
 		addBasicModelDetails(mav, TITLE_PAGE, false);
 		return mav;
 	}
