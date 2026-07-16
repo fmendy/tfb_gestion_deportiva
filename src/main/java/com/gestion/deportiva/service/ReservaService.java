@@ -74,4 +74,6 @@ public interface ReservaService extends BaseService<ReservaDTO, ReservaFilter> {
 	List<Reserva> getListByFechaDesdeInstalacionSedeIdAndReservaEstados(LocalDate fechaDesde, Long sedeId,
 			List<String> listReservaEstados);
 
+	void cancelarUsuarioFechaDesde(Long UsuarioId, LocalDate fechaDesde);
+
 }

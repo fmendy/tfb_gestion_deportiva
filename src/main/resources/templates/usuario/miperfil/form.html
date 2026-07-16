@@ -84,11 +84,30 @@
 						</div>
 					</div>
 
-					<div class="col-12 d-grid d-md-flex justify-content-md-end mt-4">
+					<div
+						class="col-12 d-grid d-md-flex justify-content-md-end mt-4 gap-2">
 						<button type="submit" class="btn btn-moderno-guardar">
 							<i class="bi bi-check-circle-fill me-2"></i> <span
 								th:text="#{boton.guardar}">Guardar Cambios</span>
 						</button>
+
+						<button type="button" class="btn btn-outline-danger"
+							data-bs-toggle="modal"
+							th:attr="data-bs-target='#confirmarEliminarModal-'"
+							th:title="#{instalacion.modal.boton.eliminar}">
+							<i class="bi bi-trash3-fill me-2"></i> <span
+								th:text="#{boton.borrar.cuenta}">Borrar Cuenta</span>
+						</button>
+
+						<div
+							th:replace="~{fragments/modals :: modalConfirmacion(
+                        'confirmarEliminarModal-',
+                        #{mi.perfil.modal.titulo.eliminar},
+                        #{mi.perfil.modal.body.eliminar},
+                        @{/privado/usuario/miperfil/eliminar},
+                        #{mi.perfil.modal.boton.eliminar}
+                      )}">
+						</div>
 					</div>
 				</form>
 

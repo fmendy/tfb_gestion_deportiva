@@ -320,6 +320,17 @@ public class ReservaServiceImpl implements ReservaService {
 	}
 
 	@Override
+	public void cancelarUsuarioFechaDesde(Long UsuarioId, LocalDate fechaDesde) {
+		List<Reserva> listReserva = reservaRepository
+				.findByActivoTrueAndUsuarioCreacionIdAndFechaGreaterThanEqualAndReservaEstadoNombreIn(UsuarioId,
+						fechaDesde,
+						Arrays.asList(Constantes.ReservaEstado.APROBADA, Constantes.ReservaEstado.PENDIENTE));
+		for (Reserva reserva : listReserva) {
+			actualizarReservaEstado(reserva.getId(), Constantes.ReservaEstado.CANCELADA_POR_USUARIO);
+		}
+	}
+
+	@Override
 	public void aprobar(Long id) {
 		actualizarReservaEstado(id, Constantes.ReservaEstado.APROBADA);
 		try {
@@ -456,14 +467,14 @@ public class ReservaServiceImpl implements ReservaService {
 		return reservaRepository.findByActivoTrueAndFechaAndInstalacionIdAndReservaEstadoNombreIn(fechaDesde,
 				instalacionId, listReservaEstados);
 	}
-	
+
 	@Override
-	public List<Reserva> getListByFechaDesdeInstalacionSedeEmpresaIdAndReservaEstados(LocalDate fechaDesde, Long empresaId,
-			List<String> listReservaEstados) {
+	public List<Reserva> getListByFechaDesdeInstalacionSedeEmpresaIdAndReservaEstados(LocalDate fechaDesde,
+			Long empresaId, List<String> listReservaEstados) {
 		return reservaRepository.findByActivoTrueAndFechaAndInstalacionSedeEmpresaIdAndReservaEstadoNombreIn(fechaDesde,
 				empresaId, listReservaEstados);
 	}
-	
+
 	@Override
 	public List<Reserva> getListByFechaDesdeInstalacionSedeIdAndReservaEstados(LocalDate fechaDesde, Long sedeId,
 			List<String> listReservaEstados) {

@@ -44,4 +44,6 @@ public interface UsuarioService
 
 	void generarPasswordYEnviarMail(UsuarioPasswordDTO dto);
 
+	void borrarMiCuenta();
+
 }

@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +23,8 @@ import com.gestion.deportiva.service.UsuarioService;
 import com.gestion.deportiva.util.Constantes;
 import com.gestion.deportiva.util.SecurityUtil;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 @Controller
@@ -34,9 +37,9 @@ public class PrivadoMiPerfilController extends BaseController {
 	private static final String TITLE_PAGE = "page.title.mi.perfil";
 
 	private static final String VIEW_FORM = "usuario/miperfil/form";
-	
+
 	private static final String VIEW_PASSWORD_FORM = "usuario/miperfil/passwordform";
-	
+
 	private static final String BASE_URL = "/privado/usuario/miperfil";
 
 	@Autowired
@@ -67,19 +70,41 @@ public class PrivadoMiPerfilController extends BaseController {
 		}
 	}
 
+	@GetMapping("/eliminar")
+	public ModelAndView eliminar(RedirectAttributes redirectAttributes, HttpServletRequest request) {
+		logger.info("Borrando cuenta del usuario datos del usuario: {}", SecurityUtil.getCurrentUserId());
+
+		try {
+			usuarioService.borrarMiCuenta();
+			HttpSession session = request.getSession(false);
+			if (session != null) {
+		        session.invalidate();
+		    }		    
+		    SecurityContextHolder.clearContext();
+			redirectAttributes.addFlashAttribute(Constantes.HTTP_STATUS, HttpStatus.OK.value());
+			return new ModelAndView(new RedirectView("/login?logout=true"));
+		} catch (Exception e) {
+			logger.error("Error al actualizar datos de perfil : {}", e.getMessage(), e);
+			ModelAndView mav = new ModelAndView(new RedirectView("/login"));
+			mav.addObject(Constantes.HTTP_STATUS, HttpStatus.INTERNAL_SERVER_ERROR.value());
+			return mav;
+		}
+	}
+
 	private ModelAndView buildDetailsMiPerilForm(MiPerfilDTO dto) {
 		ModelAndView mav = new ModelAndView(VIEW_FORM);
 		addBasicModelDetails(mav, TITLE_PAGE);
 		mav.addObject("form", dto);
 		return mav;
 	}
-	
+
 	@GetMapping("/password")
 	public ModelAndView verMiPerfilPassword() {
-		logger.info("Usuario autenticado viendo su perfil para cambio de password: {}", SecurityUtil.getCurrentUser().getUsername());
+		logger.info("Usuario autenticado viendo su perfil para cambio de password: {}",
+				SecurityUtil.getCurrentUser().getUsername());
 		return buildDetailsMiPerilPasswordForm(usuarioService.getMiPerfilPasswordDTO());
 	}
-	
+
 	@PostMapping("/password/guardar")
 	public ModelAndView guardar(@Valid @ModelAttribute("form") MiPerfilPasswordDTO dto, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) {
@@ -99,7 +124,7 @@ public class PrivadoMiPerfilController extends BaseController {
 			return mav;
 		}
 	}
-	
+
 	private ModelAndView buildDetailsMiPerilPasswordForm(MiPerfilPasswordDTO dto) {
 		ModelAndView mav = new ModelAndView(VIEW_PASSWORD_FORM);
 		addBasicModelDetails(mav, TITLE_PAGE);

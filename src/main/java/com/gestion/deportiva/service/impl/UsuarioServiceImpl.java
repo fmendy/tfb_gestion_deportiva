@@ -1,6 +1,7 @@
 package com.gestion.deportiva.service.impl;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -43,6 +44,7 @@ import com.gestion.deportiva.repository.UsuarioRepository;
 import com.gestion.deportiva.repository.UsuarioRolRepository;
 import com.gestion.deportiva.repository.UsuarioSedeRepository;
 import com.gestion.deportiva.service.MailService;
+import com.gestion.deportiva.service.ReservaService;
 import com.gestion.deportiva.service.UsuarioService;
 import com.gestion.deportiva.service.UsuarioTokenService;
 import com.gestion.deportiva.util.Constantes;
@@ -90,6 +92,9 @@ public class UsuarioServiceImpl extends MaestraServiceImpl<UsuarioDTO, UsuarioFi
 
 	@Autowired
 	private UsuarioTokenService usuarioTokenService;
+	
+	@Autowired
+	private ReservaService reservaService;
 
 	@Override
 	public Page<UsuarioDTO> getPageByFilter(UsuarioFilter filter, Pageable pageable) {
@@ -311,6 +316,16 @@ public class UsuarioServiceImpl extends MaestraServiceImpl<UsuarioDTO, UsuarioFi
 				System.out.println(e);
 			}
 		}
+	}
+	
+	@Override
+	public void borrarMiCuenta() {
+		Usuario usuario = usuarioRepository.findByActivoTrueAndId(SecurityUtil.getCurrentUserId());
+		usuario.setNombre(Utils.generarStringAleatorio(10));
+		usuario.setEmail(Utils.generarStringAleatorio(10));
+		eliminar(SecurityUtil.getCurrentUserId());		
+		reservaService.cancelarUsuarioFechaDesde(SecurityUtil.getCurrentUserId(), LocalDate.now());
+		usuarioRepository.saveAndFlush(usuario);
 	}
 
 	@Override
