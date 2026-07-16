@@ -1,7 +1,7 @@
 package com.gestion.deportiva.model;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
@@ -52,11 +52,11 @@ public abstract class BaseEntity implements Serializable {
 
 	@CreatedDate
 	@Column(name = "fecha_creacion", nullable = false, updatable = false)
-	private Date fechaCreacion;
+	private LocalDateTime fechaCreacion;
 
 	@LastModifiedDate
 	@Column(name = "fecha_modificacion", nullable = false)
-	private Date fechaModificacion;
+	private LocalDateTime fechaModificacion;
 
 	@CreatedBy
 	@ManyToOne(fetch = FetchType.LAZY)

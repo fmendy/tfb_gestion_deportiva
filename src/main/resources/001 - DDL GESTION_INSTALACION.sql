@@ -917,6 +917,39 @@ alter table usuario_empresa add foreign key fk_usuario_empresa_modificacion (id_
 alter table usuario_empresa add foreign key fk_usuario_empresa_empresa (id_empresa) references empresa(id);
 alter table usuario_empresa add foreign key fk_usuario_empresa_usuario (id_usuario) references usuario(id);
 
+
+create table usuario_token(
+	id INT  not null auto_increment primary key,
+	uuid CHAR(36) NOT NULL DEFAULT (UUID()),
+    id_usuario int not null,
+    activo TINYINT(1) not null default(1) ,
+    id_usuario_creacion int not null default(1),
+    id_usuario_modificacion int not null default(1),
+    fecha_creacion datetime not null default now(),
+    fecha_modificacion datetime not null default now()
+);
+
+CREATE TABLE usuario_token_historico (
+    id INT NOT NULL,
+    uuid CHAR(36),
+    id_usuario int  null,
+    activo TINYINT(1),
+    id_usuario_creacion INT,
+    id_usuario_modificacion INT,
+    fecha_creacion DATETIME,
+    fecha_modificacion DATETIME,
+
+    REV INT NOT NULL,
+    REVTYPE TINYINT NOT NULL,
+
+    PRIMARY KEY (id, REV),
+    CONSTRAINT usuario_token_historico_rev FOREIGN KEY (REV) REFERENCES revision_info(rev)
+);
+
+alter table usuario_token add foreign key fk_usuario_token_usuario_creacion (id_usuario_creacion) references usuario(id);
+alter table usuario_token add foreign key fk_usuario_token_modificacion (id_usuario_modificacion) references usuario(id);
+alter table usuario_token add foreign key fk_usuario_token_usuario (id_usuario) references usuario(id);
+
 create table usuario_sede(
 	id INT  not null auto_increment primary key,
 	uuid CHAR(36) NOT NULL DEFAULT (UUID()),

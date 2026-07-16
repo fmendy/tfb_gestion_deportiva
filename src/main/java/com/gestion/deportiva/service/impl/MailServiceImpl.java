@@ -19,6 +19,7 @@ import org.springframework.util.StringUtils;
 import com.gestion.deportiva.model.Reserva;
 import com.gestion.deportiva.model.Usuario;
 import com.gestion.deportiva.service.MailService;
+import com.gestion.deportiva.service.UsuarioTokenService;
 import com.gestion.deportiva.util.Utils;
 
 import jakarta.activation.DataHandler;
@@ -38,6 +39,9 @@ public class MailServiceImpl implements MailService {
 	private String mailUsername;
 
 	private static final DateTimeFormatter ICS_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss");
+	
+	@Autowired
+	private UsuarioTokenService usuarioTokenService;
 
 	@Override
 	public void enviarMail(List<String> destinatarios, String asunto, String cuerpo)
@@ -193,7 +197,7 @@ public class MailServiceImpl implements MailService {
 
 		StringBuilder sb = new StringBuilder();
 		sb.append(Utils.getMessage("mail.usuario.password.olvidada.cuerpo")).append("<br>")
-				.append("<a href='http://localhost:8080/publico/password/resetear?uuid=").append(usuario.getUuid())
+				.append("<a href='http://localhost:8080/publico/password/resetear?uuid=").append(usuarioTokenService.crearToken(usuario.getId()))
 				.append("'>").append(Utils.getMessage("boton.resetear")).append("</a><br>")
 				.append(Utils.getMessage("mail.usuario.password.olvidada.cuerpo.dos"));
 		enviarMail(Arrays.asList(usuario.getEmail()), asunto, sb.toString(), null);

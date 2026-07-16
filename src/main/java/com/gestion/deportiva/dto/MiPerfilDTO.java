@@ -1,6 +1,6 @@
 package com.gestion.deportiva.dto;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import com.gestion.deportiva.validation.FieldMatchValid;
 
@@ -18,8 +18,7 @@ import lombok.Setter;
 public class MiPerfilDTO extends MaestraDTO {
 
 	private static final long serialVersionUID = 5443997554621493300L;
-	
-	
+
 	@NotEmpty
 	@Email
 	@Size(max = 250)
@@ -28,6 +27,6 @@ public class MiPerfilDTO extends MaestraDTO {
 	@NotEmpty
 	private String emailConfirmar;
 
-	private Date fechaAlta;
+	private LocalDateTime fechaAlta;
 
 }

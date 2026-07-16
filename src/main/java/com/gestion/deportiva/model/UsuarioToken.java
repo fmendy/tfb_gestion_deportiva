@@ -1,0 +1,36 @@
+package com.gestion.deportiva.model;
+
+import java.io.Serializable;
+
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.AuditTable;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@Entity
+@Table(name = "usuario_token")
+@Audited
+@AuditTable(value = "usuario_token_historico")
+public class UsuarioToken extends BaseEntity implements Serializable {
+
+	private static final long serialVersionUID = 719893123592917927L;
+
+	public UsuarioToken(Long id) {
+		super(id);
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_usuario", nullable = false)
+	private Usuario usuario;
+
+}
