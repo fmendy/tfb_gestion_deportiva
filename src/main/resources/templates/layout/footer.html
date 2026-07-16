@@ -3,8 +3,21 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" lang="es">
 <body>
 	<footer th:fragment="footer"
-		class="bg-dark text-white text-center py-3 mt-auto">
-		<p>© 2025 - Mi App SpringBoot</p>
+		class="bg-light text-secondary py-4 mt-auto border-top border-light-subtle">
+		<div class="container">
+			<div class="row align-items-center justify-content-between">
+				<div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+					<h5 class="text-primary fw-semibold mb-1" th:text="#{project.name}">
+						Gestión de Instalaciones Deportivas</h5>
+					<p class="small text-muted mb-0">
+						<span th:text="#{footer.version}"></span> <span
+							th:text="#{project.version}" class="fw-medium text-dark">1.0.0</span>
+						&copy; <span th:text="${#calendars.year(#calendars.createNow())}">2026</span>
+						<span th:text="#{footer.todos.los.derechos}"></span>
+					</p>
+				</div>
+			</div>
+		</div>
 	</footer>
 </body>
 </html>
