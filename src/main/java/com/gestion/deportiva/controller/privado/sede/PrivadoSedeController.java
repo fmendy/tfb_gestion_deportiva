@@ -1,6 +1,5 @@
 package com.gestion.deportiva.controller.privado.sede;
 
-import com.gestion.deportiva.service.impl.SedeServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +40,6 @@ import jakarta.validation.Valid;
 @PreAuthorize("hasAuthority('" + Constantes.Permiso.Localizacion.GESTION_SEDE + "')")
 public class PrivadoSedeController extends BaseController {
 
-
 	private static final Logger logger = LoggerFactory.getLogger(PrivadoSedeController.class);
 
 	private static final String BASE_URL = "/privado/sede";
@@ -66,8 +64,6 @@ public class PrivadoSedeController extends BaseController {
 
 	@Autowired
 	private MunicipioService municipioService;
-
-
 
 	@GetMapping("")
 	public ModelAndView search(Pageable pageable, HttpServletRequest request, SedeFilter filter) {

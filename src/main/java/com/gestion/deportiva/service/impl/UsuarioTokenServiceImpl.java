@@ -99,7 +99,7 @@ public class UsuarioTokenServiceImpl extends BaseServiceImpl<UsuarioTokenDTO, Us
 	@Transactional
 	public Boolean isValidToken( UsuarioToken usuarioToken, Long minValid) {
 
-		return usuarioToken != null && usuarioToken.getFechaCreacion().plusMinutes(minValid).isBefore(LocalDateTime.now()) ;
+		return usuarioToken != null && usuarioToken.getFechaCreacion().plusMinutes(minValid).isAfter(LocalDateTime.now()) ;
 	}
 
 	@Override

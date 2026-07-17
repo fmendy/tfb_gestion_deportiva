@@ -128,7 +128,7 @@ public class InstalacionHorarioBloqueadoServiceImpl implements InstalacionHorari
 	public InstalacionHorarioBloqueadoDTO findByIdOrNewEmpty(Long id, Long instalacionId) {
 		InstalacionHorarioBloqueadoDTO retVal = null;
 		if (id != null) {
-			retVal = findById(instalacionId);
+			retVal = findById(id);
 		}
 		if (retVal == null) {
 			retVal = new InstalacionHorarioBloqueadoDTO();

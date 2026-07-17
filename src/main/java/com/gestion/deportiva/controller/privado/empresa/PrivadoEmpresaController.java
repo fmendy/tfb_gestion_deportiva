@@ -32,7 +32,7 @@ import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping(value = "/privado/empresa")
-@PreAuthorize("hasAuthority('" + Constantes.Permiso.Localizacion.GESTION_INSTALACION+ "')")
+@PreAuthorize("hasAuthority('" + Constantes.Permiso.Localizacion.GESTION_EMPRESA+ "')")
 public class PrivadoEmpresaController extends BaseController {
 
 	private static final Logger logger = LoggerFactory.getLogger(PrivadoEmpresaController.class);
@@ -50,14 +50,14 @@ public class PrivadoEmpresaController extends BaseController {
 
 	@GetMapping("")
 	public ModelAndView search(Pageable pageable, HttpServletRequest request, EmpresaFilter filter) {
-		logger.info("Mostrando vista de listado de libro con filtros");
+		logger.info("Mostrando vista de listado de empresa con filtros");
 		return buildListView(filter, pageable, request);
 	}
 
 	@GetMapping("/{id}/editar")
 	public ModelAndView editar(@PathVariable Long id, RedirectAttributes redirectAttributes) throws PermisoException {
 		if (!empresaService.canRead(id)) {
-			logger.error("Libro {} intentó acceder a una Empresa  sin permisos: usuario {}",
+			logger.error("empresa {} intentó acceder a una Empresa  sin permisos: usuario {}",
 					SecurityUtil.getCurrentUserId(), id);
 			throw new PermisoException("No tiene permisos para acceder a esta empresa.");
 		}
@@ -69,7 +69,7 @@ public class PrivadoEmpresaController extends BaseController {
 	public ModelAndView guardar(@Valid @ModelAttribute("form") EmpresaDTO dto, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) throws PermisoException {
 		if (!empresaService.canWrite(dto.getId())) {
-			logger.error("Libro {} intentó acceder a una Empresa  sin permisos: usuario {}",
+			logger.error("empresa {} intentó acceder a una Empresa  sin permisos: usuario {}",
 					SecurityUtil.getCurrentUserId(), dto.getId());
 			throw new PermisoException("No tiene permisos para acceder a esta empresa.");
 		}
@@ -82,7 +82,7 @@ public class PrivadoEmpresaController extends BaseController {
 			redirectAttributes.addFlashAttribute(Constantes.HTTP_STATUS, HttpStatus.OK.value());
 			return new ModelAndView(new RedirectView(BASE_URL + "/" + id + "/editar"));
 		} catch (Exception e) {
-			logger.error("Error al guardar la libro : {}", e.getMessage(), e);
+			logger.error("Error al guardar la empresa : {}", e.getMessage(), e);
 			ModelAndView mav = buildDetailsForm(dto);
 			mav.addObject(Constantes.HTTP_STATUS, HttpStatus.INTERNAL_SERVER_ERROR.value());
 			return mav;
@@ -94,7 +94,7 @@ public class PrivadoEmpresaController extends BaseController {
 			EmpresaDTO dto = (id == null) ? new EmpresaDTO() : empresaService.findById(id);
 			return buildDetailsForm(dto);
 		} catch (Exception e) {
-			logger.error("Error al cargar formulario de libro {}: {}", id, e.getMessage(), e);
+			logger.error("Error al cargar formulario de empresa {}: {}", id, e.getMessage(), e);
 			return redirectWithError(BASE_URL, redirectAttributes, HttpStatus.INTERNAL_SERVER_ERROR.value(), null);
 		}
 	}

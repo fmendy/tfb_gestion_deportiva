@@ -1038,7 +1038,7 @@ create table instalacion_horario_bloqueado(
 );
 
 
-CREATE TABLE usuario_horario_bloqueado_historico (
+CREATE TABLE instalacion_horario_bloqueado_historico (
     id INT NOT NULL,
     uuid CHAR(36),
     id_instalacion int  null,
@@ -1055,7 +1055,7 @@ CREATE TABLE usuario_horario_bloqueado_historico (
     REVTYPE TINYINT NOT NULL,
 
     PRIMARY KEY (id, REV),
-    CONSTRAINT usuario_horario_bloqueado_historico_rev FOREIGN KEY (REV) REFERENCES revision_info(rev)
+    CONSTRAINT instalacion_horario_bloqueado_historico_rev FOREIGN KEY (REV) REFERENCES revision_info(rev)
 );
 
 alter table instalacion_horario_bloqueado add foreign key fk_instalacion_horario_bloqueado_usuario_creacion (id_usuario_creacion) references usuario(id);
