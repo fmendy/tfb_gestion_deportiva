@@ -88,6 +88,21 @@
 								</div>
 							</div>
 
+							<!-- CHECKBOX DE POLÍTICA DE PRIVACIDAD CON TOOLTIP -->
+							<div class="col-12 mt-3">
+								<div class="form-check d-flex align-items-center">
+									<input class="form-check-input mt-0 me-2" type="checkbox"
+										id="terminos" required> <label
+										class="form-check-label text-muted small mb-0" for="terminos">
+										<span th:text="#{registro.privacidad.mensaje}"></span>
+									</label>
+									<!-- Inclusión de tu fragmento de tooltip pasando la clave de mensajes -->
+									<div
+										th:replace="~{fragments/componentes :: info-tooltip('registro.privacidad.tooltip')}"></div>
+								</div>
+							</div>
+							<!-- FIN CHECKBOX -->
+
 							<div
 								th:replace="~{fragments/field-error :: alertas-errores('error.validacion.global')}"></div>
 
