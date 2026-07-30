@@ -9,6 +9,8 @@ import com.gestion.deportiva.dto.filter.MunicipioFilter;
 public interface MunicipioService extends MaestraService<MunicipioDTO, MunicipioFilter> {
 
 	List<MunicipioDTO> getListDTOByComunidadAutonomaIdOrProvinciaId(Long comunidadAutonomaId, Long provinciaId);
+
+	List<MunicipioDTO> getListDTOConSedes();
 	
 
 

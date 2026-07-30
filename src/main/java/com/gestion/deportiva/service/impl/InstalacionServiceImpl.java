@@ -19,6 +19,8 @@ import com.gestion.deportiva.dto.InstalacionDTO;
 import com.gestion.deportiva.dto.InstalacionDisponibilidadDTO;
 import com.gestion.deportiva.dto.InstalacionPublicoDTO;
 import com.gestion.deportiva.dto.filter.InstalacionFilter;
+import com.gestion.deportiva.dto.filter.InstalacionPublicoFilter;
+import com.gestion.deportiva.dto.specifications.InstalacionPublicoSpecifications;
 import com.gestion.deportiva.dto.specifications.InstalacionSpecifications;
 import com.gestion.deportiva.mapper.InstalacionMapper;
 import com.gestion.deportiva.model.Instalacion;
@@ -33,6 +35,7 @@ import com.gestion.deportiva.repository.InstalacionHorarioEspecialRepository;
 import com.gestion.deportiva.repository.InstalacionHorarioRepository;
 import com.gestion.deportiva.repository.InstalacionRepository;
 import com.gestion.deportiva.repository.ReservaRepository;
+import com.gestion.deportiva.service.InstalacionHorarioService;
 import com.gestion.deportiva.service.InstalacionService;
 import com.gestion.deportiva.service.ReservaService;
 import com.gestion.deportiva.util.Constantes;
@@ -73,6 +76,9 @@ public class InstalacionServiceImpl implements InstalacionService {
 
 	@Autowired
 	private ReservaService reservaService;
+
+	@Autowired
+	private InstalacionHorarioService instalacionHorarioService;
 
 	@Override
 	public InstalacionDTO findById(Long id) {
@@ -126,6 +132,28 @@ public class InstalacionServiceImpl implements InstalacionService {
 	public Page<InstalacionDTO> getPageByFilter(InstalacionFilter filter, Pageable pageable) {
 		return instalacionMapper.pageToPageDTO(instalacionRepository
 				.findAll(InstalacionSpecifications.filter(limitacionesPermisos(filter)), pageable));
+	}
+
+	@Override
+	public List<InstalacionDTO> getListByFilter(InstalacionPublicoFilter filter, Pageable pageable) {
+		List<Instalacion> listInstalacion = instalacionRepository
+				.findAll(InstalacionPublicoSpecifications.filter(filter), pageable).getContent();
+
+		List<Instalacion> list = new ArrayList<>();
+		if (filter.getHoraInicio() != null && filter.getFecha() != null) {
+			for (Instalacion i : listInstalacion) {
+				Long duracionMinima = instalacionConfiguracionReservaRepository.findByActivoTrueAndId(i.getId())
+						.getDuracionMin();
+				if (instalacionHorarioService.estaAbierta(i.getId(), filter.getFecha(), filter.getHoraInicio(),
+						duracionMinima)
+						&& reservaService.isFranjaHorariaDisponibleParaInstalacion(filter.getFecha(),
+								filter.getHoraInicio(), duracionMinima, i.getId())) {
+					list.add(i);
+				}
+			}
+		}
+
+		return instalacionMapper.listModelToListDTO(list);
 	}
 
 	@Override

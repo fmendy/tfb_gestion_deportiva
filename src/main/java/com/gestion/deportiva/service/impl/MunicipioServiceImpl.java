@@ -111,6 +111,12 @@ public class MunicipioServiceImpl implements MunicipioService {
 	}
 
 	@Override
+	public List<MunicipioDTO> getListDTOConSedes() {
+		return Utils.sortByNombre(municipioMapper.listModelToListDTO(municipioRepository.findByActivoTrueAndSede()));
+	}
+
+	
+	@Override
 	public List<MunicipioDTO> getListDTO(MunicipioFilter filter) {
 		return Utils.sortByNombre(municipioMapper
 				.listModelToListDTO(municipioRepository.findAll(MunicipioSpecifications.filter(filter))));

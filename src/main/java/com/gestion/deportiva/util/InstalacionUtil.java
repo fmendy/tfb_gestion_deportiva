@@ -3,6 +3,7 @@ package com.gestion.deportiva.util;
 import org.springframework.util.StringUtils;
 
 import com.gestion.deportiva.dto.filter.InstalacionFilter;
+import com.gestion.deportiva.dto.filter.InstalacionPublicoFilter;
 
 import lombok.experimental.UtilityClass;
 
@@ -26,6 +27,28 @@ public class InstalacionUtil {
 			}
 			if (filter.getInstalacionTipoId() != null) {
 				retVal = retVal + "&instalacionTipoId=" + filter.getInstalacionTipoId();
+			}
+		}
+		return retVal;
+	}
+	
+	public String cleanUrlPageFilter(InstalacionPublicoFilter filter, String url) {
+		String retVal = url;
+		if (retVal.indexOf("?") < 0) {
+			retVal = retVal + "?";
+		}
+		if (filter != null) {
+			if (StringUtils.hasText(filter.getNombre())) {
+				retVal = retVal + "&nombre=" + filter.getNombre();
+			}
+			if (filter.getMunicipioId() != null) {
+				retVal = retVal + "&municipioId=" + filter.getMunicipioId();
+			}
+			if (filter.getFecha() != null) {
+				retVal = retVal + "&fecha=" + filter.getFecha();
+			}
+			if (filter.getHoraInicio() != null) {
+				retVal = retVal + "&horaInicio=" + filter.getHoraInicio();
 			}
 		}
 		return retVal;
