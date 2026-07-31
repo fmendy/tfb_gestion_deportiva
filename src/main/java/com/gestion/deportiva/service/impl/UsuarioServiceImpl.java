@@ -316,8 +316,8 @@ public class UsuarioServiceImpl extends MaestraServiceImpl<UsuarioDTO, UsuarioFi
 	@Override
 	public void borrarMiCuenta() {
 		Usuario usuario = usuarioRepository.findByActivoTrueAndId(SecurityUtil.getCurrentUserId());
-		usuario.setNombre(Utils.generarStringAleatorio(10));
-		usuario.setEmail(Utils.generarStringAleatorio(10));
+		usuario.setNombre("usuario_eliminado");
+		usuario.setEmail("usuario_eliminado@tfb_carlemany_apm_2026.com");
 		eliminar(SecurityUtil.getCurrentUserId());
 		reservaService.cancelarUsuarioFechaDesde(SecurityUtil.getCurrentUserId(), LocalDate.now());
 		usuarioRepository.saveAndFlush(usuario);
