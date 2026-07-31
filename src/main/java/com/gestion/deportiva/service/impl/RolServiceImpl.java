@@ -113,12 +113,6 @@ public class RolServiceImpl implements RolService {
 	}
 
 	@Override
-	public byte[] exportarExcel(RolFilter filter) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public RolFilter getFilterParaUsuarioController() {
 		RolFilter filter = new RolFilter();
 		/*

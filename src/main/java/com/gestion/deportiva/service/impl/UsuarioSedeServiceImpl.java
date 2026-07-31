@@ -106,12 +106,6 @@ public class UsuarioSedeServiceImpl implements UsuarioSedeService {
 	}
 
 	@Override
-	public byte[] exportarExcel(UsuarioSedeFilter filter) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public Long asociarUsuarioSede(Long usuarioId, Long sedeId) {
 		UsuarioSede model = new UsuarioSede();
 		model.setUsuario(new Usuario(usuarioId));
@@ -125,7 +119,7 @@ public class UsuarioSedeServiceImpl implements UsuarioSedeService {
 	public List<UsuarioSede> getListByUsuarioId(Long usuarioId) {
 		return usuarioSedeRepository.findByActivoTrueAndUsuarioId(usuarioId);
 	}
-	
+
 	@Override
 	@Transactional
 	public void eliminarByUsuarioId(Long usuarioId) {

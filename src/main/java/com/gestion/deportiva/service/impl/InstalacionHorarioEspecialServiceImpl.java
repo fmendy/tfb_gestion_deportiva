@@ -118,12 +118,6 @@ public class InstalacionHorarioEspecialServiceImpl implements InstalacionHorario
 	}
 
 	@Override
-	public byte[] exportarExcel(InstalacionHorarioEspecialFilter filter) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public InstalacionHorarioEspecialDTO findByIdOrNewEmpty(Long id, Long instalacionId) {
 		InstalacionHorarioEspecialDTO retVal = null;
 		if (id != null) {

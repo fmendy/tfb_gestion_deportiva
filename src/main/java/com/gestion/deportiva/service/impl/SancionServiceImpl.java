@@ -148,10 +148,4 @@ public class SancionServiceImpl implements SancionService {
 		return canWrite(id);
 	}
 
-	@Override
-	public byte[] exportarExcel(SancionFilter filter) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

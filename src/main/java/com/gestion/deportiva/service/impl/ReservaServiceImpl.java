@@ -205,12 +205,6 @@ public class ReservaServiceImpl implements ReservaService {
 	}
 
 	@Override
-	public byte[] exportarExcel(ReservaFilter filter) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public ReservaSolicitudDTO getFullReservaSolicitudDTOByReservaSolictudDTO(ReservaSolicitudDTO dto) {
 		Instalacion instalacion = instalacionRepository.findByActivoTrueAndId(dto.getInstalacionId());
 		return reservaMapper.instalacionModelToReservaInstalacionDTO(instalacion, dto);

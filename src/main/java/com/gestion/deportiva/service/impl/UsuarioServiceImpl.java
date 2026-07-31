@@ -92,7 +92,7 @@ public class UsuarioServiceImpl extends MaestraServiceImpl<UsuarioDTO, UsuarioFi
 
 	@Autowired
 	private UsuarioTokenService usuarioTokenService;
-	
+
 	@Autowired
 	private ReservaService reservaService;
 
@@ -273,11 +273,6 @@ public class UsuarioServiceImpl extends MaestraServiceImpl<UsuarioDTO, UsuarioFi
 	}
 
 	@Override
-	public byte[] exportarExcel(UsuarioFilter filter) throws IOException {
-		return null;
-	}
-
-	@Override
 	@Transactional
 	public Long registrarUsuarioEmpresa(@Valid EmpresaRegistroDTO dto) {
 		Usuario usuario = usuarioMapper.registroEmpresaDTOToModel(dto);
@@ -317,13 +312,13 @@ public class UsuarioServiceImpl extends MaestraServiceImpl<UsuarioDTO, UsuarioFi
 			}
 		}
 	}
-	
+
 	@Override
 	public void borrarMiCuenta() {
 		Usuario usuario = usuarioRepository.findByActivoTrueAndId(SecurityUtil.getCurrentUserId());
 		usuario.setNombre(Utils.generarStringAleatorio(10));
 		usuario.setEmail(Utils.generarStringAleatorio(10));
-		eliminar(SecurityUtil.getCurrentUserId());		
+		eliminar(SecurityUtil.getCurrentUserId());
 		reservaService.cancelarUsuarioFechaDesde(SecurityUtil.getCurrentUserId(), LocalDate.now());
 		usuarioRepository.saveAndFlush(usuario);
 	}
@@ -331,9 +326,9 @@ public class UsuarioServiceImpl extends MaestraServiceImpl<UsuarioDTO, UsuarioFi
 	@Override
 	public void generarPasswordYEnviarMail(UsuarioPasswordDTO dto) {
 		UsuarioToken usuarioToken = usuarioTokenService.getTokenActivoByUuid(dto.getUuid());
-		
+
 		if (usuarioToken != null) {
-			
+
 			String password = Utils.generarStringAleatorio(12);
 			Usuario usuario = usuarioToken.getUsuario();
 			usuarioTokenService.desactivarTokensByUsuarioId(usuario.getId());

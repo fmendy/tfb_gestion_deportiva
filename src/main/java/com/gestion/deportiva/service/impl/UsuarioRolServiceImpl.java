@@ -128,7 +128,7 @@ public class UsuarioRolServiceImpl implements UsuarioRolService {
 
 		return false;
 	}
-	
+
 	private boolean canAccessByEmpresa(Usuario usuario) {
 		List<Long> allowedEmpresas = SecurityUtil.getCurrentUserListEmpresaId();
 
@@ -167,12 +167,6 @@ public class UsuarioRolServiceImpl implements UsuarioRolService {
 	@Override
 	public boolean canRead(Long id) {
 		return canWrite(id);
-	}
-
-	@Override
-	public byte[] exportarExcel(UsuarioRolFilter filter) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override

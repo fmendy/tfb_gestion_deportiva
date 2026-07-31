@@ -207,12 +207,6 @@ public class InstalacionServiceImpl implements InstalacionService {
 	}
 
 	@Override
-	public byte[] exportarExcel(InstalacionFilter filter) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public List<InstalacionDTO> getListDTOParaEmpleado(Long empresaId, Long sedeId) {
 		List<InstalacionDTO> retVal = new ArrayList<>();
 		if (SecurityUtil.hasAuthority(Constantes.Permiso.GESTION_GLOBAL)

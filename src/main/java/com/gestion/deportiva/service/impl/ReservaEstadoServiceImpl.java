@@ -122,9 +122,4 @@ public class ReservaEstadoServiceImpl implements ReservaEstadoService {
 		return true;
 	}
 
-	@Override
-	public byte[] exportarExcel(ReservaEstadoFilter filter) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

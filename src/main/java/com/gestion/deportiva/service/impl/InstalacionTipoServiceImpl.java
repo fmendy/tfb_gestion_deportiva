@@ -125,9 +125,4 @@ public class InstalacionTipoServiceImpl implements InstalacionTipoService {
 		return true;
 	}
 
-	@Override
-	public byte[] exportarExcel(InstalacionTipoFilter filter) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

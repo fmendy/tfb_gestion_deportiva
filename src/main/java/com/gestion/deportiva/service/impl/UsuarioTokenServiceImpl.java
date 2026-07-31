@@ -83,23 +83,24 @@ public class UsuarioTokenServiceImpl extends BaseServiceImpl<UsuarioTokenDTO, Us
 		desactivar(list);
 
 	}
-	
+
 	@Override
 	@Transactional
 	public UsuarioToken getTokenActivoByUuid(String uuid) {
 		UsuarioToken token = usuarioTokenRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid);
-		 if(isValidToken(token, 5L)) {
-			 return token;
-		 }
+		if (isValidToken(token, 5L)) {
+			return token;
+		}
 
 		return null;
 	}
-	
+
 	@Override
 	@Transactional
-	public Boolean isValidToken( UsuarioToken usuarioToken, Long minValid) {
+	public Boolean isValidToken(UsuarioToken usuarioToken, Long minValid) {
 
-		return usuarioToken != null && usuarioToken.getFechaCreacion().plusMinutes(minValid).isAfter(LocalDateTime.now()) ;
+		return usuarioToken != null
+				&& usuarioToken.getFechaCreacion().plusMinutes(minValid).isAfter(LocalDateTime.now());
 	}
 
 	@Override
@@ -142,12 +143,6 @@ public class UsuarioTokenServiceImpl extends BaseServiceImpl<UsuarioTokenDTO, Us
 	@Override
 	public boolean canRead(Long id) {
 		return true;
-	}
-
-	@Override
-	public byte[] exportarExcel(UsuarioTokenFilter filter) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

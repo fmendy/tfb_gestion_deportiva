@@ -117,12 +117,6 @@ public class UsuarioEmpresaServiceImpl implements UsuarioEmpresaService {
 	}
 
 	@Override
-	public byte[] exportarExcel(UsuarioEmpresaFilter filter) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public Long asociarUsuarioEmpresa(Long usuarioId, Long empresaId) {
 		UsuarioEmpresa model = new UsuarioEmpresa();
 		model.setUsuario(new Usuario(usuarioId));

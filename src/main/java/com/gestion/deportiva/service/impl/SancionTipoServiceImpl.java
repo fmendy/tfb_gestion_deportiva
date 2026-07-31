@@ -121,9 +121,4 @@ public class SancionTipoServiceImpl implements SancionTipoService {
 		return true;
 	}
 
-	@Override
-	public byte[] exportarExcel(SancionTipoFilter filter) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

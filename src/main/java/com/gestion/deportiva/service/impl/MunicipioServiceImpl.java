@@ -115,7 +115,6 @@ public class MunicipioServiceImpl implements MunicipioService {
 		return Utils.sortByNombre(municipioMapper.listModelToListDTO(municipioRepository.findByActivoTrueAndSede()));
 	}
 
-	
 	@Override
 	public List<MunicipioDTO> getListDTO(MunicipioFilter filter) {
 		return Utils.sortByNombre(municipioMapper
@@ -130,12 +129,6 @@ public class MunicipioServiceImpl implements MunicipioService {
 	@Override
 	public boolean canRead(Long id) {
 		return true;
-	}
-
-	@Override
-	public byte[] exportarExcel(MunicipioFilter filter) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override

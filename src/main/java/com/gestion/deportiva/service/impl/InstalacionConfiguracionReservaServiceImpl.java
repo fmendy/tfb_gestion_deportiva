@@ -111,12 +111,6 @@ public class InstalacionConfiguracionReservaServiceImpl implements InstalacionCo
 	}
 
 	@Override
-	public byte[] exportarExcel(InstalacionConfiguracionReservaFilter filter) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public InstalacionConfiguracionReservaDTO findDTOByInstalacionId(Long instalacionId) {
 		logger.info("Buscando InstalacionConfiguracionReserva por instalacionID: {}", instalacionId);
 		return instalacionConfiguracionReservaMapper

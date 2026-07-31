@@ -195,12 +195,6 @@ public class SedeServiceImpl implements SedeService {
 	}
 
 	@Override
-	public byte[] exportarExcel(SedeFilter filter) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public List<SedeDTO> getListDTOParaInstalacion(Long empresaId) {
 		List<SedeDTO> retVal = new ArrayList<>();
 		if (SecurityUtil.hasAuthority(Constantes.Permiso.GESTION_GLOBAL)) {

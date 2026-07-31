@@ -116,12 +116,6 @@ public class InstalacionHorarioServiceImpl implements InstalacionHorarioService 
 	}
 
 	@Override
-	public byte[] exportarExcel(InstalacionHorarioFilter filter) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public void borrarTodosLosHorarios(Long instalacionId) {
 		List<InstalacionHorario> list = instalacionHorarioRepository.findByActivoTrueAndInstalacionId(instalacionId);
 

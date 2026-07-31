@@ -124,10 +124,4 @@ public class ComunidadAutonomaServiceImpl extends MaestraServiceImpl<ComunidadAu
 	public boolean canRead(Long id) {
 		return true;
 	}
-
-	@Override
-	public byte[] exportarExcel(ComunidadAutonomaFilter filter) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

@@ -107,12 +107,6 @@ public class UsuarioInstalacionServiceImpl implements UsuarioInstalacionService 
 	}
 
 	@Override
-	public byte[] exportarExcel(UsuarioInstalacionFilter filter) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public Long asociarUsuarioInstalacion(Long usuarioId, Long instalacionId) {
 		UsuarioInstalacion model = new UsuarioInstalacion();
 		model.setUsuario(new Usuario(usuarioId));
@@ -121,12 +115,12 @@ public class UsuarioInstalacionServiceImpl implements UsuarioInstalacionService 
 		usuarioInstalacionRepository.saveAndFlush(model);
 		return model.getId();
 	}
-	
+
 	@Override
-	public List<UsuarioInstalacion> getListByUsuarioId(Long usuarioId){
+	public List<UsuarioInstalacion> getListByUsuarioId(Long usuarioId) {
 		return usuarioInstalacionRepository.findByActivoTrueAndUsuarioId(usuarioId);
 	}
-	
+
 	@Override
 	@Transactional
 	public void eliminarByUsuarioId(Long usuarioId) {

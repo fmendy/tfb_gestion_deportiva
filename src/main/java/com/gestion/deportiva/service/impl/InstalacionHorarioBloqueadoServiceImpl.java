@@ -37,10 +37,9 @@ public class InstalacionHorarioBloqueadoServiceImpl implements InstalacionHorari
 
 	@Autowired
 	private InstalacionHorarioBloqueadoMapper instalacionHorarioBloqueadoMapper;
-	
+
 	@Autowired
 	private ReservaService reservaService;
-	
 
 	@Override
 	public InstalacionHorarioBloqueadoDTO findById(Long id) {
@@ -116,12 +115,6 @@ public class InstalacionHorarioBloqueadoServiceImpl implements InstalacionHorari
 	@Override
 	public boolean canRead(Long id) {
 		return true;
-	}
-
-	@Override
-	public byte[] exportarExcel(InstalacionHorarioBloqueadoFilter filter) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override

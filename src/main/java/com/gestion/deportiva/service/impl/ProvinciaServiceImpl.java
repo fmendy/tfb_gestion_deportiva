@@ -136,10 +136,4 @@ public class ProvinciaServiceImpl implements ProvinciaService {
 		return true;
 	}
 
-	@Override
-	public byte[] exportarExcel(ProvinciaFilter filter) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

@@ -241,12 +241,6 @@ public class EmpleadoServiceImpl implements EmpleadoService {
 	}
 
 	@Override
-	public byte[] exportarExcel(EmpleadoFilter filter) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	@Transactional
 	public Long guardar(@Valid EmpleadoRegistroDTO dto) {
 		Usuario usuario = empleadoMapper.empleadoRegistroDTOToUsuario(dto);

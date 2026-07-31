@@ -57,7 +57,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 
 	@Autowired
 	private SedeRepository sedeRepository;
-	
+
 	@Autowired
 	private ReservaService reservaService;
 
@@ -123,8 +123,9 @@ public class EmpresaServiceImpl implements EmpresaService {
 		Empresa model = empresaRepository.findByActivoTrueAndId(id);
 		model.setActivo(false);
 		empresaRepository.saveAndFlush(model);
-		reservaService.cancelarReservasEmpresa(reservaService.getListByFechaDesdeInstalacionSedeEmpresaIdAndReservaEstados(
-				LocalDate.now(), id, List.of(Constantes.ReservaEstado.PENDIENTE, Constantes.ReservaEstado.APROBADA)));
+		reservaService.cancelarReservasEmpresa(
+				reservaService.getListByFechaDesdeInstalacionSedeEmpresaIdAndReservaEstados(LocalDate.now(), id,
+						List.of(Constantes.ReservaEstado.PENDIENTE, Constantes.ReservaEstado.APROBADA)));
 	}
 
 	@Override
@@ -167,12 +168,6 @@ public class EmpresaServiceImpl implements EmpresaService {
 		return (SecurityUtil.hasAuthority(Constantes.Permiso.GESTION_GLOBAL)
 				|| (SecurityUtil.hasAuthority(Constantes.Permiso.Localizacion.GESTION_EMPRESA)
 						&& SecurityUtil.getCurrentUserListEmpresaId().contains(id)));
-	}
-
-	@Override
-	public byte[] exportarExcel(EmpresaFilter filter) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
