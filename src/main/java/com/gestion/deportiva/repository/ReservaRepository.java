@@ -23,7 +23,7 @@ public interface ReservaRepository extends BaseEntityRepository<Reserva, Long> {
 
 	List<Reserva> findByActivoTrueAndUsuarioCreacionIdAndFechaGreaterThanEqualAndFechaLessThanEqualAndReservaEstadoNombreIn(
 			Long usuarioId, LocalDate fechaInicio, LocalDate fechaFin, List<String> asList);
-	
+
 	List<Reserva> findByActivoTrueAndFechaAndInstalacionSedeEmpresaIdAndReservaEstadoNombreIn(LocalDate fechaDesde,
 			Long empresaId, List<String> listReservaEstados);
 
@@ -32,4 +32,7 @@ public interface ReservaRepository extends BaseEntityRepository<Reserva, Long> {
 
 	List<Reserva> findByActivoTrueAndUsuarioCreacionIdAndFechaGreaterThanEqualAndReservaEstadoNombreIn(Long usuarioId,
 			LocalDate fechaDesde, List<String> asList);
+
+	List<Reserva> findByActivoTrueAndUsuarioCreacionId(Long usuarioId);
+
 }
