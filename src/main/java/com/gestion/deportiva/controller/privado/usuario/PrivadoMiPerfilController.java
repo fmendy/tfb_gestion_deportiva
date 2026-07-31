@@ -1,5 +1,8 @@
 package com.gestion.deportiva.controller.privado.usuario;
 
+import java.io.IOException;
+import java.security.Principal;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +22,13 @@ import org.springframework.web.servlet.view.RedirectView;
 import com.gestion.deportiva.controller.BaseController;
 import com.gestion.deportiva.dto.MiPerfilDTO;
 import com.gestion.deportiva.dto.MiPerfilPasswordDTO;
+import com.gestion.deportiva.service.PdfReportService;
 import com.gestion.deportiva.service.UsuarioService;
 import com.gestion.deportiva.util.Constantes;
 import com.gestion.deportiva.util.SecurityUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
@@ -44,6 +49,9 @@ public class PrivadoMiPerfilController extends BaseController {
 
 	@Autowired
 	private UsuarioService usuarioService;
+
+	@Autowired
+	private PdfReportService pdfReportService;
 
 	@GetMapping
 	public ModelAndView verMiPerfil() {
@@ -70,6 +78,15 @@ public class PrivadoMiPerfilController extends BaseController {
 		}
 	}
 
+	@GetMapping("/descargar-datos-arco")
+	public void descargarInformeArco(Principal principal, HttpServletResponse response) {
+		try {
+			pdfReportService.exportarDatosArcoUsuarioPdf(SecurityUtil.getCurrentUserId(), response);
+		} catch (IOException e) {
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+	}
+
 	@GetMapping("/eliminar")
 	public ModelAndView eliminar(RedirectAttributes redirectAttributes, HttpServletRequest request) {
 		logger.info("Borrando cuenta del usuario datos del usuario: {}", SecurityUtil.getCurrentUserId());
@@ -78,9 +95,9 @@ public class PrivadoMiPerfilController extends BaseController {
 			usuarioService.borrarMiCuenta();
 			HttpSession session = request.getSession(false);
 			if (session != null) {
-		        session.invalidate();
-		    }		    
-		    SecurityContextHolder.clearContext();
+				session.invalidate();
+			}
+			SecurityContextHolder.clearContext();
 			redirectAttributes.addFlashAttribute(Constantes.HTTP_STATUS, HttpStatus.OK.value());
 			return new ModelAndView(new RedirectView("/login?logout=true"));
 		} catch (Exception e) {
