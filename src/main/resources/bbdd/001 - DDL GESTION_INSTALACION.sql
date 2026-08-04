@@ -70,7 +70,7 @@ CREATE TABLE usuario_historico (
 
 
 insert into usuario(nombre, email, password)
-values ('admin','admin@gestioninstalacion.com','password');
+values ('admin','admin@gestioninstalacion.com','$2a$10$DFFs70DvnosU6HFN1B0yv.zgeW/li41vxmvhr1B44dZNKptdCdcVu');
 
 
 

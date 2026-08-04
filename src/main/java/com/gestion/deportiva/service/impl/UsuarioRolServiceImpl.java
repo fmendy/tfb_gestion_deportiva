@@ -115,7 +115,6 @@ public class UsuarioRolServiceImpl implements UsuarioRolService {
 		if (usuario == null)
 			return false;
 
-		// Delegamos la validación según el rol
 		if (SecurityUtil.hasAuthority(Constantes.Permiso.Rol.GESTION_ROL_EMPRESA)) {
 			return canAccessByEmpresa(usuario);
 		}
