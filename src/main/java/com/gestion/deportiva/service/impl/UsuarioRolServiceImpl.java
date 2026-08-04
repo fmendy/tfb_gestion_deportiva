@@ -146,6 +146,7 @@ public class UsuarioRolServiceImpl implements UsuarioRolService {
 	}
 
 	private boolean canAccessBySede(Usuario usuario) {
+		List<Long> allowedEmpresas = SecurityUtil.getCurrentUserListEmpresaId();
 		List<Long> allowedSedes = SecurityUtil.getCurrentUserListSedeId();
 
 		boolean match = usuario.getListUsuarioSede().stream()
@@ -153,14 +154,24 @@ public class UsuarioRolServiceImpl implements UsuarioRolService {
 		if (match)
 			return true;
 
+		match = usuario.getListUsuarioSede().stream()
+				.anyMatch(us -> allowedEmpresas.contains(us.getSede().getEmpresa().getId()));
+		if (match)
+			return true;
+
 		return usuario.getListUsuarioInstalacion().stream()
-				.anyMatch(ui -> allowedSedes.contains(ui.getInstalacion().getSede().getId()));
+				.anyMatch(ui -> allowedSedes.contains(ui.getInstalacion().getSede().getId()))
+				|| usuario.getListUsuarioInstalacion().stream()
+						.anyMatch(ui -> allowedEmpresas.contains(ui.getInstalacion().getSede().getEmpresa().getId()));
 	}
 
 	private boolean canAccessByInstalacion(Usuario usuario) {
 		List<Long> allowedInstalaciones = SecurityUtil.getCurrentUserListInstalacionId();
+		List<Long> allowedSedes = SecurityUtil.getCurrentUserListSedeId();
 		return usuario.getListUsuarioInstalacion().stream()
-				.anyMatch(ui -> allowedInstalaciones.contains(ui.getInstalacion().getId()));
+				.anyMatch(ui -> allowedInstalaciones.contains(ui.getInstalacion().getId()))
+				|| usuario.getListUsuarioInstalacion().stream()
+						.anyMatch(ui -> allowedSedes.contains(ui.getInstalacion().getSede().getId()));
 	}
 
 	@Override
