@@ -409,7 +409,6 @@ public class ReservaServiceImpl implements ReservaService {
 		if (reservas.isEmpty())
 			return;
 
-		// Obtención de datos
 		List<InstalacionHorarioBloqueado> bloqueos = instalacionHorarioBloqueadoRepository
 				.findByActivoTrueAndInstalacionIdAndFecha(instalacionId, date);
 		List<InstalacionHorarioEspecial> especiales = instalacionHorarioEspecialRepository
@@ -423,23 +422,18 @@ public class ReservaServiceImpl implements ReservaService {
 			reservasAfectadas.addAll(reservas);
 		} else {
 			for (Reserva reserva : reservas) {
-				// 1. Siempre comprobamos si solapa con algún bloqueo (esto es prioridad
-				// absoluta)
 				boolean solapaConBloqueo = bloqueos.stream()
 						.anyMatch(b -> reserva.getHoraInicio().isBefore(b.getHoraFin())
 								&& reserva.getHoraFin().isAfter(b.getHoraInicio()));
 
-				// 2. Comprobamos validez horaria (si está fuera de rango)
 				boolean fueraDeRango = false;
 
 				if (!especiales.isEmpty()) {
-					// Existe horario especial: la reserva DEBE estar dentro de al menos uno
 					boolean dentroDeEspecial = especiales.stream()
 							.anyMatch(e -> !reserva.getHoraInicio().isBefore(e.getHoraInicio())
 									&& !reserva.getHoraFin().isAfter(e.getHoraFin()));
 					fueraDeRango = !dentroDeEspecial;
 				} else {
-					// No hay especial, comprobamos horario normal
 					boolean dentroDeNormal = normales.stream()
 							.anyMatch(n -> !reserva.getHoraInicio().isBefore(n.getHoraInicio())
 									&& !reserva.getHoraFin().isAfter(n.getHoraFin()));

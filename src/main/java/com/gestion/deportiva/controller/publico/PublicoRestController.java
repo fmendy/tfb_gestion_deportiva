@@ -36,11 +36,9 @@ public class PublicoRestController {
 	@GetMapping("/api/municipios")
 	@ResponseBody
 	public List<MunicipioDTO> getMunicipios(@RequestParam Long padreId, @RequestParam(required = false) String tipo) {
-		// Si el tipo es 'comunidad', busca todos los municipios de la comunidad
 		if ("comunidad".equals(tipo)) {
 			return municipioService.getListDTOByComunidadAutonomaIdOrProvinciaId(padreId, null);
 		}
-		// Si no, busca por provincia
 		return municipioService.getListDTOByComunidadAutonomaIdOrProvinciaId(null, padreId);
 	}
 	

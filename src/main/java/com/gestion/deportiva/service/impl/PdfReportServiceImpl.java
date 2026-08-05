@@ -52,11 +52,9 @@ public class PdfReportServiceImpl implements PdfReportService {
 		List<Object[]> revisionsUsuario = auditReader.createQuery().forRevisionsOfEntity(Usuario.class, false, true)
 				.add(AuditEntity.id().eq(usuarioId)).getResultList();
 
-		// 1. Configurar la respuesta HTTP
 		response.setContentType("application/pdf");
 		response.setHeader("Content-Disposition", "attachment; filename=informe-datos-personales-arco.pdf");
 
-		// 2. Crear el documento PDF (Tamaño A4, márgenes de 36 puntos)
 		Document document = new Document(PageSize.A4, 36, 36, 36, 36);
 		PdfWriter.getInstance(document, response.getOutputStream());
 
@@ -73,7 +71,7 @@ public class PdfReportServiceImpl implements PdfReportService {
 		title.setSpacingAfter(20);
 		document.add(title);
 
-		// Sección 1: Datos Actuales del Usuario
+		// Datos Actuales del Usuario
 		document.add(new Paragraph(Utils.getMessage("usuario.arco.informe.subtitle.datos.actuales"), subtitleFont));
 		if (usuario != null) {
 			document.add(new Paragraph(Utils.getMessage("usuario.arco.informe.nombre") + ": " + usuario.getNombre(),
@@ -88,7 +86,7 @@ public class PdfReportServiceImpl implements PdfReportService {
 		}
 		document.add(new Paragraph("\n"));
 
-		// Sección 2: Histórico de Cambios del Usuario (Envers)
+		// Histórico de Cambios del Usuario (Envers)
 		document.add(new Paragraph(Utils.getMessage("usuario.arco.informe.subtitle.historico"), subtitleFont));
 
 		if (revisionsUsuario != null && !revisionsUsuario.isEmpty()) {
@@ -146,7 +144,6 @@ public class PdfReportServiceImpl implements PdfReportService {
 				document.add(new Paragraph("  - " + Utils.getMessage("usuario.arco.informe.reserva.estado") + ": "
 						+ reserva.getReservaEstado().getNombre(), bodyFont));
 
-				// Consultar el histórico de cambios de ESTA reserva concreta mediante Envers
 				List<Object[]> revisionsReserva = auditReader.createQuery()
 						.forRevisionsOfEntity(Reserva.class, false, true).add(AuditEntity.id().eq(reserva.getId()))
 						.getResultList();

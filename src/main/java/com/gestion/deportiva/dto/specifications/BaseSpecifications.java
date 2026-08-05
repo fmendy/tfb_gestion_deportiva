@@ -22,11 +22,8 @@ public abstract class BaseSpecifications<T> {
 
 	private From<?, ?> joinAndFilterActivo(From<?, ?> root, String... fields) {
 		From<?, ?> current = root;
-		// Iteramos hasta el penúltimo campo (las relaciones)
 		for (int i = 0; i < fields.length - 1; i++) {
-			// Hacemos el Join
 			Join<Object, Object> join = current.join(fields[i], JoinType.INNER);
-			// Filtramos que la relación intermedia esté activa
 			join.on(join.get("activo").in(true));
 			current = join;
 		}
@@ -95,22 +92,18 @@ public abstract class BaseSpecifications<T> {
 
 	protected Specification<T> equalsFieldLong(Long value, String... fields) {
 		return (root, query, cb) -> {
-			// Si solo viene un campo (ej. "id"), se busca directo en el root
 			if (fields.length == 1) {
 				return cb.equal(root.get(fields[0]), value);
 			}
 
-			// Empezamos el primer Join desde la raíz (ej. root.join("municipio"))
 			Join<Object, Object> currentJoin = root.join(fields[0]);
 			currentJoin.on(cb.isTrue(currentJoin.get("activo")));
 
-			// Encadenamos los siguientes joins de forma secuencial
 			for (int i = 1; i < fields.length - 1; i++) {
 				currentJoin = currentJoin.join(fields[i]);
 				currentJoin.on(cb.isTrue(currentJoin.get("activo")));
 			}
 
-			// El último elemento del array siempre será el atributo final (ej. "id")
 			Path<Object> path = currentJoin.get(fields[fields.length - 1]);
 
 			return cb.equal(path, value);
@@ -119,22 +112,18 @@ public abstract class BaseSpecifications<T> {
 
 	protected Specification<T> equalsFieldBoolean(Boolean value, String... fields) {
 	    return (root, query, cb) -> {
-	        // Si solo viene un campo (ej. "id"), se busca directo en el root
 	        if (fields.length == 1) {
 	            return cb.equal(root.get(fields[0]), value);
 	        }
 
-	        // Empezamos el primer Join desde la raíz (ej. root.join("municipio"))
 	        Join<Object, Object> currentJoin = root.join(fields[0]);
 	        currentJoin.on(cb.isTrue(currentJoin.get("activo")));
 
-	        // Encadenamos los siguientes joins de forma secuencial
 	        for (int i = 1; i < fields.length - 1; i++) {
 	            currentJoin = currentJoin.join(fields[i]);
 	            currentJoin.on(cb.isTrue(currentJoin.get("activo")));
 	        }
 
-	        // El último elemento del array siempre será el atributo final (ej. "id")
 	        Path<Object> path = currentJoin.get(fields[fields.length - 1]);
 
 	        return cb.equal(path, value);
@@ -155,7 +144,6 @@ public abstract class BaseSpecifications<T> {
 			if (values == null || values.isEmpty())
 				return null;
 
-			// En lugar de join, usamos un Subquery EXISTS
 			jakarta.persistence.criteria.Subquery<Long> subquery = query.subquery(Long.class);
 			jakarta.persistence.criteria.Root<T> subRoot = subquery.correlate(root);
 
@@ -166,7 +154,6 @@ public abstract class BaseSpecifications<T> {
 				path = path.get(part);
 			}
 
-			// Filtro de activo en la relación
 			jakarta.persistence.criteria.Predicate activePredicate = cb.isTrue(join.get("activo"));
 
 			subquery.select(subRoot.get("id")).where(cb.and(activePredicate, path.in(values)));
@@ -175,39 +162,28 @@ public abstract class BaseSpecifications<T> {
 		};
 	}
 
-	// Inner Join
 	protected Specification<T> inList(String collectionName, List<?> values, String... pathParts) {
 		return (root, query, cb) -> {
 			if (values == null || values.isEmpty()) {
 				return null;
 			}
 
-			// 1. Join inicial a la colección
 			var join = root.join(collectionName);
 
-			// Creamos una lista de predicados para incluir el filtro de 'activo' en cada
-			// paso
 			List<jakarta.persistence.criteria.Predicate> predicates = new ArrayList<>();
 
-			// 2. Navegación dinámica
 			jakarta.persistence.criteria.Path<Object> path = join;
 
 			for (String part : pathParts) {
-				// Antes de avanzar, verificamos si el nivel actual tiene la propiedad 'activo'
-				// Esto evita errores si una de las entidades intermedias no tiene este campo
 				try {
-					// Intentamos obtener el campo "activo" del objeto actual (path)
 					var activoPath = path.get("activo");
 					predicates.add(cb.isTrue(activoPath.as(Boolean.class)));
 				} catch (IllegalArgumentException e) {
-					// El campo no existe en este nivel, continuamos normalmente
 				}
 
-				// Avanzamos al siguiente subcampo
 				path = path.get(part);
 			}
 
-			// 3. Aplicamos el predicado IN final y los filtros de activo acumulados
 			query.distinct(true);
 			predicates.add(path.in(values));
 

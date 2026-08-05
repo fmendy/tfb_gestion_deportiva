@@ -65,8 +65,6 @@ public class UsuarioMapper {
 	public Usuario dtoToModel(UsuarioDTO dto, Usuario model) {
 		if (model == null) {
 			model = new Usuario();
-			// Solo si es nuevo, asigna el ID manualmente (aunque normalmente JPA lo genera
-			// solo)
 			Optional.ofNullable(dto.getId()).ifPresent(model::setId);
 			Optional.ofNullable(dto.getUuid()).filter(StringUtils::hasText).ifPresent(model::setUuid);
 			model.setPassword("");

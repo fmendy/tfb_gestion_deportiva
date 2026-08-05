@@ -14,7 +14,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class InstalacionHorarioPublicoDTO {
 
-	private LocalDate fecha; // opcional (para calculado)
+	private LocalDate fecha; 
 	private Integer diaSemana; // 1-7 (lunes-domingo)
 
 	private LocalTime horaInicio;

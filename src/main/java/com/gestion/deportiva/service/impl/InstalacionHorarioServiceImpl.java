@@ -129,7 +129,6 @@ public class InstalacionHorarioServiceImpl implements InstalacionHorarioService 
 	public void guardar(@Valid InstalacionHorarioSemanalDTO dto) {
 		borrarTodosLosHorarios(dto.getInstalacionId());
 
-		// 2. Guardar los N turnos enviados por cada día
 		dto.getHorarios().forEach((dia, listaTurnos) -> {
 			for (InstalacionHorarioDTO turno : listaTurnos) {
 				InstalacionHorario h = new InstalacionHorario();
@@ -153,11 +152,9 @@ public class InstalacionHorarioServiceImpl implements InstalacionHorarioService 
 		InstalacionHorarioSemanalDTO dtoSemanal = new InstalacionHorarioSemanalDTO();
 		dtoSemanal.setInstalacionId(instalacionId);
 
-		// 1. Recuperar todos los turnos guardados
 		List<InstalacionHorario> entidades = instalacionHorarioRepository
 				.findByActivoTrueAndInstalacionId(instalacionId);
 
-		// 2. Agruparlos en el mapa del DTO
 		for (InstalacionHorario ent : entidades) {
 			InstalacionHorarioDTO turnoDto = new InstalacionHorarioDTO();
 			turnoDto.setId(ent.getId());

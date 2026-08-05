@@ -280,7 +280,6 @@ public class InstalacionServiceImpl implements InstalacionService {
 
 		List<FranjaHorariaDTO> resultado = new ArrayList<>();
 
-		// --- NUEVA LÓGICA DE GENERACIÓN ---
 		for (InstalacionHorario h : horariosActivos) {
 			for (LocalTime inicio = h.getHoraInicio(); inicio.plusMinutes(config.getDuracionMin())
 					.isBefore(h.getHoraFin())
@@ -293,7 +292,6 @@ public class InstalacionServiceImpl implements InstalacionService {
 						.getDuracionMax(); duracion += intervalo) {
 					LocalTime fin = inicio.plusMinutes(duracion);
 
-					// No permitir que la reserva exceda el horario de cierre
 					if (fin.isAfter(h.getHoraFin()))
 						break;
 
@@ -313,7 +311,6 @@ public class InstalacionServiceImpl implements InstalacionService {
 		return resultado;
 	}
 
-	// Función auxiliar para verificar disponibilidad del rango completo
 	private boolean estaLibre(LocalTime inicio, LocalTime fin, List<Reserva> reservas,
 			List<InstalacionHorarioBloqueado> bloqueos) {
 		boolean ocupadoPorReserva = reservas.stream()

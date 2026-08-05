@@ -140,18 +140,14 @@ public class InstalacionConfiguracionReservaServiceImpl implements InstalacionCo
 	public boolean isValid(Long instalacionId, LocalTime hora, Long duracion) {
 		InstalacionConfiguracionReserva configuracion = findByInstalacionId(instalacionId);
 
-		// 1. Validar rangos de duración
 		if (duracion < configuracion.getDuracionMin() || duracion > configuracion.getDuracionMax()) {
 			return false;
 		}
 
-		// 2. Validar que la duración sea múltiplo del intervalo
 		if (duracion % configuracion.getIntervaloHorario() != 0) {
 			return false;
 		}
 
-		// 3. Validar que la hora de inicio sea múltiplo del intervalo
-		// Convertimos la hora a minutos totales desde las 00:00
 		int minutosDesdeMedianoche = hora.getHour() * 60 + hora.getMinute();
 
 		if (minutosDesdeMedianoche % configuracion.getIntervaloHorario() != 0) {

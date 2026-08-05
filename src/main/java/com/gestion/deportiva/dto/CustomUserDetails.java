@@ -20,7 +20,6 @@ public class CustomUserDetails implements UserDetails {
 	private List<Long> listInstalacionId = new ArrayList<>();
 	private Collection<? extends GrantedAuthority> authorities;
 
-	// getters, setters, etc.
 
 	public CustomUserDetails(Long userId, String username, String password, Set<GrantedAuthority> authorities) {
 		this.userId = userId;

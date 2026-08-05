@@ -99,7 +99,6 @@ public class InstalacionMapper {
 		dto.setSedeLatitud(instalacion.getSede().getLatitud());
 		dto.setSedeLongitud(instalacion.getSede().getLongitud());
 
-		// Cambia la recolección a groupingBy
 		Map<Long, List<InstalacionHorario>> mapaSemanal = listHorarios.stream()
 				.collect(Collectors.groupingBy(InstalacionHorario::getDiaSemana));
 
@@ -113,20 +112,16 @@ public class InstalacionMapper {
 		Map<LocalDate, List<InstalacionHorarioEspecial>> mapaEspeciales = listHorariosEspeciales.stream()
 				.collect(Collectors.groupingBy(InstalacionHorarioEspecial::getFecha));
 
-		// 3️⃣ Generar calendario (ej: próximos 14 días)
 		Map<LocalDate, List<InstalacionHorarioPublicoDTO>> resultado = new LinkedHashMap<>();
 
 		LocalDate hoy = LocalDate.now();
 
-		// 👉 Inicio:
 		LocalDate inicio = hoy;
 
-		// 👉 Fin: final del año siguiente
 		LocalDate fin = LocalDate.of(hoy.getYear() + 1, 12, 31);
 		for (LocalDate fecha = inicio; !fecha.isAfter(fin); fecha = fecha.plusDays(1)) {
 			int diaSemana = fecha.getDayOfWeek().getValue();
 
-			// 1. Prioridad: Horarios Especiales
 			if (mapaEspeciales.containsKey(fecha)) {
 				List<InstalacionHorarioEspecial> especiales = mapaEspeciales.get(fecha);
 				for (InstalacionHorarioEspecial esp : especiales) {
@@ -134,7 +129,6 @@ public class InstalacionMapper {
 							diaSemana, esp.getHoraInicio(), esp.getHoraFin(), esp.getCerrado()));
 				}
 			}
-			// 2. Si no hay especial, usamos los normales
 			else {
 				List<InstalacionHorario> normales = mapaSemanal.get((long) diaSemana);
 				if (normales != null) {

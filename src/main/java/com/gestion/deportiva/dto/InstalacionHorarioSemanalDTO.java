@@ -27,7 +27,6 @@ public class InstalacionHorarioSemanalDTO extends BaseDTO {
 	@NotNull
 	private Long instalacionId;
 
-	// Un mapa donde la llave es el día (1 a 7) y el valor es la lista de turnos
 	@NotEmpty
 	@Valid
 	private Map<Integer, List<InstalacionHorarioDTO>> horarios = new HashMap<>();

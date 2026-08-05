@@ -16,7 +16,7 @@ public class CustomRevisionListener implements RevisionListener {
 			Long userId = SecurityUtil.getCurrentUserId();
 			rev.setUsuarioId(userId);
 		} catch (IllegalStateException e) {
-			// No hay usuario autenticado → setear null o usuario por defecto
+			// No hay usuario autenticado 
 			rev.setUsuarioId(null);
 		}
 

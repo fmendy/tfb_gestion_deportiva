@@ -44,7 +44,6 @@ public class EmpleadoSpecifications extends BaseSpecifications<Usuario> {
 					Arrays.asList(filter.getInstalacionId()), "instalacion", "id"));
 		}
 
-		// --- GRUPO DE PERMISOS (OR) ---
 		List<Specification<Usuario>> permisosSpecs = new ArrayList<>();
 
 		if (filter.getListEmpresaIds() != null && !filter.getListEmpresaIds().isEmpty()) {
@@ -62,8 +61,6 @@ public class EmpleadoSpecifications extends BaseSpecifications<Usuario> {
 					filter.getListInstalacionIds(), "instalacion", "id"));
 		}
 
-		// Si hay filtros de permisos, los combinamos con OR y los añadimos a la lista
-		// principal
 		if (!permisosSpecs.isEmpty()) {
 			specs.add((root, query, cb) -> {
 				var predicates = permisosSpecs.stream().map(spec -> spec.toPredicate(root, query, cb))

@@ -105,7 +105,6 @@ public class MailServiceImpl implements MailService {
 	public void mensajeDenegacionReserva(Reserva reserva) throws MessagingException, IOException {
 		String asunto = Utils.getMessage("mail.reserva.asunto.denegada");
 		String cuerpo = construirCuerpoBaseReserva(reserva, "mail.reserva.cuerpo.denegada");
-		// Añadir línea extra que tenías específica en denegación si aplica
 		cuerpo = cuerpo + Utils.getMessage("mail.reserva.asunto.denegada") + "<br>";
 
 		enviarMail(Arrays.asList(reserva.getUsuarioCreacion().getEmail()), asunto, cuerpo, null);

@@ -37,9 +37,7 @@ public class InstalacionPublicoDTO extends MaestraDTO {
     
     private String sedeMunicipioProvinciaComunidadAutonomaNombre;
 
-    // Horario base semanal
     private List<InstalacionHorarioPublicoDTO> horarioSemanal;
 
-    // Horario final con especiales aplicados (clave = fecha)
     private Map<LocalDate, List<InstalacionHorarioPublicoDTO>> horarioCalculado;
 }

@@ -135,13 +135,11 @@ public class UsuarioServiceImpl extends MaestraServiceImpl<UsuarioDTO, UsuarioFi
 
 		Set<GrantedAuthority> authorities = new HashSet<>();
 
-		// Roles del usuario
 		List<UsuarioRol> listUsuarioRol = usuario.getListUsuarioRol().stream().filter(ur -> ur.isActivo()).toList();
 
 		for (UsuarioRol usuarioRol : listUsuarioRol) {
 			Rol rol = usuarioRol.getRol();
 			if (rol.isActivo()) {
-				// Rol como ROLE_X
 				List<RolPermiso> listRolPermiso = rol.getListRolPermiso().stream().filter(rp -> rp.isActivo()).toList();
 				for (RolPermiso rp : listRolPermiso) {
 					Permiso permiso = rp.getPermiso();

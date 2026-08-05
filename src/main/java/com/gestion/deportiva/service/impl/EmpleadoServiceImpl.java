@@ -186,7 +186,6 @@ public class EmpleadoServiceImpl implements EmpleadoService {
 		if (usuario == null)
 			return false;
 
-		// Delegamos la validación según el rol
 		if (SecurityUtil.hasAuthority(Constantes.Permiso.Usuario.GESTION_USUARIO_EMPRESA)) {
 			return canAccessByEmpresa(usuario);
 		}
