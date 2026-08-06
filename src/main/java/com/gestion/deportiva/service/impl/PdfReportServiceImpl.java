@@ -53,8 +53,7 @@ public class PdfReportServiceImpl implements PdfReportService {
 
 		configurarCabeceraResponse(response);
 
-		Document document = new Document(PageSize.A4, 36, 36, 36, 36);
-		try {
+		try (Document document = new Document(PageSize.A4, 36, 36, 36, 36)) {
 			PdfWriter.getInstance(document, response.getOutputStream());
 			document.open();
 
@@ -69,10 +68,6 @@ public class PdfReportServiceImpl implements PdfReportService {
 
 		} catch (DocumentException e) {
 			throw new IOException("Error al generar el documento PDF", e);
-		} finally {
-			if (document.isOpen()) {
-				document.close();
-			}
 		}
 	}
 
