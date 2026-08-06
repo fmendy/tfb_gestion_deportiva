@@ -49,7 +49,7 @@ public class PrivadoReservaController extends BaseController {
 	private static final String TITLE_PAGE = "page.title.privado.reserva.instalacion";
 
 	private static final String VIEW_SOLICITUD_FORM = "privado/reserva/solicitudForm";
-	
+
 	private static final String VIEW_HISTORICO_LIST = "privado/reserva/historicoList";
 
 	private static final String VIEW_MIS_RESERVAS_LIST = "privado/reserva/misReservasList";
@@ -219,8 +219,7 @@ public class PrivadoReservaController extends BaseController {
 	private ModelAndView buildListMisReservasView(ReservaFilter filter, Pageable pageable, HttpServletRequest request,
 			boolean reservasPasadas) {
 		ModelAndView mav = new ModelAndView(VIEW_MIS_RESERVAS_LIST);
-		mav.addObject("page", reservasPasadas ? reservaService.getPageMiReservaListadoDTOByFilter(filter, pageable)
-				: reservaService.getPageMiReservaListadoDTOByFilter(filter, pageable));
+		mav.addObject("page", reservaService.getPageMiReservaListadoDTOByFilter(filter, pageable));
 		mav.addObject("filter", filter);
 		mav.addObject("reservasPasadas", reservasPasadas);
 		mav.addObject("url", ReservaUtil.cleanUrlPageFilter(filter, request.getRequestURI()));
@@ -230,7 +229,7 @@ public class PrivadoReservaController extends BaseController {
 		addBasicModelDetails(mav, TITLE_PAGE, false);
 		return mav;
 	}
-	
+
 	private ModelAndView buildListHistoricoView(Long reservaId) {
 		ModelAndView mav = new ModelAndView(VIEW_HISTORICO_LIST);
 		mav.addObject("historico", reservaService.getListHistorico(reservaId));

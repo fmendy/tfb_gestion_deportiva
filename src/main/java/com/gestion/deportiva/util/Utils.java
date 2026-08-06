@@ -205,5 +205,16 @@ public class Utils {
 
 		return sb.toString();
 	}
+	
+
+
+	public void appendParam(StringBuilder url, String nombre, Object valor) {
+	    if (valor != null && !(valor instanceof String s && !StringUtils.hasText(s))) {
+	        url.append("&")
+	           .append(nombre)
+	           .append("=")
+	           .append(valor);
+	    }
+	}
 
 }

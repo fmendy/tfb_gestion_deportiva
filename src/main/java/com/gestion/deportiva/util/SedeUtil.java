@@ -1,7 +1,5 @@
 package com.gestion.deportiva.util;
 
-import org.springframework.util.StringUtils;
-
 import com.gestion.deportiva.dto.filter.SedeFilter;
 import lombok.experimental.UtilityClass;
 
@@ -9,35 +7,28 @@ import lombok.experimental.UtilityClass;
 public class SedeUtil {
 
 	public String cleanUrlPageFilter(SedeFilter filter, String url) {
-		String retVal = url;
-		if (retVal.indexOf("?") < 0) {
-			retVal = retVal + "?";
+		StringBuilder retVal = new StringBuilder(url);
+
+		if (!url.contains("?")) {
+			retVal.append("?");
 		}
+
 		if (filter != null) {
-			if (StringUtils.hasText(filter.getNombre())) {
-				retVal = retVal + "&nombre=" + filter.getNombre();
-			}
-			if (filter.getListEmpresaIds() != null && !filter.getListEmpresaIds().isEmpty()) {
-				retVal = retVal + "&listEmpresaIds=" + filter.getListEmpresaIds();
-			}
-			if (filter.getListIds() != null && !filter.getListIds().isEmpty()) {
-				retVal = retVal + "&listIds=" + filter.getListIds();
-			}
-			
-			if (filter.getEmpresaId() != null ) {
-				retVal = retVal + "&empresaId=" + filter.getEmpresaId();
-			}
-			if (filter.getComunidadAutonomaId() != null ) {
-				retVal = retVal + "&comunidadAutonomaId=" + filter.getComunidadAutonomaId();
-			}
-			if (filter.getProvinciaId() != null ) {
-				retVal = retVal + "&provinciaId=" + filter.getProvinciaId();
-			}
-			if (filter.getMunicipioId() != null ) {
-				retVal = retVal + "&municipioId=" + filter.getMunicipioId();
-			}
+			appendFilterParams(retVal, filter);
 		}
-		return retVal;
+
+		return retVal.toString();
+	}
+
+	private void appendFilterParams(StringBuilder url, SedeFilter filter) {
+		Utils.appendParam(url, "nombre", filter.getNombre());
+		String listEmpresasIds = filter.getListEmpresaIds().toString().replace("[", "").replace("]", "");
+		Utils.appendParam(url, "listEmpresaIds", listEmpresasIds);
+		Utils.appendParam(url, "listIds", filter.getListIds());
+		Utils.appendParam(url, "empresaId", filter.getEmpresaId());
+		Utils.appendParam(url, "comunidadAutonomaId", filter.getComunidadAutonomaId());
+		Utils.appendParam(url, "provinciaId", filter.getProvinciaId());
+		Utils.appendParam(url, "municipioId", filter.getMunicipioId());
 	}
 
 }

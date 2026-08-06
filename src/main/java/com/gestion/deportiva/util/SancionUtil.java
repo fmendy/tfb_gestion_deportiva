@@ -1,6 +1,5 @@
 package com.gestion.deportiva.util;
 
-import com.cloudinary.utils.StringUtils;
 import com.gestion.deportiva.dto.filter.SancionFilter;
 
 import lombok.experimental.UtilityClass;
@@ -9,45 +8,28 @@ import lombok.experimental.UtilityClass;
 public class SancionUtil {
 
 	public String cleanUrlPageFilter(SancionFilter filter, String url) {
-		String retVal = url;
-		if (retVal.indexOf("?") < 0) {
-			retVal = retVal + "?";
+		StringBuilder retVal = new StringBuilder(url);
+
+		if (!url.contains("?")) {
+			retVal.append("?");
 		}
+
 		if (filter != null) {
-			if (filter.getReservaId() != null) {
-				retVal = retVal + "&reservaId=" + filter.getReservaId();
-			}
-
-			if (filter.getUsuarioId() != null) {
-				retVal = retVal + "&usuarioId=" + filter.getUsuarioId();
-			}
-
-			if (filter.getSancionTipoId() != null) {
-				retVal = retVal + "&sancionTipoId=" + filter.getSancionTipoId();
-			}
-
-			if (!StringUtils.isBlank(filter.getUsuarioNombre())) {
-				retVal = retVal + "&usuarioNombre=" + filter.getUsuarioNombre();
-			}
-
-			if (filter.getFechaFinDesde() != null) {
-				retVal = retVal + "&fechaFinDesde=" + filter.getFechaFinDesde();
-			}
-
-			if (filter.getFechaFinHasta() != null) {
-				retVal = retVal + "&fechaFinHasta=" + filter.getFechaFinHasta();
-			}
-
-			if (filter.getFechaInicioDesde() != null) {
-				retVal = retVal + "&fechaInicioDesde=" + filter.getFechaInicioDesde();
-			}
-
-			if (filter.getFechaInicioHasta() != null) {
-				retVal = retVal + "&fechaInicioHasta=" + filter.getFechaInicioHasta();
-			}
-
+			appendFilterParams(retVal, filter);
 		}
-		return retVal;
+
+		return retVal.toString();
+	}
+
+	private void appendFilterParams(StringBuilder url, SancionFilter filter) {
+		Utils.appendParam(url, "reservaId", filter.getReservaId());
+		Utils.appendParam(url, "usuarioId", filter.getUsuarioId());
+		Utils.appendParam(url, "sancionTipoId", filter.getSancionTipoId());
+		Utils.appendParam(url, "usuarioNombre", filter.getUsuarioNombre());
+		Utils.appendParam(url, "fechaFinDesde", filter.getFechaFinDesde());
+		Utils.appendParam(url, "fechaFinHasta", filter.getFechaFinHasta());
+		Utils.appendParam(url, "fechaInicioDesde", filter.getFechaInicioDesde());
+		Utils.appendParam(url, "fechaInicioHasta", filter.getFechaInicioHasta());
 	}
 
 }

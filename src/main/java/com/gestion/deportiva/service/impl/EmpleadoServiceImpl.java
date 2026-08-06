@@ -142,6 +142,8 @@ public class EmpleadoServiceImpl implements EmpleadoService {
 
 	@Override
 	public void eliminar(Long id) {
+		// TODO Auto-generated method stub
+		// Metodo no necesario
 	}
 
 	@Override

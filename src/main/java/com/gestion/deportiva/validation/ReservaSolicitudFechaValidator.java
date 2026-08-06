@@ -31,7 +31,7 @@ public class ReservaSolicitudFechaValidator
 
 		// 2. Si es hoy, validar que la hora no haya pasado
 		// Fallamos si la hora de la reserva es anterior a la hora actual
-		if (dto.getFecha().equals(hoy) && dto.getHora().isBefore(LocalTime.now())) {
+		if (dto.getFecha().equals(hoy) && dto.getHora().isBefore(LocalTime.now(ZoneId.of("Europe/Madrid")))) {
 			context.disableDefaultConstraintViolation();
 			context.buildConstraintViolationWithTemplate(
 					Utils.getMessage("error.validacion.reserva.solicitud.fecha.hora")).addConstraintViolation();

@@ -1,6 +1,7 @@
 package com.gestion.deportiva.service.impl;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -100,7 +101,7 @@ public class UsuarioTokenServiceImpl extends BaseServiceImpl<UsuarioTokenDTO, Us
 	public Boolean isValidToken(UsuarioToken usuarioToken, Long minValid) {
 
 		return usuarioToken != null
-				&& usuarioToken.getFechaCreacion().plusMinutes(minValid).isAfter(LocalDateTime.now());
+				&& usuarioToken.getFechaCreacion().plusMinutes(minValid).isAfter(LocalDateTime.now(ZoneId.of("Europe/Madrid")));
 	}
 
 	@Override

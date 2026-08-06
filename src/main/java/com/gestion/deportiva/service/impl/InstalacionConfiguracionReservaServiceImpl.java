@@ -117,7 +117,7 @@ public class InstalacionConfiguracionReservaServiceImpl implements InstalacionCo
 
 	@Override
 	public InstalacionConfiguracionReservaDTO findDTOByInstalacionIdOrNewIfEmpty(Long instalacionId) {
-		logger.info("Buscando InstalacionConfiguracionReserva por instalacionID: {}", instalacionId);
+		logger.info("Buscar una InstalacionConfiguracionReserva por instalacionID: {}", instalacionId);
 
 		InstalacionConfiguracionReserva bean = findByInstalacionId(instalacionId);
 		if (bean == null) {

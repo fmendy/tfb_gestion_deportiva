@@ -5,6 +5,7 @@ import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
@@ -171,7 +172,7 @@ public class MailServiceImpl implements MailService {
 
 		String fechaInicioStr = inicio.format(ICS_DATE_FORMATTER);
 		String fechaFinStr = fin.format(ICS_DATE_FORMATTER);
-		String ahoraStr = LocalDateTime.now().format(ICS_DATE_FORMATTER);
+		String ahoraStr = LocalDateTime.now(ZoneId.of("Europe/Madrid")).format(ICS_DATE_FORMATTER);
 		String summaryFinal = (summaryPrefix != null ? summaryPrefix : "") + titulo;
 
 		StringBuilder ics = new StringBuilder();
