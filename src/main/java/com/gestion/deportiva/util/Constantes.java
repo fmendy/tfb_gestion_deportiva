@@ -46,6 +46,10 @@ public class Constantes {
 	public static final String CERRADO = "cerrado";
 
 	public static class Breadcrumbs {
+		
+		private Breadcrumbs() {
+	        // Constructor Privado
+	    }
 
 		public static final String BREADCRUMB = "breadcrumbs";
 

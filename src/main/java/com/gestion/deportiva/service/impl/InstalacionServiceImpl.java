@@ -270,7 +270,7 @@ public class InstalacionServiceImpl implements InstalacionService {
 				.findByActivoTrueAndInstalacionIdAndFecha(instalacionId, fecha);
 
 		if (!especiales.isEmpty()) {
-			if (especiales.get(0).getCerrado()) {
+			if (Boolean.TRUE.equals(especiales.get(0).getCerrado())) {
 				return new ArrayList<>();
 			}
 			List<InstalacionHorario> horarios = new ArrayList<>();
