@@ -137,20 +137,6 @@ class InstalacionTipoServiceImplTest {
 	}
 
 	@Test
-	void eliminarPorUuid() {
-		String uuid = "uuid-del";
-		InstalacionTipo model = new InstalacionTipo();
-		model.setActivo(true);
-
-		when(instalacionTipoRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid)).thenReturn(model);
-
-		instalacionTipoService.eliminar(uuid);
-
-		assertThat(model.isActivo()).isFalse();
-		verify(instalacionTipoRepository).saveAndFlush(model);
-	}
-
-	@Test
 	void buscarPorNombreEqualsIgnoreCase() {
 		String nombre = "Padel";
 		InstalacionTipo model = new InstalacionTipo();
@@ -203,7 +189,6 @@ class InstalacionTipoServiceImplTest {
 
 		when(instalacionTipoRepository.findAll(any(Specification.class))).thenReturn(listaModel);
 		when(instalacionTipoMapper.listModelToListDTO(listaModel)).thenReturn(listaDto);
-
 
 		verify(instalacionTipoRepository).findAll(any(Specification.class));
 	}

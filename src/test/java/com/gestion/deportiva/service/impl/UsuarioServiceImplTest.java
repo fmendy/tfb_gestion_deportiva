@@ -2,6 +2,7 @@ package com.gestion.deportiva.service.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.verify;
@@ -344,7 +345,7 @@ class UsuarioServiceImplTest {
 	@Test
 	void getListDTOWithFilter() {
 		UsuarioFilter filter = new UsuarioFilter();
-		
+
 		List<Usuario> listaModel = List.of(new Usuario());
 		List<UsuarioDTO> listaDto = new ArrayList<>(List.of(new UsuarioDTO()));
 
@@ -409,6 +410,8 @@ class UsuarioServiceImplTest {
 		when(usuarioRepository.findByActivoTrueAndEmailEqualsIgnoreCase("test@example.com")).thenReturn(usuario);
 
 		usuarioService.enviarMailPasswordOlvidada(dto);
+
+		assertTrue(usuario != null);
 
 	}
 

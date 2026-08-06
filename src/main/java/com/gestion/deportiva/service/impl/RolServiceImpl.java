@@ -72,13 +72,6 @@ public class RolServiceImpl implements RolService {
 		rolRepository.saveAndFlush(rol);
 	}
 
-	@Override
-	public void eliminar(String uuid) {
-		logger.info("Eliminando rol por ID: {}");
-		Rol rol = rolRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid);
-		rol.setActivo(false);
-		rolRepository.saveAndFlush(rol);
-	}
 
 	@Override
 	public RolDTO findByNombreEqualsIgnoreCase(String nombre) {

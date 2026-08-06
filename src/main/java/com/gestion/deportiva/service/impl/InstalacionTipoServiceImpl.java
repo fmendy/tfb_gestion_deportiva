@@ -81,14 +81,6 @@ public class InstalacionTipoServiceImpl implements InstalacionTipoService {
 		instalacionTipoRepository.saveAndFlush(model);
 	}
 
-	@Override
-	@CacheEvict(value = "instalacionTipos", allEntries = true)
-	public void eliminar(String uuid) {
-		logger.info("Eliminando InstalacionTipo por ID: {}");
-		InstalacionTipo model = instalacionTipoRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid);
-		model.setActivo(false);
-		instalacionTipoRepository.saveAndFlush(model);
-	}
 
 	@Override
 	public InstalacionTipoDTO findByNombreEqualsIgnoreCase(String nombre) {

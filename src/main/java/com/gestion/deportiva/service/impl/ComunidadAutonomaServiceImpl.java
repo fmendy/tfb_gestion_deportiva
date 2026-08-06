@@ -83,15 +83,6 @@ public class ComunidadAutonomaServiceImpl extends MaestraServiceImpl<ComunidadAu
 	}
 
 	@Override
-	@CacheEvict(value = "comunidades", allEntries = true)
-	public void eliminar(String uuid) {
-		logger.info("Eliminando ComunidadAutonoma por ID: {}");
-		ComunidadAutonoma model = comunidadAutonomaRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid);
-		model.setActivo(false);
-		comunidadAutonomaRepository.saveAndFlush(model);
-	}
-
-	@Override
 	public ComunidadAutonomaDTO findByNombreEqualsIgnoreCase(String nombre) {
 		return comunidadAutonomaMapper
 				.modelToDTO(comunidadAutonomaRepository.findByActivoTrueAndNombreEqualsIgnoreCase(nombre));

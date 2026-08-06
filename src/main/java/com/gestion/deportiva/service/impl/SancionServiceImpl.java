@@ -95,15 +95,7 @@ public class SancionServiceImpl implements SancionService {
 		model.setActivo(false);
 		sancionRepository.saveAndFlush(model);
 	}
-
-	@Override
-	public void eliminar(String uuid) {
-		logger.info("Eliminando Sancion por ID: {}");
-		Sancion model = sancionRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid);
-		model.setActivo(false);
-		sancionRepository.saveAndFlush(model);
-	}
-
+	
 	@Override
 	public List<SancionDTO> getListDTO() {
 		return sancionMapper.listModelToListDTO(sancionRepository.findByActivoTrue());

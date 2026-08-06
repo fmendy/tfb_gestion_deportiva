@@ -80,14 +80,6 @@ public class SancionTipoServiceImpl implements SancionTipoService {
 		sancionTipoRepository.saveAndFlush(model);
 	}
 
-	@Override
-	@CacheEvict(value = "comunidades", allEntries = true)
-	public void eliminar(String uuid) {
-		logger.info("Eliminando SancionTipo por ID: {}");
-		SancionTipo model = sancionTipoRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid);
-		model.setActivo(false);
-		sancionTipoRepository.saveAndFlush(model);
-	}
 
 	@Override
 	public SancionTipoDTO findByNombreEqualsIgnoreCase(String nombre) {

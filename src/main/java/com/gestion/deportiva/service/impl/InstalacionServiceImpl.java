@@ -168,12 +168,6 @@ public class InstalacionServiceImpl implements InstalacionService {
 
 	}
 
-	@Override
-	public void eliminar(String uuid) {
-		logger.info("Eliminando Instalacion por ID: {}");
-		Instalacion model = instalacionRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid);
-		eliminar(model.getId());
-	}
 
 	@Override
 	public InstalacionDTO findByNombreEqualsIgnoreCase(String nombre) {

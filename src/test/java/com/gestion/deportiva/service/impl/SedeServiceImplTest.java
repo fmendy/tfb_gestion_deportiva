@@ -140,24 +140,6 @@ class SedeServiceImplTest {
 	}
 
 	@Test
-	void eliminarPorUuid() {
-		String uuid = "uuid-del";
-		Sede model = new Sede();
-		model.setId(1L);
-		model.setActivo(true);
-
-		when(sedeRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid)).thenReturn(model);
-		when(sedeRepository.findByActivoTrueAndId(1L)).thenReturn(model);
-		when(reservaService.getListByFechaDesdeInstalacionSedeIdAndReservaEstados(any(LocalDate.now().getClass()),
-				any(Long.class), any(List.class))).thenReturn(List.of());
-
-		sedeService.eliminar(uuid);
-
-		assertThat(model.isActivo()).isFalse();
-		verify(sedeRepository).saveAndFlush(model);
-	}
-
-	@Test
 	void buscarPorNombreEqualsIgnoreCase() {
 		String nombre = "Sede Central";
 		Sede model = new Sede();

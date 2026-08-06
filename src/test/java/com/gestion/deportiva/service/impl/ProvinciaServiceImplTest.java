@@ -106,8 +106,7 @@ class ProvinciaServiceImplTest {
 		modelExistente.setId(10L);
 		ComunidadAutonoma comunidad = new ComunidadAutonoma();
 
-		when(provinciaRepository.findByActivoTrueAndUuidEqualsIgnoreCase("uuid-existente"))
-				.thenReturn(modelExistente);
+		when(provinciaRepository.findByActivoTrueAndUuidEqualsIgnoreCase("uuid-existente")).thenReturn(modelExistente);
 		when(comunidadAutonomaRepository.findByActivoTrueAndUuidEqualsIgnoreCase("com-uuid")).thenReturn(comunidad);
 		when(provinciaMapper.dtoToModel(dto, modelExistente, comunidad)).thenReturn(modelExistente);
 
@@ -144,20 +143,6 @@ class ProvinciaServiceImplTest {
 		when(provinciaRepository.findByActivoTrueAndId(id)).thenReturn(model);
 
 		provinciaService.eliminar(id);
-
-		assertThat(model.isActivo()).isFalse();
-		verify(provinciaRepository).saveAndFlush(model);
-	}
-
-	@Test
-	void eliminarPorUuid() {
-		String uuid = "uuid-del";
-		Provincia model = new Provincia();
-		model.setActivo(true);
-
-		when(provinciaRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid)).thenReturn(model);
-
-		provinciaService.eliminar(uuid);
 
 		assertThat(model.isActivo()).isFalse();
 		verify(provinciaRepository).saveAndFlush(model);
@@ -243,7 +228,8 @@ class ProvinciaServiceImplTest {
 	void obtenerListDTOConFiltro() {
 		ProvinciaFilter filter = new ProvinciaFilter();
 		List<Provincia> listaModel = List.of(new Provincia());
-		// Usamos un ArrayList mutable ya que Utils.sortByNombre intenta ordenar la lista devuelta
+		// Usamos un ArrayList mutable ya que Utils.sortByNombre intenta ordenar la
+		// lista devuelta
 		List<ProvinciaDTO> listaDto = new ArrayList<>(List.of(new ProvinciaDTO()));
 
 		when(provinciaRepository.findAll(any(Specification.class))).thenReturn(listaModel);

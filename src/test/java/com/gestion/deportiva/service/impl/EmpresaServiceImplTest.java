@@ -173,24 +173,6 @@ class EmpresaServiceImplTest {
 	}
 
 	@Test
-	void eliminarPorUuid() {
-		String uuid = "uuid-del";
-		Empresa empresa = new Empresa();
-		empresa.setId(1L);
-		empresa.setActivo(true);
-
-		when(empresaRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid)).thenReturn(empresa);
-		when(empresaRepository.findByActivoTrueAndId(1L)).thenReturn(empresa);
-		when(reservaService.getListByFechaDesdeInstalacionSedeEmpresaIdAndReservaEstados(
-				any(LocalDate.now().getClass()), eq(1L), any())).thenReturn(List.of());
-
-		empresaService.eliminar(uuid);
-
-		assertThat(empresa.isActivo()).isFalse();
-		verify(empresaRepository).saveAndFlush(empresa);
-	}
-
-	@Test
 	void buscarPorNombreEqualsIgnoreCase() {
 		String nombre = "Empresa Test";
 		Empresa empresa = new Empresa();

@@ -44,9 +44,9 @@ public class MiPerfilPasswordValidator
 			return false;
 		}
 
-		String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^A-Za-z\\d]).{8,}$";
+		String regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^A-Za-z\\d]).{8,}$";
 
-		if (!dto.getPassword().matches(passwordRegex)) {
+		if (!dto.getPassword().matches(regex)) {
 			context.buildConstraintViolationWithTemplate(
 					Utils.getMessage("error.validacion.cambio.password.nueva.complejidad")).addPropertyNode("password")
 					.addConstraintViolation();

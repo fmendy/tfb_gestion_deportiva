@@ -151,20 +151,6 @@ class InstalacionHorarioEspecialServiceImplTest {
 	}
 
 	@Test
-	void eliminarPorUuid() {
-		String uuid = "uuid-del";
-		InstalacionHorarioEspecial model = new InstalacionHorarioEspecial();
-		model.setActivo(true);
-
-		when(instalacionHorarioEspecialRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid)).thenReturn(model);
-
-		instalacionHorarioEspecialService.eliminar(uuid);
-
-		assertThat(model.isActivo()).isFalse();
-		verify(instalacionHorarioEspecialRepository).saveAndFlush(model);
-	}
-
-	@Test
 	void obtenerListDTO() {
 		List<InstalacionHorarioEspecial> listaModel = List.of(new InstalacionHorarioEspecial());
 		List<InstalacionHorarioEspecialDTO> listaDto = List.of(new InstalacionHorarioEspecialDTO());

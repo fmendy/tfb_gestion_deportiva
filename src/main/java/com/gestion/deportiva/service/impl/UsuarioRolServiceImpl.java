@@ -84,16 +84,6 @@ public class UsuarioRolServiceImpl implements UsuarioRolService {
 	}
 
 	@Override
-	public void eliminar(String uuid) {
-		logger.info("Eliminando UsuarioRol con UUID: {}", uuid);
-		UsuarioRol usuarioRol = usuarioRolRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid);
-		if (usuarioRol != null) {
-			usuarioRol.setActivo(false);
-			usuarioRolRepository.saveAndFlush(usuarioRol);
-		}
-	}
-
-	@Override
 	public List<UsuarioRolDTO> getListDTO() {
 		return usuarioRolMapper.listModelToListDTO(usuarioRolRepository.findByActivoTrue());
 	}

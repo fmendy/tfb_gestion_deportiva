@@ -20,8 +20,6 @@ public interface BaseService<T extends BaseDTO, F extends BaseEntityFilter> {
 
 	void eliminar(Long id);
 
-	void eliminar(String uuid);
-
 	List<T> getListDTO();
 
 	List<T> getListDTO(F filter);

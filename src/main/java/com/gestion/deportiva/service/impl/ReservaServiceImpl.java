@@ -155,14 +155,6 @@ public class ReservaServiceImpl implements ReservaService {
 	}
 
 	@Override
-	public void eliminar(String uuid) {
-		logger.info("Eliminando Reserva por ID: {}");
-		Reserva model = reservaRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid);
-		model.setActivo(false);
-		reservaRepository.saveAndFlush(model);
-	}
-
-	@Override
 	public List<ReservaDTO> getListDTO() {
 		return reservaMapper.listModelToListDTO(reservaRepository.findByActivoTrue());
 	}

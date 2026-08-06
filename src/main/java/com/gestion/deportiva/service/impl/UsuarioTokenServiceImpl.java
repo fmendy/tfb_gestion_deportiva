@@ -118,13 +118,6 @@ public class UsuarioTokenServiceImpl extends BaseServiceImpl<UsuarioTokenDTO, Us
 	}
 
 	@Override
-	public void eliminar(String uuid) {
-		logger.info("Eliminando UsuarioToken por ID: {}");
-		UsuarioToken model = usuarioTokenRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid);
-		eliminar(model.getId());
-	}
-
-	@Override
 	public List<UsuarioTokenDTO> getListDTO() {
 		return usuarioTokenMapper.listModelToListDTO(usuarioTokenRepository.findByActivoTrue());
 	}

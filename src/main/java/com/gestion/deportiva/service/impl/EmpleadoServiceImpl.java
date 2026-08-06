@@ -145,10 +145,6 @@ public class EmpleadoServiceImpl implements EmpleadoService {
 	}
 
 	@Override
-	public void eliminar(String uuid) {
-	}
-
-	@Override
 	public EmpleadoDTO findByNombreEqualsIgnoreCase(String nombre) {
 		return empleadoMapper.modelToDTO(usuarioRepository.findByActivoTrueAndNombreEqualsIgnoreCase(nombre));
 	}

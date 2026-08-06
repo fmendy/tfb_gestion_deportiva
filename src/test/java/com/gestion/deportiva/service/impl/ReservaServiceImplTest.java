@@ -135,8 +135,7 @@ class ReservaServiceImplTest {
 		Reserva modelExistente = new Reserva();
 		modelExistente.setId(10L);
 
-		when(reservaRepository.findByActivoTrueAndUuidEqualsIgnoreCase("uuid-existente"))
-				.thenReturn(modelExistente);
+		when(reservaRepository.findByActivoTrueAndUuidEqualsIgnoreCase("uuid-existente")).thenReturn(modelExistente);
 		when(reservaMapper.dtoToModel(dto, modelExistente)).thenReturn(modelExistente);
 
 		Long id = reservaService.guardar(dto);
@@ -144,7 +143,6 @@ class ReservaServiceImplTest {
 		assertThat(id).isEqualTo(10L);
 		verify(reservaRepository).saveAndFlush(modelExistente);
 	}
-
 
 	@Test
 	void obtenerPaginaMiReservaListadoDTOByFilter() {
@@ -172,20 +170,6 @@ class ReservaServiceImplTest {
 		when(reservaRepository.findByActivoTrueAndId(id)).thenReturn(model);
 
 		reservaService.eliminar(id);
-
-		assertThat(model.isActivo()).isFalse();
-		verify(reservaRepository).saveAndFlush(model);
-	}
-
-	@Test
-	void eliminarPorUuid() {
-		String uuid = "uuid-del";
-		Reserva model = new Reserva();
-		model.setActivo(true);
-
-		when(reservaRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid)).thenReturn(model);
-
-		reservaService.eliminar(uuid);
 
 		assertThat(model.isActivo()).isFalse();
 		verify(reservaRepository).saveAndFlush(model);
@@ -243,10 +227,11 @@ class ReservaServiceImplTest {
 		Long duracion = 60L;
 		Long instalacionId = 1L;
 
-		when(reservaRepository.findByActivoTrueAndFechaAndInstalacionIdAndReservaEstadoNombreIn(
-				eq(fecha), eq(instalacionId), any())).thenReturn(List.of());
+		when(reservaRepository.findByActivoTrueAndFechaAndInstalacionIdAndReservaEstadoNombreIn(eq(fecha),
+				eq(instalacionId), any())).thenReturn(List.of());
 
-		boolean disponible = reservaService.isFranjaHorariaDisponibleParaInstalacion(fecha, horaInicio, duracion, instalacionId);
+		boolean disponible = reservaService.isFranjaHorariaDisponibleParaInstalacion(fecha, horaInicio, duracion,
+				instalacionId);
 
 		assertThat(disponible).isTrue();
 	}
@@ -262,10 +247,11 @@ class ReservaServiceImplTest {
 		reservaExistente.setHoraInicio(LocalTime.of(10, 30));
 		reservaExistente.setHoraFin(LocalTime.of(11, 30));
 
-		when(reservaRepository.findByActivoTrueAndFechaAndInstalacionIdAndReservaEstadoNombreIn(
-				eq(fecha), eq(instalacionId), any())).thenReturn(List.of(reservaExistente));
+		when(reservaRepository.findByActivoTrueAndFechaAndInstalacionIdAndReservaEstadoNombreIn(eq(fecha),
+				eq(instalacionId), any())).thenReturn(List.of(reservaExistente));
 
-		boolean disponible = reservaService.isFranjaHorariaDisponibleParaInstalacion(fecha, horaInicio, duracion, instalacionId);
+		boolean disponible = reservaService.isFranjaHorariaDisponibleParaInstalacion(fecha, horaInicio, duracion,
+				instalacionId);
 
 		assertThat(disponible).isFalse();
 	}
@@ -277,10 +263,11 @@ class ReservaServiceImplTest {
 		Long duracion = 60L;
 		Long usuarioId = 1L;
 
-		when(reservaRepository.findByActivoTrueAndFechaAndUsuarioCreacionIdAndReservaEstadoNombreIn(
-				eq(fecha), eq(usuarioId), any())).thenReturn(List.of());
+		when(reservaRepository.findByActivoTrueAndFechaAndUsuarioCreacionIdAndReservaEstadoNombreIn(eq(fecha),
+				eq(usuarioId), any())).thenReturn(List.of());
 
-		boolean disponible = reservaService.isFranjaHorariaDisponibleParaUsuario(fecha, horaInicio, duracion, usuarioId);
+		boolean disponible = reservaService.isFranjaHorariaDisponibleParaUsuario(fecha, horaInicio, duracion,
+				usuarioId);
 
 		assertThat(disponible).isTrue();
 	}
@@ -329,8 +316,7 @@ class ReservaServiceImplTest {
 	void actualizarReservaEstadoLanzaExcepcionSiNoExiste() {
 		when(reservaRepository.findByActivoTrueAndId(99L)).thenReturn(null);
 
-		assertThatThrownBy(() -> reservaService.cancelarUsuario(99L))
-				.isInstanceOf(EntityNotFoundException.class)
+		assertThatThrownBy(() -> reservaService.cancelarUsuario(99L)).isInstanceOf(EntityNotFoundException.class)
 				.hasMessage("Reserva no encontrada");
 	}
 
@@ -339,12 +325,12 @@ class ReservaServiceImplTest {
 		LocalDate date = LocalDate.now();
 		Long instalacionId = 1L;
 
-		when(reservaRepository.findByActivoTrueAndFechaAndInstalacionIdAndReservaEstadoNombreIn(
-				eq(date), eq(instalacionId), any())).thenReturn(List.of());
+		when(reservaRepository.findByActivoTrueAndFechaAndInstalacionIdAndReservaEstadoNombreIn(eq(date),
+				eq(instalacionId), any())).thenReturn(List.of());
 
 		reservaService.fechaComprobarPorCambioDeHorarios(date, instalacionId);
 
-		verify(reservaRepository).findByActivoTrueAndFechaAndInstalacionIdAndReservaEstadoNombreIn(
-				eq(date), eq(instalacionId), any());
+		verify(reservaRepository).findByActivoTrueAndFechaAndInstalacionIdAndReservaEstadoNombreIn(eq(date),
+				eq(instalacionId), any());
 	}
 }

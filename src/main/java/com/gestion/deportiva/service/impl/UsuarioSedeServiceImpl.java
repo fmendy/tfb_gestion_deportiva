@@ -77,14 +77,6 @@ public class UsuarioSedeServiceImpl implements UsuarioSedeService {
 	}
 
 	@Override
-	public void eliminar(String uuid) {
-		logger.info("Eliminando UsuarioSede por ID: {}");
-		UsuarioSede model = usuarioSedeRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid);
-		model.setActivo(false);
-		usuarioSedeRepository.saveAndFlush(model);
-	}
-
-	@Override
 	public List<UsuarioSedeDTO> getListDTO() {
 		return usuarioSedeMapper.listModelToListDTO(usuarioSedeRepository.findByActivoTrue());
 	}

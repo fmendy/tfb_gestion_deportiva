@@ -136,20 +136,6 @@ class SancionTipoServiceImplTest {
 	}
 
 	@Test
-	void eliminarPorUuid() {
-		String uuid = "uuid-del";
-		SancionTipo model = new SancionTipo();
-		model.setActivo(true);
-
-		when(sancionTipoRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid)).thenReturn(model);
-
-		sancionTipoService.eliminar(uuid);
-
-		assertThat(model.isActivo()).isFalse();
-		verify(sancionTipoRepository).saveAndFlush(model);
-	}
-
-	@Test
 	void buscarPorNombreEqualsIgnoreCase() {
 		String nombre = "Leve";
 		SancionTipo model = new SancionTipo();
@@ -186,7 +172,6 @@ class SancionTipoServiceImplTest {
 
 		when(sancionTipoRepository.findByActivoTrue()).thenReturn(listaModel);
 		when(sancionTipoMapper.listModelToListDTO(listaModel)).thenReturn(listaDto);
-
 
 		verify(sancionTipoRepository).findByActivoTrue();
 	}

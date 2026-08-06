@@ -225,22 +225,6 @@ class UsuarioTokenServiceImplTest {
 	}
 
 	@Test
-	void eliminarPorUuid() {
-		String uuid = "uuid-del";
-		UsuarioToken model = new UsuarioToken();
-		model.setId(1L);
-		model.setActivo(true);
-
-		when(usuarioTokenRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid)).thenReturn(model);
-		when(usuarioTokenRepository.findByActivoTrueAndId(1L)).thenReturn(model);
-
-		usuarioTokenService.eliminar(uuid);
-
-		assertThat(model.isActivo()).isFalse();
-		verify(usuarioTokenRepository).saveAndFlush(model);
-	}
-
-	@Test
 	void obtenerListDTO() {
 		List<UsuarioToken> listaModel = List.of(new UsuarioToken());
 		List<UsuarioTokenDTO> listaDto = List.of(new UsuarioTokenDTO());

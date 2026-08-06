@@ -150,20 +150,6 @@ class InstalacionHorarioBloqueadoServiceImplTest {
 	}
 
 	@Test
-	void eliminarPorUuid() {
-		String uuid = "uuid-del";
-		InstalacionHorarioBloqueado model = new InstalacionHorarioBloqueado();
-		model.setActivo(true);
-
-		when(instalacionHorarioBloqueadoRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid)).thenReturn(model);
-
-		instalacionHorarioBloqueadoService.eliminar(uuid);
-
-		assertThat(model.isActivo()).isFalse();
-		verify(instalacionHorarioBloqueadoRepository).saveAndFlush(model);
-	}
-
-	@Test
 	void obtenerListDTO() {
 		List<InstalacionHorarioBloqueado> listaModel = List.of(new InstalacionHorarioBloqueado());
 		List<InstalacionHorarioBloqueadoDTO> listaDto = List.of(new InstalacionHorarioBloqueadoDTO());

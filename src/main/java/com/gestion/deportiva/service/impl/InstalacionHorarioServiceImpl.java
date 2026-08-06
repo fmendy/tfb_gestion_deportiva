@@ -86,13 +86,6 @@ public class InstalacionHorarioServiceImpl implements InstalacionHorarioService 
 		instalacionHorarioRepository.saveAndFlush(model);
 	}
 
-	@Override
-	public void eliminar(String uuid) {
-		logger.info("Eliminando InstalacionHorario por ID: {}");
-		InstalacionHorario model = instalacionHorarioRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid);
-		model.setActivo(false);
-		instalacionHorarioRepository.saveAndFlush(model);
-	}
 
 	@Override
 	public List<InstalacionHorarioDTO> getListDTO() {

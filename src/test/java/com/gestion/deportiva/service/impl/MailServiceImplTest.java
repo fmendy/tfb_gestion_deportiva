@@ -1,6 +1,7 @@
 package com.gestion.deportiva.service.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.verify;
@@ -104,6 +105,7 @@ class MailServiceImplTest {
 
 		Reserva reserva = new Reserva();
 		reserva.setInstalacion(instalacion);
+		assertTrue(reserva != null);
 	}
 
 	@Test

@@ -85,14 +85,6 @@ public class MunicipioServiceImpl implements MunicipioService {
 		municipioRepository.saveAndFlush(model);
 	}
 
-	@Override
-	@CacheEvict(value = "municipios", allEntries = true)
-	public void eliminar(String uuid) {
-		logger.info("Eliminando Municipio por ID: {}");
-		Municipio model = municipioRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid);
-		model.setActivo(false);
-		municipioRepository.saveAndFlush(model);
-	}
 
 	@Override
 	public MunicipioDTO findByNombreEqualsIgnoreCase(String nombre) {

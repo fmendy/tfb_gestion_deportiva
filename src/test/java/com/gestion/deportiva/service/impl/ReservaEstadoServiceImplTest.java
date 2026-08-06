@@ -136,20 +136,6 @@ class ReservaEstadoServiceImplTest {
 	}
 
 	@Test
-	void eliminarPorUuid() {
-		String uuid = "uuid-del";
-		ReservaEstado model = new ReservaEstado();
-		model.setActivo(true);
-
-		when(reservaEstadoRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid)).thenReturn(model);
-
-		reservaEstadoService.eliminar(uuid);
-
-		assertThat(model.isActivo()).isFalse();
-		verify(reservaEstadoRepository).saveAndFlush(model);
-	}
-
-	@Test
 	void buscarPorNombreEqualsIgnoreCase() {
 		String nombre = "Pendiente";
 		ReservaEstado model = new ReservaEstado();
@@ -186,7 +172,6 @@ class ReservaEstadoServiceImplTest {
 
 		when(reservaEstadoRepository.findByActivoTrue()).thenReturn(listaModel);
 		when(reservaEstadoMapper.listModelToListDTO(listaModel)).thenReturn(listaDto);
-
 
 		verify(reservaEstadoRepository).findByActivoTrue();
 	}

@@ -207,20 +207,6 @@ class SancionServiceImplTest {
 	}
 
 	@Test
-	void eliminarPorUuid() {
-		String uuid = "uuid-del";
-		Sancion model = new Sancion();
-		model.setActivo(true);
-
-		when(sancionRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid)).thenReturn(model);
-
-		sancionService.eliminar(uuid);
-
-		assertThat(model.isActivo()).isFalse();
-		verify(sancionRepository).saveAndFlush(model);
-	}
-
-	@Test
 	void obtenerListDTO() {
 		List<Sancion> listaModel = List.of(new Sancion());
 		List<SancionDTO> listaDto = List.of(new SancionDTO());

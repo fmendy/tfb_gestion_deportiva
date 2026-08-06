@@ -135,13 +135,6 @@ public class SedeServiceImpl implements SedeService {
 	}
 
 	@Override
-	public void eliminar(String uuid) {
-		logger.info("Eliminando Sede por ID: {}");
-		Sede model = sedeRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid);
-		eliminar(model.getId());
-	}
-
-	@Override
 	public SedeDTO findByNombreEqualsIgnoreCase(String nombre) {
 		return sedeMapper.modelToDTO(sedeRepository.findByActivoTrueAndNombreEqualsIgnoreCase(nombre));
 	}

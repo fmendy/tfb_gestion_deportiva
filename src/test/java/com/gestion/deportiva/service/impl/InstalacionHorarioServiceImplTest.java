@@ -143,20 +143,6 @@ class InstalacionHorarioServiceImplTest {
 	}
 
 	@Test
-	void eliminarPorUuid() {
-		String uuid = "uuid-del";
-		InstalacionHorario model = new InstalacionHorario();
-		model.setActivo(true);
-
-		when(instalacionHorarioRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid)).thenReturn(model);
-
-		instalacionHorarioService.eliminar(uuid);
-
-		assertThat(model.isActivo()).isFalse();
-		verify(instalacionHorarioRepository).saveAndFlush(model);
-	}
-
-	@Test
 	void obtenerListDTO() {
 		List<InstalacionHorario> listaModel = List.of(new InstalacionHorario());
 		List<InstalacionHorarioDTO> listaDto = List.of(new InstalacionHorarioDTO());
@@ -197,8 +183,7 @@ class InstalacionHorarioServiceImplTest {
 		InstalacionHorario model = new InstalacionHorario();
 		model.setActivo(true);
 
-		when(instalacionHorarioRepository.findByActivoTrueAndInstalacionId(instalacionId))
-				.thenReturn(List.of(model));
+		when(instalacionHorarioRepository.findByActivoTrueAndInstalacionId(instalacionId)).thenReturn(List.of(model));
 
 		instalacionHorarioService.borrarTodosLosHorarios(instalacionId);
 
@@ -211,15 +196,14 @@ class InstalacionHorarioServiceImplTest {
 		Long instalacionId = 1L;
 		InstalacionHorarioSemanalDTO dtoSemanal = new InstalacionHorarioSemanalDTO();
 		dtoSemanal.setInstalacionId(instalacionId);
-		
+
 		InstalacionHorarioDTO turnoDto = new InstalacionHorarioDTO();
 		turnoDto.setHoraInicio(LocalTime.of(8, 0));
 		turnoDto.setHoraFin(LocalTime.of(12, 0));
-		
+
 		dtoSemanal.getHorarios().put(1, List.of(turnoDto));
 
-		when(instalacionHorarioRepository.findByActivoTrueAndInstalacionId(instalacionId))
-				.thenReturn(List.of());
+		when(instalacionHorarioRepository.findByActivoTrueAndInstalacionId(instalacionId)).thenReturn(List.of());
 
 		instalacionHorarioService.guardar(dtoSemanal);
 
@@ -236,8 +220,7 @@ class InstalacionHorarioServiceImplTest {
 		model.setHoraInicio(LocalTime.of(8, 0));
 		model.setHoraFin(LocalTime.of(12, 0));
 
-		when(instalacionHorarioRepository.findByActivoTrueAndInstalacionId(instalacionId))
-				.thenReturn(List.of(model));
+		when(instalacionHorarioRepository.findByActivoTrueAndInstalacionId(instalacionId)).thenReturn(List.of(model));
 
 		InstalacionHorarioSemanalDTO resultado = instalacionHorarioService.cargarHorarioSemanal(instalacionId);
 

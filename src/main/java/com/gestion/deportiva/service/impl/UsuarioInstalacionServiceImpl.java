@@ -78,14 +78,6 @@ public class UsuarioInstalacionServiceImpl implements UsuarioInstalacionService 
 	}
 
 	@Override
-	public void eliminar(String uuid) {
-		logger.info("Eliminando UsuarioInstalacion por ID: {}");
-		UsuarioInstalacion model = usuarioInstalacionRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid);
-		model.setActivo(false);
-		usuarioInstalacionRepository.saveAndFlush(model);
-	}
-
-	@Override
 	public List<UsuarioInstalacionDTO> getListDTO() {
 		return usuarioInstalacionMapper.listModelToListDTO(usuarioInstalacionRepository.findByActivoTrue());
 	}

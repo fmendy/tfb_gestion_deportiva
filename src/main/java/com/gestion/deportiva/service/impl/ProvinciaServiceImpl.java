@@ -86,15 +86,6 @@ public class ProvinciaServiceImpl implements ProvinciaService {
 	}
 
 	@Override
-	@CacheEvict(value = "provincias", allEntries = true)
-	public void eliminar(String uuid) {
-		logger.info("Eliminando Provincia por ID: {}");
-		Provincia model = provinciaRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid);
-		model.setActivo(false);
-		provinciaRepository.saveAndFlush(model);
-	}
-
-	@Override
 	public ProvinciaDTO findByNombreEqualsIgnoreCase(String nombre) {
 		return provinciaMapper.modelToDTO(provinciaRepository.findByActivoTrueAndNombreEqualsIgnoreCase(nombre));
 	}

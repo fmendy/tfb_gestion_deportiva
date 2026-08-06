@@ -81,15 +81,6 @@ public class ReservaEstadoServiceImpl implements ReservaEstadoService {
 	}
 
 	@Override
-	@CacheEvict(value = "comunidades", allEntries = true)
-	public void eliminar(String uuid) {
-		logger.info("Eliminando ReservaEstado por ID: {}");
-		ReservaEstado model = reservaEstadoRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid);
-		model.setActivo(false);
-		reservaEstadoRepository.saveAndFlush(model);
-	}
-
-	@Override
 	public ReservaEstadoDTO findByNombreEqualsIgnoreCase(String nombre) {
 		return reservaEstadoMapper
 				.modelToDTO(reservaEstadoRepository.findByActivoTrueAndNombreEqualsIgnoreCase(nombre));

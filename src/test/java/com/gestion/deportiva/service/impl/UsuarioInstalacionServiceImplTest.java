@@ -135,20 +135,6 @@ class UsuarioInstalacionServiceImplTest {
 	}
 
 	@Test
-	void eliminarPorUuid() {
-		String uuid = "uuid-del";
-		UsuarioInstalacion model = new UsuarioInstalacion();
-		model.setActivo(true);
-
-		when(usuarioInstalacionRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid)).thenReturn(model);
-
-		usuarioInstalacionService.eliminar(uuid);
-
-		assertThat(model.isActivo()).isFalse();
-		verify(usuarioInstalacionRepository).saveAndFlush(model);
-	}
-
-	@Test
 	void obtenerListDTO() {
 		List<UsuarioInstalacion> listaModel = List.of(new UsuarioInstalacion());
 		List<UsuarioInstalacionDTO> listaDto = List.of(new UsuarioInstalacionDTO());

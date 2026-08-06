@@ -135,20 +135,6 @@ class RolServiceImplTest {
 	}
 
 	@Test
-	void eliminarPorUuid() {
-		String uuid = "uuid-del";
-		Rol model = new Rol();
-		model.setActivo(true);
-
-		when(rolRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid)).thenReturn(model);
-
-		rolService.eliminar(uuid);
-
-		assertThat(model.isActivo()).isFalse();
-		verify(rolRepository).saveAndFlush(model);
-	}
-
-	@Test
 	void buscarPorNombreEqualsIgnoreCase() {
 		String nombre = "Administrador";
 		Rol model = new Rol();
@@ -197,7 +183,6 @@ class RolServiceImplTest {
 
 		when(rolRepository.findAll(any(Specification.class))).thenReturn(listaModel);
 		when(rolMapper.listModelToListDTO(listaModel)).thenReturn(listaDto);
-
 
 		verify(rolRepository).findAll(any(Specification.class));
 	}

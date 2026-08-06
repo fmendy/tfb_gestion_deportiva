@@ -129,13 +129,6 @@ public class EmpresaServiceImpl implements EmpresaService {
 	}
 
 	@Override
-	public void eliminar(String uuid) {
-		logger.info("Eliminando Empresa por ID: {}");
-		Empresa model = empresaRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid);
-		eliminar(model.getId());
-	}
-
-	@Override
 	public EmpresaDTO findByNombreEqualsIgnoreCase(String nombre) {
 		return empresaMapper.modelToDTO(empresaRepository.findByActivoTrueAndNombreEqualsIgnoreCase(nombre));
 	}

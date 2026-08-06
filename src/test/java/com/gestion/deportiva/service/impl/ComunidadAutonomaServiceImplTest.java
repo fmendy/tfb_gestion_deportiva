@@ -136,20 +136,6 @@ class ComunidadAutonomaServiceImplTest {
 	}
 
 	@Test
-	void eliminarPorUuid() {
-		String uuid = "uuid-del";
-		ComunidadAutonoma model = new ComunidadAutonoma();
-		model.setActivo(true);
-
-		when(comunidadAutonomaRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid)).thenReturn(model);
-
-		comunidadAutonomaService.eliminar(uuid);
-
-		assertThat(model.isActivo()).isFalse();
-		verify(comunidadAutonomaRepository).saveAndFlush(model);
-	}
-
-	@Test
 	void buscarPorNombreEqualsIgnoreCase() {
 		String nombre = "Madrid";
 		ComunidadAutonoma model = new ComunidadAutonoma();

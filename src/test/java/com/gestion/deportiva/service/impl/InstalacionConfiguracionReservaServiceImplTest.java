@@ -75,9 +75,10 @@ class InstalacionConfiguracionReservaServiceImplTest {
 		InstalacionConfiguracionReservaDTO dto = new InstalacionConfiguracionReservaDTO();
 		dto.setUuid("uuid-nuevo");
 
-		when(instalacionConfiguracionReservaRepository.findByActivoTrueAndUuidEqualsIgnoreCase("uuid-nuevo")).thenReturn(null);
-		when(instalacionConfiguracionReservaMapper.dtoToModel(any(InstalacionConfiguracionReservaDTO.class), any(InstalacionConfiguracionReserva.class)))
-				.thenAnswer(invocation -> invocation.getArgument(1));
+		when(instalacionConfiguracionReservaRepository.findByActivoTrueAndUuidEqualsIgnoreCase("uuid-nuevo"))
+				.thenReturn(null);
+		when(instalacionConfiguracionReservaMapper.dtoToModel(any(InstalacionConfiguracionReservaDTO.class),
+				any(InstalacionConfiguracionReserva.class))).thenAnswer(invocation -> invocation.getArgument(1));
 
 		Long id = instalacionConfiguracionReservaService.guardar(dto);
 
@@ -109,12 +110,15 @@ class InstalacionConfiguracionReservaServiceImplTest {
 		Pageable pageable = PageRequest.of(0, 10);
 		InstalacionConfiguracionReserva model = new InstalacionConfiguracionReserva();
 		Page<InstalacionConfiguracionReserva> pageModel = new PageImpl<>(List.of(model));
-		Page<InstalacionConfiguracionReservaDTO> pageDto = new PageImpl<>(List.of(new InstalacionConfiguracionReservaDTO()));
+		Page<InstalacionConfiguracionReservaDTO> pageDto = new PageImpl<>(
+				List.of(new InstalacionConfiguracionReservaDTO()));
 
-		when(instalacionConfiguracionReservaRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(pageModel);
+		when(instalacionConfiguracionReservaRepository.findAll(any(Specification.class), any(Pageable.class)))
+				.thenReturn(pageModel);
 		when(instalacionConfiguracionReservaMapper.pageToPageDTO(pageModel)).thenReturn(pageDto);
 
-		Page<InstalacionConfiguracionReservaDTO> resultado = instalacionConfiguracionReservaService.getPageByFilter(filter, pageable);
+		Page<InstalacionConfiguracionReservaDTO> resultado = instalacionConfiguracionReservaService
+				.getPageByFilter(filter, pageable);
 
 		assertThat(resultado).isNotNull();
 		assertThat(resultado.getContent()).hasSize(1);
@@ -130,20 +134,6 @@ class InstalacionConfiguracionReservaServiceImplTest {
 		when(instalacionConfiguracionReservaRepository.findByActivoTrueAndId(id)).thenReturn(model);
 
 		instalacionConfiguracionReservaService.eliminar(id);
-
-		assertThat(model.isActivo()).isFalse();
-		verify(instalacionConfiguracionReservaRepository).saveAndFlush(model);
-	}
-
-	@Test
-	void eliminarPorUuid() {
-		String uuid = "uuid-del";
-		InstalacionConfiguracionReserva model = new InstalacionConfiguracionReserva();
-		model.setActivo(true);
-
-		when(instalacionConfiguracionReservaRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid)).thenReturn(model);
-
-		instalacionConfiguracionReservaService.eliminar(uuid);
 
 		assertThat(model.isActivo()).isFalse();
 		verify(instalacionConfiguracionReservaRepository).saveAndFlush(model);
@@ -190,10 +180,12 @@ class InstalacionConfiguracionReservaServiceImplTest {
 		InstalacionConfiguracionReserva model = new InstalacionConfiguracionReserva();
 		InstalacionConfiguracionReservaDTO dto = new InstalacionConfiguracionReservaDTO();
 
-		when(instalacionConfiguracionReservaRepository.findByActivoTrueAndInstalacionId(instalacionId)).thenReturn(model);
+		when(instalacionConfiguracionReservaRepository.findByActivoTrueAndInstalacionId(instalacionId))
+				.thenReturn(model);
 		when(instalacionConfiguracionReservaMapper.modelToDTO(model)).thenReturn(dto);
 
-		InstalacionConfiguracionReservaDTO resultado = instalacionConfiguracionReservaService.findDTOByInstalacionId(instalacionId);
+		InstalacionConfiguracionReservaDTO resultado = instalacionConfiguracionReservaService
+				.findDTOByInstalacionId(instalacionId);
 
 		assertThat(resultado).isEqualTo(dto);
 		verify(instalacionConfiguracionReservaRepository).findByActivoTrueAndInstalacionId(instalacionId);
@@ -204,9 +196,11 @@ class InstalacionConfiguracionReservaServiceImplTest {
 		Long instalacionId = 1L;
 		InstalacionConfiguracionReserva model = new InstalacionConfiguracionReserva();
 
-		when(instalacionConfiguracionReservaRepository.findByActivoTrueAndInstalacionId(instalacionId)).thenReturn(model);
+		when(instalacionConfiguracionReservaRepository.findByActivoTrueAndInstalacionId(instalacionId))
+				.thenReturn(model);
 
-		InstalacionConfiguracionReserva resultado = instalacionConfiguracionReservaService.findByInstalacionId(instalacionId);
+		InstalacionConfiguracionReserva resultado = instalacionConfiguracionReservaService
+				.findByInstalacionId(instalacionId);
 
 		assertThat(resultado).isEqualTo(model);
 		verify(instalacionConfiguracionReservaRepository).findByActivoTrueAndInstalacionId(instalacionId);
@@ -218,10 +212,12 @@ class InstalacionConfiguracionReservaServiceImplTest {
 		InstalacionConfiguracionReserva model = new InstalacionConfiguracionReserva();
 		InstalacionConfiguracionReservaDTO dto = new InstalacionConfiguracionReservaDTO();
 
-		when(instalacionConfiguracionReservaRepository.findByActivoTrueAndInstalacionId(instalacionId)).thenReturn(model);
+		when(instalacionConfiguracionReservaRepository.findByActivoTrueAndInstalacionId(instalacionId))
+				.thenReturn(model);
 		when(instalacionConfiguracionReservaMapper.modelToDTO(model)).thenReturn(dto);
 
-		InstalacionConfiguracionReservaDTO resultado = instalacionConfiguracionReservaService.findDTOByInstalacionIdOrNewIfEmpty(instalacionId);
+		InstalacionConfiguracionReservaDTO resultado = instalacionConfiguracionReservaService
+				.findDTOByInstalacionIdOrNewIfEmpty(instalacionId);
 
 		assertThat(resultado).isEqualTo(dto);
 	}
@@ -230,9 +226,11 @@ class InstalacionConfiguracionReservaServiceImplTest {
 	void findDTOByInstalacionIdOrNewIfEmptyCuandoNoExiste() {
 		Long instalacionId = 1L;
 
-		when(instalacionConfiguracionReservaRepository.findByActivoTrueAndInstalacionId(instalacionId)).thenReturn(null);
+		when(instalacionConfiguracionReservaRepository.findByActivoTrueAndInstalacionId(instalacionId))
+				.thenReturn(null);
 
-		InstalacionConfiguracionReservaDTO resultado = instalacionConfiguracionReservaService.findDTOByInstalacionIdOrNewIfEmpty(instalacionId);
+		InstalacionConfiguracionReservaDTO resultado = instalacionConfiguracionReservaService
+				.findDTOByInstalacionIdOrNewIfEmpty(instalacionId);
 
 		assertThat(resultado).isNotNull();
 		assertThat(resultado.getInstalacionId()).isEqualTo(instalacionId);
@@ -249,7 +247,8 @@ class InstalacionConfiguracionReservaServiceImplTest {
 		model.setDuracionMax(120L);
 		model.setIntervaloHorario(30L);
 
-		when(instalacionConfiguracionReservaRepository.findByActivoTrueAndInstalacionId(instalacionId)).thenReturn(model);
+		when(instalacionConfiguracionReservaRepository.findByActivoTrueAndInstalacionId(instalacionId))
+				.thenReturn(model);
 
 		boolean resultado = instalacionConfiguracionReservaService.isValid(instalacionId, hora, duracion);
 
@@ -267,7 +266,8 @@ class InstalacionConfiguracionReservaServiceImplTest {
 		model.setDuracionMax(120L);
 		model.setIntervaloHorario(30L);
 
-		when(instalacionConfiguracionReservaRepository.findByActivoTrueAndInstalacionId(instalacionId)).thenReturn(model);
+		when(instalacionConfiguracionReservaRepository.findByActivoTrueAndInstalacionId(instalacionId))
+				.thenReturn(model);
 
 		boolean resultado = instalacionConfiguracionReservaService.isValid(instalacionId, hora, duracion);
 
@@ -285,7 +285,8 @@ class InstalacionConfiguracionReservaServiceImplTest {
 		model.setDuracionMax(120L);
 		model.setIntervaloHorario(30L);
 
-		when(instalacionConfiguracionReservaRepository.findByActivoTrueAndInstalacionId(instalacionId)).thenReturn(model);
+		when(instalacionConfiguracionReservaRepository.findByActivoTrueAndInstalacionId(instalacionId))
+				.thenReturn(model);
 
 		boolean resultado = instalacionConfiguracionReservaService.isValid(instalacionId, hora, duracion);
 
@@ -303,7 +304,8 @@ class InstalacionConfiguracionReservaServiceImplTest {
 		model.setDuracionMax(120L);
 		model.setIntervaloHorario(30L);
 
-		when(instalacionConfiguracionReservaRepository.findByActivoTrueAndInstalacionId(instalacionId)).thenReturn(model);
+		when(instalacionConfiguracionReservaRepository.findByActivoTrueAndInstalacionId(instalacionId))
+				.thenReturn(model);
 
 		boolean resultado = instalacionConfiguracionReservaService.isValid(instalacionId, hora, duracion);
 
@@ -321,7 +323,8 @@ class InstalacionConfiguracionReservaServiceImplTest {
 		model.setDuracionMax(120L);
 		model.setIntervaloHorario(30L);
 
-		when(instalacionConfiguracionReservaRepository.findByActivoTrueAndInstalacionId(instalacionId)).thenReturn(model);
+		when(instalacionConfiguracionReservaRepository.findByActivoTrueAndInstalacionId(instalacionId))
+				.thenReturn(model);
 
 		boolean resultado = instalacionConfiguracionReservaService.isValid(instalacionId, hora, duracion);
 

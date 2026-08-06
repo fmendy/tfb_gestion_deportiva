@@ -160,20 +160,6 @@ class UsuarioEmpresaServiceImplTest {
 	}
 
 	@Test
-	void eliminarPorUuid() {
-		String uuid = "uuid-del";
-		UsuarioEmpresa model = new UsuarioEmpresa();
-		model.setActivo(true);
-
-		when(usuarioEmpresaRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid)).thenReturn(model);
-
-		usuarioEmpresaService.eliminar(uuid);
-
-		assertThat(model.isActivo()).isFalse();
-		verify(usuarioEmpresaRepository).saveAndFlush(model);
-	}
-
-	@Test
 	void obtenerListDTO() {
 		List<UsuarioEmpresa> listaModel = List.of(new UsuarioEmpresa());
 		List<UsuarioEmpresaDTO> listaDto = List.of(new UsuarioEmpresaDTO());

@@ -150,31 +150,6 @@ class UsuarioRolServiceImplTest {
 	}
 
 	@Test
-	void eliminarPorUuidEncontrado() {
-		String uuid = "uuid-del";
-		UsuarioRol model = new UsuarioRol();
-		model.setActivo(true);
-
-		when(usuarioRolRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid)).thenReturn(model);
-
-		usuarioRolService.eliminar(uuid);
-
-		assertThat(model.isActivo()).isFalse();
-		verify(usuarioRolRepository).saveAndFlush(model);
-	}
-
-	@Test
-	void eliminarPorUuidNoEncontrado() {
-		String uuid = "uuid-del";
-
-		when(usuarioRolRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid)).thenReturn(null);
-
-		usuarioRolService.eliminar(uuid);
-
-		verify(usuarioRolRepository).findByActivoTrueAndUuidEqualsIgnoreCase(uuid);
-	}
-
-	@Test
 	void obtenerListDTO() {
 		List<UsuarioRol> listaModel = List.of(new UsuarioRol());
 		List<UsuarioRolDTO> listaDto = List.of(new UsuarioRolDTO());

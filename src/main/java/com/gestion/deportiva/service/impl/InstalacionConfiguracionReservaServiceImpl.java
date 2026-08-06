@@ -79,14 +79,6 @@ public class InstalacionConfiguracionReservaServiceImpl implements InstalacionCo
 		instalacionConfiguracionReservaRepository.saveAndFlush(model);
 	}
 
-	@Override
-	public void eliminar(String uuid) {
-		logger.info("Eliminando InstalacionConfiguracionReserva por ID: {}");
-		InstalacionConfiguracionReserva model = instalacionConfiguracionReservaRepository
-				.findByActivoTrueAndUuidEqualsIgnoreCase(uuid);
-		model.setActivo(false);
-		instalacionConfiguracionReservaRepository.saveAndFlush(model);
-	}
 
 	@Override
 	public List<InstalacionConfiguracionReservaDTO> getListDTO() {

@@ -105,8 +105,7 @@ class MunicipioServiceImplTest {
 		modelExistente.setId(10L);
 		Provincia provincia = new Provincia();
 
-		when(municipioRepository.findByActivoTrueAndUuidEqualsIgnoreCase("uuid-existente"))
-				.thenReturn(modelExistente);
+		when(municipioRepository.findByActivoTrueAndUuidEqualsIgnoreCase("uuid-existente")).thenReturn(modelExistente);
 		when(provinciaRepository.findByActivoTrueAndUuidEqualsIgnoreCase("prov-uuid")).thenReturn(provincia);
 		when(municipioMapper.dtoToModel(dto, modelExistente, provincia)).thenReturn(modelExistente);
 
@@ -143,20 +142,6 @@ class MunicipioServiceImplTest {
 		when(municipioRepository.findByActivoTrueAndId(id)).thenReturn(model);
 
 		municipioService.eliminar(id);
-
-		assertThat(model.isActivo()).isFalse();
-		verify(municipioRepository).saveAndFlush(model);
-	}
-
-	@Test
-	void eliminarPorUuid() {
-		String uuid = "uuid-del";
-		Municipio model = new Municipio();
-		model.setActivo(true);
-
-		when(municipioRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid)).thenReturn(model);
-
-		municipioService.eliminar(uuid);
 
 		assertThat(model.isActivo()).isFalse();
 		verify(municipioRepository).saveAndFlush(model);
@@ -200,7 +185,6 @@ class MunicipioServiceImplTest {
 		when(municipioRepository.findByActivoTrue()).thenReturn(listaModel);
 		when(municipioMapper.listModelToListDTO(listaModel)).thenReturn(listaDto);
 
-
 		verify(municipioRepository).findByActivoTrue();
 	}
 
@@ -211,7 +195,6 @@ class MunicipioServiceImplTest {
 
 		when(municipioRepository.findByActivoTrueAndSede()).thenReturn(listaModel);
 		when(municipioMapper.listModelToListDTO(listaModel)).thenReturn(listaDto);
-
 
 		verify(municipioRepository).findByActivoTrueAndSede();
 	}
@@ -257,8 +240,6 @@ class MunicipioServiceImplTest {
 		assertThat(resultado).isNotNull();
 		verify(municipioRepository).findByActivoTrueAndProvinciaComunidadAutonomaId(comunidadId);
 	}
-
-
 
 	@Test
 	void canWriteYCanRead() {

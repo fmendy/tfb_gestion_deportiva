@@ -88,14 +88,6 @@ public class UsuarioEmpresaServiceImpl implements UsuarioEmpresaService {
 	}
 
 	@Override
-	public void eliminar(String uuid) {
-		logger.info("Eliminando UsuarioEmpresa por ID: {}");
-		UsuarioEmpresa model = usuarioEmpresaRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid);
-		model.setActivo(false);
-		usuarioEmpresaRepository.saveAndFlush(model);
-	}
-
-	@Override
 	public List<UsuarioEmpresaDTO> getListDTO() {
 		return usuarioEmpresaMapper.listModelToListDTO(usuarioEmpresaRepository.findByActivoTrue());
 	}

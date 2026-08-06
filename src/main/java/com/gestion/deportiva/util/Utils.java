@@ -13,7 +13,6 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.TimeZone;
@@ -159,13 +158,11 @@ public class Utils {
 		if (seed == null)
 			seed = String.valueOf(System.nanoTime());
 
-		// Usamos el hash del seed como semilla del Random
-		Random random = new Random(seed.hashCode());
+		int hash = seed.hashCode();
 
-		// Colores pastel: alto brillo y saturación baja
-		int red = (random.nextInt(128) + 127);
-		int green = (random.nextInt(128) + 127);
-		int blue = (random.nextInt(128) + 127);
+		int red = 127 + (hash & 0x7F);
+		int green = 127 + ((hash >> 8) & 0x7F);
+		int blue = 127 + ((hash >> 16) & 0x7F);
 
 		String background = String.format("#%02x%02x%02x", red, green, blue);
 
@@ -195,14 +192,17 @@ public class Utils {
 		}
 	}
 
+	private static final SecureRandom RANDOM = new SecureRandom();
+	private static final String CARACTERES = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
 	public static String generarStringAleatorio(int longitud) {
-		String CARACTERES = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-		SecureRandom RANDOM = new SecureRandom();
 		StringBuilder sb = new StringBuilder(longitud);
+
 		for (int i = 0; i < longitud; i++) {
 			int indice = RANDOM.nextInt(CARACTERES.length());
 			sb.append(CARACTERES.charAt(indice));
 		}
+
 		return sb.toString();
 	}
 

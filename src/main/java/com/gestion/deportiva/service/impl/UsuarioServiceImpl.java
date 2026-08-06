@@ -223,13 +223,6 @@ public class UsuarioServiceImpl extends MaestraServiceImpl<UsuarioDTO, UsuarioFi
 	}
 
 	@Override
-	public void eliminar(String uuid) {
-		Usuario usuario = usuarioRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid);
-		eliminar(usuario.getId());
-
-	}
-
-	@Override
 	public MiPerfilDTO getMiPerfilDTO() {
 		Usuario usuario = usuarioRepository.findByActivoTrueAndId(SecurityUtil.getCurrentUserId());
 		return usuarioMapper.modelToMiPerfilDTO(usuario);
@@ -312,10 +305,11 @@ public class UsuarioServiceImpl extends MaestraServiceImpl<UsuarioDTO, UsuarioFi
 	}
 
 	@Override
+	@Transactional
 	public void borrarMiCuenta() {
 		Usuario usuario = usuarioRepository.findByActivoTrueAndId(SecurityUtil.getCurrentUserId());
 		usuario.setNombre("usuario_eliminado");
-		usuario.setEmail("usuario_eliminado@tfb_carlemany_apm_2026.com");
+		usuario.setEmail(Utils.generarStringAleatorio(12) + "o@tfb_carlemany_apm_2026.com");
 		eliminar(SecurityUtil.getCurrentUserId());
 		reservaService.cancelarUsuarioFechaDesde(SecurityUtil.getCurrentUserId(), LocalDate.now());
 		usuarioRepository.saveAndFlush(usuario);
