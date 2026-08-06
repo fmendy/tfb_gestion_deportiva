@@ -1,6 +1,5 @@
 package com.gestion.deportiva.validation;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.StringUtils;
 
@@ -11,14 +10,16 @@ import com.gestion.deportiva.util.Utils;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class MiPerfilPasswordValidator
-		implements ConstraintValidator<MiPerfilPasswordValid, MiPerfilPasswordDTO> {
+public class MiPerfilPasswordValidator implements ConstraintValidator<MiPerfilPasswordValid, MiPerfilPasswordDTO> {
 
-	@Autowired
-	private UsuarioRepository repository;
+	private final UsuarioRepository repository;
 
-	@Autowired
-	private PasswordEncoder passwordEncoder;
+	private final PasswordEncoder passwordEncoder;
+
+	MiPerfilPasswordValidator(UsuarioRepository repository, PasswordEncoder passwordEncoder) {
+		this.repository = repository;
+		this.passwordEncoder = passwordEncoder;
+	}
 
 	@Override
 	public boolean isValid(MiPerfilPasswordDTO dto, ConstraintValidatorContext context) {

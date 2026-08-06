@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -29,14 +28,18 @@ public class InstalacionTipoServiceImpl implements InstalacionTipoService {
 
 	private static final Logger logger = LoggerFactory.getLogger(InstalacionTipoServiceImpl.class);
 
-	@Autowired
-	private InstalacionTipoRepository instalacionTipoRepository;
+	private final InstalacionTipoRepository instalacionTipoRepository;
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	@Autowired
-	private InstalacionTipoMapper instalacionTipoMapper;
+	private final InstalacionTipoMapper instalacionTipoMapper;
+
+	InstalacionTipoServiceImpl(InstalacionTipoRepository instalacionTipoRepository,
+			InstalacionTipoMapper instalacionTipoMapper) {
+		this.instalacionTipoRepository = instalacionTipoRepository;
+		this.instalacionTipoMapper = instalacionTipoMapper;
+	}
 
 	@Override
 	public InstalacionTipoDTO findById(Long id) {
@@ -80,7 +83,6 @@ public class InstalacionTipoServiceImpl implements InstalacionTipoService {
 		model.setActivo(false);
 		instalacionTipoRepository.saveAndFlush(model);
 	}
-
 
 	@Override
 	public InstalacionTipoDTO findByNombreEqualsIgnoreCase(String nombre) {

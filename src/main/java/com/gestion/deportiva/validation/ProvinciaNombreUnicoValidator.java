@@ -1,6 +1,5 @@
 package com.gestion.deportiva.validation;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
 import com.gestion.deportiva.dto.ProvinciaDTO;
@@ -12,8 +11,11 @@ import jakarta.validation.ConstraintValidatorContext;
 
 public class ProvinciaNombreUnicoValidator implements ConstraintValidator<ProvinciaNombreUnicoValid, ProvinciaDTO> {
 
-	@Autowired
-	private ProvinciaRepository provinciaRepository;
+	private final ProvinciaRepository provinciaRepository;
+
+	ProvinciaNombreUnicoValidator(ProvinciaRepository provinciaRepository) {
+		this.provinciaRepository = provinciaRepository;
+	}
 
 	@Override
 	public boolean isValid(ProvinciaDTO form, ConstraintValidatorContext context) {

@@ -2,7 +2,6 @@ package com.gestion.deportiva.controller.privado.empresa;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -32,7 +31,7 @@ import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping(value = "/privado/empresa")
-@PreAuthorize("hasAuthority('" + Constantes.Permiso.Localizacion.GESTION_EMPRESA+ "')")
+@PreAuthorize("hasAuthority('" + Constantes.Permiso.Localizacion.GESTION_EMPRESA + "')")
 public class PrivadoEmpresaController extends BaseController {
 
 	private static final Logger logger = LoggerFactory.getLogger(PrivadoEmpresaController.class);
@@ -45,8 +44,11 @@ public class PrivadoEmpresaController extends BaseController {
 
 	private static final String VIEW_FORM = "privado/empresa/form";
 
-	@Autowired
-	private EmpresaService empresaService;
+	private final EmpresaService empresaService;
+
+	PrivadoEmpresaController(EmpresaService empresaService) {
+		this.empresaService = empresaService;
+	}
 
 	@GetMapping("")
 	public ModelAndView search(Pageable pageable, HttpServletRequest request, EmpresaFilter filter) {

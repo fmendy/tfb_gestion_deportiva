@@ -1,6 +1,5 @@
 package com.gestion.deportiva.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,30 +12,31 @@ import com.gestion.deportiva.service.UsuarioService;
 import com.gestion.deportiva.util.Constantes;
 
 @Service
-public class RegistroEmpresaServiceImpl implements RegistroEmpresaService{
-	
-	@Autowired 
-	private EmpresaService empresaService;
-	
-    @Autowired 
-    private UsuarioService usuarioService;
-    
-    @Autowired 
-    private UsuarioEmpresaService usuarioEmpresaService;
-    
-    @Autowired 
-    private UsuarioRolService usuarioRolService;
-    
+public class RegistroEmpresaServiceImpl implements RegistroEmpresaService {
 
-    @Transactional(rollbackFor = Exception.class)
-    public void registrarEmpresa(EmpresaRegistroDTO dto) {
-        Long empresaId = empresaService.registrarEmpresa(dto);
-        dto.setPassword(dto.getPassword());
-        Long usuarioId = usuarioService.registrarUsuarioEmpresa(dto);
-        usuarioEmpresaService.asociarUsuarioEmpresa(usuarioId, empresaId);
-        usuarioRolService.asignarRol(usuarioId, Constantes.Rol.USUARIO_EMPRESA);
-    }
+	private final EmpresaService empresaService;
 
+	private final UsuarioService usuarioService;
 
+	private final UsuarioEmpresaService usuarioEmpresaService;
+
+	private final UsuarioRolService usuarioRolService;
+
+	RegistroEmpresaServiceImpl(EmpresaService empresaService, UsuarioService usuarioService,
+			UsuarioEmpresaService usuarioEmpresaService, UsuarioRolService usuarioRolService) {
+		this.empresaService = empresaService;
+		this.usuarioService = usuarioService;
+		this.usuarioEmpresaService = usuarioEmpresaService;
+		this.usuarioRolService = usuarioRolService;
+	}
+
+	@Transactional(rollbackFor = Exception.class)
+	public void registrarEmpresa(EmpresaRegistroDTO dto) {
+		Long empresaId = empresaService.registrarEmpresa(dto);
+		dto.setPassword(dto.getPassword());
+		Long usuarioId = usuarioService.registrarUsuarioEmpresa(dto);
+		usuarioEmpresaService.asociarUsuarioEmpresa(usuarioId, empresaId);
+		usuarioRolService.asignarRol(usuarioId, Constantes.Rol.USUARIO_EMPRESA);
+	}
 
 }

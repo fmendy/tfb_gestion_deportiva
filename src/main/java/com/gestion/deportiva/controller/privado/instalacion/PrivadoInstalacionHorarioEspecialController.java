@@ -2,7 +2,6 @@ package com.gestion.deportiva.controller.privado.instalacion;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -48,8 +47,11 @@ public class PrivadoInstalacionHorarioEspecialController extends BaseController 
 
 	private static final String VIEW_LIST = "privado/instalacion/horarioEspecialList";
 
-	@Autowired
-	private InstalacionHorarioEspecialService instalacionHorarioEspecialService;
+	private final InstalacionHorarioEspecialService instalacionHorarioEspecialService;
+
+	PrivadoInstalacionHorarioEspecialController(InstalacionHorarioEspecialService instalacionHorarioEspecialService) {
+		this.instalacionHorarioEspecialService = instalacionHorarioEspecialService;
+	}
 
 	@GetMapping("")
 	public ModelAndView search(@PathVariable Long idInstalacion, Pageable pageable, HttpServletRequest request,

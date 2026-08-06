@@ -7,10 +7,10 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import com.gestion.deportiva.dto.InstalacionHorarioDTO;
 import com.gestion.deportiva.dto.InstalacionHorarioSemanalDTO;
@@ -30,21 +30,25 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
 @Service
+@Validated
 public class InstalacionHorarioServiceImpl implements InstalacionHorarioService {
 
 	private static final Logger logger = LoggerFactory.getLogger(InstalacionHorarioServiceImpl.class);
 
-	@Autowired
-	private InstalacionHorarioRepository instalacionHorarioRepository;
+	private final InstalacionHorarioRepository instalacionHorarioRepository;
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	@Autowired
-	private InstalacionHorarioMapper instalacionHorarioMapper;
+	private final InstalacionHorarioMapper instalacionHorarioMapper;
 
-	@Autowired
-	private ReservaService reservaService;
+	private final ReservaService reservaService;
+
+	InstalacionHorarioServiceImpl(InstalacionHorarioRepository instalacionHorarioRepository, InstalacionHorarioMapper instalacionHorarioMapper, ReservaService reservaService) {
+		this.instalacionHorarioRepository = instalacionHorarioRepository;
+		this.instalacionHorarioMapper = instalacionHorarioMapper;
+		this.reservaService = reservaService;
+	}
 
 	@Override
 	public InstalacionHorarioDTO findById(Long id) {

@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -26,14 +25,19 @@ public class InstalacionConfiguracionReservaServiceImpl implements InstalacionCo
 
 	private static final Logger logger = LoggerFactory.getLogger(InstalacionConfiguracionReservaServiceImpl.class);
 
-	@Autowired
-	private InstalacionConfiguracionReservaRepository instalacionConfiguracionReservaRepository;
+	private final InstalacionConfiguracionReservaRepository instalacionConfiguracionReservaRepository;
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	@Autowired
-	private InstalacionConfiguracionReservaMapper instalacionConfiguracionReservaMapper;
+	private final InstalacionConfiguracionReservaMapper instalacionConfiguracionReservaMapper;
+
+	InstalacionConfiguracionReservaServiceImpl(
+			InstalacionConfiguracionReservaRepository instalacionConfiguracionReservaRepository,
+			InstalacionConfiguracionReservaMapper instalacionConfiguracionReservaMapper) {
+		this.instalacionConfiguracionReservaRepository = instalacionConfiguracionReservaRepository;
+		this.instalacionConfiguracionReservaMapper = instalacionConfiguracionReservaMapper;
+	}
 
 	@Override
 	public InstalacionConfiguracionReservaDTO findById(Long id) {
@@ -78,7 +82,6 @@ public class InstalacionConfiguracionReservaServiceImpl implements InstalacionCo
 		model.setActivo(false);
 		instalacionConfiguracionReservaRepository.saveAndFlush(model);
 	}
-
 
 	@Override
 	public List<InstalacionConfiguracionReservaDTO> getListDTO() {

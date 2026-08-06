@@ -1,6 +1,5 @@
 package com.gestion.deportiva.validation;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
 import com.gestion.deportiva.dto.MunicipioDTO;
@@ -13,8 +12,11 @@ import jakarta.validation.ConstraintValidatorContext;
 public class MunicipioCodigoIneUnicoValidator
 		implements ConstraintValidator<MunicipioCodigoIneUnicoValid, MunicipioDTO> {
 
-	@Autowired
-	private MunicipioRepository municipioRepository;
+	private final MunicipioRepository municipioRepository;
+
+	MunicipioCodigoIneUnicoValidator(MunicipioRepository municipioRepository) {
+		this.municipioRepository = municipioRepository;
+	}
 
 	@Override
 	public boolean isValid(MunicipioDTO form, ConstraintValidatorContext context) {

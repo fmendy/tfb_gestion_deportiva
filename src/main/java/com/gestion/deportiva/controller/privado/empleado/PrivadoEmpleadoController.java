@@ -2,7 +2,6 @@ package com.gestion.deportiva.controller.privado.empleado;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -54,23 +53,27 @@ public class PrivadoEmpleadoController extends BaseController {
 
 	private static final String MSG_EMPLEADO_PERMISOS = "Empleado {} intento acceder a una Empleado  sin permisos: usuario {}";
 
-	@Autowired
-	private EmpleadoService empleadoService;
+	private final EmpleadoService empleadoService;
 
-	@Autowired
-	private RolService rolService;
+	private final RolService rolService;
 
-	@Autowired
-	private EmpresaService empresaService;
+	private final EmpresaService empresaService;
 
-	@Autowired
-	private SedeService sedeService;
+	private final SedeService sedeService;
 
-	@Autowired
-	private InstalacionService instalacionService;
+	private final InstalacionService instalacionService;
 
-	@Autowired
-	private UsuarioService usuarioService;
+	private final UsuarioService usuarioService;
+
+	PrivadoEmpleadoController(EmpleadoService empleadoService, RolService rolService, EmpresaService empresaService,
+			SedeService sedeService, InstalacionService instalacionService, UsuarioService usuarioService) {
+		this.empleadoService = empleadoService;
+		this.rolService = rolService;
+		this.empresaService = empresaService;
+		this.sedeService = sedeService;
+		this.instalacionService = instalacionService;
+		this.usuarioService = usuarioService;
+	}
 
 	@GetMapping("")
 	public ModelAndView search(Pageable pageable, HttpServletRequest request, EmpleadoFilter filter) {
@@ -174,8 +177,9 @@ public class PrivadoEmpleadoController extends BaseController {
 	private ModelAndView buildDetailsForm(EmpleadoRegistroDTO dto) {
 		ModelAndView mav = new ModelAndView(VIEW_FORM);
 		mav.addObject("form", dto);
-		mav.addObject(Constantes.Breadcrumbs.BREADCRUMB, BreadcrumbBuilder.start().includeHome()
-				.add(Constantes.Breadcrumbs.GESTION_EMPLEADO , BASE_URL).add("breadcrumb.gestion.empleado.editar", null).build());
+		mav.addObject(Constantes.Breadcrumbs.BREADCRUMB,
+				BreadcrumbBuilder.start().includeHome().add(Constantes.Breadcrumbs.GESTION_EMPLEADO, BASE_URL)
+						.add("breadcrumb.gestion.empleado.editar", null).build());
 		addBasicModelDetails(mav, TITLE_PAGE, false);
 		return mav;
 	}

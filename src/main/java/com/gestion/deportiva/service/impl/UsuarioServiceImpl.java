@@ -1,13 +1,11 @@
 package com.gestion.deportiva.service.impl;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +17,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import com.gestion.deportiva.config.AuditorAwareContext;
 import com.gestion.deportiva.dto.ComboDTO;
@@ -57,45 +56,53 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.validation.Valid;
 
 @Service
+@Validated
 public class UsuarioServiceImpl extends MaestraServiceImpl<UsuarioDTO, UsuarioFilter>
 		implements UsuarioService, UserDetailsService {
 
-	@Autowired
-	private UsuarioRepository usuarioRepository;
+	private final UsuarioRepository usuarioRepository;
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	@Autowired
-	private UsuarioMapper usuarioMapper;
+	private final UsuarioMapper usuarioMapper;
 
-	@Autowired
 	@Qualifier("myPasswordEncoder")
-	private PasswordEncoder passwordEncoder;
+	private final PasswordEncoder passwordEncoder;
 
-	@Autowired
-	private UsuarioEmpresaRepository usuarioEmpresaRepository;
+	private final UsuarioEmpresaRepository usuarioEmpresaRepository;
 
-	@Autowired
-	private UsuarioSedeRepository usuarioSedeRepository;
+	private final UsuarioSedeRepository usuarioSedeRepository;
 
-	@Autowired
-	private UsuarioInstalacionRepository usuarioInstalacionRepository;
+	private final UsuarioInstalacionRepository usuarioInstalacionRepository;
 
-	@Autowired
-	private UsuarioRolRepository usuarioRolRepository;
+	private final UsuarioRolRepository usuarioRolRepository;
 
-	@Autowired
-	private RolRepository rolRepository;
+	private final RolRepository rolRepository;
 
-	@Autowired
-	private MailService mailService;
+	private final MailService mailService;
 
-	@Autowired
-	private UsuarioTokenService usuarioTokenService;
+	private final UsuarioTokenService usuarioTokenService;
 
-	@Autowired
-	private ReservaService reservaService;
+	private final ReservaService reservaService;
+
+	UsuarioServiceImpl(UsuarioRepository usuarioRepository, UsuarioMapper usuarioMapper,
+			PasswordEncoder passwordEncoder, UsuarioEmpresaRepository usuarioEmpresaRepository,
+			UsuarioSedeRepository usuarioSedeRepository, UsuarioInstalacionRepository usuarioInstalacionRepository,
+			UsuarioRolRepository usuarioRolRepository, RolRepository rolRepository, MailService mailService,
+			UsuarioTokenService usuarioTokenService, ReservaService reservaService) {
+		this.usuarioRepository = usuarioRepository;
+		this.usuarioMapper = usuarioMapper;
+		this.passwordEncoder = passwordEncoder;
+		this.usuarioEmpresaRepository = usuarioEmpresaRepository;
+		this.usuarioSedeRepository = usuarioSedeRepository;
+		this.usuarioInstalacionRepository = usuarioInstalacionRepository;
+		this.usuarioRolRepository = usuarioRolRepository;
+		this.rolRepository = rolRepository;
+		this.mailService = mailService;
+		this.usuarioTokenService = usuarioTokenService;
+		this.reservaService = reservaService;
+	}
 
 	@Override
 	public Page<UsuarioDTO> getPageByFilter(UsuarioFilter filter, Pageable pageable) {

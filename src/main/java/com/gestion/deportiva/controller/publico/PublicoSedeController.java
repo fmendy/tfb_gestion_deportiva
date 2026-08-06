@@ -2,7 +2,6 @@ package com.gestion.deportiva.controller.publico;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,17 +25,13 @@ public class PublicoSedeController extends BaseController {
 
 	private static final Logger logger = LoggerFactory.getLogger(PublicoSedeController.class);
 
-	@Autowired
-	private SedeService sedeService;
+	private final SedeService sedeService;
 
-	@Autowired
-	private ComunidadAutonomaService comunidadAutonomaService;
+	private final ComunidadAutonomaService comunidadAutonomaService;
 
-	@Autowired
-	private ProvinciaService provinciaService;
+	private final ProvinciaService provinciaService;
 
-	@Autowired
-	private MunicipioService municipioService;
+	private final MunicipioService municipioService;
 
 	private static final String TITLE_PAGE = "page.title.publico.sede";
 
@@ -45,6 +40,14 @@ public class PublicoSedeController extends BaseController {
 	private static final String VIEW_MAP = "publico/sede/mapaList";
 
 	private static final String VIEW_FORM = "publico/sede/form";
+
+	PublicoSedeController(SedeService sedeService, ComunidadAutonomaService comunidadAutonomaService,
+			ProvinciaService provinciaService, MunicipioService municipioService) {
+		this.sedeService = sedeService;
+		this.comunidadAutonomaService = comunidadAutonomaService;
+		this.provinciaService = provinciaService;
+		this.municipioService = municipioService;
+	}
 
 	@GetMapping("/mapa")
 	public ModelAndView mapa(Pageable pageable, HttpServletRequest request, SedePublicoFilter filter) {

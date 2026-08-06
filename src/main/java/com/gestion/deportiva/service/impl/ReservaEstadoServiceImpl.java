@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -29,14 +28,17 @@ public class ReservaEstadoServiceImpl implements ReservaEstadoService {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReservaEstadoServiceImpl.class);
 
-	@Autowired
-	private ReservaEstadoRepository reservaEstadoRepository;
+	private final ReservaEstadoRepository reservaEstadoRepository;
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	@Autowired
-	private ReservaEstadoMapper reservaEstadoMapper;
+	private final ReservaEstadoMapper reservaEstadoMapper;
+
+	ReservaEstadoServiceImpl(ReservaEstadoRepository reservaEstadoRepository, ReservaEstadoMapper reservaEstadoMapper) {
+		this.reservaEstadoRepository = reservaEstadoRepository;
+		this.reservaEstadoMapper = reservaEstadoMapper;
+	}
 
 	@Override
 	public ReservaEstadoDTO findById(Long id) {

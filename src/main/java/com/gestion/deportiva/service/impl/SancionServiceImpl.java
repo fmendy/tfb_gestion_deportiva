@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -31,20 +30,24 @@ public class SancionServiceImpl implements SancionService {
 
 	private static final Logger logger = LoggerFactory.getLogger(SancionServiceImpl.class);
 
-	@Autowired
-	private SancionRepository sancionRepository;
+	private final SancionRepository sancionRepository;
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	@Autowired
-	private SancionMapper sancionMapper;
+	private final SancionMapper sancionMapper;
 
-	@Autowired
-	private ReservaRepository reservaRepository;
+	private final ReservaRepository reservaRepository;
 
-	@Autowired
-	private ReservaService reservaService;
+	private final ReservaService reservaService;
+
+	SancionServiceImpl(SancionRepository sancionRepository, SancionMapper sancionMapper,
+			ReservaRepository reservaRepository, ReservaService reservaService) {
+		this.sancionRepository = sancionRepository;
+		this.sancionMapper = sancionMapper;
+		this.reservaRepository = reservaRepository;
+		this.reservaService = reservaService;
+	}
 
 	@Override
 	public SancionDTO findById(Long id) {
@@ -95,7 +98,7 @@ public class SancionServiceImpl implements SancionService {
 		model.setActivo(false);
 		sancionRepository.saveAndFlush(model);
 	}
-	
+
 	@Override
 	public List<SancionDTO> getListDTO() {
 		return sancionMapper.listModelToListDTO(sancionRepository.findByActivoTrue());

@@ -2,7 +2,6 @@ package com.gestion.deportiva.controller.publico;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -37,11 +36,14 @@ public class PublicoRegistroController extends BaseController {
 
 	private static final String PAGE_TITLE_USUARIO = "page.title.registro.usuario";
 
-	@Autowired
-	private RegistroEmpresaService registroEmpresaService;
-	
-	@Autowired
-	private UsuarioService usuarioService;
+	private final RegistroEmpresaService registroEmpresaService;
+
+	private final UsuarioService usuarioService;
+
+	PublicoRegistroController(RegistroEmpresaService registroEmpresaService, UsuarioService usuarioService) {
+		this.registroEmpresaService = registroEmpresaService;
+		this.usuarioService = usuarioService;
+	}
 
 	@GetMapping(value = "/usuario")
 	public ModelAndView login() {

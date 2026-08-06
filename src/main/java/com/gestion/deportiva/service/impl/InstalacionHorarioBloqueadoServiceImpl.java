@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -29,17 +28,21 @@ public class InstalacionHorarioBloqueadoServiceImpl implements InstalacionHorari
 
 	private static final Logger logger = LoggerFactory.getLogger(InstalacionHorarioBloqueadoServiceImpl.class);
 
-	@Autowired
-	private InstalacionHorarioBloqueadoRepository instalacionHorarioBloqueadoRepository;
+	private final InstalacionHorarioBloqueadoRepository instalacionHorarioBloqueadoRepository;
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	@Autowired
-	private InstalacionHorarioBloqueadoMapper instalacionHorarioBloqueadoMapper;
+	private final InstalacionHorarioBloqueadoMapper instalacionHorarioBloqueadoMapper;
 
-	@Autowired
-	private ReservaService reservaService;
+	private final ReservaService reservaService;
+
+	InstalacionHorarioBloqueadoServiceImpl(InstalacionHorarioBloqueadoRepository instalacionHorarioBloqueadoRepository,
+			InstalacionHorarioBloqueadoMapper instalacionHorarioBloqueadoMapper, ReservaService reservaService) {
+		this.instalacionHorarioBloqueadoRepository = instalacionHorarioBloqueadoRepository;
+		this.instalacionHorarioBloqueadoMapper = instalacionHorarioBloqueadoMapper;
+		this.reservaService = reservaService;
+	}
 
 	@Override
 	public InstalacionHorarioBloqueadoDTO findById(Long id) {
@@ -85,7 +88,6 @@ public class InstalacionHorarioBloqueadoServiceImpl implements InstalacionHorari
 		model.setActivo(false);
 		instalacionHorarioBloqueadoRepository.saveAndFlush(model);
 	}
-
 
 	@Override
 	public List<InstalacionHorarioBloqueadoDTO> getListDTO() {

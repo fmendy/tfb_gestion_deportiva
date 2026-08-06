@@ -2,7 +2,6 @@ package com.gestion.deportiva.controller.privado.sede;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -50,20 +49,25 @@ public class PrivadoSedeController extends BaseController {
 
 	private static final String VIEW_FORM = "privado/sede/form";
 
-	@Autowired
-	private EmpresaService empresaService;
+	private final EmpresaService empresaService;
 
-	@Autowired
-	private SedeService sedeService;
+	private final SedeService sedeService;
 
-	@Autowired
-	private ComunidadAutonomaService comunidadAutonomaService;
+	private final ComunidadAutonomaService comunidadAutonomaService;
 
-	@Autowired
-	private ProvinciaService provinciaService;
+	private final ProvinciaService provinciaService;
 
-	@Autowired
-	private MunicipioService municipioService;
+	private final MunicipioService municipioService;
+
+	PrivadoSedeController(EmpresaService empresaService, SedeService sedeService,
+			ComunidadAutonomaService comunidadAutonomaService, ProvinciaService provinciaService,
+			MunicipioService municipioService) {
+		this.empresaService = empresaService;
+		this.sedeService = sedeService;
+		this.comunidadAutonomaService = comunidadAutonomaService;
+		this.provinciaService = provinciaService;
+		this.municipioService = municipioService;
+	}
 
 	@GetMapping("")
 	public ModelAndView search(Pageable pageable, HttpServletRequest request, SedeFilter filter) {
@@ -155,8 +159,9 @@ public class PrivadoSedeController extends BaseController {
 		mav.addObject("listProvincias", provinciaService.getListDTOByComunidadAutonomaId(dto.getComunidadAutonomaId()));
 		mav.addObject("listMunicipios", municipioService
 				.getListDTOByComunidadAutonomaIdOrProvinciaId(dto.getComunidadAutonomaId(), dto.getProvinciaId()));
-		mav.addObject(Constantes.Breadcrumbs.BREADCRUMB, BreadcrumbBuilder.start().includeHome().add(Constantes.Breadcrumbs.GESTION_SEDE, BASE_URL)
-				.add("breadcrumb.gestion.sede.editar", null).build());
+		mav.addObject(Constantes.Breadcrumbs.BREADCRUMB,
+				BreadcrumbBuilder.start().includeHome().add(Constantes.Breadcrumbs.GESTION_SEDE, BASE_URL)
+						.add("breadcrumb.gestion.sede.editar", null).build());
 		addBasicModelDetails(mav, TITLE_PAGE, false);
 		return mav;
 	}
@@ -167,8 +172,8 @@ public class PrivadoSedeController extends BaseController {
 		mav.addObject("filter", filter);
 		mav.addObject("listEmpresas", empresaService.getListDTO(new EmpresaFilter()));
 		mav.addObject("url", SedeUtil.cleanUrlPageFilter(filter, request.getRequestURI()));
-		mav.addObject(Constantes.Breadcrumbs.BREADCRUMB ,
-				BreadcrumbBuilder.start().includeHome().add(Constantes.Breadcrumbs.GESTION_SEDE , null).build());
+		mav.addObject(Constantes.Breadcrumbs.BREADCRUMB,
+				BreadcrumbBuilder.start().includeHome().add(Constantes.Breadcrumbs.GESTION_SEDE, null).build());
 		mav.addObject("listComunidades", comunidadAutonomaService.getListDTO());
 		mav.addObject("listProvincias",
 				provinciaService.getListDTOByComunidadAutonomaId(filter.getComunidadAutonomaId()));

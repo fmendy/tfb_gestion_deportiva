@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -29,14 +28,17 @@ public class SancionTipoServiceImpl implements SancionTipoService {
 
 	private static final Logger logger = LoggerFactory.getLogger(SancionTipoServiceImpl.class);
 
-	@Autowired
-	private SancionTipoRepository sancionTipoRepository;
+	private final SancionTipoRepository sancionTipoRepository;
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	@Autowired
-	private SancionTipoMapper sancionTipoMapper;
+	private final SancionTipoMapper sancionTipoMapper;
+
+	SancionTipoServiceImpl(SancionTipoRepository sancionTipoRepository, SancionTipoMapper sancionTipoMapper) {
+		this.sancionTipoRepository = sancionTipoRepository;
+		this.sancionTipoMapper = sancionTipoMapper;
+	}
 
 	@Override
 	public SancionTipoDTO findById(Long id) {
@@ -79,7 +81,6 @@ public class SancionTipoServiceImpl implements SancionTipoService {
 		model.setActivo(false);
 		sancionTipoRepository.saveAndFlush(model);
 	}
-
 
 	@Override
 	public SancionTipoDTO findByNombreEqualsIgnoreCase(String nombre) {

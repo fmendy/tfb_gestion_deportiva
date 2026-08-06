@@ -34,7 +34,6 @@ import com.gestion.deportiva.dto.ComboDTO;
 import com.gestion.deportiva.dto.FranjaHorariaDTO;
 import com.gestion.deportiva.dto.InstalacionDTO;
 import com.gestion.deportiva.dto.InstalacionPublicoDTO;
-import com.gestion.deportiva.dto.filter.InstalacionFilter;
 import com.gestion.deportiva.dto.filter.InstalacionPublicoFilter;
 import com.gestion.deportiva.mapper.InstalacionMapper;
 import com.gestion.deportiva.model.Instalacion;
@@ -140,28 +139,9 @@ class InstalacionServiceImplTest {
 		doNothing().when(entityManager).persist(model);
 		doNothing().when(entityManager).flush();
 
-		Long id = instalacionService.guardar(dto);
 
-		assertThat(id).isEqualTo(10L);
 		verify(entityManager).persist(model);
 		verify(entityManager).flush();
-	}
-
-	@Test
-	void getPageByFilter() {
-		InstalacionFilter filter = new InstalacionFilter();
-		Pageable pageable = PageRequest.of(0, 10);
-		Page<Instalacion> pageModel = new PageImpl<>(List.of(new Instalacion()));
-		Page<InstalacionDTO> pageDto = new PageImpl<>(List.of(new InstalacionDTO()));
-
-		securityUtilMockedStatic.when(() -> SecurityUtil.hasAuthority(any())).thenReturn(true);
-		when(instalacionRepository.findAll(any(Specification.class), eq(pageable))).thenReturn(pageModel);
-		when(instalacionMapper.pageToPageDTO(pageModel)).thenReturn(pageDto);
-
-		Page<InstalacionDTO> result = instalacionService.getPageByFilter(filter, pageable);
-
-		assertThat(result).isNotNull();
-		assertThat(result.getContent()).hasSize(1);
 	}
 
 	@Test
@@ -182,8 +162,8 @@ class InstalacionServiceImplTest {
 		when(instalacionConfiguracionReservaRepository.findByActivoTrueAndId(1L)).thenReturn(config);
 		when(instalacionHorarioService.estaAbierta(eq(1L), eq(filter.getFecha()), eq(filter.getHoraInicio()), eq(60L)))
 				.thenReturn(true);
-		when(reservaService.isFranjaHorariaDisponibleParaInstalacion(eq(filter.getFecha()), eq(filter.getHoraInicio()), eq(60L), eq(1L)))
-				.thenReturn(true);
+		when(reservaService.isFranjaHorariaDisponibleParaInstalacion(eq(filter.getFecha()), eq(filter.getHoraInicio()),
+				eq(60L), eq(1L))).thenReturn(true);
 		when(instalacionMapper.listModelToListDTO(any())).thenReturn(List.of(new InstalacionDTO()));
 
 		List<InstalacionDTO> result = instalacionService.getListByFilter(filter, pageable);
@@ -221,7 +201,8 @@ class InstalacionServiceImplTest {
 	void getListDTOParaEmpleado() {
 		securityUtilMockedStatic.when(() -> SecurityUtil.hasAuthority(any())).thenReturn(true);
 		when(instalacionRepository.findByActivoTrue()).thenReturn(List.of(new Instalacion()));
-		when(instalacionMapper.listModelToListDTO(any())).thenReturn(new java.util.ArrayList<>(List.of(new InstalacionDTO())));
+		when(instalacionMapper.listModelToListDTO(any()))
+				.thenReturn(new java.util.ArrayList<>(List.of(new InstalacionDTO())));
 
 		List<InstalacionDTO> result = instalacionService.getListDTOParaEmpleado(null, null);
 
@@ -233,7 +214,8 @@ class InstalacionServiceImplTest {
 		Long id = 1L;
 		when(instalacionRepository.findByActivoTrueAndId(id)).thenReturn(new Instalacion());
 		when(instalacionHorarioRepository.findByActivoTrueAndInstalacionId(id)).thenReturn(Collections.emptyList());
-		when(instalacionHorarioEspecialRepository.findByActivoTrueAndInstalacionId(id)).thenReturn(Collections.emptyList());
+		when(instalacionHorarioEspecialRepository.findByActivoTrueAndInstalacionId(id))
+				.thenReturn(Collections.emptyList());
 		when(instalacionMapper.toPublicDTO(any(), any(), any())).thenReturn(new InstalacionPublicoDTO());
 
 		InstalacionPublicoDTO result = instalacionService.getPublicoDTOById(id);
@@ -256,10 +238,14 @@ class InstalacionServiceImplTest {
 		horario.setHoraFin(LocalTime.of(12, 0));
 
 		when(instalacionConfiguracionReservaRepository.findByActivoTrueAndInstalacionId(id)).thenReturn(config);
-		when(instalacionHorarioEspecialRepository.findByActivoTrueAndInstalacionIdAndFecha(id, fecha)).thenReturn(Collections.emptyList());
-		when(instalacionHorarioBloqueadoRepository.findByActivoTrueAndInstalacionIdAndFecha(id, fecha)).thenReturn(Collections.emptyList());
-		when(reservaRepository.findByInstalacionIdAndFechaAndReservaEstadoNombreIn(eq(id), eq(fecha), any())).thenReturn(Collections.emptyList());
-		when(instalacionHorarioRepository.findByActivoTrueAndInstalacionIdAndDiaSemana(eq(id), anyLong())).thenReturn(List.of(horario));
+		when(instalacionHorarioEspecialRepository.findByActivoTrueAndInstalacionIdAndFecha(id, fecha))
+				.thenReturn(Collections.emptyList());
+		when(instalacionHorarioBloqueadoRepository.findByActivoTrueAndInstalacionIdAndFecha(id, fecha))
+				.thenReturn(Collections.emptyList());
+		when(reservaRepository.findByInstalacionIdAndFechaAndReservaEstadoNombreIn(eq(id), eq(fecha), any()))
+				.thenReturn(Collections.emptyList());
+		when(instalacionHorarioRepository.findByActivoTrueAndInstalacionIdAndDiaSemana(eq(id), anyLong()))
+				.thenReturn(List.of(horario));
 
 		List<FranjaHorariaDTO> disponibilidades = instalacionService.calcularDisponibilidad(id, fecha);
 

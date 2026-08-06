@@ -2,7 +2,6 @@ package com.gestion.deportiva.controller.privado.sancion;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -48,11 +47,14 @@ public class PrivadoSancionController extends BaseController {
 
 	private static final String VIEW_LIST = "privado/sancion/list";
 
-	@Autowired
-	private SancionService sancionService;
+	private final SancionService sancionService;
 
-	@Autowired
-	private SancionTipoService sancionTipoService;
+	private final SancionTipoService sancionTipoService;
+
+	PrivadoSancionController(SancionService sancionService, SancionTipoService sancionTipoService) {
+		this.sancionService = sancionService;
+		this.sancionTipoService = sancionTipoService;
+	}
 
 	@GetMapping("/crear")
 	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Sancion.GESTION_SANCION_INSTALACION + "')")
@@ -95,7 +97,6 @@ public class PrivadoSancionController extends BaseController {
 		return buildListView(filter, pageable, request);
 	}
 
-	
 	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Sancion.GESTION_SANCION_PROPIA + "')")
 	@GetMapping("/missanciones")
 	public ModelAndView searchMisSanciones(Pageable pageable, HttpServletRequest request, SancionFilter filter) {
@@ -104,7 +105,6 @@ public class PrivadoSancionController extends BaseController {
 		return buildListView(filter, pageable, request);
 	}
 
-	
 	@GetMapping("/{id}/anular")
 	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Sancion.GESTION_SANCION_INSTALACION + "')")
 	public ModelAndView aprobar(@PathVariable Long id, RedirectAttributes redirectAttributes) throws PermisoException {

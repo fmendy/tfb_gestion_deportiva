@@ -2,7 +2,6 @@ package com.gestion.deportiva.controller.publico;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,14 +17,18 @@ import com.gestion.deportiva.service.SedeService;
 @Controller
 public class PublicoRestController {
 
-	@Autowired
-	private ProvinciaService provinciaService;
+	private final ProvinciaService provinciaService;
 
-	@Autowired
-	private MunicipioService municipioService;
-	
-	@Autowired
-	private SedeService sedeService;
+	private final MunicipioService municipioService;
+
+	private final SedeService sedeService;
+
+	PublicoRestController(ProvinciaService provinciaService, MunicipioService municipioService,
+			SedeService sedeService) {
+		this.provinciaService = provinciaService;
+		this.municipioService = municipioService;
+		this.sedeService = sedeService;
+	}
 
 	@GetMapping("/api/provincias")
 	@ResponseBody
@@ -41,7 +44,7 @@ public class PublicoRestController {
 		}
 		return municipioService.getListDTOByComunidadAutonomaIdOrProvinciaId(null, padreId);
 	}
-	
+
 	@GetMapping("/api/sede/list/instalacion")
 	@ResponseBody
 	public List<SedeDTO> getSedesInstalacion(@RequestParam Long padreId) {

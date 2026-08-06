@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -28,11 +27,14 @@ public class RolServiceImpl implements RolService {
 
 	private static final Logger logger = LoggerFactory.getLogger(RolServiceImpl.class);
 
-	@Autowired
-	private RolRepository rolRepository;
+	private final RolRepository rolRepository;
 
-	@Autowired
-	private RolMapper rolMapper;
+	private final RolMapper rolMapper;
+
+	RolServiceImpl(RolRepository rolRepository, RolMapper rolMapper) {
+		this.rolRepository = rolRepository;
+		this.rolMapper = rolMapper;
+	}
 
 	@Override
 	public RolDTO findById(Long id) {
@@ -71,7 +73,6 @@ public class RolServiceImpl implements RolService {
 		rol.setActivo(false);
 		rolRepository.saveAndFlush(rol);
 	}
-
 
 	@Override
 	public RolDTO findByNombreEqualsIgnoreCase(String nombre) {

@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -30,17 +29,21 @@ public class MunicipioServiceImpl implements MunicipioService {
 
 	private static final Logger logger = LoggerFactory.getLogger(MunicipioServiceImpl.class);
 
-	@Autowired
-	private MunicipioRepository municipioRepository;
+	private final MunicipioRepository municipioRepository;
 
-	@Autowired
-	private ProvinciaRepository provinciaRepository;
+	private final ProvinciaRepository provinciaRepository;
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	@Autowired
-	private MunicipioMapper municipioMapper;
+	private final MunicipioMapper municipioMapper;
+
+	MunicipioServiceImpl(MunicipioRepository municipioRepository, ProvinciaRepository provinciaRepository,
+			MunicipioMapper municipioMapper) {
+		this.municipioRepository = municipioRepository;
+		this.provinciaRepository = provinciaRepository;
+		this.municipioMapper = municipioMapper;
+	}
 
 	@Override
 	public MunicipioDTO findById(Long id) {
@@ -84,7 +87,6 @@ public class MunicipioServiceImpl implements MunicipioService {
 		model.setActivo(false);
 		municipioRepository.saveAndFlush(model);
 	}
-
 
 	@Override
 	public MunicipioDTO findByNombreEqualsIgnoreCase(String nombre) {

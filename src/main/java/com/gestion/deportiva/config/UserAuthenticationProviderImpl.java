@@ -1,6 +1,5 @@
 package com.gestion.deportiva.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,11 +14,14 @@ import com.gestion.deportiva.service.UsuarioService;
 @Service
 public class UserAuthenticationProviderImpl implements AuthenticationProvider {
 
-	@Autowired
-	private UsuarioService userDetailsService;
+	private final UsuarioService userDetailsService;
 
-	@Autowired
-	private PasswordEncoder passwordEncoder;
+	private final PasswordEncoder passwordEncoder;
+
+	UserAuthenticationProviderImpl(UsuarioService userDetailsService, PasswordEncoder passwordEncoder) {
+		this.userDetailsService = userDetailsService;
+		this.passwordEncoder = passwordEncoder;
+	}
 
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {

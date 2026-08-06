@@ -6,7 +6,6 @@ import java.util.List;
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
 import org.hibernate.envers.query.AuditEntity;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.gestion.deportiva.model.Reserva;
@@ -31,18 +30,23 @@ import jakarta.servlet.http.HttpServletResponse;
 @Service
 public class PdfReportServiceImpl implements PdfReportService {
 
-	@Autowired
-	private UsuarioRepository usuarioRepository;
+	private final UsuarioRepository usuarioRepository;
 
-	@Autowired
-	private ReservaRepository reservaRepository;
+	private final ReservaRepository reservaRepository;
 
-	@Autowired
-	private ReservaEstadoRepository reservaEstadoRepository;
+	private final ReservaEstadoRepository reservaEstadoRepository;
 
-	@Autowired
-	private EntityManager entityManager;
+	private final EntityManager entityManager;
 
+	PdfReportServiceImpl(UsuarioRepository usuarioRepository, ReservaRepository reservaRepository,
+			ReservaEstadoRepository reservaEstadoRepository, EntityManager entityManager) {
+		this.usuarioRepository = usuarioRepository;
+		this.reservaRepository = reservaRepository;
+		this.reservaEstadoRepository = reservaEstadoRepository;
+		this.entityManager = entityManager;
+	}
+
+	@SuppressWarnings("unchecked")
 	@Override
 	public void exportarDatosArcoUsuarioPdf(Long usuarioId, HttpServletResponse response) throws IOException {
 		Usuario usuario = usuarioRepository.findByActivoTrueAndId(usuarioId);
@@ -171,6 +175,7 @@ public class PdfReportServiceImpl implements PdfReportService {
 				+ reserva.getReservaEstado().getNombre(), bodyFont));
 	}
 
+	@SuppressWarnings("unchecked")
 	private void renderizarHistoricoReserva(Document document, Reserva reserva, AuditReader auditReader,
 			Font subtitleFont, Font bodyFont) throws DocumentException {
 		List<Object[]> revisionsReserva = auditReader.createQuery().forRevisionsOfEntity(Reserva.class, false, true)

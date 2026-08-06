@@ -2,7 +2,6 @@ package com.gestion.deportiva.controller.privado.empleado;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -44,26 +43,32 @@ public class PrivadoEmpleadoRolController extends BaseController {
 
 	private static final String VIEW_FORM = "privado/empleado/rolForm";
 
-	@Autowired
-	private EmpleadoService empleadoService;
-	
-	@Autowired
-	private UsuarioRolService usuarioRolService;
+	private final EmpleadoService empleadoService;
 
-	@Autowired
-	private EmpresaService empresaService;
+	private final UsuarioRolService usuarioRolService;
 
-	@Autowired
-	private SedeService sedeService;
+	private final EmpresaService empresaService;
 
-	@Autowired
-	private InstalacionService instalacionService;
+	private final SedeService sedeService;
 
-	@Autowired
-	private RolService rolService;
+	private final InstalacionService instalacionService;
+
+	private final RolService rolService;
+
+	PrivadoEmpleadoRolController(EmpleadoService empleadoService, UsuarioRolService usuarioRolService,
+			EmpresaService empresaService, SedeService sedeService, InstalacionService instalacionService,
+			RolService rolService) {
+		this.empleadoService = empleadoService;
+		this.usuarioRolService = usuarioRolService;
+		this.empresaService = empresaService;
+		this.sedeService = sedeService;
+		this.instalacionService = instalacionService;
+		this.rolService = rolService;
+	}
 
 	@GetMapping("")
-	public ModelAndView ver(@PathVariable Long idEmpleado, RedirectAttributes redirectAttributes) throws PermisoException {
+	public ModelAndView ver(@PathVariable Long idEmpleado, RedirectAttributes redirectAttributes)
+			throws PermisoException {
 		logger.info("Mostrando rol para empleado");
 		if (!usuarioRolService.canWrite(idEmpleado)) {
 			logger.error("Empleado {} intentó acceder a una EmpleadoRol  sin permisos: usuario {}",
@@ -106,8 +111,10 @@ public class PrivadoEmpleadoRolController extends BaseController {
 		mav.addObject("listEmpresas", empresaService.getListDTOParaEmpleado());
 		mav.addObject("listSedes", sedeService.getListDTOParaEmpleado(null));
 		mav.addObject("listInstalaciones", instalacionService.getListDTOParaEmpleado(null, null));
-		mav.addObject("breadcrumbs", BreadcrumbBuilder.start().includeHome()
-				.add("breadcrumb.gestion.empleado", String.format(BASE_URL, dto.getUsuarioId().toString())).add("breadcrumb.gestion.empleado.editar", null).build());
+		mav.addObject("breadcrumbs",
+				BreadcrumbBuilder.start().includeHome()
+						.add("breadcrumb.gestion.empleado", String.format(BASE_URL, dto.getUsuarioId().toString()))
+						.add("breadcrumb.gestion.empleado.editar", null).build());
 		addBasicModelDetails(mav, TITLE_PAGE, false);
 		return mav;
 	}

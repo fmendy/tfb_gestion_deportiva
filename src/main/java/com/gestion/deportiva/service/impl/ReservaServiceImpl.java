@@ -13,10 +13,10 @@ import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import com.gestion.deportiva.dto.ReservaListadoDTO;
 import com.gestion.deportiva.dto.ReservaDTO;
@@ -52,39 +52,48 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
 @Service
+@Validated
 public class ReservaServiceImpl implements ReservaService {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReservaServiceImpl.class);
 
-	@Autowired
-	private ReservaRepository reservaRepository;
+	private final ReservaRepository reservaRepository;
 
-	@Autowired
-	private InstalacionRepository instalacionRepository;
+	private final InstalacionRepository instalacionRepository;
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	@Autowired
-	private ReservaMapper reservaMapper;
+	private final ReservaMapper reservaMapper;
 
-	@Autowired
-	private ReservaEstadoRepository reservaEstadoRepository;
+	private final ReservaEstadoRepository reservaEstadoRepository;
 
-	@Autowired
-	private InstalacionHorarioBloqueadoRepository instalacionHorarioBloqueadoRepository;
+	private final InstalacionHorarioBloqueadoRepository instalacionHorarioBloqueadoRepository;
 
-	@Autowired
-	private InstalacionHorarioEspecialRepository instalacionHorarioEspecialRepository;
+	private final InstalacionHorarioEspecialRepository instalacionHorarioEspecialRepository;
 
-	@Autowired
-	private InstalacionHorarioRepository instalacionHorarioRepository;
+	private final InstalacionHorarioRepository instalacionHorarioRepository;
 
-	@Autowired
-	private MailService mailService;
+	private final MailService mailService;
 
-	@Autowired
-	private UsuarioRepository usuarioRepository;
+	private final UsuarioRepository usuarioRepository;
+
+	ReservaServiceImpl(ReservaRepository reservaRepository, InstalacionRepository instalacionRepository,
+			ReservaMapper reservaMapper, ReservaEstadoRepository reservaEstadoRepository,
+			InstalacionHorarioBloqueadoRepository instalacionHorarioBloqueadoRepository,
+			InstalacionHorarioEspecialRepository instalacionHorarioEspecialRepository,
+			InstalacionHorarioRepository instalacionHorarioRepository, MailService mailService,
+			UsuarioRepository usuarioRepository) {
+		this.reservaRepository = reservaRepository;
+		this.instalacionRepository = instalacionRepository;
+		this.reservaMapper = reservaMapper;
+		this.reservaEstadoRepository = reservaEstadoRepository;
+		this.instalacionHorarioBloqueadoRepository = instalacionHorarioBloqueadoRepository;
+		this.instalacionHorarioEspecialRepository = instalacionHorarioEspecialRepository;
+		this.instalacionHorarioRepository = instalacionHorarioRepository;
+		this.mailService = mailService;
+		this.usuarioRepository = usuarioRepository;
+	}
 
 	@Override
 	public ReservaDTO findById(Long id) {

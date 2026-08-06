@@ -4,7 +4,6 @@ import java.util.function.BooleanSupplier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -56,14 +55,18 @@ public class PrivadoReservaController extends BaseController {
 
 	private static final String VIEW_LIST = "privado/reserva/list";
 
-	@Autowired
-	private ReservaService reservaService;
+	private final ReservaService reservaService;
 
-	@Autowired
-	private InstalacionTipoService instalacionTipoService;
+	private final InstalacionTipoService instalacionTipoService;
 
-	@Autowired
-	private ReservaEstadoService reservaEstadoService;
+	private final ReservaEstadoService reservaEstadoService;
+
+	PrivadoReservaController(ReservaService reservaService, InstalacionTipoService instalacionTipoService,
+			ReservaEstadoService reservaEstadoService) {
+		this.reservaService = reservaService;
+		this.instalacionTipoService = instalacionTipoService;
+		this.reservaEstadoService = reservaEstadoService;
+	}
 
 	@GetMapping("/solicitud")
 	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Reserva.GESTION_RESERVA_PROPIA + "')")

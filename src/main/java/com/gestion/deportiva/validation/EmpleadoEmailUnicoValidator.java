@@ -1,6 +1,5 @@
 package com.gestion.deportiva.validation;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
 import com.gestion.deportiva.dto.EmpleadoRegistroDTO;
@@ -10,10 +9,14 @@ import com.gestion.deportiva.util.Utils;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class EmpleadoEmailUnicoValidator implements ConstraintValidator<EmpleadoRegistroEmailUnicoValid, EmpleadoRegistroDTO> {
+public class EmpleadoEmailUnicoValidator
+		implements ConstraintValidator<EmpleadoRegistroEmailUnicoValid, EmpleadoRegistroDTO> {
 
-	@Autowired
-	private UsuarioRepository repository;
+	private final UsuarioRepository repository;
+
+	EmpleadoEmailUnicoValidator(UsuarioRepository repository) {
+		this.repository = repository;
+	}
 
 	@Override
 	public boolean isValid(EmpleadoRegistroDTO form, ConstraintValidatorContext context) {

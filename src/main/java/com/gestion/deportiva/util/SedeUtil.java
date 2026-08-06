@@ -22,8 +22,7 @@ public class SedeUtil {
 
 	private void appendFilterParams(StringBuilder url, SedeFilter filter) {
 		Utils.appendParam(url, "nombre", filter.getNombre());
-		String listEmpresasIds = filter.getListEmpresaIds().toString().replace("[", "").replace("]", "");
-		Utils.appendParam(url, "listEmpresaIds", listEmpresasIds);
+		Utils.appendParam(url, "listEmpresaIds", filter.getListEmpresaIds());
 		Utils.appendParam(url, "listIds", filter.getListIds());
 		Utils.appendParam(url, "empresaId", filter.getEmpresaId());
 		Utils.appendParam(url, "comunidadAutonomaId", filter.getComunidadAutonomaId());

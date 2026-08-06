@@ -5,7 +5,6 @@ import java.security.Principal;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -47,11 +46,14 @@ public class PrivadoMiPerfilController extends BaseController {
 
 	private static final String BASE_URL = "/privado/usuario/miperfil";
 
-	@Autowired
-	private UsuarioService usuarioService;
+	private final UsuarioService usuarioService;
 
-	@Autowired
-	private PdfReportService pdfReportService;
+	private final PdfReportService pdfReportService;
+
+	PrivadoMiPerfilController(UsuarioService usuarioService, PdfReportService pdfReportService) {
+		this.usuarioService = usuarioService;
+		this.pdfReportService = pdfReportService;
+	}
 
 	@GetMapping
 	public ModelAndView verMiPerfil() {

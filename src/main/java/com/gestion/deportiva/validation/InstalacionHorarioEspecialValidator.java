@@ -1,7 +1,5 @@
 package com.gestion.deportiva.validation;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.gestion.deportiva.dto.InstalacionHorarioEspecialDTO;
 import com.gestion.deportiva.model.InstalacionHorarioEspecial;
 import com.gestion.deportiva.repository.InstalacionHorarioEspecialRepository;
@@ -14,8 +12,11 @@ import jakarta.validation.ConstraintValidatorContext;
 public class InstalacionHorarioEspecialValidator
 		implements ConstraintValidator<InstalacionHorarioEspecialValid, InstalacionHorarioEspecialDTO> {
 
-	@Autowired
-	private InstalacionHorarioEspecialRepository repository;
+	private final InstalacionHorarioEspecialRepository repository;
+
+	InstalacionHorarioEspecialValidator(InstalacionHorarioEspecialRepository repository) {
+		this.repository = repository;
+	}
 
 	@Override
 	public boolean isValid(InstalacionHorarioEspecialDTO dto, ConstraintValidatorContext context) {
@@ -61,7 +62,7 @@ public class InstalacionHorarioEspecialValidator
 			context.disableDefaultConstraintViolation();
 			context.buildConstraintViolationWithTemplate(
 					Utils.getMessage("error.validacion.instalacion.horario.especial.cerrado.duplicado"))
-					.addPropertyNode(Constantes.CERRADO ).addConstraintViolation();
+					.addPropertyNode(Constantes.CERRADO).addConstraintViolation();
 			return false;
 		}
 

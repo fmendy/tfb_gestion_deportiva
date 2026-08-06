@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -30,17 +29,21 @@ public class ProvinciaServiceImpl implements ProvinciaService {
 
 	private static final Logger logger = LoggerFactory.getLogger(ProvinciaServiceImpl.class);
 
-	@Autowired
-	private ProvinciaRepository provinciaRepository;
+	private final ProvinciaRepository provinciaRepository;
 
-	@Autowired
-	private ComunidadAutonomaRepository comunidadAutonomaRepository;
+	private final ComunidadAutonomaRepository comunidadAutonomaRepository;
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	@Autowired
-	private ProvinciaMapper provinciaMapper;
+	private final ProvinciaMapper provinciaMapper;
+
+	ProvinciaServiceImpl(ProvinciaRepository provinciaRepository,
+			ComunidadAutonomaRepository comunidadAutonomaRepository, ProvinciaMapper provinciaMapper) {
+		this.provinciaRepository = provinciaRepository;
+		this.comunidadAutonomaRepository = comunidadAutonomaRepository;
+		this.provinciaMapper = provinciaMapper;
+	}
 
 	@Override
 	public ProvinciaDTO findById(Long id) {

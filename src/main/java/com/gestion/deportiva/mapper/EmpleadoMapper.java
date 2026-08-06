@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -19,21 +18,26 @@ import com.gestion.deportiva.util.Constantes;
 @Component
 public class EmpleadoMapper {
 
-	@Autowired
 	@Qualifier("myPasswordEncoder")
-	private PasswordEncoder passwordEncoder;
+	private final PasswordEncoder passwordEncoder;
 
-	@Autowired
-	private UsuarioRolMapper usuarioRolMapper;
+	private final UsuarioRolMapper usuarioRolMapper;
 
-	@Autowired
-	private UsuarioEmpresaMapper usuarioEmpresaMapper;
+	private final UsuarioEmpresaMapper usuarioEmpresaMapper;
 
-	@Autowired
-	private UsuarioSedeMapper usuarioSedeMapper;
+	private final UsuarioSedeMapper usuarioSedeMapper;
 
-	@Autowired
-	private UsuarioInstalacionMapper usuarioInstalacionMapper;
+	private final UsuarioInstalacionMapper usuarioInstalacionMapper;
+
+	EmpleadoMapper(PasswordEncoder passwordEncoder, UsuarioRolMapper usuarioRolMapper,
+			UsuarioEmpresaMapper usuarioEmpresaMapper, UsuarioSedeMapper usuarioSedeMapper,
+			UsuarioInstalacionMapper usuarioInstalacionMapper) {
+		this.passwordEncoder = passwordEncoder;
+		this.usuarioRolMapper = usuarioRolMapper;
+		this.usuarioEmpresaMapper = usuarioEmpresaMapper;
+		this.usuarioSedeMapper = usuarioSedeMapper;
+		this.usuarioInstalacionMapper = usuarioInstalacionMapper;
+	}
 
 	public EmpleadoDTO modelToDTO(Usuario usuario) {
 		EmpleadoDTO retVal = new EmpleadoDTO();

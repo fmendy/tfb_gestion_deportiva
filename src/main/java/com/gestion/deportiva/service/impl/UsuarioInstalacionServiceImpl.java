@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -27,14 +26,18 @@ public class UsuarioInstalacionServiceImpl implements UsuarioInstalacionService 
 
 	private static final Logger logger = LoggerFactory.getLogger(UsuarioInstalacionServiceImpl.class);
 
-	@Autowired
-	private UsuarioInstalacionRepository usuarioInstalacionRepository;
+	private final UsuarioInstalacionRepository usuarioInstalacionRepository;
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	@Autowired
-	private UsuarioInstalacionMapper usuarioInstalacionMapper;
+	private final UsuarioInstalacionMapper usuarioInstalacionMapper;
+
+	UsuarioInstalacionServiceImpl(UsuarioInstalacionRepository usuarioInstalacionRepository,
+			UsuarioInstalacionMapper usuarioInstalacionMapper) {
+		this.usuarioInstalacionRepository = usuarioInstalacionRepository;
+		this.usuarioInstalacionMapper = usuarioInstalacionMapper;
+	}
 
 	@Override
 	public UsuarioInstalacionDTO findById(Long id) {

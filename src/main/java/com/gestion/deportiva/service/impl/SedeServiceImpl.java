@@ -9,7 +9,6 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -43,26 +42,31 @@ public class SedeServiceImpl implements SedeService {
 
 	private static final Logger logger = LoggerFactory.getLogger(SedeServiceImpl.class);
 
-	@Autowired
-	private SedeRepository sedeRepository;
+	private final SedeRepository sedeRepository;
 
-	@Autowired
-	private InstalacionRepository instalacionRepository;
+	private final InstalacionRepository instalacionRepository;
 
-	@Autowired
-	private InstalacionMapper instalacionMapper;
+	private final InstalacionMapper instalacionMapper;
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	@Autowired
-	private SedeMapper sedeMapper;
+	private final SedeMapper sedeMapper;
 
-	@Autowired
-	private ImageStoreService imageStoreService;
+	private final ImageStoreService imageStoreService;
 
-	@Autowired
-	private ReservaService reservaService;
+	private final ReservaService reservaService;
+
+	SedeServiceImpl(SedeRepository sedeRepository, InstalacionRepository instalacionRepository,
+			InstalacionMapper instalacionMapper, SedeMapper sedeMapper, ImageStoreService imageStoreService,
+			ReservaService reservaService) {
+		this.sedeRepository = sedeRepository;
+		this.instalacionRepository = instalacionRepository;
+		this.instalacionMapper = instalacionMapper;
+		this.sedeMapper = sedeMapper;
+		this.imageStoreService = imageStoreService;
+		this.reservaService = reservaService;
+	}
 
 	@Override
 	public SedeDTO findById(Long id) {

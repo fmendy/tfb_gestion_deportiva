@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -30,14 +29,18 @@ public class ComunidadAutonomaServiceImpl extends MaestraServiceImpl<ComunidadAu
 
 	private static final Logger logger = LoggerFactory.getLogger(ComunidadAutonomaServiceImpl.class);
 
-	@Autowired
-	private ComunidadAutonomaRepository comunidadAutonomaRepository;
+	private final ComunidadAutonomaRepository comunidadAutonomaRepository;
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	@Autowired
-	private ComunidadAutonomaMapper comunidadAutonomaMapper;
+	private final ComunidadAutonomaMapper comunidadAutonomaMapper;
+
+	ComunidadAutonomaServiceImpl(ComunidadAutonomaRepository comunidadAutonomaRepository,
+			ComunidadAutonomaMapper comunidadAutonomaMapper) {
+		this.comunidadAutonomaRepository = comunidadAutonomaRepository;
+		this.comunidadAutonomaMapper = comunidadAutonomaMapper;
+	}
 
 	@Override
 	public ComunidadAutonomaDTO findById(Long id) {

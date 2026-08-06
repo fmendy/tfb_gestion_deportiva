@@ -2,7 +2,6 @@ package com.gestion.deportiva.controller.privado.instalacion;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -48,8 +47,12 @@ public class PrivadoInstalacionHorarioBloqueadoController extends BaseController
 
 	private static final String VIEW_LIST = "privado/instalacion/horarioBloqueadoList";
 
-	@Autowired
-	private InstalacionHorarioBloqueadoService instalacionHorarioBloqueadoService;
+	private final InstalacionHorarioBloqueadoService instalacionHorarioBloqueadoService;
+
+	PrivadoInstalacionHorarioBloqueadoController(
+			InstalacionHorarioBloqueadoService instalacionHorarioBloqueadoService) {
+		this.instalacionHorarioBloqueadoService = instalacionHorarioBloqueadoService;
+	}
 
 	@GetMapping("")
 	public ModelAndView search(@PathVariable Long idInstalacion, Pageable pageable, HttpServletRequest request,
@@ -64,7 +67,8 @@ public class PrivadoInstalacionHorarioBloqueadoController extends BaseController
 	public ModelAndView editar(@PathVariable Long idInstalacion, @PathVariable Long id,
 			RedirectAttributes redirectAttributes) throws PermisoException {
 		if (!instalacionHorarioBloqueadoService.canRead(id)) {
-			logger.error("Instalacion on id {} se ha intentado acceder a una instalacionHorarioBloqueado  sin permisos: el usuario {}",
+			logger.error(
+					"Instalacion on id {} se ha intentado acceder a una instalacionHorarioBloqueado  sin permisos: el usuario {}",
 					SecurityUtil.getCurrentUserId(), id);
 			throw new PermisoException("No tiene permisos para acceder a esta instalacionHorarioBloqueado.");
 		}
@@ -107,7 +111,8 @@ public class PrivadoInstalacionHorarioBloqueadoController extends BaseController
 
 	private ModelAndView loadForm(Long id, Long instalacionId, RedirectAttributes redirectAttributes) {
 		try {
-			InstalacionHorarioBloqueadoDTO dto = instalacionHorarioBloqueadoService.findByIdOrNewEmpty(id, instalacionId);
+			InstalacionHorarioBloqueadoDTO dto = instalacionHorarioBloqueadoService.findByIdOrNewEmpty(id,
+					instalacionId);
 			return buildDetailsForm(dto);
 		} catch (Exception e) {
 			logger.error("Error al cargar formulario de Instalacion {}: {}", id, e.getMessage(), e);

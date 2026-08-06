@@ -10,7 +10,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -34,8 +33,7 @@ import jakarta.mail.util.ByteArrayDataSource;
 @Service
 public class MailServiceImpl implements MailService {
 
-	@Autowired
-	private JavaMailSender mailSender;
+	private final JavaMailSender mailSender;
 
 	@Value("${spring.mail.username}")
 	private String mailUsername;
@@ -44,8 +42,12 @@ public class MailServiceImpl implements MailService {
 
 	private static final String B_TAG_PUNTOS = "</b>: ";
 
-	@Autowired
-	private UsuarioTokenService usuarioTokenService;
+	private final UsuarioTokenService usuarioTokenService;
+
+	MailServiceImpl(JavaMailSender mailSender, UsuarioTokenService usuarioTokenService) {
+		this.mailSender = mailSender;
+		this.usuarioTokenService = usuarioTokenService;
+	}
 
 	@Override
 	public void enviarMail(List<String> destinatarios, String asunto, String cuerpo)

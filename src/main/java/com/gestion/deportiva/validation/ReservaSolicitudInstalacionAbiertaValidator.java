@@ -1,7 +1,5 @@
 package com.gestion.deportiva.validation;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.gestion.deportiva.dto.ReservaSolicitudDTO;
 import com.gestion.deportiva.service.InstalacionHorarioBloqueadoService;
 import com.gestion.deportiva.service.InstalacionHorarioEspecialService;
@@ -14,14 +12,19 @@ import jakarta.validation.ConstraintValidatorContext;
 public class ReservaSolicitudInstalacionAbiertaValidator
 		implements ConstraintValidator<ReservaSolicitudInstalacionAbiertaValid, ReservaSolicitudDTO> {
 
-	@Autowired
-	private InstalacionHorarioEspecialService instalacionHorarioEspecialService;
+	private final InstalacionHorarioEspecialService instalacionHorarioEspecialService;
 
-	@Autowired
-	private InstalacionHorarioService instalacionHorarioService;
+	private final InstalacionHorarioService instalacionHorarioService;
 
-	@Autowired
-	private InstalacionHorarioBloqueadoService instalacionHorarioBloqueadoService;
+	private final InstalacionHorarioBloqueadoService instalacionHorarioBloqueadoService;
+
+	ReservaSolicitudInstalacionAbiertaValidator(InstalacionHorarioEspecialService instalacionHorarioEspecialService,
+			InstalacionHorarioService instalacionHorarioService,
+			InstalacionHorarioBloqueadoService instalacionHorarioBloqueadoService) {
+		this.instalacionHorarioEspecialService = instalacionHorarioEspecialService;
+		this.instalacionHorarioService = instalacionHorarioService;
+		this.instalacionHorarioBloqueadoService = instalacionHorarioBloqueadoService;
+	}
 
 	@Override
 	public boolean isValid(ReservaSolicitudDTO dto, ConstraintValidatorContext context) {

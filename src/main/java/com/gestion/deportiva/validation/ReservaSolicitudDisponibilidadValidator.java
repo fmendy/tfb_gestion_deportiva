@@ -1,7 +1,5 @@
 package com.gestion.deportiva.validation;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.gestion.deportiva.dto.ReservaSolicitudDTO;
 import com.gestion.deportiva.service.ReservaService;
 import com.gestion.deportiva.util.SecurityUtil;
@@ -13,8 +11,11 @@ import jakarta.validation.ConstraintValidatorContext;
 public class ReservaSolicitudDisponibilidadValidator
 		implements ConstraintValidator<ReservaSolicitudDisponibilidadValid, ReservaSolicitudDTO> {
 
-	@Autowired
-	private ReservaService reservaService;
+	private final ReservaService reservaService;
+
+	ReservaSolicitudDisponibilidadValidator(ReservaService reservaService) {
+		this.reservaService = reservaService;
+	}
 
 	@Override
 	public boolean isValid(ReservaSolicitudDTO dto, ConstraintValidatorContext context) {

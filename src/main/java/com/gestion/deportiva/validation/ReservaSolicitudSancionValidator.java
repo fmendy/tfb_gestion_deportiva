@@ -1,8 +1,5 @@
 package com.gestion.deportiva.validation;
 
-
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.gestion.deportiva.dto.ReservaSolicitudDTO;
 import com.gestion.deportiva.repository.SancionRepository;
 import com.gestion.deportiva.util.SecurityUtil;
@@ -14,8 +11,11 @@ import jakarta.validation.ConstraintValidatorContext;
 public class ReservaSolicitudSancionValidator
 		implements ConstraintValidator<ReservaSolicitudSancionValid, ReservaSolicitudDTO> {
 
-	@Autowired
-	private SancionRepository repository;
+	private final SancionRepository repository;
+
+	ReservaSolicitudSancionValidator(SancionRepository repository) {
+		this.repository = repository;
+	}
 
 	@Override
 	public boolean isValid(ReservaSolicitudDTO dto, ConstraintValidatorContext context) {
@@ -27,8 +27,7 @@ public class ReservaSolicitudSancionValidator
 		// Horario Especial de la instalación
 		if (estaSancionado) {
 			context.disableDefaultConstraintViolation();
-			context.buildConstraintViolationWithTemplate(
-					Utils.getMessage("error.validacion.reserva.sancion"))
+			context.buildConstraintViolationWithTemplate(Utils.getMessage("error.validacion.reserva.sancion"))
 					.addConstraintViolation();
 			return false;
 		}

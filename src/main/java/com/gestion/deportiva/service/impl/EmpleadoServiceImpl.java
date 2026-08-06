@@ -6,10 +6,10 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import com.gestion.deportiva.dto.ComboDTO;
 import com.gestion.deportiva.dto.EmpleadoDTO;
@@ -44,39 +44,47 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
 @Service
+@Validated
 public class EmpleadoServiceImpl implements EmpleadoService {
 
 	private static final Logger logger = LoggerFactory.getLogger(EmpleadoServiceImpl.class);
 
-	@Autowired
-	private UsuarioRepository usuarioRepository;
+	private final UsuarioRepository usuarioRepository;
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	@Autowired
-	private EmpleadoMapper empleadoMapper;
+	private final EmpleadoMapper empleadoMapper;
 
-	@Autowired
-	private SedeRepository sedeRepository;
+	private final SedeRepository sedeRepository;
 
-	@Autowired
-	private InstalacionRepository instalacionRepository;
+	private final InstalacionRepository instalacionRepository;
 
-	@Autowired
-	private UsuarioRolService usuarioRolService;
+	private final UsuarioRolService usuarioRolService;
 
-	@Autowired
-	private UsuarioEmpresaService usuarioEmpresaService;
+	private final UsuarioEmpresaService usuarioEmpresaService;
 
-	@Autowired
-	private UsuarioSedeService usuarioSedeService;
+	private final UsuarioSedeService usuarioSedeService;
 
-	@Autowired
-	private UsuarioInstalacionService usuarioInstalacionService;
+	private final UsuarioInstalacionService usuarioInstalacionService;
 
-	@Autowired
-	private RolRepository rolRepository;
+	private final RolRepository rolRepository;
+
+	EmpleadoServiceImpl(UsuarioRepository usuarioRepository, EmpleadoMapper empleadoMapper,
+			SedeRepository sedeRepository, InstalacionRepository instalacionRepository,
+			UsuarioRolService usuarioRolService, UsuarioEmpresaService usuarioEmpresaService,
+			UsuarioSedeService usuarioSedeService, UsuarioInstalacionService usuarioInstalacionService,
+			RolRepository rolRepository) {
+		this.usuarioRepository = usuarioRepository;
+		this.empleadoMapper = empleadoMapper;
+		this.sedeRepository = sedeRepository;
+		this.instalacionRepository = instalacionRepository;
+		this.usuarioRolService = usuarioRolService;
+		this.usuarioEmpresaService = usuarioEmpresaService;
+		this.usuarioSedeService = usuarioSedeService;
+		this.usuarioInstalacionService = usuarioInstalacionService;
+		this.rolRepository = rolRepository;
+	}
 
 	@Override
 	public EmpleadoDTO findById(Long id) {

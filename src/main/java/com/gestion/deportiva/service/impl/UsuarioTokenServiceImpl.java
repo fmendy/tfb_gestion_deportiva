@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -29,14 +28,17 @@ public class UsuarioTokenServiceImpl extends BaseServiceImpl<UsuarioTokenDTO, Us
 
 	private static final Logger logger = LoggerFactory.getLogger(UsuarioTokenServiceImpl.class);
 
-	@Autowired
-	private UsuarioTokenRepository usuarioTokenRepository;
+	private final UsuarioTokenRepository usuarioTokenRepository;
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	@Autowired
-	private UsuarioTokenMapper usuarioTokenMapper;
+	private final UsuarioTokenMapper usuarioTokenMapper;
+
+	UsuarioTokenServiceImpl(UsuarioTokenRepository usuarioTokenRepository, UsuarioTokenMapper usuarioTokenMapper) {
+		this.usuarioTokenRepository = usuarioTokenRepository;
+		this.usuarioTokenMapper = usuarioTokenMapper;
+	}
 
 	@Override
 	public UsuarioTokenDTO findById(Long id) {
@@ -100,8 +102,8 @@ public class UsuarioTokenServiceImpl extends BaseServiceImpl<UsuarioTokenDTO, Us
 	@Transactional
 	public Boolean isValidToken(UsuarioToken usuarioToken, Long minValid) {
 
-		return usuarioToken != null
-				&& usuarioToken.getFechaCreacion().plusMinutes(minValid).isAfter(LocalDateTime.now(ZoneId.of("Europe/Madrid")));
+		return usuarioToken != null && usuarioToken.getFechaCreacion().plusMinutes(minValid)
+				.isAfter(LocalDateTime.now(ZoneId.of("Europe/Madrid")));
 	}
 
 	@Override

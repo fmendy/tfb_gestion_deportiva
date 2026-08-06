@@ -2,7 +2,6 @@ package com.gestion.deportiva.controller.privado.instalacion;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -42,11 +41,15 @@ public class PrivadoInstalacionHorarioController extends BaseController {
 
 	private static final String VIEW_FORM = "privado/instalacion/horarioForm";
 
-	@Autowired
-	private InstalacionHorarioService instalacionHorarioService;
+	private final InstalacionHorarioService instalacionHorarioService;
 
-	@Autowired
-	private InstalacionService instalacionService;
+	private final InstalacionService instalacionService;
+
+	PrivadoInstalacionHorarioController(InstalacionHorarioService instalacionHorarioService,
+			InstalacionService instalacionService) {
+		this.instalacionHorarioService = instalacionHorarioService;
+		this.instalacionService = instalacionService;
+	}
 
 	@GetMapping("")
 	public ModelAndView ver(@PathVariable Long idInstalacion, RedirectAttributes redirectAttributes) {
@@ -55,7 +58,7 @@ public class PrivadoInstalacionHorarioController extends BaseController {
 	}
 
 	@PostMapping("/guardar")
-	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Localizacion.GESTION_INSTALACION  + "')")
+	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Localizacion.GESTION_INSTALACION + "')")
 	public ModelAndView guardar(@Valid @ModelAttribute("form") InstalacionHorarioSemanalDTO dto,
 			BindingResult bindingResult, RedirectAttributes redirectAttributes) throws PermisoException {
 		if (!instalacionService.canWrite(dto.getInstalacionId())) {

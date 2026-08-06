@@ -1,6 +1,5 @@
 package com.gestion.deportiva.validation;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
 import com.gestion.deportiva.dto.MiPerfilDTO;
@@ -12,8 +11,11 @@ import jakarta.validation.ConstraintValidatorContext;
 
 public class MiPerfilEmailUnicoValidator implements ConstraintValidator<MiPerfilEmailUnicoValid, MiPerfilDTO> {
 
-	@Autowired
-	private UsuarioRepository repository;
+	private final UsuarioRepository repository;
+
+	MiPerfilEmailUnicoValidator(UsuarioRepository repository) {
+		this.repository = repository;
+	}
 
 	@Override
 	public boolean isValid(MiPerfilDTO form, ConstraintValidatorContext context) {

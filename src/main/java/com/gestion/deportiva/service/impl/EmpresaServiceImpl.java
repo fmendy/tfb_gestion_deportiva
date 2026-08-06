@@ -9,7 +9,6 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -41,26 +40,31 @@ public class EmpresaServiceImpl implements EmpresaService {
 
 	private static final Logger logger = LoggerFactory.getLogger(EmpresaServiceImpl.class);
 
-	@Autowired
-	private EmpresaRepository empresaRepository;
+	private final EmpresaRepository empresaRepository;
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	@Autowired
-	private EmpresaMapper empresaMapper;
+	private final EmpresaMapper empresaMapper;
 
-	@Autowired
-	private ImageStoreService imageStoreService;
+	private final ImageStoreService imageStoreService;
 
-	@Autowired
-	private InstalacionRepository instalacionRepository;
+	private final InstalacionRepository instalacionRepository;
 
-	@Autowired
-	private SedeRepository sedeRepository;
+	private final SedeRepository sedeRepository;
 
-	@Autowired
-	private ReservaService reservaService;
+	private final ReservaService reservaService;
+
+	EmpresaServiceImpl(EmpresaRepository empresaRepository, EmpresaMapper empresaMapper,
+			ImageStoreService imageStoreService, InstalacionRepository instalacionRepository,
+			SedeRepository sedeRepository, ReservaService reservaService) {
+		this.empresaRepository = empresaRepository;
+		this.empresaMapper = empresaMapper;
+		this.imageStoreService = imageStoreService;
+		this.instalacionRepository = instalacionRepository;
+		this.sedeRepository = sedeRepository;
+		this.reservaService = reservaService;
+	}
 
 	@Override
 	public EmpresaDTO findById(Long id) {

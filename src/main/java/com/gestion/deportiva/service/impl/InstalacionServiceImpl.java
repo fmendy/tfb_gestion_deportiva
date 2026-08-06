@@ -8,7 +8,6 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -51,35 +50,44 @@ public class InstalacionServiceImpl implements InstalacionService {
 
 	private static final Logger logger = LoggerFactory.getLogger(InstalacionServiceImpl.class);
 
-	@Autowired
-	private InstalacionRepository instalacionRepository;
+	private final InstalacionRepository instalacionRepository;
 
-	@Autowired
-	private InstalacionHorarioRepository instalacionHorarioRepository;
+	private final InstalacionHorarioRepository instalacionHorarioRepository;
 
-	@Autowired
-	private InstalacionHorarioEspecialRepository instalacionHorarioEspecialRepository;
+	private final InstalacionHorarioEspecialRepository instalacionHorarioEspecialRepository;
 
-	@Autowired
-	private InstalacionConfiguracionReservaRepository instalacionConfiguracionReservaRepository;
+	private final InstalacionConfiguracionReservaRepository instalacionConfiguracionReservaRepository;
 
-	@Autowired
-	private InstalacionHorarioBloqueadoRepository instalacionHorarioBloqueadoRepository;
+	private final InstalacionHorarioBloqueadoRepository instalacionHorarioBloqueadoRepository;
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	@Autowired
-	private InstalacionMapper instalacionMapper;
+	private final InstalacionMapper instalacionMapper;
 
-	@Autowired
-	private ReservaRepository reservaRepository;
+	private final ReservaRepository reservaRepository;
 
-	@Autowired
-	private ReservaService reservaService;
+	private final ReservaService reservaService;
 
-	@Autowired
-	private InstalacionHorarioService instalacionHorarioService;
+	private final InstalacionHorarioService instalacionHorarioService;
+
+	InstalacionServiceImpl(InstalacionRepository instalacionRepository,
+			InstalacionHorarioRepository instalacionHorarioRepository,
+			InstalacionHorarioEspecialRepository instalacionHorarioEspecialRepository,
+			InstalacionConfiguracionReservaRepository instalacionConfiguracionReservaRepository,
+			InstalacionHorarioBloqueadoRepository instalacionHorarioBloqueadoRepository,
+			InstalacionMapper instalacionMapper, ReservaRepository reservaRepository, ReservaService reservaService,
+			InstalacionHorarioService instalacionHorarioService) {
+		this.instalacionRepository = instalacionRepository;
+		this.instalacionHorarioRepository = instalacionHorarioRepository;
+		this.instalacionHorarioEspecialRepository = instalacionHorarioEspecialRepository;
+		this.instalacionConfiguracionReservaRepository = instalacionConfiguracionReservaRepository;
+		this.instalacionHorarioBloqueadoRepository = instalacionHorarioBloqueadoRepository;
+		this.instalacionMapper = instalacionMapper;
+		this.reservaRepository = reservaRepository;
+		this.reservaService = reservaService;
+		this.instalacionHorarioService = instalacionHorarioService;
+	}
 
 	@Override
 	public InstalacionDTO findById(Long id) {
@@ -315,20 +323,23 @@ public class InstalacionServiceImpl implements InstalacionService {
 			long intervalo) {
 
 		List<FranjaHorariaDuracionDTO> opcionesValidas = new ArrayList<>();
+		boolean continuarBucle = true;
 
-		for (long duracion = config.getDuracionMin(); duracion <= config.getDuracionMax(); duracion += intervalo) {
+		for (long duracion = config.getDuracionMin(); duracion <= config.getDuracionMax()
+				&& continuarBucle; duracion += intervalo) {
+
 			LocalTime fin = inicio.plusMinutes(duracion);
 
 			if (fin.isAfter(h.getHoraFin())) {
-				break;
-			}
+				continuarBucle = false;
+			} else {
+				if (estaLibre(inicio, fin, reservas, bloqueos)) {
+					opcionesValidas.add(new FranjaHorariaDuracionDTO(duracion, fin));
+				}
 
-			if (estaLibre(inicio, fin, reservas, bloqueos)) {
-				opcionesValidas.add(new FranjaHorariaDuracionDTO(duracion, fin));
-			}
-
-			if (config.getDuracionMin().equals(config.getDuracionMax())) {
-				break;
+				if (config.getDuracionMin().equals(config.getDuracionMax())) {
+					continuarBucle = false;
+				}
 			}
 		}
 

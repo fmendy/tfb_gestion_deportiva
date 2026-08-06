@@ -1,7 +1,5 @@
 package com.gestion.deportiva.validation;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.gestion.deportiva.dto.SancionDTO;
 import com.gestion.deportiva.model.Sancion;
 import com.gestion.deportiva.repository.SancionRepository;
@@ -11,15 +9,18 @@ import jakarta.validation.ConstraintValidatorContext;
 
 public class SancionValidator implements ConstraintValidator<SancionValid, SancionDTO> {
 
-	@Autowired
-	private SancionRepository repository;
+	private final SancionRepository repository;
+
+	SancionValidator(SancionRepository repository) {
+		this.repository = repository;
+	}
 
 	@Override
 	public boolean isValid(SancionDTO form, ConstraintValidatorContext context) {
-		
+
 		Sancion sancion = repository.findByActivoTrueAndReservaId(form.getReservaId());
-		
-		if(sancion != null) {
+
+		if (sancion != null) {
 			context.disableDefaultConstraintViolation();
 			context.buildConstraintViolationWithTemplate(Utils.getMessage("error.validacion.sancion.reserva.existe"))
 					.addPropertyNode("reservaId").addConstraintViolation();

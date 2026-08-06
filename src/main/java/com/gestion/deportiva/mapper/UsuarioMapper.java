@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -23,13 +22,16 @@ import com.gestion.deportiva.model.Usuario;
 @Component
 public class UsuarioMapper {
 
-	@Autowired
 	@Qualifier("myPasswordEncoder")
-	private PasswordEncoder passwordEncoder;
+	private final PasswordEncoder passwordEncoder;
 
-	@Autowired
-	private UsuarioRolMapper usuarioRolMapper;
-	
+	private final UsuarioRolMapper usuarioRolMapper;
+
+	UsuarioMapper(PasswordEncoder passwordEncoder, UsuarioRolMapper usuarioRolMapper) {
+		this.passwordEncoder = passwordEncoder;
+		this.usuarioRolMapper = usuarioRolMapper;
+	}
+
 	public Usuario registroEmpresaDTOToModel(EmpresaRegistroDTO dto) {
 		Usuario usuario = new Usuario();
 		usuario.setNombre(dto.getNombre());

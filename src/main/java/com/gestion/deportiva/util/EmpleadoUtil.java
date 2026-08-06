@@ -24,12 +24,9 @@ public class EmpleadoUtil {
 	private void appendFilterParams(StringBuilder url, EmpleadoFilter filter) {
 		Utils.appendParam(url, "email", filter.getEmail());
 		Utils.appendParam(url, "nombre", filter.getNombre());
-		String listEmpresasIds = filter.getListEmpresaIds().toString().replace("[", "").replace("]", "");
-		Utils.appendParam(url, "listEmpresaIds", listEmpresasIds);
-		String listSedesIds = filter.getListSedeIds().toString().replace("[", "").replace("]", "");
-		Utils.appendParam(url, "listSedeIds", listSedesIds);
-		String listInstalacionIds = filter.getListInstalacionIds().toString().replace("[", "").replace("]", "");
-		Utils.appendParam(url, "listInstalacionIds", listInstalacionIds);
+		Utils.appendParam(url, "listEmpresaIds", filter.getListEmpresaIds());
+		Utils.appendParam(url, "listSedeIds", filter.getListSedeIds());
+		Utils.appendParam(url, "listInstalacionIds", filter.getListInstalacionIds());
 		Utils.appendParam(url, "listIds", filter.getListSedeIds());
 		Utils.appendParam(url, "empresaId", filter.getEmpresaId());
 		Utils.appendParam(url, "instalacionId", filter.getInstalacionId());

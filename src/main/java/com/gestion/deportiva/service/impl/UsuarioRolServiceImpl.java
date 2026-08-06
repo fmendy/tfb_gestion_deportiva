@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -30,17 +29,21 @@ public class UsuarioRolServiceImpl implements UsuarioRolService {
 
 	private static final Logger logger = LoggerFactory.getLogger(UsuarioRolServiceImpl.class);
 
-	@Autowired
-	private UsuarioRolRepository usuarioRolRepository;
+	private final UsuarioRolRepository usuarioRolRepository;
 
-	@Autowired
-	private UsuarioRepository usuarioRepository;
+	private final UsuarioRepository usuarioRepository;
 
-	@Autowired
-	private RolRepository rolRepository;
+	private final RolRepository rolRepository;
 
-	@Autowired
-	private UsuarioRolMapper usuarioRolMapper;
+	private final UsuarioRolMapper usuarioRolMapper;
+
+	UsuarioRolServiceImpl(UsuarioRolRepository usuarioRolRepository, UsuarioRepository usuarioRepository,
+			RolRepository rolRepository, UsuarioRolMapper usuarioRolMapper) {
+		this.usuarioRolRepository = usuarioRolRepository;
+		this.usuarioRepository = usuarioRepository;
+		this.rolRepository = rolRepository;
+		this.usuarioRolMapper = usuarioRolMapper;
+	}
 
 	@Override
 	public UsuarioRolDTO findById(Long id) {

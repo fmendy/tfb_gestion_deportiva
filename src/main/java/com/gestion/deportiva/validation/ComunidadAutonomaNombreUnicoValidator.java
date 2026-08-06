@@ -1,6 +1,5 @@
 package com.gestion.deportiva.validation;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
 import com.gestion.deportiva.dto.ComunidadAutonomaDTO;
@@ -13,8 +12,11 @@ import jakarta.validation.ConstraintValidatorContext;
 public class ComunidadAutonomaNombreUnicoValidator
 		implements ConstraintValidator<ComunidadAutonomaNombreUnicoValid, ComunidadAutonomaDTO> {
 
-	@Autowired
-	private ComunidadAutonomaRepository comunidadAutonomaRepository;
+	private final ComunidadAutonomaRepository comunidadAutonomaRepository;
+
+	ComunidadAutonomaNombreUnicoValidator(ComunidadAutonomaRepository comunidadAutonomaRepository) {
+		this.comunidadAutonomaRepository = comunidadAutonomaRepository;
+	}
 
 	@Override
 	public boolean isValid(ComunidadAutonomaDTO form, ConstraintValidatorContext context) {
