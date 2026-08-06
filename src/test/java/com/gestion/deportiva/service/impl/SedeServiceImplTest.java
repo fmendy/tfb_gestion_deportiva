@@ -18,7 +18,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -26,7 +25,6 @@ import com.gestion.deportiva.dto.ComboDTO;
 import com.gestion.deportiva.dto.InstalacionDTO;
 import com.gestion.deportiva.dto.SedeDTO;
 import com.gestion.deportiva.dto.SedePublicoDTO;
-import com.gestion.deportiva.dto.filter.SedeFilter;
 import com.gestion.deportiva.dto.filter.SedePublicoFilter;
 import com.gestion.deportiva.mapper.InstalacionMapper;
 import com.gestion.deportiva.mapper.SedeMapper;

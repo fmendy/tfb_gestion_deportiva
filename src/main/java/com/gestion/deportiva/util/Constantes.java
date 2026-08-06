@@ -1,5 +1,8 @@
 package com.gestion.deportiva.util;
 
+import lombok.experimental.UtilityClass;
+
+@UtilityClass
 public class Constantes {
 
 	public static final String PAGE_TITLE = "pageTitle";
