@@ -174,7 +174,7 @@ public class PrivadoEmpleadoController extends BaseController {
 	private ModelAndView buildDetailsForm(EmpleadoRegistroDTO dto) {
 		ModelAndView mav = new ModelAndView(VIEW_FORM);
 		mav.addObject("form", dto);
-		mav.addObject(Constantes.Breadcrumbs.BREADCRUMBS, BreadcrumbBuilder.start().includeHome()
+		mav.addObject(Constantes.Breadcrumbs.BREADCRUMB, BreadcrumbBuilder.start().includeHome()
 				.add(Constantes.Breadcrumbs.GESTION_EMPLEADO , BASE_URL).add("breadcrumb.gestion.empleado.editar", null).build());
 		addBasicModelDetails(mav, TITLE_PAGE, false);
 		return mav;
@@ -187,7 +187,7 @@ public class PrivadoEmpleadoController extends BaseController {
 		mav.addObject("listEmpresas", empresaService.getListDTOParaEmpleado());
 		mav.addObject("listSedes", sedeService.getListDTOParaEmpleado(null));
 		mav.addObject("listInstalaciones", instalacionService.getListDTOParaEmpleado(null, null));
-		mav.addObject(Constantes.Breadcrumbs.BREADCRUMBS,
+		mav.addObject(Constantes.Breadcrumbs.BREADCRUMB,
 				BreadcrumbBuilder.start().includeHome().add(Constantes.Breadcrumbs.GESTION_EMPLEADO, BASE_URL)
 						.add("breadcrumb.gestion.empleado.registro", null).build());
 		addBasicModelDetails(mav, TITLE_PAGE, false);
@@ -203,7 +203,7 @@ public class PrivadoEmpleadoController extends BaseController {
 		mav.addObject("listInstalaciones",
 				instalacionService.getListDTOParaEmpleado(filter.getEmpresaId(), filter.getSedeId()));
 		mav.addObject("url", EmpleadoUtil.cleanUrlPageFilter(filter, request.getRequestURI()));
-		mav.addObject(Constantes.Breadcrumbs.BREADCRUMBS,
+		mav.addObject(Constantes.Breadcrumbs.BREADCRUMB,
 				BreadcrumbBuilder.start().includeHome().add(Constantes.Breadcrumbs.GESTION_EMPLEADO, null).build());
 		addSortParameter(mav, pageable);
 		addBasicModelDetails(mav, TITLE_PAGE, false);

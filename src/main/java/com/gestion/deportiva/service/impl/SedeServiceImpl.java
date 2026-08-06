@@ -2,6 +2,7 @@ package com.gestion.deportiva.service.impl;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -131,7 +132,8 @@ public class SedeServiceImpl implements SedeService {
 		model.setActivo(false);
 		sedeRepository.saveAndFlush(model);
 		reservaService.cancelarReservasEmpresa(reservaService.getListByFechaDesdeInstalacionSedeIdAndReservaEstados(
-				LocalDate.now(), id, List.of(Constantes.ReservaEstado.PENDIENTE, Constantes.ReservaEstado.APROBADA)));
+				LocalDate.now(ZoneId.of("Europe/Madrid")), id,
+				List.of(Constantes.ReservaEstado.PENDIENTE, Constantes.ReservaEstado.APROBADA)));
 	}
 
 	@Override

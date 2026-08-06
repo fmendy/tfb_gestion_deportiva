@@ -119,8 +119,8 @@ public class PrivadoInstalacionHorarioEspecialController extends BaseController 
 	private ModelAndView buildDetailsForm(InstalacionHorarioEspecialDTO dto) {
 		ModelAndView mav = new ModelAndView(VIEW_FORM);
 		mav.addObject("form", dto);
-		mav.addObject(Constantes.Breadcrumbs.BREADCRUMBS,
-				BreadcrumbBuilder.start().includeHome().add(Constantes.Breadcrumbs.BREADCRUMBS, String
+		mav.addObject(Constantes.Breadcrumbs.BREADCRUMB,
+				BreadcrumbBuilder.start().includeHome().add(Constantes.Breadcrumbs.BREADCRUMB, String
 						.format(BASE_URL, dto.getInstalacionId().toString()).replace("horario/especial", "editar"))
 						.add("breadcrumb.gestion.instalacion.horario", null).build());
 		addBasicModelDetails(mav, TITLE_PAGE, false);
@@ -133,8 +133,8 @@ public class PrivadoInstalacionHorarioEspecialController extends BaseController 
 		mav.addObject("page", instalacionHorarioEspecialService.getPageByFilter(filter, pageable));
 		mav.addObject("filter", filter);
 		mav.addObject("url", InstalacionHorarioEspecialUtil.cleanUrlPageFilter(filter, request.getRequestURI()));
-		mav.addObject(Constantes.Breadcrumbs.BREADCRUMBS, BreadcrumbBuilder.start().includeHome()
-				.add(Constantes.Breadcrumbs.BREADCRUMBS, String.format(BASE_URL, filter.getInstalacionId().toString())
+		mav.addObject(Constantes.Breadcrumbs.BREADCRUMB, BreadcrumbBuilder.start().includeHome()
+				.add(Constantes.Breadcrumbs.BREADCRUMB, String.format(BASE_URL, filter.getInstalacionId().toString())
 						.replace("horario/especial", "editar"))
 				.add("breadcrumb.gestion.instalacion.horario", null).build());
 

@@ -2,6 +2,7 @@ package com.gestion.deportiva.service.impl;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -164,10 +165,10 @@ public class InstalacionServiceImpl implements InstalacionService {
 		instalacionRepository.saveAndFlush(model);
 
 		reservaService.cancelarReservasEmpresa(reservaService.getListByFechaDesdeInstalacionIdAndReservaEstados(
-				LocalDate.now(), id, List.of(Constantes.ReservaEstado.PENDIENTE, Constantes.ReservaEstado.APROBADA)));
+				LocalDate.now(ZoneId.of("Europe/Madrid")), id,
+				List.of(Constantes.ReservaEstado.PENDIENTE, Constantes.ReservaEstado.APROBADA)));
 
 	}
-
 
 	@Override
 	public InstalacionDTO findByNombreEqualsIgnoreCase(String nombre) {

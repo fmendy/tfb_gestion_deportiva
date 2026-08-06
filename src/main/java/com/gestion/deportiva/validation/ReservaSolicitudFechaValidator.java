@@ -2,6 +2,7 @@ package com.gestion.deportiva.validation;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
 
 import com.gestion.deportiva.dto.ReservaSolicitudDTO;
 import com.gestion.deportiva.util.Utils;
@@ -17,7 +18,7 @@ public class ReservaSolicitudFechaValidator
 		if (dto.getFecha() == null || dto.getHora() == null)
 			return true;
 
-		LocalDate hoy = LocalDate.now();
+		LocalDate hoy = LocalDate.now(ZoneId.of("Europe/Madrid"));
 		context.disableDefaultConstraintViolation(); // IMPORTANTE: Para no duplicar mensajes
 
 		// 1. Validar fecha pasada

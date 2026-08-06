@@ -2,6 +2,7 @@ package com.gestion.deportiva.service.impl;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -132,7 +133,7 @@ public class InstalacionHorarioServiceImpl implements InstalacionHorarioService 
 				instalacionHorarioRepository.save(h);
 			}
 		});
-		LocalDate startDate = LocalDate.now();
+		LocalDate startDate = LocalDate.now(ZoneId.of("Europe/Madrid"));
 
 		for (int i = 0; i < 60; i++) {
 			LocalDate dateToCheck = startDate.plusDays(i);

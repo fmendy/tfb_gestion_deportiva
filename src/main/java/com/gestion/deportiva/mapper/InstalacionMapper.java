@@ -1,6 +1,7 @@
 package com.gestion.deportiva.mapper;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -114,7 +115,7 @@ public class InstalacionMapper {
 
 		Map<LocalDate, List<InstalacionHorarioPublicoDTO>> resultado = new LinkedHashMap<>();
 
-		LocalDate hoy = LocalDate.now();
+		LocalDate hoy = LocalDate.now(ZoneId.of("Europe/Madrid"));
 
 		LocalDate inicio = hoy;
 

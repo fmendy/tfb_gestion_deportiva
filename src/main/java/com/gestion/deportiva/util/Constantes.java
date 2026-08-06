@@ -44,7 +44,7 @@ public class Constantes {
 
 	public static class Breadcrumbs {
 
-		public static final String BREADCRUMBS = "breadcrumbs";
+		public static final String BREADCRUMB = "breadcrumbs";
 
 		public static final String GESTION_EMPLEADO = "breadcrumb.gestion.empleado";
 

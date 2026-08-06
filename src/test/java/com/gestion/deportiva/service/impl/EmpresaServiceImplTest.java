@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -163,7 +164,7 @@ class EmpresaServiceImplTest {
 
 		when(empresaRepository.findByActivoTrueAndId(id)).thenReturn(empresa);
 		when(reservaService.getListByFechaDesdeInstalacionSedeEmpresaIdAndReservaEstados(
-				any(LocalDate.now().getClass()), eq(id), any())).thenReturn(List.of());
+				any(LocalDate.now(ZoneId.of("Europe/Madrid")).getClass()), eq(id), any())).thenReturn(List.of());
 
 		empresaService.eliminar(id);
 

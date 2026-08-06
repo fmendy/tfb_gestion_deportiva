@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -222,7 +223,7 @@ class ReservaServiceImplTest {
 
 	@Test
 	void isFranjaHorariaDisponibleParaInstalacionSinSolapamiento() {
-		LocalDate fecha = LocalDate.now();
+		LocalDate fecha = LocalDate.now(ZoneId.of("Europe/Madrid"));
 		LocalTime horaInicio = LocalTime.of(10, 0);
 		Long duracion = 60L;
 		Long instalacionId = 1L;
@@ -238,7 +239,7 @@ class ReservaServiceImplTest {
 
 	@Test
 	void isFranjaHorariaDisponibleParaInstalacionConSolapamiento() {
-		LocalDate fecha = LocalDate.now();
+		LocalDate fecha = LocalDate.now(ZoneId.of("Europe/Madrid"));
 		LocalTime horaInicio = LocalTime.of(10, 0);
 		Long duracion = 60L;
 		Long instalacionId = 1L;
@@ -258,7 +259,7 @@ class ReservaServiceImplTest {
 
 	@Test
 	void isFranjaHorariaDisponibleParaUsuarioSinSolapamiento() {
-		LocalDate fecha = LocalDate.now();
+		LocalDate fecha = LocalDate.now(ZoneId.of("Europe/Madrid"));
 		LocalTime horaInicio = LocalTime.of(10, 0);
 		Long duracion = 60L;
 		Long usuarioId = 1L;
@@ -275,7 +276,7 @@ class ReservaServiceImplTest {
 	@Test
 	void crearReservaEstadoPendiente() {
 		ReservaSolicitudDTO dto = new ReservaSolicitudDTO();
-		dto.setFecha(LocalDate.now());
+		dto.setFecha(LocalDate.now(ZoneId.of("Europe/Madrid")));
 		dto.setHora(LocalTime.of(10, 0));
 		dto.setDuracion(60L);
 		dto.setInstalacionId(1L);
@@ -302,14 +303,14 @@ class ReservaServiceImplTest {
 	void getReservaFilterParaMisReservas() {
 		ReservaFilter filter = reservaService.getReservaFilterParaMisReservas();
 		assertThat(filter).isNotNull();
-		assertThat(filter.getFechaDesde()).isEqualTo(LocalDate.now());
+		assertThat(filter.getFechaDesde()).isEqualTo(LocalDate.now(ZoneId.of("Europe/Madrid")));
 	}
 
 	@Test
 	void getReservaFilterParaMisReservasPasadas() {
 		ReservaFilter filter = reservaService.getReservaFilterParaMisReservasPasadas();
 		assertThat(filter).isNotNull();
-		assertThat(filter.getFechaHasta()).isEqualTo(LocalDate.now().minusDays(1L));
+		assertThat(filter.getFechaHasta()).isEqualTo(LocalDate.now(ZoneId.of("Europe/Madrid")).minusDays(1L));
 	}
 
 	@Test
@@ -322,7 +323,7 @@ class ReservaServiceImplTest {
 
 	@Test
 	void fechaComprobarPorCambioDeHorariosSinReservas() {
-		LocalDate date = LocalDate.now();
+		LocalDate date = LocalDate.now(ZoneId.of("Europe/Madrid"));
 		Long instalacionId = 1L;
 
 		when(reservaRepository.findByActivoTrueAndFechaAndInstalacionIdAndReservaEstadoNombreIn(eq(date),

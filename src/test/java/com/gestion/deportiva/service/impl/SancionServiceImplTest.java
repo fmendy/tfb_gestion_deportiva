@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Collections;
 import java.util.List;
 
@@ -137,8 +138,8 @@ class SancionServiceImplTest {
 		SancionDTO dto = new SancionDTO();
 		dto.setUuid("uuid-nuevo");
 		dto.setUsuarioId(2L);
-		dto.setFechaInicio(LocalDate.now());
-		dto.setFechaFin(LocalDate.now().plusDays(5));
+		dto.setFechaInicio(LocalDate.now(ZoneId.of("Europe/Madrid")));
+		dto.setFechaFin(LocalDate.now(ZoneId.of("Europe/Madrid")).plusDays(5));
 
 		when(sancionRepository.findByActivoTrueAndUuidEqualsIgnoreCase("uuid-nuevo")).thenReturn(null);
 		when(sancionMapper.dtoToModel(any(SancionDTO.class), any(Sancion.class)))
@@ -148,8 +149,8 @@ class SancionServiceImplTest {
 
 		verify(sancionRepository).findByActivoTrueAndUuidEqualsIgnoreCase("uuid-nuevo");
 		verify(sancionRepository).saveAndFlush(any(Sancion.class));
-		verify(reservaService).cancelarSancion(eq(2L), any(LocalDate.now().getClass()),
-				any(LocalDate.now().getClass()));
+		verify(reservaService).cancelarSancion(eq(2L), any(LocalDate.now(ZoneId.of("Europe/Madrid")).getClass()),
+				any(LocalDate.now(ZoneId.of("Europe/Madrid")).getClass()));
 	}
 
 	@Test
@@ -157,8 +158,8 @@ class SancionServiceImplTest {
 		SancionDTO dto = new SancionDTO();
 		dto.setUuid("uuid-existente");
 		dto.setUsuarioId(2L);
-		dto.setFechaInicio(LocalDate.now());
-		dto.setFechaFin(LocalDate.now().plusDays(5));
+		dto.setFechaInicio(LocalDate.now(ZoneId.of("Europe/Madrid")));
+		dto.setFechaFin(LocalDate.now(ZoneId.of("Europe/Madrid")).plusDays(5));
 
 		Sancion modelExistente = new Sancion();
 		modelExistente.setId(10L);
@@ -170,8 +171,8 @@ class SancionServiceImplTest {
 
 		assertThat(id).isEqualTo(10L);
 		verify(sancionRepository).saveAndFlush(modelExistente);
-		verify(reservaService).cancelarSancion(eq(2L), any(LocalDate.now().getClass()),
-				any(LocalDate.now().getClass()));
+		verify(reservaService).cancelarSancion(eq(2L), any(LocalDate.now(ZoneId.of("Europe/Madrid")).getClass()),
+				any(LocalDate.now(ZoneId.of("Europe/Madrid")).getClass()));
 	}
 
 	@Test

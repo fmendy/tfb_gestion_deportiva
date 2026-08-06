@@ -149,13 +149,13 @@ public class PrivadoSedeController extends BaseController {
 		ModelAndView mav = new ModelAndView(VIEW_FORM);
 		mav.addObject("form", dto);
 		mav.addObject("listEmpresas", empresaService.getListDTO(new EmpresaFilter()));
-		mav.addObject(Constantes.Breadcrumbs.BREADCRUMBS,
+		mav.addObject(Constantes.Breadcrumbs.BREADCRUMB,
 				BreadcrumbBuilder.start().includeHome().add(Constantes.Breadcrumbs.GESTION_SEDE, null).build());
 		mav.addObject("listComunidades", comunidadAutonomaService.getListDTO());
 		mav.addObject("listProvincias", provinciaService.getListDTOByComunidadAutonomaId(dto.getComunidadAutonomaId()));
 		mav.addObject("listMunicipios", municipioService
 				.getListDTOByComunidadAutonomaIdOrProvinciaId(dto.getComunidadAutonomaId(), dto.getProvinciaId()));
-		mav.addObject(Constantes.Breadcrumbs.BREADCRUMBS, BreadcrumbBuilder.start().includeHome().add(Constantes.Breadcrumbs.GESTION_SEDE, BASE_URL)
+		mav.addObject(Constantes.Breadcrumbs.BREADCRUMB, BreadcrumbBuilder.start().includeHome().add(Constantes.Breadcrumbs.GESTION_SEDE, BASE_URL)
 				.add("breadcrumb.gestion.sede.editar", null).build());
 		addBasicModelDetails(mav, TITLE_PAGE, false);
 		return mav;
@@ -167,7 +167,7 @@ public class PrivadoSedeController extends BaseController {
 		mav.addObject("filter", filter);
 		mav.addObject("listEmpresas", empresaService.getListDTO(new EmpresaFilter()));
 		mav.addObject("url", SedeUtil.cleanUrlPageFilter(filter, request.getRequestURI()));
-		mav.addObject(Constantes.Breadcrumbs.BREADCRUMBS ,
+		mav.addObject(Constantes.Breadcrumbs.BREADCRUMB ,
 				BreadcrumbBuilder.start().includeHome().add(Constantes.Breadcrumbs.GESTION_SEDE , null).build());
 		mav.addObject("listComunidades", comunidadAutonomaService.getListDTO());
 		mav.addObject("listProvincias",

@@ -2,6 +2,7 @@ package com.gestion.deportiva.service.impl;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -309,9 +310,10 @@ public class UsuarioServiceImpl extends MaestraServiceImpl<UsuarioDTO, UsuarioFi
 	public void borrarMiCuenta() {
 		Usuario usuario = usuarioRepository.findByActivoTrueAndId(SecurityUtil.getCurrentUserId());
 		usuario.setNombre("usuario_eliminado");
-		usuario.setEmail(Utils.generarStringAleatorio(12) + "o@tfb_carlemany_apm_2026.com");
+		usuario.setEmail(Utils.generarStringAleatorio(12) + "@tfb_carlemany_apm_2026.com");
 		eliminar(SecurityUtil.getCurrentUserId());
-		reservaService.cancelarUsuarioFechaDesde(SecurityUtil.getCurrentUserId(), LocalDate.now());
+		reservaService.cancelarUsuarioFechaDesde(SecurityUtil.getCurrentUserId(),
+				LocalDate.now(ZoneId.of("Europe/Madrid")));
 		usuarioRepository.saveAndFlush(usuario);
 	}
 

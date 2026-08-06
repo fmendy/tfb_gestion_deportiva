@@ -3,6 +3,7 @@ package com.gestion.deportiva.service.impl;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -250,7 +251,7 @@ public class ReservaServiceImpl implements ReservaService {
 	public ReservaFilter getReservaFilterParaMisReservas() {
 		ReservaFilter filter = new ReservaFilter();
 		filter.setUsuarioCreacionId(SecurityUtil.getCurrentUserId());
-		filter.setFechaDesde(LocalDate.now());
+		filter.setFechaDesde(LocalDate.now(ZoneId.of("Europe/Madrid")));
 		return filter;
 	}
 
@@ -258,7 +259,7 @@ public class ReservaServiceImpl implements ReservaService {
 	public ReservaFilter getReservaFilterParaMisReservasPasadas() {
 		ReservaFilter filter = new ReservaFilter();
 		filter.setUsuarioCreacionId(SecurityUtil.getCurrentUserId());
-		filter.setFechaHasta(LocalDate.now().minusDays(1L));
+		filter.setFechaHasta(LocalDate.now(ZoneId.of("Europe/Madrid")).minusDays(1L));
 		return filter;
 	}
 

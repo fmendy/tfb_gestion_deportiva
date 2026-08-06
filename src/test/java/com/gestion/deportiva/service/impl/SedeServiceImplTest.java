@@ -7,6 +7,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -129,7 +130,7 @@ class SedeServiceImplTest {
 		model.setActivo(true);
 
 		when(sedeRepository.findByActivoTrueAndId(id)).thenReturn(model);
-		when(reservaService.getListByFechaDesdeInstalacionSedeIdAndReservaEstados(any(LocalDate.now().getClass()),
+		when(reservaService.getListByFechaDesdeInstalacionSedeIdAndReservaEstados(any(LocalDate.now(ZoneId.of("Europe/Madrid")).getClass()),
 				any(Long.class), any(List.class))).thenReturn(List.of());
 
 		sedeService.eliminar(id);
