@@ -7,6 +7,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import com.gestion.deportiva.dto.filter.ReservaFilter;
 import com.gestion.deportiva.model.Reserva;
+import com.gestion.deportiva.util.Constantes;
 
 public class ReservaSpecifications extends BaseSpecifications<Reserva> {
 
@@ -16,15 +17,15 @@ public class ReservaSpecifications extends BaseSpecifications<Reserva> {
 		specs.add(new ReservaSpecifications().activoTrue());
 
 		if (filter.getSedeId() != null) {
-			specs.add(new ReservaSpecifications().equalsFieldLong(filter.getSedeId(), "instalacion", "sede", "id"));
+			specs.add(new ReservaSpecifications().equalsFieldLong(filter.getSedeId(), Constantes.INSTALACION , "sede", "id"));
 		}
 
 		if (filter.getInstalacionId() != null) {
-			specs.add(new ReservaSpecifications().equalsFieldLong(filter.getInstalacionId(), "instalacion", "id"));
+			specs.add(new ReservaSpecifications().equalsFieldLong(filter.getInstalacionId(), Constantes.INSTALACION, "id"));
 		}
 		
 		if (filter.getInstalacionTipoId() != null) {
-			specs.add(new ReservaSpecifications().equalsFieldLong(filter.getInstalacionTipoId(), "instalacion","instalacionTipo", "id"));
+			specs.add(new ReservaSpecifications().equalsFieldLong(filter.getInstalacionTipoId(), Constantes.INSTALACION,"instalacionTipo", "id"));
 		}
 
 		if (filter.getFechaDesde() != null) {
@@ -45,16 +46,16 @@ public class ReservaSpecifications extends BaseSpecifications<Reserva> {
 		}
 
 		if (filter.getListEmpresaIds() != null && !filter.getListEmpresaIds().isEmpty()) {
-			specs.add(new ReservaSpecifications().fieldInLong(filter.getListEmpresaIds(), "instalacion", "sede",
+			specs.add(new ReservaSpecifications().fieldInLong(filter.getListEmpresaIds(), Constantes.INSTALACION, "sede",
 					"empresa", "id"));
 		}
 
 		if (filter.getListSedeIds() != null && !filter.getListSedeIds().isEmpty()) {
-			specs.add(new ReservaSpecifications().fieldInLong(filter.getListSedeIds(), "instalacion", "sede", "id"));
+			specs.add(new ReservaSpecifications().fieldInLong(filter.getListSedeIds(), Constantes.INSTALACION, "sede", "id"));
 		}
 
 		if (filter.getListInstalacionIds() != null && !filter.getListInstalacionIds().isEmpty()) {
-			specs.add(new ReservaSpecifications().fieldInLong(filter.getListInstalacionIds(), "instalacion", "id"));
+			specs.add(new ReservaSpecifications().fieldInLong(filter.getListInstalacionIds(), Constantes.INSTALACION, "id"));
 		}
 
 		return new ReservaSpecifications().combine(specs);

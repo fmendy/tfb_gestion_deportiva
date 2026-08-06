@@ -20,6 +20,7 @@ import com.gestion.deportiva.model.Reserva;
 import com.gestion.deportiva.model.Usuario;
 import com.gestion.deportiva.service.MailService;
 import com.gestion.deportiva.service.UsuarioTokenService;
+import com.gestion.deportiva.util.Constantes;
 import com.gestion.deportiva.util.Utils;
 
 import jakarta.activation.DataHandler;
@@ -39,7 +40,9 @@ public class MailServiceImpl implements MailService {
 	private String mailUsername;
 
 	private static final DateTimeFormatter ICS_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss");
-	
+
+	private static final String B_TAG_PUNTOS = "</b>: ";
+
 	@Autowired
 	private UsuarioTokenService usuarioTokenService;
 
@@ -59,7 +62,7 @@ public class MailServiceImpl implements MailService {
 		helper.setSubject(asunto);
 
 		if (StringUtils.hasText(icsContent)) {
-			String method = icsContent.contains("METHOD:CANCEL") ? "CANCEL" : "REQUEST";
+			String method = icsContent.contains("METHOD:CANCEL") ? Constantes.CANCEL : "REQUEST";
 
 			MimeBodyPart htmlPart = new MimeBodyPart();
 			htmlPart.setContent(cuerpo, "text/html; charset=UTF-8");
@@ -121,7 +124,7 @@ public class MailServiceImpl implements MailService {
 		String idCita = "reserva-" + reserva.getUuid();
 
 		String icsContent = generarIcsContent(reserva.getFecha(), reserva.getHoraInicio(), reserva.getHoraFin(),
-				tituloCita, descripcionCita, idCita, "CANCEL", "CANCELADO: ", "CANCELLED");
+				tituloCita, descripcionCita, idCita, Constantes.CANCEL, "CANCELADO: ", "CANCELLED");
 
 		enviarMail(Arrays.asList(reserva.getUsuarioCreacion().getEmail()), asunto, cuerpo, icsContent);
 	}
@@ -138,18 +141,19 @@ public class MailServiceImpl implements MailService {
 		StringBuilder sb = new StringBuilder();
 		sb.append(Utils.getMessage(claveCuerpoMensaje)).append("<br>").append("<h1>")
 				.append(Utils.getMessage("mail.reserva.cuerpo.datos")).append("</h1><br>").append("<b>")
-				.append(Utils.getMessage("mail.reserva.cuerpo.localizacion")).append("</b>: ")
+				.append(Utils.getMessage("mail.reserva.cuerpo.localizacion")).append(B_TAG_PUNTOS)
 				.append(prov.getComunidadAutonoma().getNombre()).append(" - ").append(prov.getNombre()).append(" - ")
 				.append(muni.getNombre()).append(" - ").append(sede.getDireccion()).append("<br>").append("<b>")
-				.append(Utils.getMessage("mail.reserva.cuerpo.instalacion")).append("</b>: ")
+				.append(Utils.getMessage("mail.reserva.cuerpo.instalacion")).append(B_TAG_PUNTOS)
 				.append(reserva.getInstalacion().getNombre()).append(" (")
 				.append(reserva.getInstalacion().getInstalacionTipo().getNombre()).append(")<br>").append("<b>")
-				.append(Utils.getMessage("mail.reserva.cuerpo.fecha")).append("</b>: ").append(reserva.getFecha())
+				.append(Utils.getMessage("mail.reserva.cuerpo.fecha")).append(B_TAG_PUNTOS).append(reserva.getFecha())
 				.append("<br>").append("<b>").append(Utils.getMessage("mail.reserva.cuerpo.hora.inicio"))
-				.append("</b>: ").append(reserva.getHoraInicio()).append("<br>").append("<b>")
-				.append(Utils.getMessage("mail.reserva.cuerpo.hora.fin")).append("</b>: ").append(reserva.getHoraFin())
-				.append("<br>").append("<br><small>").append(Utils.getMessage("mail.reserva.cuerpo.contacto.email"))
-				.append("</small> ").append(sede.getEmail());
+				.append(B_TAG_PUNTOS).append(reserva.getHoraInicio()).append("<br>").append("<b>")
+				.append(Utils.getMessage("mail.reserva.cuerpo.hora.fin")).append(B_TAG_PUNTOS)
+				.append(reserva.getHoraFin()).append("<br>").append("<br><small>")
+				.append(Utils.getMessage("mail.reserva.cuerpo.contacto.email")).append("</small> ")
+				.append(sede.getEmail());
 
 		return MessageFormat.format(sb.toString(), reserva.getInstalacion().getNombre(), reserva.getFecha(),
 				reserva.getHoraInicio(), reserva.getHoraFin());
@@ -181,7 +185,7 @@ public class MailServiceImpl implements MailService {
 		if (status != null) {
 			ics.append("STATUS:").append(status).append("\n");
 		}
-		if ("CANCEL".equals(method)) {
+		if (Constantes.CANCEL.equals(method)) {
 			ics.append("SEQUENCE:1\n");
 		}
 
@@ -196,8 +200,9 @@ public class MailServiceImpl implements MailService {
 
 		StringBuilder sb = new StringBuilder();
 		sb.append(Utils.getMessage("mail.usuario.password.olvidada.cuerpo")).append("<br>")
-				.append("<a href='http://localhost:8080/publico/password/resetear?uuid=").append(usuarioTokenService.crearToken(usuario.getId()))
-				.append("'>").append(Utils.getMessage("boton.resetear")).append("</a><br>")
+				.append("<a href='http://localhost:8080/publico/password/resetear?uuid=")
+				.append(usuarioTokenService.crearToken(usuario.getId())).append("'>")
+				.append(Utils.getMessage("boton.resetear")).append("</a><br>")
 				.append(Utils.getMessage("mail.usuario.password.olvidada.cuerpo.dos"));
 		enviarMail(Arrays.asList(usuario.getEmail()), asunto, sb.toString(), null);
 	}
@@ -208,8 +213,8 @@ public class MailServiceImpl implements MailService {
 
 		StringBuilder sb = new StringBuilder();
 		sb.append(Utils.getMessage("mail.usuario.password.olvidada.cuerpo")).append("<br>").append(password)
-				.append("<br>").append("<a href='http://localhost:8080/login'>").append(Utils.getMessage("boton.iniciar.sesion"))
-				.append("</a><br>");
+				.append("<br>").append("<a href='http://localhost:8080/login'>")
+				.append(Utils.getMessage("boton.iniciar.sesion")).append("</a><br>");
 		enviarMail(Arrays.asList(usuario.getEmail()), asunto, sb.toString(), null);
 	}
 

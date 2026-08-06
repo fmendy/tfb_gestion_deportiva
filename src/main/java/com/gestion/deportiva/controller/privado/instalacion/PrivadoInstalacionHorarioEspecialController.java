@@ -35,7 +35,7 @@ import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping(value = "/privado/instalacion/{idInstalacion}/horario/especial")
-@PreAuthorize("hasAuthority('" + Constantes.Permiso.Localizacion.GESTION_INSTALACION  + "')")
+@PreAuthorize("hasAuthority('" + Constantes.Permiso.Localizacion.GESTION_INSTALACION + "')")
 public class PrivadoInstalacionHorarioEspecialController extends BaseController {
 
 	private static final Logger logger = LoggerFactory.getLogger(PrivadoInstalacionHorarioEspecialController.class);
@@ -60,11 +60,12 @@ public class PrivadoInstalacionHorarioEspecialController extends BaseController 
 	}
 
 	@GetMapping("/{id}/editar")
-	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Localizacion.GESTION_INSTALACION  + "')")
+	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Localizacion.GESTION_INSTALACION + "')")
 	public ModelAndView editar(@PathVariable Long idInstalacion, @PathVariable Long id,
 			RedirectAttributes redirectAttributes) throws PermisoException {
 		if (!instalacionHorarioEspecialService.canRead(id)) {
-			logger.error("Instalacion {} intentó acceder a una instalacionHorarioEspecial  sin permisos: usuario {}",
+			logger.error(
+					"Se ha intenado acceder a la Instalacion id {} , instalacionHorarioEspecial  sin permisos: usuario {}",
 					SecurityUtil.getCurrentUserId(), id);
 			throw new PermisoException("No tiene permisos para acceder a esta instalacionHorarioEspecial.");
 		}
@@ -81,7 +82,7 @@ public class PrivadoInstalacionHorarioEspecialController extends BaseController 
 	}
 
 	@PostMapping("/guardar")
-	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Localizacion.GESTION_INSTALACION  + "')")
+	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Localizacion.GESTION_INSTALACION + "')")
 	public ModelAndView guardar(@Valid @ModelAttribute("form") InstalacionHorarioEspecialDTO dto,
 			BindingResult bindingResult, RedirectAttributes redirectAttributes) throws PermisoException {
 		if (!instalacionHorarioEspecialService.canWrite(dto.getId())) {
@@ -118,8 +119,8 @@ public class PrivadoInstalacionHorarioEspecialController extends BaseController 
 	private ModelAndView buildDetailsForm(InstalacionHorarioEspecialDTO dto) {
 		ModelAndView mav = new ModelAndView(VIEW_FORM);
 		mav.addObject("form", dto);
-		mav.addObject("breadcrumbs",
-				BreadcrumbBuilder.start().includeHome().add("breadcrumb.gestion.instalacion", String
+		mav.addObject(Constantes.Breadcrumbs.BREADCRUMBS,
+				BreadcrumbBuilder.start().includeHome().add(Constantes.Breadcrumbs.BREADCRUMBS, String
 						.format(BASE_URL, dto.getInstalacionId().toString()).replace("horario/especial", "editar"))
 						.add("breadcrumb.gestion.instalacion.horario", null).build());
 		addBasicModelDetails(mav, TITLE_PAGE, false);
@@ -132,8 +133,8 @@ public class PrivadoInstalacionHorarioEspecialController extends BaseController 
 		mav.addObject("page", instalacionHorarioEspecialService.getPageByFilter(filter, pageable));
 		mav.addObject("filter", filter);
 		mav.addObject("url", InstalacionHorarioEspecialUtil.cleanUrlPageFilter(filter, request.getRequestURI()));
-		mav.addObject("breadcrumbs", BreadcrumbBuilder.start().includeHome()
-				.add("breadcrumb.gestion.instalacion", String.format(BASE_URL, filter.getInstalacionId().toString())
+		mav.addObject(Constantes.Breadcrumbs.BREADCRUMBS, BreadcrumbBuilder.start().includeHome()
+				.add(Constantes.Breadcrumbs.BREADCRUMBS, String.format(BASE_URL, filter.getInstalacionId().toString())
 						.replace("horario/especial", "editar"))
 				.add("breadcrumb.gestion.instalacion.horario", null).build());
 
@@ -143,7 +144,7 @@ public class PrivadoInstalacionHorarioEspecialController extends BaseController 
 	}
 
 	@GetMapping("/{id}/eliminar")
-	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Localizacion.GESTION_INSTALACION  + "')")
+	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Localizacion.GESTION_INSTALACION + "')")
 	public ModelAndView eliminar(@PathVariable Long idInstalacion, @PathVariable Long id,
 			RedirectAttributes redirectAttributes) throws PermisoException {
 		if (!instalacionHorarioEspecialService.canWrite(id)) {

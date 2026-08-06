@@ -15,14 +15,16 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class WebSecurityConfig {
 
+	private static final String LOGIN_PAGE = "/login";
+
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		http.authorizeHttpRequests(auth -> auth
-				.requestMatchers("/resources/**", "/css/**", "/images/**", "/js/**", "/publico/**", "/login", "/error")
-				.permitAll().anyRequest().authenticated())
-				.formLogin(form -> form.loginPage("/login").defaultSuccessUrl("/privado/usuario/miperfil", true).permitAll())
+		http.authorizeHttpRequests(auth -> auth.requestMatchers("/resources/**", "/css/**", "/images/**", "/js/**",
+				"/publico/**", LOGIN_PAGE, "/error").permitAll().anyRequest().authenticated())
+				.formLogin(form -> form
+						.loginPage(LOGIN_PAGE).defaultSuccessUrl("/privado/usuario/miperfil", true).permitAll())
 				.logout(logout -> logout.logoutUrl("/privado/logout") // URL que invoca el logout
-						.logoutSuccessUrl ("/login") // A dónde redirige después del logout
+						.logoutSuccessUrl(LOGIN_PAGE) // A dónde redirige después del logout
 						.invalidateHttpSession(true) // invalida la sesión
 						.deleteCookies("JSESSIONID") // borra cookie de sesión
 						.permitAll());

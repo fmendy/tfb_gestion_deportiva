@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.gestion.deportiva.dto.InstalacionHorarioEspecialDTO;
 import com.gestion.deportiva.model.InstalacionHorarioEspecial;
 import com.gestion.deportiva.repository.InstalacionHorarioEspecialRepository;
+import com.gestion.deportiva.util.Constantes;
 import com.gestion.deportiva.util.Utils;
 
 import jakarta.validation.ConstraintValidator;
@@ -34,7 +35,7 @@ public class InstalacionHorarioEspecialValidator
 			context.disableDefaultConstraintViolation();
 			context.buildConstraintViolationWithTemplate(
 					Utils.getMessage("error.validacion.instalacion.horario.especial.cerrado.hora.valor"))
-					.addPropertyNode("cerrado").addConstraintViolation();
+					.addPropertyNode(Constantes.CERRADO).addConstraintViolation();
 			return false;
 
 		}
@@ -52,7 +53,7 @@ public class InstalacionHorarioEspecialValidator
 			context.disableDefaultConstraintViolation();
 			context.buildConstraintViolationWithTemplate(
 					Utils.getMessage("error.validacion.instalacion.horario.especial.cerrado.existente"))
-					.addPropertyNode("cerrado").addConstraintViolation();
+					.addPropertyNode(Constantes.CERRADO).addConstraintViolation();
 			return false;
 		}
 
@@ -60,7 +61,7 @@ public class InstalacionHorarioEspecialValidator
 			context.disableDefaultConstraintViolation();
 			context.buildConstraintViolationWithTemplate(
 					Utils.getMessage("error.validacion.instalacion.horario.especial.cerrado.duplicado"))
-					.addPropertyNode("cerrado").addConstraintViolation();
+					.addPropertyNode(Constantes.CERRADO ).addConstraintViolation();
 			return false;
 		}
 

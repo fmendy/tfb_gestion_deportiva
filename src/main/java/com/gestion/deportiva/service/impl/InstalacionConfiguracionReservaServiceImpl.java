@@ -37,7 +37,7 @@ public class InstalacionConfiguracionReservaServiceImpl implements InstalacionCo
 
 	@Override
 	public InstalacionConfiguracionReservaDTO findById(Long id) {
-		logger.info("Buscando InstalacionConfiguracionReserva por ID: {}", id);
+		logger.info("Filtrando InstalacionConfiguracionReserva por ID: {}", id);
 		return instalacionConfiguracionReservaMapper
 				.modelToDTO(instalacionConfiguracionReservaRepository.findByActivoTrueAndId(id));
 	}

@@ -87,7 +87,7 @@ public class PrivadoSedeController extends BaseController {
 	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Localizacion.GESTION_SEDE + "')")
 	public ModelAndView eliminar(@PathVariable Long id, RedirectAttributes redirectAttributes) throws PermisoException {
 		if (!sedeService.canRead(id)) {
-			logger.error("Sede {} intentó acceder a una Sede  sin permisos: usuario {}",
+			logger.error("Sede con id {},  acceso no autorizado a una Sede  sin permisos: usuario {}",
 					SecurityUtil.getCurrentUserId(), id);
 			throw new PermisoException("No tiene permisos para acceder a esta sede.");
 		}
@@ -149,13 +149,13 @@ public class PrivadoSedeController extends BaseController {
 		ModelAndView mav = new ModelAndView(VIEW_FORM);
 		mav.addObject("form", dto);
 		mav.addObject("listEmpresas", empresaService.getListDTO(new EmpresaFilter()));
-		mav.addObject("breadcrumbs",
-				BreadcrumbBuilder.start().includeHome().add("breadcrumb.gestion.sede", null).build());
+		mav.addObject(Constantes.Breadcrumbs.BREADCRUMBS,
+				BreadcrumbBuilder.start().includeHome().add(Constantes.Breadcrumbs.GESTION_SEDE, null).build());
 		mav.addObject("listComunidades", comunidadAutonomaService.getListDTO());
 		mav.addObject("listProvincias", provinciaService.getListDTOByComunidadAutonomaId(dto.getComunidadAutonomaId()));
 		mav.addObject("listMunicipios", municipioService
 				.getListDTOByComunidadAutonomaIdOrProvinciaId(dto.getComunidadAutonomaId(), dto.getProvinciaId()));
-		mav.addObject("breadcrumbs", BreadcrumbBuilder.start().includeHome().add("breadcrumb.gestion.sede", BASE_URL)
+		mav.addObject(Constantes.Breadcrumbs.BREADCRUMBS, BreadcrumbBuilder.start().includeHome().add(Constantes.Breadcrumbs.GESTION_SEDE, BASE_URL)
 				.add("breadcrumb.gestion.sede.editar", null).build());
 		addBasicModelDetails(mav, TITLE_PAGE, false);
 		return mav;
@@ -167,8 +167,8 @@ public class PrivadoSedeController extends BaseController {
 		mav.addObject("filter", filter);
 		mav.addObject("listEmpresas", empresaService.getListDTO(new EmpresaFilter()));
 		mav.addObject("url", SedeUtil.cleanUrlPageFilter(filter, request.getRequestURI()));
-		mav.addObject("breadcrumbs",
-				BreadcrumbBuilder.start().includeHome().add("breadcrumb.gestion.sede", null).build());
+		mav.addObject(Constantes.Breadcrumbs.BREADCRUMBS ,
+				BreadcrumbBuilder.start().includeHome().add(Constantes.Breadcrumbs.GESTION_SEDE , null).build());
 		mav.addObject("listComunidades", comunidadAutonomaService.getListDTO());
 		mav.addObject("listProvincias",
 				provinciaService.getListDTOByComunidadAutonomaId(filter.getComunidadAutonomaId()));

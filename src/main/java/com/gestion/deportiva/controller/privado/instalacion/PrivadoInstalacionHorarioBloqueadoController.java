@@ -64,7 +64,7 @@ public class PrivadoInstalacionHorarioBloqueadoController extends BaseController
 	public ModelAndView editar(@PathVariable Long idInstalacion, @PathVariable Long id,
 			RedirectAttributes redirectAttributes) throws PermisoException {
 		if (!instalacionHorarioBloqueadoService.canRead(id)) {
-			logger.error("Instalacion {} intentó acceder a una instalacionHorarioBloqueado  sin permisos: usuario {}",
+			logger.error("Instalacion on id {} se ha intentado acceder a una instalacionHorarioBloqueado  sin permisos: el usuario {}",
 					SecurityUtil.getCurrentUserId(), id);
 			throw new PermisoException("No tiene permisos para acceder a esta instalacionHorarioBloqueado.");
 		}

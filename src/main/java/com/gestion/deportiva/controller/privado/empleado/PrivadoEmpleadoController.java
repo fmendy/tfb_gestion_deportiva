@@ -52,6 +52,8 @@ public class PrivadoEmpleadoController extends BaseController {
 
 	private static final String VIEW_REGISTRO_FORM = "privado/empleado/registroForm";
 
+	private static final String MSG_EMPLEADO_PERMISOS = "Empleado {} intento acceder a una Empleado  sin permisos: usuario {}";
+
 	@Autowired
 	private EmpleadoService empleadoService;
 
@@ -66,7 +68,7 @@ public class PrivadoEmpleadoController extends BaseController {
 
 	@Autowired
 	private InstalacionService instalacionService;
-	
+
 	@Autowired
 	private UsuarioService usuarioService;
 
@@ -79,19 +81,17 @@ public class PrivadoEmpleadoController extends BaseController {
 	@GetMapping("/{id}/editar")
 	public ModelAndView editar(@PathVariable Long id, RedirectAttributes redirectAttributes) throws PermisoException {
 		if (!empleadoService.canRead(id)) {
-			logger.error("Empleado {} intentó acceder a una Empleado  sin permisos: usuario {}",
-					SecurityUtil.getCurrentUserId(), id);
+			logger.error(MSG_EMPLEADO_PERMISOS, SecurityUtil.getCurrentUserId(), id);
 			throw new PermisoException("No tiene permisos para acceder a esta empleado.");
 		}
 		return loadForm(id, redirectAttributes);
 
 	}
-	
+
 	@GetMapping("/{id}/eliminar")
 	public ModelAndView eliminar(@PathVariable Long id, RedirectAttributes redirectAttributes) throws PermisoException {
 		if (!empleadoService.canRead(id)) {
-			logger.error("Sede {} intentó acceder a una empleado  sin permisos: usuario {}",
-					SecurityUtil.getCurrentUserId(), id);
+			logger.error(MSG_EMPLEADO_PERMISOS, SecurityUtil.getCurrentUserId(), id);
 			throw new PermisoException("No tiene permisos para acceder a este empleado.");
 		}
 		try {
@@ -116,8 +116,7 @@ public class PrivadoEmpleadoController extends BaseController {
 	public ModelAndView registroGuardar(@Valid @ModelAttribute("form") EmpleadoRegistroDTO dto,
 			BindingResult bindingResult, RedirectAttributes redirectAttributes) throws PermisoException {
 		if (!empleadoService.canWrite(dto.getId())) {
-			logger.error("Empleado {} intentó acceder a una Empleado  sin permisos: usuario {}",
-					SecurityUtil.getCurrentUserId(), dto.getId());
+			logger.error(MSG_EMPLEADO_PERMISOS, SecurityUtil.getCurrentUserId(), dto.getId());
 			throw new PermisoException("No tiene permisos para acceder a esta empleado.");
 		}
 
@@ -141,8 +140,7 @@ public class PrivadoEmpleadoController extends BaseController {
 	public ModelAndView guardar(@Valid @ModelAttribute("form") EmpleadoRegistroDTO dto, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) throws PermisoException {
 		if (!empleadoService.canWrite(dto.getId())) {
-			logger.error("Empleado {} intentó acceder a una Empleado  sin permisos: usuario {}",
-					SecurityUtil.getCurrentUserId(), dto.getId());
+			logger.error(MSG_EMPLEADO_PERMISOS, SecurityUtil.getCurrentUserId(), dto.getId());
 			throw new PermisoException("No tiene permisos para acceder a esta empleado.");
 		}
 
@@ -176,8 +174,8 @@ public class PrivadoEmpleadoController extends BaseController {
 	private ModelAndView buildDetailsForm(EmpleadoRegistroDTO dto) {
 		ModelAndView mav = new ModelAndView(VIEW_FORM);
 		mav.addObject("form", dto);
-		mav.addObject("breadcrumbs", BreadcrumbBuilder.start().includeHome()
-				.add("breadcrumb.gestion.empleado", BASE_URL).add("breadcrumb.gestion.empleado.editar", null).build());
+		mav.addObject(Constantes.Breadcrumbs.BREADCRUMBS, BreadcrumbBuilder.start().includeHome()
+				.add(Constantes.Breadcrumbs.GESTION_EMPLEADO , BASE_URL).add("breadcrumb.gestion.empleado.editar", null).build());
 		addBasicModelDetails(mav, TITLE_PAGE, false);
 		return mav;
 	}
@@ -189,8 +187,8 @@ public class PrivadoEmpleadoController extends BaseController {
 		mav.addObject("listEmpresas", empresaService.getListDTOParaEmpleado());
 		mav.addObject("listSedes", sedeService.getListDTOParaEmpleado(null));
 		mav.addObject("listInstalaciones", instalacionService.getListDTOParaEmpleado(null, null));
-		mav.addObject("breadcrumbs",
-				BreadcrumbBuilder.start().includeHome().add("breadcrumb.gestion.empleado", BASE_URL)
+		mav.addObject(Constantes.Breadcrumbs.BREADCRUMBS,
+				BreadcrumbBuilder.start().includeHome().add(Constantes.Breadcrumbs.GESTION_EMPLEADO, BASE_URL)
 						.add("breadcrumb.gestion.empleado.registro", null).build());
 		addBasicModelDetails(mav, TITLE_PAGE, false);
 		return mav;
@@ -205,8 +203,8 @@ public class PrivadoEmpleadoController extends BaseController {
 		mav.addObject("listInstalaciones",
 				instalacionService.getListDTOParaEmpleado(filter.getEmpresaId(), filter.getSedeId()));
 		mav.addObject("url", EmpleadoUtil.cleanUrlPageFilter(filter, request.getRequestURI()));
-		mav.addObject("breadcrumbs",
-				BreadcrumbBuilder.start().includeHome().add("breadcrumb.gestion.empleado", null).build());
+		mav.addObject(Constantes.Breadcrumbs.BREADCRUMBS,
+				BreadcrumbBuilder.start().includeHome().add(Constantes.Breadcrumbs.GESTION_EMPLEADO, null).build());
 		addSortParameter(mav, pageable);
 		addBasicModelDetails(mav, TITLE_PAGE, false);
 		return mav;

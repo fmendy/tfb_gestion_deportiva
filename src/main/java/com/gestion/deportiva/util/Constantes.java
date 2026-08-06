@@ -31,6 +31,27 @@ public class Constantes {
 	public static final String CUSTOM_ERROR = "customError";
 
 	public static final int CUSTOM_ERROR_CODE = 555;
+	
+	public static final String ACTIVO = "activo";
+	
+	public static final String INSTALACION = "instalacion";
+	
+	public static final String MUNICIPIO = "municipio";
+	
+	public static final String CANCEL = "cancel";
+	
+	public static final String CERRADO = "cerrado";
+
+	public static class Breadcrumbs {
+
+		public static final String BREADCRUMBS = "breadcrumbs";
+
+		public static final String GESTION_EMPLEADO = "breadcrumb.gestion.empleado";
+
+		public static final String GESTION_INSTALACION = "breadcrumb.gestion.instalacion";
+
+		public static final String GESTION_SEDE = "breadcrumb.gestion.sede";
+	}
 
 	public static class Rol {
 		public static final String ADMINISTRADOR = "ADMINISTRADOR";
@@ -50,9 +71,9 @@ public class Constantes {
 		public static final String GESTION_GLOBAL = "GESTION_GLOBAL";
 
 		public static class Usuario {
-			
+
 			public static final String GESTION_USUARIO = "GESTION_USUARIO";
-			
+
 			public static final String GESTION_USUARIO_GLOBAL = "GESTION_USUARIO_GLOBAL";
 
 			public static final String GESTION_USUARIO_EMPRESA = "GESTION_USUARIO_EMPRESA";
@@ -66,7 +87,6 @@ public class Constantes {
 		}
 
 		public static class Localizacion {
-			
 
 			public static final String GESTION_EMPRESA = "GESTION_EMPRESA";
 
@@ -88,7 +108,7 @@ public class Constantes {
 			public static final String GESTION_ROL_INSTALACION = "GESTION_ROL_INSTALACION";
 
 		}
-		
+
 		public static class Reserva {
 			public static final String GESTION_RESERVA = "GESTION_RESERVA";
 
@@ -99,11 +119,11 @@ public class Constantes {
 			public static final String GESTION_RESERVA_SEDE = "GESTION_RESERVA_SEDE";
 
 			public static final String GESTION_RESERVA_INSTALACION = "GESTION_RESERVA_INSTALACION";
-			
+
 			public static final String GESTION_RESERVA_PROPIA = "GESTION_RESERVA_PROPIA";
 
 		}
-		
+
 		public static class Sancion {
 			public static final String GESTION_SANCION = "GESTION_SANCION";
 
@@ -114,28 +134,28 @@ public class Constantes {
 			public static final String GESTION_SANCION_SEDE = "GESTION_SANCION_SEDE";
 
 			public static final String GESTION_SANCION_INSTALACION = "GESTION_SANCION_INSTALACION";
-			
+
 			public static final String GESTION_SANCION_PROPIA = "GESTION_SANCION_PROPIA";
 
 		}
 
 	}
-	
+
 	public static class ReservaEstado {
 		public static final String PENDIENTE = "PENDIENTE";
 
 		public static final String APROBADA = "APROBADA";
 
 		public static final String CANCELADA_POR_USUARIO = "CANCELADA POR USUARIO";
-		
+
 		public static final String CANCELADA_POR_EMPRESA = "CANCELADA POR EMPRESA";
 
 		public static final String COMPLETADA = "COMPLETADA";
-		
+
 		public static final String INCOMPLETADA = "INCOMPLETADA";
-		
+
 		public static final String DENEGADA = "DENEGADA";
-		
+
 		public static final String CANCELADA_POR_SANCION = "CANCELADA POR SANCION";
 	}
 

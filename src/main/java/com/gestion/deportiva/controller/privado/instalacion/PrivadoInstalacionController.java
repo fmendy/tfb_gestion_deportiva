@@ -79,7 +79,7 @@ public class PrivadoInstalacionController extends BaseController {
 		return loadForm(id, redirectAttributes);
 
 	}
-	
+
 	@GetMapping("/{id}/eliminar")
 	@PreAuthorize("hasAuthority('" + Constantes.Permiso.Localizacion.GESTION_INSTALACION + "')")
 	public ModelAndView eliminar(@PathVariable Long id, RedirectAttributes redirectAttributes) throws PermisoException {
@@ -147,12 +147,13 @@ public class PrivadoInstalacionController extends BaseController {
 		mav.addObject("form", dto);
 		mav.addObject("listEmpresas", empresaService.getListDTOParaInstalacion());
 		mav.addObject("listSedes", sedeService.getListDTOParaInstalacion(dto.getEmpresaId()));
-		mav.addObject("listInstalacionTipo", Utils.addEmptyOptionIfMoreThanOneOption(instalacionTipoService.getListDTO(), InstalacionTipoDTO.class));
-		mav.addObject("breadcrumbs",
-				BreadcrumbBuilder.start().includeHome().add("breadcrumb.gestion.instalacion", null).build());
+		mav.addObject("listInstalacionTipo",
+				Utils.addEmptyOptionIfMoreThanOneOption(instalacionTipoService.getListDTO(), InstalacionTipoDTO.class));
+		mav.addObject(Constantes.Breadcrumbs.BREADCRUMBS,
+				BreadcrumbBuilder.start().includeHome().add(Constantes.Breadcrumbs.GESTION_INSTALACION, null).build());
 
-		mav.addObject("breadcrumbs",
-				BreadcrumbBuilder.start().includeHome().add("breadcrumb.gestion.instalacion", BASE_URL)
+		mav.addObject(Constantes.Breadcrumbs.BREADCRUMBS,
+				BreadcrumbBuilder.start().includeHome().add(Constantes.Breadcrumbs.GESTION_INSTALACION, BASE_URL)
 						.add("breadcrumb.gestion.instalacion.editar", null).build());
 		addBasicModelDetails(mav, TITLE_PAGE, false);
 		return mav;
@@ -163,10 +164,11 @@ public class PrivadoInstalacionController extends BaseController {
 		mav.addObject("page", instalacionService.getPageByFilter(filter, pageable));
 		mav.addObject("filter", filter);
 		mav.addObject("url", InstalacionUtil.cleanUrlPageFilter(filter, request.getRequestURI()));
-		mav.addObject("breadcrumbs",
-				BreadcrumbBuilder.start().includeHome().add("breadcrumb.gestion.instalacion", null).build());
+		mav.addObject(Constantes.Breadcrumbs.BREADCRUMBS,
+				BreadcrumbBuilder.start().includeHome().add(Constantes.Breadcrumbs.GESTION_INSTALACION, null).build());
 		mav.addObject("listEmpresas", empresaService.getListDTOParaInstalacion());
-		mav.addObject("listInstalacionTipo", Utils.addEmptyOptionIfMoreThanOneOption(instalacionTipoService.getListDTO(), InstalacionTipoDTO.class));
+		mav.addObject("listInstalacionTipo",
+				Utils.addEmptyOptionIfMoreThanOneOption(instalacionTipoService.getListDTO(), InstalacionTipoDTO.class));
 		mav.addObject("listSedes", sedeService.getListDTOParaInstalacion(filter.getEmpresaId()));
 		addSortParameter(mav, pageable);
 		addBasicModelDetails(mav, TITLE_PAGE, false);

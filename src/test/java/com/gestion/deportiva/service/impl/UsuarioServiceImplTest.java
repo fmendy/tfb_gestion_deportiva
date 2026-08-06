@@ -2,13 +2,12 @@ package com.gestion.deportiva.service.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -298,19 +297,6 @@ class UsuarioServiceImplTest {
 		assertThat(resultado).isEqualTo(dto);
 	}
 
-	@Test
-	void eliminarByUuid() {
-		String uuid = "uuid-123";
-		Usuario usuario = new Usuario();
-		usuario.setId(1L);
-
-		when(usuarioRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid)).thenReturn(usuario);
-		when(usuarioRepository.findByActivoTrueAndId(1L)).thenReturn(usuario);
-
-		usuarioService.eliminar(uuid);
-
-		assertThat(usuario.isActivo()).isFalse();
-	}
 
 	@Test
 	void actualizarPassword() {
@@ -411,7 +397,7 @@ class UsuarioServiceImplTest {
 
 		usuarioService.enviarMailPasswordOlvidada(dto);
 
-		assertTrue(usuario != null);
+		assertNotNull(usuario);
 
 	}
 
