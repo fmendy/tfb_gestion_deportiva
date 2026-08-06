@@ -1,6 +1,7 @@
 package com.gestion.deportiva.service.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -166,16 +167,18 @@ class ComunidadAutonomaServiceImplTest {
 
 	@Test
 	void obtenerListDTO() {
-		List<ComunidadAutonoma> listaModel = List.of(new ComunidadAutonoma());
-		List<ComunidadAutonomaDTO> listaDto = List.of(new ComunidadAutonomaDTO());
+	    List<ComunidadAutonoma> listaModel = List.of(new ComunidadAutonoma());
+	    List<ComunidadAutonomaDTO> listaDto = List.of(new ComunidadAutonomaDTO());
 
-		when(comunidadAutonomaRepository.findByActivoTrue()).thenReturn(listaModel);
-		when(comunidadAutonomaMapper.listModelToListDTO(listaModel)).thenReturn(listaDto);
+	    when(comunidadAutonomaRepository.findByActivoTrue()).thenReturn(listaModel);
+	    when(comunidadAutonomaMapper.listModelToListDTO(listaModel)).thenReturn(listaDto);
 
+	    List<ComunidadAutonomaDTO> resultado = comunidadAutonomaService.getListDTO();
 
-		verify(comunidadAutonomaRepository).findByActivoTrue();
+	    verify(comunidadAutonomaRepository).findByActivoTrue();
+	    
+	    assertNotNull(resultado);
 	}
-
 	@Test
 	void obtenerListDTOConFiltro() {
 		List<ComunidadAutonoma> listaModel = List.of(new ComunidadAutonoma());
