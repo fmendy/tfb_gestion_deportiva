@@ -87,7 +87,7 @@ class InstalacionHorarioBloqueadoServiceImplTest {
 		when(instalacionHorarioBloqueadoMapper.dtoToModel(any(InstalacionHorarioBloqueadoDTO.class),
 				any(InstalacionHorarioBloqueado.class))).thenAnswer(invocation -> invocation.getArgument(1));
 
-		Long id = instalacionHorarioBloqueadoService.guardar(dto);
+		instalacionHorarioBloqueadoService.guardar(dto);
 
 		verify(instalacionHorarioBloqueadoRepository).findByActivoTrueAndUuidEqualsIgnoreCase("uuid-nuevo");
 		verify(instalacionHorarioBloqueadoRepository).saveAndFlush(any(InstalacionHorarioBloqueado.class));

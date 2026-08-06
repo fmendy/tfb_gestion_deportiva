@@ -79,7 +79,7 @@ class UsuarioTokenServiceImplTest {
 		when(usuarioTokenMapper.dtoToModel(any(UsuarioTokenDTO.class), any(UsuarioToken.class)))
 				.thenAnswer(invocation -> invocation.getArgument(1));
 
-		Long id = usuarioTokenService.guardar(dto);
+		usuarioTokenService.guardar(dto);
 
 		verify(usuarioTokenRepository).findByActivoTrueAndUuidEqualsIgnoreCase("uuid-nuevo");
 		verify(usuarioTokenRepository).saveAndFlush(any(UsuarioToken.class));

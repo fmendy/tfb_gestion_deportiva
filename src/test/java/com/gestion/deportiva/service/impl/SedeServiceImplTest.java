@@ -103,7 +103,7 @@ class SedeServiceImplTest {
 		when(sedeMapper.dtoToModel(any(SedeDTO.class), any(Sede.class)))
 				.thenAnswer(invocation -> invocation.getArgument(1));
 
-		Long id = sedeService.guardar(dto);
+		sedeService.guardar(dto);
 
 		verify(sedeRepository).findByActivoTrueAndUuidEqualsIgnoreCase("uuid-nuevo");
 		verify(sedeRepository).saveAndFlush(any(Sede.class));
@@ -111,8 +111,6 @@ class SedeServiceImplTest {
 
 	@Test
 	void obtenerPaginaPorFiltro() {
-		SedeFilter filter = new SedeFilter();
-		Pageable pageable = PageRequest.of(0, 10);
 		Sede model = new Sede();
 		Page<Sede> pageModel = new PageImpl<>(List.of(model));
 		Page<SedeDTO> pageDto = new PageImpl<>(List.of(new SedeDTO()));
@@ -130,8 +128,9 @@ class SedeServiceImplTest {
 		model.setActivo(true);
 
 		when(sedeRepository.findByActivoTrueAndId(id)).thenReturn(model);
-		when(reservaService.getListByFechaDesdeInstalacionSedeIdAndReservaEstados(any(LocalDate.now(ZoneId.of("Europe/Madrid")).getClass()),
-				any(Long.class), any(List.class))).thenReturn(List.of());
+		when(reservaService.getListByFechaDesdeInstalacionSedeIdAndReservaEstados(
+				any(LocalDate.now(ZoneId.of("Europe/Madrid")).getClass()), any(Long.class), any(List.class)))
+				.thenReturn(List.of());
 
 		sedeService.eliminar(id);
 
@@ -188,7 +187,6 @@ class SedeServiceImplTest {
 
 	@Test
 	void obtenerListDTOConFiltro() {
-		SedeFilter filter = new SedeFilter();
 		List<Sede> listaModel = List.of(new Sede());
 		List<SedeDTO> listaDto = List.of(new SedeDTO());
 

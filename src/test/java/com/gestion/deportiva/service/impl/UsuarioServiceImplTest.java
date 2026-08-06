@@ -115,7 +115,7 @@ class UsuarioServiceImplTest {
 		when(usuarioRepository.findByActivoTrueAndUuidEqualsIgnoreCase("uuid-123")).thenReturn(model);
 		when(usuarioMapper.dtoToModel(dto, model)).thenReturn(model);
 
-		Long id = usuarioService.guardar(dto);
+		usuarioService.guardar(dto);
 
 		verify(usuarioRepository).findByActivoTrueAndUuidEqualsIgnoreCase("uuid-123");
 		verify(usuarioRepository).saveAndFlush(model);
@@ -296,7 +296,6 @@ class UsuarioServiceImplTest {
 
 		assertThat(resultado).isEqualTo(dto);
 	}
-
 
 	@Test
 	void actualizarPassword() {

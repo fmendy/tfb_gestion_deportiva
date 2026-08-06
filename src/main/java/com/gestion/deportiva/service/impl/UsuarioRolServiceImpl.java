@@ -64,6 +64,7 @@ public class UsuarioRolServiceImpl implements UsuarioRolService {
 		dto.setRolId(rolRepository.findByActivoTrueAndUuidEqualsIgnoreCase(dto.getRolUuid()).getId());
 		dto.setUsuarioId(usuarioRepository.findByActivoTrueAndUuidEqualsIgnoreCase(dto.getUsuarioUuid()).getId());
 		model = usuarioRolMapper.dtoToModel(dto, model);
+		usuarioRolRepository.saveAndFlush(model);
 		return dto.getId();
 	}
 

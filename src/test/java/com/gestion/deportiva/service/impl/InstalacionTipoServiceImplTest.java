@@ -80,7 +80,7 @@ class InstalacionTipoServiceImplTest {
 		when(instalacionTipoMapper.dtoToModel(any(InstalacionTipoDTO.class), any(InstalacionTipo.class)))
 				.thenAnswer(invocation -> invocation.getArgument(1));
 
-		Long id = instalacionTipoService.guardar(dto);
+		instalacionTipoService.guardar(dto);
 
 		verify(instalacionTipoRepository).findByActivoTrueAndUuidEqualsIgnoreCase("uuid-nuevo");
 		verify(instalacionTipoRepository).saveAndFlush(any(InstalacionTipo.class));
@@ -183,7 +183,6 @@ class InstalacionTipoServiceImplTest {
 
 	@Test
 	void obtenerListDTOConFiltro() {
-		InstalacionTipoFilter filter = new InstalacionTipoFilter();
 		List<InstalacionTipo> listaModel = List.of(new InstalacionTipo());
 		List<InstalacionTipoDTO> listaDto = List.of(new InstalacionTipoDTO());
 

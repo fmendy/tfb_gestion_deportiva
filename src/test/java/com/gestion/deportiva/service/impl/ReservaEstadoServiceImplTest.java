@@ -79,7 +79,7 @@ class ReservaEstadoServiceImplTest {
 		when(reservaEstadoMapper.dtoToModel(any(ReservaEstadoDTO.class), any(ReservaEstado.class)))
 				.thenAnswer(invocation -> invocation.getArgument(1));
 
-		Long id = reservaEstadoService.guardar(dto);
+		reservaEstadoService.guardar(dto);
 
 		verify(reservaEstadoRepository).findByActivoTrueAndUuidEqualsIgnoreCase("uuid-nuevo");
 		verify(reservaEstadoRepository).saveAndFlush(any(ReservaEstado.class));
@@ -178,7 +178,6 @@ class ReservaEstadoServiceImplTest {
 
 	@Test
 	void obtenerListDTOConFiltro() {
-		ReservaEstadoFilter filter = new ReservaEstadoFilter();
 		List<ReservaEstado> listaModel = List.of(new ReservaEstado());
 		List<ReservaEstadoDTO> listaDto = List.of(new ReservaEstadoDTO());
 

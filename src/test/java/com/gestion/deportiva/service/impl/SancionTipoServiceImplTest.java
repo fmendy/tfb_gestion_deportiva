@@ -79,7 +79,7 @@ class SancionTipoServiceImplTest {
 		when(sancionTipoMapper.dtoToModel(any(SancionTipoDTO.class), any(SancionTipo.class)))
 				.thenAnswer(invocation -> invocation.getArgument(1));
 
-		Long id = sancionTipoService.guardar(dto);
+		sancionTipoService.guardar(dto);
 
 		verify(sancionTipoRepository).findByActivoTrueAndUuidEqualsIgnoreCase("uuid-nuevo");
 		verify(sancionTipoRepository).saveAndFlush(any(SancionTipo.class));
@@ -178,7 +178,6 @@ class SancionTipoServiceImplTest {
 
 	@Test
 	void obtenerListDTOConFiltro() {
-		SancionTipoFilter filter = new SancionTipoFilter();
 		List<SancionTipo> listaModel = List.of(new SancionTipo());
 		List<SancionTipoDTO> listaDto = List.of(new SancionTipoDTO());
 

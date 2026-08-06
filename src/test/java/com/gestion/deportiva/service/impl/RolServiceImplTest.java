@@ -79,7 +79,7 @@ class RolServiceImplTest {
 		when(rolMapper.dtoToModel(any(RolDTO.class), any(Rol.class)))
 				.thenAnswer(invocation -> invocation.getArgument(1));
 
-		Long id = rolService.guardar(dto);
+		rolService.guardar(dto);
 
 		verify(rolRepository).findByActivoTrueAndUuidEqualsIgnoreCase("uuid-nuevo");
 		verify(rolRepository).saveAndFlush(any(Rol.class));
@@ -177,7 +177,6 @@ class RolServiceImplTest {
 
 	@Test
 	void obtenerListDTOConFiltro() {
-		RolFilter filter = new RolFilter();
 		List<Rol> listaModel = List.of(new Rol());
 		List<RolDTO> listaDto = List.of(new RolDTO());
 

@@ -78,7 +78,7 @@ class UsuarioInstalacionServiceImplTest {
 		when(usuarioInstalacionMapper.dtoToModel(any(UsuarioInstalacionDTO.class), any(UsuarioInstalacion.class)))
 				.thenAnswer(invocation -> invocation.getArgument(1));
 
-		Long id = usuarioInstalacionService.guardar(dto);
+		usuarioInstalacionService.guardar(dto);
 
 		verify(usuarioInstalacionRepository).findByActivoTrueAndUuidEqualsIgnoreCase("uuid-nuevo");
 		verify(usuarioInstalacionRepository).saveAndFlush(any(UsuarioInstalacion.class));

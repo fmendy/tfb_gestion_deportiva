@@ -80,7 +80,7 @@ class InstalacionConfiguracionReservaServiceImplTest {
 		when(instalacionConfiguracionReservaMapper.dtoToModel(any(InstalacionConfiguracionReservaDTO.class),
 				any(InstalacionConfiguracionReserva.class))).thenAnswer(invocation -> invocation.getArgument(1));
 
-		Long id = instalacionConfiguracionReservaService.guardar(dto);
+		instalacionConfiguracionReservaService.guardar(dto);
 
 		verify(instalacionConfiguracionReservaRepository).findByActivoTrueAndUuidEqualsIgnoreCase("uuid-nuevo");
 		verify(instalacionConfiguracionReservaRepository).saveAndFlush(any(InstalacionConfiguracionReserva.class));

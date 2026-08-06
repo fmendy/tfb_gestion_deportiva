@@ -178,7 +178,6 @@ class ComunidadAutonomaServiceImplTest {
 
 	@Test
 	void obtenerListDTOConFiltro() {
-		ComunidadAutonomaFilter filter = new ComunidadAutonomaFilter();
 		List<ComunidadAutonoma> listaModel = List.of(new ComunidadAutonoma());
 		List<ComunidadAutonomaDTO> listaDto = List.of(new ComunidadAutonomaDTO());
 

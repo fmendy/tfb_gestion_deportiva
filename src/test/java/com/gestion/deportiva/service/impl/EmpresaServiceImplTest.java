@@ -111,7 +111,7 @@ class EmpresaServiceImplTest {
 		when(empresaMapper.dtoToModel(any(EmpresaDTO.class), any(Empresa.class)))
 				.thenAnswer(invocation -> invocation.getArgument(1));
 
-		Long id = empresaService.guardar(dto);
+		empresaService.guardar(dto);
 
 		verify(empresaRepository).findByActivoTrueAndId(1L);
 		verify(empresaRepository).saveAndFlush(any(Empresa.class));

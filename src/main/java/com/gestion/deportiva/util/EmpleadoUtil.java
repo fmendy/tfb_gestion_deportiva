@@ -25,7 +25,7 @@ public class EmpleadoUtil {
 
 			if (filter.getListEmpresaIds() != null && !filter.getListEmpresaIds().isEmpty()) {
 				retVal = retVal + "&listEmpresaIds=" + filter.getListEmpresaIds();
-				retVal.replace("[", "");
+				retVal = retVal.replace("[", "").replace("]", "");
 			}
 
 			if (filter.getListSedeIds() != null && !filter.getListSedeIds().isEmpty()) {

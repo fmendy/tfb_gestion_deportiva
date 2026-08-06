@@ -89,7 +89,7 @@ class ProvinciaServiceImplTest {
 		when(provinciaMapper.dtoToModel(any(ProvinciaDTO.class), any(Provincia.class), any(ComunidadAutonoma.class)))
 				.thenAnswer(invocation -> invocation.getArgument(1));
 
-		Long id = provinciaService.guardar(dto);
+		provinciaService.guardar(dto);
 
 		verify(provinciaRepository).findByActivoTrueAndUuidEqualsIgnoreCase("uuid-nuevo");
 		verify(comunidadAutonomaRepository).findByActivoTrueAndUuidEqualsIgnoreCase("com-uuid");

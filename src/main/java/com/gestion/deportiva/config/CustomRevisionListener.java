@@ -18,7 +18,7 @@ public class CustomRevisionListener implements RevisionListener {
 			Long userId = SecurityUtil.getCurrentUserId();
 			rev.setUsuarioId(userId);
 		} catch (IllegalStateException e) {
-			logger.error("Error al obtener el usuario actual: " + e.getMessage());
+			logger.error("Error al obtener el usuario actual: ", e.getMessage());
 			rev.setUsuarioId(null);
 		}
 

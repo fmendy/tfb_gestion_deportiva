@@ -145,7 +145,7 @@ class SancionServiceImplTest {
 		when(sancionMapper.dtoToModel(any(SancionDTO.class), any(Sancion.class)))
 				.thenAnswer(invocation -> invocation.getArgument(1));
 
-		Long id = sancionService.guardar(dto);
+		sancionService.guardar(dto);
 
 		verify(sancionRepository).findByActivoTrueAndUuidEqualsIgnoreCase("uuid-nuevo");
 		verify(sancionRepository).saveAndFlush(any(Sancion.class));

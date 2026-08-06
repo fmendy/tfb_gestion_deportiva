@@ -86,7 +86,7 @@ class InstalacionHorarioServiceImplTest {
 		when(instalacionHorarioMapper.dtoToModel(any(InstalacionHorarioDTO.class), any(InstalacionHorario.class)))
 				.thenAnswer(invocation -> invocation.getArgument(1));
 
-		Long id = instalacionHorarioService.guardar(dto);
+		instalacionHorarioService.guardar(dto);
 
 		verify(instalacionHorarioRepository).findByActivoTrueAndUuidEqualsIgnoreCase("uuid-nuevo");
 		verify(instalacionHorarioRepository).saveAndFlush(any(InstalacionHorario.class));

@@ -122,7 +122,7 @@ class ReservaServiceImplTest {
 		when(reservaMapper.dtoToModel(any(ReservaDTO.class), any(Reserva.class)))
 				.thenAnswer(invocation -> invocation.getArgument(1));
 
-		Long id = reservaService.guardar(dto);
+		reservaService.guardar(dto);
 
 		verify(reservaRepository).findByActivoTrueAndUuidEqualsIgnoreCase("uuid-nuevo");
 		verify(reservaRepository).saveAndFlush(any(Reserva.class));

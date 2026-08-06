@@ -88,7 +88,7 @@ class MunicipioServiceImplTest {
 		when(municipioMapper.dtoToModel(any(MunicipioDTO.class), any(Municipio.class), any(Provincia.class)))
 				.thenAnswer(invocation -> invocation.getArgument(1));
 
-		Long id = municipioService.guardar(dto);
+		municipioService.guardar(dto);
 
 		verify(municipioRepository).findByActivoTrueAndUuidEqualsIgnoreCase("uuid-nuevo");
 		verify(provinciaRepository).findByActivoTrueAndUuidEqualsIgnoreCase("prov-uuid");
@@ -201,7 +201,6 @@ class MunicipioServiceImplTest {
 
 	@Test
 	void obtenerListDTOConFiltro() {
-		MunicipioFilter filter = new MunicipioFilter();
 		List<Municipio> listaModel = List.of(new Municipio());
 		List<MunicipioDTO> listaDto = List.of(new MunicipioDTO());
 
