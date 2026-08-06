@@ -1,7 +1,5 @@
 package com.gestion.deportiva.util;
 
-import org.springframework.util.StringUtils;
-
 import com.gestion.deportiva.dto.filter.EmpleadoFilter;
 
 import lombok.experimental.UtilityClass;
@@ -10,51 +8,33 @@ import lombok.experimental.UtilityClass;
 public class EmpleadoUtil {
 
 	public String cleanUrlPageFilter(EmpleadoFilter filter, String url) {
-		String retVal = url;
-		if (retVal.indexOf("?") < 0) {
-			retVal = retVal + "?";
+		StringBuilder retVal = new StringBuilder(url);
+
+		if (!url.contains("?")) {
+			retVal.append("?");
 		}
+
 		if (filter != null) {
-			if (StringUtils.hasText(filter.getEmail())) {
-				retVal = retVal + "&email=" + filter.getEmail();
-			}
-
-			if (StringUtils.hasText(filter.getNombre())) {
-				retVal = retVal + "&nombre=" + filter.getNombre();
-			}
-
-			if (filter.getListEmpresaIds() != null && !filter.getListEmpresaIds().isEmpty()) {
-				retVal = retVal + "&listEmpresaIds=" + filter.getListEmpresaIds();
-				retVal = retVal.replace("[", "").replace("]", "");
-			}
-
-			if (filter.getListSedeIds() != null && !filter.getListSedeIds().isEmpty()) {
-				retVal = retVal + "&listSedeIds=" + filter.getListSedeIds();
-			}
-
-			if (filter.getListInstalacionIds() != null && !filter.getListInstalacionIds().isEmpty()) {
-				retVal = retVal + "&listInstalacionIds=" + filter.getListInstalacionIds();
-			}
-
-			if (filter.getEmpresaId() != null) {
-				retVal = retVal + "&empresaId=" + filter.getEmpresaId();
-			}
-
-			if (filter.getSedeId() != null) {
-				retVal = retVal + "&sedeId=" + filter.getSedeId();
-			}
-
-			if (filter.getInstalacionId() != null) {
-				retVal = retVal + "&instalacionId=" + filter.getInstalacionId();
-			}
-
-			if (filter.getRolId() != null) {
-				retVal = retVal + "&rolId=" + filter.getRolId();
-			}
-			retVal = retVal.replace("[", "").replace("]", "");
-
+			appendFilterParams(retVal, filter);
 		}
-		return retVal;
+
+		return retVal.toString();
+	}
+
+	private void appendFilterParams(StringBuilder url, EmpleadoFilter filter) {
+		Utils.appendParam(url, "email", filter.getEmail());
+		Utils.appendParam(url, "nombre", filter.getNombre());
+		String listEmpresasIds = filter.getListEmpresaIds().toString().replace("[", "").replace("]", "");
+		Utils.appendParam(url, "listEmpresaIds", listEmpresasIds);
+		String listSedesIds = filter.getListSedeIds().toString().replace("[", "").replace("]", "");
+		Utils.appendParam(url, "listSedeIds", listSedesIds);
+		String listInstalacionIds = filter.getListInstalacionIds().toString().replace("[", "").replace("]", "");
+		Utils.appendParam(url, "listInstalacionIds", listInstalacionIds);
+		Utils.appendParam(url, "listIds", filter.getListSedeIds());
+		Utils.appendParam(url, "empresaId", filter.getEmpresaId());
+		Utils.appendParam(url, "instalacionId", filter.getInstalacionId());
+		Utils.appendParam(url, "rolId", filter.getRolId());
+
 	}
 
 }

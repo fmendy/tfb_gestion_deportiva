@@ -399,8 +399,9 @@ public class ReservaServiceImpl implements ReservaService {
 		List<Reserva> reservas = reservaRepository.findByActivoTrueAndFechaAndInstalacionIdAndReservaEstadoNombreIn(
 				date, instalacionId, listReservaEstados);
 
-		if (reservas.isEmpty())
+		if (reservas.isEmpty()) {
 			return;
+		}
 
 		List<InstalacionHorarioBloqueado> bloqueos = instalacionHorarioBloqueadoRepository
 				.findByActivoTrueAndInstalacionIdAndFecha(instalacionId, date);
@@ -409,37 +410,54 @@ public class ReservaServiceImpl implements ReservaService {
 		List<InstalacionHorario> normales = instalacionHorarioRepository
 				.findByActivoTrueAndInstalacionIdAndDiaSemana(instalacionId, (long) date.getDayOfWeek().getValue());
 
+		List<Reserva> reservasAfectadas = determinarReservasAfectadas(reservas, bloqueos, especiales, normales);
+
+		cancelarReservasEmpresa(reservasAfectadas);
+	}
+
+	private List<Reserva> determinarReservasAfectadas(List<Reserva> reservas,
+			List<InstalacionHorarioBloqueado> bloqueos, List<InstalacionHorarioEspecial> especiales,
+			List<InstalacionHorario> normales) {
+
+		if (especiales.stream().anyMatch(InstalacionHorarioEspecial::getCerrado)) {
+			return new ArrayList<>(reservas);
+		}
+
 		List<Reserva> reservasAfectadas = new ArrayList<>();
-
-		if (especiales.stream().anyMatch(e -> e.getCerrado())) {
-			reservasAfectadas.addAll(reservas);
-		} else {
-			for (Reserva reserva : reservas) {
-				boolean solapaConBloqueo = bloqueos.stream()
-						.anyMatch(b -> reserva.getHoraInicio().isBefore(b.getHoraFin())
-								&& reserva.getHoraFin().isAfter(b.getHoraInicio()));
-
-				boolean fueraDeRango = false;
-
-				if (!especiales.isEmpty()) {
-					boolean dentroDeEspecial = especiales.stream()
-							.anyMatch(e -> !reserva.getHoraInicio().isBefore(e.getHoraInicio())
-									&& !reserva.getHoraFin().isAfter(e.getHoraFin()));
-					fueraDeRango = !dentroDeEspecial;
-				} else {
-					boolean dentroDeNormal = normales.stream()
-							.anyMatch(n -> !reserva.getHoraInicio().isBefore(n.getHoraInicio())
-									&& !reserva.getHoraFin().isAfter(n.getHoraFin()));
-					fueraDeRango = !dentroDeNormal;
-				}
-
-				if (solapaConBloqueo || fueraDeRango) {
-					reservasAfectadas.add(reserva);
-				}
+		for (Reserva reserva : reservas) {
+			if (estaReservaAfectada(reserva, bloqueos, especiales, normales)) {
+				reservasAfectadas.add(reserva);
 			}
 		}
-		cancelarReservasEmpresa(reservasAfectadas);
+		return reservasAfectadas;
+	}
 
+	private boolean estaReservaAfectada(Reserva reserva, List<InstalacionHorarioBloqueado> bloqueos,
+			List<InstalacionHorarioEspecial> especiales, List<InstalacionHorario> normales) {
+
+		boolean solapaConBloqueo = bloqueos.stream().anyMatch(b -> reserva.getHoraInicio().isBefore(b.getHoraFin())
+				&& reserva.getHoraFin().isAfter(b.getHoraInicio()));
+
+		if (solapaConBloqueo) {
+			return true;
+		}
+
+		return estaFueraDeRangoHorario(reserva, especiales, normales);
+	}
+
+	private boolean estaFueraDeRangoHorario(Reserva reserva, List<InstalacionHorarioEspecial> especiales,
+			List<InstalacionHorario> normales) {
+
+		if (!especiales.isEmpty()) {
+			boolean dentroDeEspecial = especiales.stream()
+					.anyMatch(e -> !reserva.getHoraInicio().isBefore(e.getHoraInicio())
+							&& !reserva.getHoraFin().isAfter(e.getHoraFin()));
+			return !dentroDeEspecial;
+		}
+
+		boolean dentroDeNormal = normales.stream().anyMatch(n -> !reserva.getHoraInicio().isBefore(n.getHoraInicio())
+				&& !reserva.getHoraFin().isAfter(n.getHoraFin()));
+		return !dentroDeNormal;
 	}
 
 	@Override

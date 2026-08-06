@@ -250,30 +250,48 @@ public class InstalacionServiceImpl implements InstalacionService {
 	public List<FranjaHorariaDTO> calcularDisponibilidad(Long instalacionId, LocalDate fecha) {
 		InstalacionConfiguracionReserva config = instalacionConfiguracionReservaRepository
 				.findByActivoTrueAndInstalacionId(instalacionId);
-		long intervalo = config.getIntervaloHorario();
 
-		List<InstalacionHorarioEspecial> especiales = instalacionHorarioEspecialRepository
-				.findByActivoTrueAndInstalacionIdAndFecha(instalacionId, fecha);
 		List<InstalacionHorarioBloqueado> bloqueos = instalacionHorarioBloqueadoRepository
 				.findByActivoTrueAndInstalacionIdAndFecha(instalacionId, fecha);
+
 		List<Reserva> reservas = reservaRepository.findByInstalacionIdAndFechaAndReservaEstadoNombreIn(instalacionId,
 				fecha, List.of("PENDIENTE", "APROBADA", "COMPLETADA", "USUARIO NO COMPARECE"));
 
-		List<InstalacionHorario> horariosActivos = new ArrayList<>();
+		List<InstalacionHorario> horariosActivos = obtenerHorariosActivos(instalacionId, fecha);
+		if (horariosActivos.isEmpty()) {
+			return new ArrayList<>();
+		}
+
+		return generarFranjasHorarias(horariosActivos, config, reservas, bloqueos);
+	}
+
+	private List<InstalacionHorario> obtenerHorariosActivos(Long instalacionId, LocalDate fecha) {
+		List<InstalacionHorarioEspecial> especiales = instalacionHorarioEspecialRepository
+				.findByActivoTrueAndInstalacionIdAndFecha(instalacionId, fecha);
+
 		if (!especiales.isEmpty()) {
-			if (especiales.get(0).getCerrado())
+			if (especiales.get(0).getCerrado()) {
 				return new ArrayList<>();
+			}
+			List<InstalacionHorario> horarios = new ArrayList<>();
 			for (InstalacionHorarioEspecial e : especiales) {
 				InstalacionHorario ih = new InstalacionHorario();
 				ih.setHoraInicio(e.getHoraInicio());
 				ih.setHoraFin(e.getHoraFin());
-				horariosActivos.add(ih);
+				horarios.add(ih);
 			}
-		} else {
-			horariosActivos = buscarHorarioAplicable(instalacionId, fecha);
+			return horarios;
 		}
 
+		return buscarHorarioAplicable(instalacionId, fecha);
+	}
+
+	private List<FranjaHorariaDTO> generarFranjasHorarias(List<InstalacionHorario> horariosActivos,
+			InstalacionConfiguracionReserva config, List<Reserva> reservas,
+			List<InstalacionHorarioBloqueado> bloqueos) {
+
 		List<FranjaHorariaDTO> resultado = new ArrayList<>();
+		long intervalo = config.getIntervaloHorario();
 
 		for (InstalacionHorario h : horariosActivos) {
 			for (LocalTime inicio = h.getHoraInicio(); inicio.plusMinutes(config.getDuracionMin())
@@ -281,22 +299,8 @@ public class InstalacionServiceImpl implements InstalacionService {
 					|| inicio.plusMinutes(config.getDuracionMin())
 							.equals(h.getHoraFin()); inicio = inicio.plusMinutes(intervalo)) {
 
-				List<FranjaHorariaDuracionDTO> opcionesValidas = new ArrayList<>();
-
-				for (long duracion = config.getDuracionMin(); duracion <= config
-						.getDuracionMax(); duracion += intervalo) {
-					LocalTime fin = inicio.plusMinutes(duracion);
-
-					if (fin.isAfter(h.getHoraFin()))
-						break;
-
-					if (estaLibre(inicio, fin, reservas, bloqueos)) {
-						opcionesValidas.add(new FranjaHorariaDuracionDTO(duracion, fin));
-					}
-
-					if (config.getDuracionMin().equals(config.getDuracionMax()))
-						break;
-				}
+				List<FranjaHorariaDuracionDTO> opcionesValidas = calcularOpcionesValidas(inicio, h, config, reservas,
+						bloqueos, intervalo);
 
 				if (!opcionesValidas.isEmpty()) {
 					resultado.add(new FranjaHorariaDTO(inicio, opcionesValidas, "DISPONIBLE"));
@@ -304,6 +308,31 @@ public class InstalacionServiceImpl implements InstalacionService {
 			}
 		}
 		return resultado;
+	}
+
+	private List<FranjaHorariaDuracionDTO> calcularOpcionesValidas(LocalTime inicio, InstalacionHorario h,
+			InstalacionConfiguracionReserva config, List<Reserva> reservas, List<InstalacionHorarioBloqueado> bloqueos,
+			long intervalo) {
+
+		List<FranjaHorariaDuracionDTO> opcionesValidas = new ArrayList<>();
+
+		for (long duracion = config.getDuracionMin(); duracion <= config.getDuracionMax(); duracion += intervalo) {
+			LocalTime fin = inicio.plusMinutes(duracion);
+
+			if (fin.isAfter(h.getHoraFin())) {
+				break;
+			}
+
+			if (estaLibre(inicio, fin, reservas, bloqueos)) {
+				opcionesValidas.add(new FranjaHorariaDuracionDTO(duracion, fin));
+			}
+
+			if (config.getDuracionMin().equals(config.getDuracionMax())) {
+				break;
+			}
+		}
+
+		return opcionesValidas;
 	}
 
 	private boolean estaLibre(LocalTime inicio, LocalTime fin, List<Reserva> reservas,
