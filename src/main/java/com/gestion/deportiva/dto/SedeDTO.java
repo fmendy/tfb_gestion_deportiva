@@ -50,7 +50,7 @@ public class SedeDTO extends MaestraDTO {
 	
 	private String logo;
 	
-	private MultipartFile logoFile;
+	private transient MultipartFile logoFile;
 	
 	private Boolean logoBorrar;
 	

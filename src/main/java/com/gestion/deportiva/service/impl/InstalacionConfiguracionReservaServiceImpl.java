@@ -44,7 +44,7 @@ public class InstalacionConfiguracionReservaServiceImpl implements InstalacionCo
 
 	@Override
 	public InstalacionConfiguracionReservaDTO findByUuid(String uuid) {
-		logger.info("Buscando InstalacionConfiguracionReserva por UUID: {}", uuid);
+		logger.info("Filtrando InstalacionConfiguracionReserva por UUID: {}", uuid);
 		return instalacionConfiguracionReservaMapper
 				.modelToDTO(instalacionConfiguracionReservaRepository.findByActivoTrueAndUuidEqualsIgnoreCase(uuid));
 	}

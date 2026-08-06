@@ -1,5 +1,6 @@
 package com.gestion.deportiva.dto;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -12,8 +13,10 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class InstalacionHorarioPublicoDTO {
+public class InstalacionHorarioPublicoDTO implements Serializable {
 
+	private static final long serialVersionUID = 2417494153930195657L;
+	
 	private LocalDate fecha; 
 	private Integer diaSemana; // 1-7 (lunes-domingo)
 

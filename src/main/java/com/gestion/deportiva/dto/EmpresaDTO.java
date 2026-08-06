@@ -22,25 +22,23 @@ import lombok.Setter;
 public class EmpresaDTO extends MaestraDTO {
 
 	private static final long serialVersionUID = -4826841690566784966L;
-	
+
 	@NotEmpty
 	@Size(max = 250)
 	private String email;
-	
-	private MultipartFile logo;
-	
+
+	private transient MultipartFile logo;
+
 	private String logoUrl;
-	
+
 	private Boolean logoBorrar;
-	
+
 	@Size(max = 250)
 	private String url;
-	
+
 	@Size(max = 1250)
 	private String descripcion;
-	
-	
-	
+
 	@Size(max = 20)
 	@NotEmpty
 	@CifValid(message = "{error.validacion.cif.invalido}")

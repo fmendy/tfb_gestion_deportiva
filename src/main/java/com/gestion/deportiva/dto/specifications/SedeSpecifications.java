@@ -8,6 +8,7 @@ import org.springframework.util.StringUtils;
 
 import com.gestion.deportiva.dto.filter.SedeFilter;
 import com.gestion.deportiva.model.Sede;
+import com.gestion.deportiva.util.Constantes;
 
 public class SedeSpecifications extends BaseSpecifications<Sede> {
 
@@ -25,16 +26,17 @@ public class SedeSpecifications extends BaseSpecifications<Sede> {
 		}
 
 		if (filter.getMunicipioId() != null) {
-			specs.add(new SedeSpecifications().equalsFieldLong(filter.getMunicipioId(), "municipio", "id"));
+			specs.add(new SedeSpecifications().equalsFieldLong(filter.getMunicipioId(), Constantes.MUNICIPIO , "id"));
 		}
 
 		if (filter.getProvinciaId() != null) {
 			specs.add(
-					new SedeSpecifications().equalsFieldLong(filter.getProvinciaId(), "municipio", "provincia", "id"));
+					new SedeSpecifications().equalsFieldLong(filter.getProvinciaId(), Constantes.MUNICIPIO, "provincia", "id"));
 		}
 
 		if (filter.getComunidadAutonomaId() != null) {
-			specs.add(new SedeSpecifications().equalsFieldLong(filter.getComunidadAutonomaId(), "municipio",
+			specs.add(new SedeSpecifications().equalsFieldLong(filter.getComunidadAutonomaId(),
+					Constantes.MUNICIPIO,
 					"provincia", "comunidadAutonoma", "id"));
 		}
 
