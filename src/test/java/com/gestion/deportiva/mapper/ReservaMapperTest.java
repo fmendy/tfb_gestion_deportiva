@@ -317,7 +317,7 @@ class ReservaMapperTest {
 			model.setInstalacion(instalacion);
 			model.setUsuarioCreacion(usuario);
 			model.setReservaEstado(estadoPendiente);
-			model.setFecha(LocalDate.now().plusDays(1));
+			model.setFecha(LocalDate.now().plusDays(5));
 			model.setHoraInicio(LocalTime.of(10, 0));
 			model.setHoraFin(LocalTime.of(11, 0));
 
@@ -327,8 +327,8 @@ class ReservaMapperTest {
 			assertThat(listadoDTO.getId()).isEqualTo(1L);
 			assertThat(listadoDTO.getUsuarioId()).isEqualTo(100L);
 			assertThat(listadoDTO.isMostrarEliminar()).isTrue();
-			assertThat(listadoDTO.isMostrarAprobar()).isTrue();
-			assertThat(listadoDTO.isMostrarDenegar()).isTrue();
+			assertThat(listadoDTO.isMostrarAprobar()).isFalse();
+			assertThat(listadoDTO.isMostrarDenegar()).isFalse();
 			assertThat(listadoDTO.getReservaEstadoCss()).contains("warning");
 
 			List<ReservaListadoDTO> lista = mapper.listModelToListReservaListadoDTO(List.of(model));
