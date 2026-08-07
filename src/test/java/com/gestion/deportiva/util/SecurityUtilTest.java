@@ -5,6 +5,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import java.util.Set;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -57,7 +58,8 @@ class SecurityUtilTest {
 
 	@Test
 	void getCurrentUserConUsuarioAutenticadoValido() {
-		CustomUserDetails customUser = new CustomUserDetails(42L, "uuid-123", "testuser", null);
+		CustomUserDetails customUser = new CustomUserDetails(42L, "uuid-123", "testuser", "password",
+				Set.of(new SimpleGrantedAuthority("ROLE_USER")));
 		Authentication auth = new UsernamePasswordAuthenticationToken(customUser, null,
 				List.of(new SimpleGrantedAuthority("ROLE_USER")));
 		when(securityContext.getAuthentication()).thenReturn(auth);
@@ -92,9 +94,10 @@ class SecurityUtilTest {
 
 	@Test
 	void isAuthenticatedDevuelveTrueSiEstaAutenticado() {
-		CustomUserDetails customUser = new CustomUserDetails(10L, "uuid", "admin", null);
-		Authentication auth = new UsernamePasswordAuthenticationToken(customUser, null, List.of());
-		when(auth.isAuthenticated()).thenReturn(true);
+		CustomUserDetails customUser = new CustomUserDetails(10L, "uuid", "admin", "password",
+				Set.of(new SimpleGrantedAuthority("ROLE_USER")));
+		Authentication auth = new UsernamePasswordAuthenticationToken(customUser, null,
+				List.of(new SimpleGrantedAuthority("ROLE_USER")));
 		when(securityContext.getAuthentication()).thenReturn(auth);
 
 		boolean result = SecurityUtil.isAuthenticated();
@@ -104,7 +107,8 @@ class SecurityUtilTest {
 
 	@Test
 	void getCurrentUserIdYMetodosRelacionados() {
-		CustomUserDetails customUser = new CustomUserDetails(5L, "uuid-5", "user5", null);
+		CustomUserDetails customUser = new CustomUserDetails(5L, "uuid-5", "user5", "password",
+				Set.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("PERMISO_X")));
 		customUser.setListEmpresaId(List.of(100L));
 		customUser.setListSedeId(List.of(200L));
 		customUser.setListInstalacionId(List.of(300L));
@@ -126,7 +130,8 @@ class SecurityUtilTest {
 
 	@Test
 	void hasAnyAuthorityFuncionaCorrectamente() {
-		CustomUserDetails customUser = new CustomUserDetails(1L, "uuid", "user", null);
+		CustomUserDetails customUser = new CustomUserDetails(1L, "uuid", "user", "password",
+				Set.of(new SimpleGrantedAuthority("ROLE_USER")));
 		Authentication auth = new UsernamePasswordAuthenticationToken(customUser, null,
 				List.of(new SimpleGrantedAuthority("ROLE_USER")));
 		when(securityContext.getAuthentication()).thenReturn(auth);
