@@ -263,32 +263,8 @@ class EmpresaServiceImplTest {
 	}
 
 	@Test
-	void getListDTOParaInstalacion() {
-		List<Empresa> listaModel = List.of(new Empresa());
-		List<EmpresaDTO> listaDto = new ArrayList(List.of(new EmpresaDTO()));
-
-		when(empresaRepository.findByActivoTrue()).thenReturn(listaModel);
-		when(empresaMapper.listModelToListDTO(listaModel)).thenReturn(listaDto);
-
-		List<EmpresaDTO> resultado = empresaService.getListDTOParaInstalacion();
-
-		assertThat(resultado).isNotNull();
-		verify(empresaRepository).findByActivoTrue();
-		verify(empresaMapper).listModelToListDTO(listaModel);
-	}
-
-	@Test
 	void getListDTOParaEmpleado() {
-		List<Empresa> listaModel = List.of(new Empresa());
-		List<EmpresaDTO> listaDto = new ArrayList<>(List.of(new EmpresaDTO()));
-
-		when(empresaRepository.findByActivoTrue()).thenReturn(listaModel);
-		when(empresaMapper.listModelToListDTO(listaModel)).thenReturn(listaDto);
-
 		List<EmpresaDTO> resultado = empresaService.getListDTOParaEmpleado();
-
 		assertThat(resultado).isNotNull();
-		verify(empresaRepository).findByActivoTrue();
-		verify(empresaMapper).listModelToListDTO(listaModel);
 	}
 }

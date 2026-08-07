@@ -183,12 +183,16 @@ class InstalacionTipoServiceImplTest {
 
 	@Test
 	void obtenerListDTOConFiltro() {
+		InstalacionTipoFilter filter = new InstalacionTipoFilter();
 		List<InstalacionTipo> listaModel = List.of(new InstalacionTipo());
-		List<InstalacionTipoDTO> listaDto = List.of(new InstalacionTipoDTO());
+		List<InstalacionTipoDTO> listaDto = new ArrayList<>(List.of(new InstalacionTipoDTO()));
 
 		when(instalacionTipoRepository.findAll(any(Specification.class))).thenReturn(listaModel);
 		when(instalacionTipoMapper.listModelToListDTO(listaModel)).thenReturn(listaDto);
 
+		List<InstalacionTipoDTO> resultado = instalacionTipoService.getListDTO(filter);
+
+		assertThat(resultado).isNotNull();
 		verify(instalacionTipoRepository).findAll(any(Specification.class));
 	}
 

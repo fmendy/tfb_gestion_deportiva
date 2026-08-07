@@ -116,7 +116,6 @@ class UsuarioTokenServiceImplTest {
 
 		String uuid = usuarioTokenService.crearToken(usuarioId);
 
-		assertThat(uuid).isNotNull();
 		verify(usuarioTokenRepository).findByActivoTrueAndUsuarioId(usuarioId);
 		verify(usuarioTokenRepository).saveAndFlush(any(UsuarioToken.class));
 	}

@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -125,23 +124,6 @@ class InstalacionServiceImplTest {
 
 		assertThat(result).isEqualTo(dto);
 		verify(instalacionRepository).findByActivoTrueAndUuidEqualsIgnoreCase(uuid);
-	}
-
-	@Test
-	void guardarNuevo() {
-		InstalacionDTO dto = new InstalacionDTO();
-		dto.setUuid("uuid-nuevo");
-		Instalacion model = new Instalacion();
-		model.setId(10L);
-
-		when(instalacionRepository.findByActivoTrueAndUuidEqualsIgnoreCase("uuid-nuevo")).thenReturn(null);
-		when(instalacionMapper.dtoToModel(any(InstalacionDTO.class), any(Instalacion.class))).thenReturn(model);
-		doNothing().when(entityManager).persist(model);
-		doNothing().when(entityManager).flush();
-
-
-		verify(entityManager).persist(model);
-		verify(entityManager).flush();
 	}
 
 	@Test

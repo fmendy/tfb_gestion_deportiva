@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -167,22 +168,29 @@ class RolServiceImplTest {
 	@Test
 	void obtenerListDTO() {
 		List<Rol> listaModel = List.of(new Rol());
-		List<RolDTO> listaDto = List.of(new RolDTO());
+		List<RolDTO> listaDto = new ArrayList<>(List.of(new RolDTO()));
 
 		when(rolRepository.findByActivoTrue()).thenReturn(listaModel);
 		when(rolMapper.listModelToListDTO(listaModel)).thenReturn(listaDto);
 
+		List<RolDTO> resultado = rolService.getListDTO();
+
+		assertThat(resultado).isNotNull();
 		verify(rolRepository).findByActivoTrue();
 	}
 
 	@Test
 	void obtenerListDTOConFiltro() {
+		RolFilter filter = new RolFilter();
 		List<Rol> listaModel = List.of(new Rol());
-		List<RolDTO> listaDto = List.of(new RolDTO());
+		List<RolDTO> listaDto = new ArrayList<>(List.of(new RolDTO()));
 
 		when(rolRepository.findAll(any(Specification.class))).thenReturn(listaModel);
 		when(rolMapper.listModelToListDTO(listaModel)).thenReturn(listaDto);
 
+		List<RolDTO> resultado = rolService.getListDTO(filter);
+
+		assertThat(resultado).isNotNull();
 		verify(rolRepository).findAll(any(Specification.class));
 	}
 

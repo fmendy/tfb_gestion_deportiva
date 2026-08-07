@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -180,33 +181,44 @@ class MunicipioServiceImplTest {
 	@Test
 	void obtenerListDTO() {
 		List<Municipio> listaModel = List.of(new Municipio());
-		List<MunicipioDTO> listaDto = List.of(new MunicipioDTO());
+		List<MunicipioDTO> listaDto = new ArrayList<>(List.of(new MunicipioDTO()));
 
 		when(municipioRepository.findByActivoTrue()).thenReturn(listaModel);
 		when(municipioMapper.listModelToListDTO(listaModel)).thenReturn(listaDto);
 
+		List<MunicipioDTO> resultado = municipioService.getListDTO();
+
+		assertThat(resultado).isNotNull();
 		verify(municipioRepository).findByActivoTrue();
+		verify(municipioMapper).listModelToListDTO(listaModel);
 	}
 
 	@Test
 	void obtenerListDTOConSedes() {
 		List<Municipio> listaModel = List.of(new Municipio());
-		List<MunicipioDTO> listaDto = List.of(new MunicipioDTO());
+		List<MunicipioDTO> listaDto = new ArrayList<>(List.of(new MunicipioDTO()));
 
 		when(municipioRepository.findByActivoTrueAndSede()).thenReturn(listaModel);
 		when(municipioMapper.listModelToListDTO(listaModel)).thenReturn(listaDto);
 
+		List<MunicipioDTO> resultado = municipioService.getListDTOConSedes();
+
+		assertThat(resultado).isNotNull();
 		verify(municipioRepository).findByActivoTrueAndSede();
 	}
 
 	@Test
 	void obtenerListDTOConFiltro() {
+		MunicipioFilter filter = new MunicipioFilter();
 		List<Municipio> listaModel = List.of(new Municipio());
-		List<MunicipioDTO> listaDto = List.of(new MunicipioDTO());
+		List<MunicipioDTO> listaDto = new ArrayList<>(List.of(new MunicipioDTO()));
 
 		when(municipioRepository.findAll(any(Specification.class))).thenReturn(listaModel);
 		when(municipioMapper.listModelToListDTO(listaModel)).thenReturn(listaDto);
 
+		List<MunicipioDTO> resultado = municipioService.getListDTO(filter);
+
+		assertThat(resultado).isNotNull();
 		verify(municipioRepository).findAll(any(Specification.class));
 	}
 

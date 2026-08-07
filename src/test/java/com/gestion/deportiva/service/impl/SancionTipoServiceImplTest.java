@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -168,22 +169,29 @@ class SancionTipoServiceImplTest {
 	@Test
 	void obtenerListDTO() {
 		List<SancionTipo> listaModel = List.of(new SancionTipo());
-		List<SancionTipoDTO> listaDto = List.of(new SancionTipoDTO());
+		List<SancionTipoDTO> listaDto = new ArrayList<>(List.of(new SancionTipoDTO()));
 
 		when(sancionTipoRepository.findByActivoTrue()).thenReturn(listaModel);
 		when(sancionTipoMapper.listModelToListDTO(listaModel)).thenReturn(listaDto);
 
+		List<SancionTipoDTO> resultado = sancionTipoService.getListDTO();
+
+		assertThat(resultado).isNotNull();
 		verify(sancionTipoRepository).findByActivoTrue();
 	}
 
 	@Test
 	void obtenerListDTOConFiltro() {
+		SancionTipoFilter filter = new SancionTipoFilter();
 		List<SancionTipo> listaModel = List.of(new SancionTipo());
-		List<SancionTipoDTO> listaDto = List.of(new SancionTipoDTO());
+		List<SancionTipoDTO> listaDto = new ArrayList<>(List.of(new SancionTipoDTO()));
 
 		when(sancionTipoRepository.findAll(any(Specification.class))).thenReturn(listaModel);
 		when(sancionTipoMapper.listModelToListDTO(listaModel)).thenReturn(listaDto);
 
+		List<SancionTipoDTO> resultado = sancionTipoService.getListDTO(filter);
+
+		assertThat(resultado).isNotNull();
 		verify(sancionTipoRepository).findAll(any(Specification.class));
 	}
 

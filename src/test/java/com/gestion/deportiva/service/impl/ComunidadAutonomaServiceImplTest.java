@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -167,30 +168,33 @@ class ComunidadAutonomaServiceImplTest {
 
 	@Test
 	void obtenerListDTO() {
-	    List<ComunidadAutonoma> listaModel = List.of(new ComunidadAutonoma());
-	    List<ComunidadAutonomaDTO> listaDto = List.of(new ComunidadAutonomaDTO());
+		List<ComunidadAutonoma> listaModel = List.of(new ComunidadAutonoma());
+		List<ComunidadAutonomaDTO> listaDto = new ArrayList<>(List.of(new ComunidadAutonomaDTO()));
 
-	    when(comunidadAutonomaRepository.findByActivoTrue()).thenReturn(listaModel);
-	    when(comunidadAutonomaMapper.listModelToListDTO(listaModel)).thenReturn(listaDto);
+		when(comunidadAutonomaRepository.findByActivoTrue()).thenReturn(listaModel);
+		when(comunidadAutonomaMapper.listModelToListDTO(listaModel)).thenReturn(listaDto);
 
-	    List<ComunidadAutonomaDTO> resultado = comunidadAutonomaService.getListDTO();
+		List<ComunidadAutonomaDTO> resultado = comunidadAutonomaService.getListDTO();
 
-	    verify(comunidadAutonomaRepository).findByActivoTrue();
-	    
-	    assertNotNull(resultado);
+		verify(comunidadAutonomaRepository).findByActivoTrue();
+		assertNotNull(resultado);
 	}
+
 	@Test
 	void obtenerListDTOConFiltro() {
+		ComunidadAutonomaFilter filter = new ComunidadAutonomaFilter();
 		List<ComunidadAutonoma> listaModel = List.of(new ComunidadAutonoma());
-		List<ComunidadAutonomaDTO> listaDto = List.of(new ComunidadAutonomaDTO());
+		List<ComunidadAutonomaDTO> listaDto = new ArrayList<>(List.of(new ComunidadAutonomaDTO()));
 
 		when(comunidadAutonomaRepository.findAll(any(Specification.class))).thenReturn(listaModel);
 		when(comunidadAutonomaMapper.listModelToListDTO(listaModel)).thenReturn(listaDto);
 
+		List<ComunidadAutonomaDTO> resultado = comunidadAutonomaService.getListDTO(filter);
 
+		assertThat(resultado).isEqualTo(listaDto);
 		verify(comunidadAutonomaRepository).findAll(any(Specification.class));
+		verify(comunidadAutonomaMapper).listModelToListDTO(listaModel);
 	}
-
 	@Test
 	void validarPermisosEscrituraYLectura() {
 		assertThat(comunidadAutonomaService.canWrite(1L)).isTrue();

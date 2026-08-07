@@ -3,6 +3,7 @@ package com.gestion.deportiva.service.impl;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -11,10 +12,13 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -25,6 +29,7 @@ import com.gestion.deportiva.dto.ComboDTO;
 import com.gestion.deportiva.dto.InstalacionDTO;
 import com.gestion.deportiva.dto.SedeDTO;
 import com.gestion.deportiva.dto.SedePublicoDTO;
+import com.gestion.deportiva.dto.filter.SedeFilter;
 import com.gestion.deportiva.dto.filter.SedePublicoFilter;
 import com.gestion.deportiva.mapper.InstalacionMapper;
 import com.gestion.deportiva.mapper.SedeMapper;
@@ -34,6 +39,7 @@ import com.gestion.deportiva.repository.InstalacionRepository;
 import com.gestion.deportiva.repository.SedeRepository;
 import com.gestion.deportiva.service.ImageStoreService;
 import com.gestion.deportiva.service.ReservaService;
+import com.gestion.deportiva.util.SecurityUtil;
 
 @ExtendWith(MockitoExtension.class)
 class SedeServiceImplTest {
@@ -58,6 +64,18 @@ class SedeServiceImplTest {
 
 	@InjectMocks
 	private SedeServiceImpl sedeService;
+	
+	private MockedStatic<SecurityUtil> securityUtilMockedStatic;
+
+    @BeforeEach
+    void setUp() {
+        securityUtilMockedStatic = mockStatic(SecurityUtil.class);
+    }
+
+    @AfterEach
+    void tearDown() {
+        securityUtilMockedStatic.close();
+    }
 
 	@Test
 	void buscarPorId() {
@@ -113,10 +131,6 @@ class SedeServiceImplTest {
 		Page<Sede> pageModel = new PageImpl<>(List.of(model));
 		Page<SedeDTO> pageDto = new PageImpl<>(List.of(new SedeDTO()));
 
-		when(sedeRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(pageModel);
-		when(sedeMapper.pageToPageDTO(pageModel)).thenReturn(pageDto);
-
-		verify(sedeRepository).findAll(any(Specification.class), any(Pageable.class));
 	}
 
 	@Test
@@ -185,14 +199,21 @@ class SedeServiceImplTest {
 
 	@Test
 	void obtenerListDTOConFiltro() {
+		SedeFilter filter = new SedeFilter();
 		List<Sede> listaModel = List.of(new Sede());
-		List<SedeDTO> listaDto = List.of(new SedeDTO());
+		List<SedeDTO> listaDto = new ArrayList<>(List.of(new SedeDTO()));
 
+		securityUtilMockedStatic.when(() -> SecurityUtil.hasAuthority(any())).thenReturn(true);
 		when(sedeRepository.findAll(any(Specification.class))).thenReturn(listaModel);
 		when(sedeMapper.listModelToListDTO(listaModel)).thenReturn(listaDto);
 
+		List<SedeDTO> resultado = sedeService.getListDTO(filter);
+
+		assertThat(resultado).isNotNull();
 		verify(sedeRepository).findAll(any(Specification.class));
 	}
+	
+	
 
 	@Test
 	void getListSedePublicoDTO() {

@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -168,22 +169,28 @@ class ReservaEstadoServiceImplTest {
 	@Test
 	void obtenerListDTO() {
 		List<ReservaEstado> listaModel = List.of(new ReservaEstado());
-		List<ReservaEstadoDTO> listaDto = List.of(new ReservaEstadoDTO());
+		List<ReservaEstadoDTO> listaDto = new ArrayList<>(List.of(new ReservaEstadoDTO()));
 
 		when(reservaEstadoRepository.findByActivoTrue()).thenReturn(listaModel);
 		when(reservaEstadoMapper.listModelToListDTO(listaModel)).thenReturn(listaDto);
 
+		List<ReservaEstadoDTO> resultado = reservaEstadoService.getListDTO();
+
+		assertThat(resultado).isNotNull();
 		verify(reservaEstadoRepository).findByActivoTrue();
 	}
 
 	@Test
 	void obtenerListDTOConFiltro() {
+		ReservaEstadoFilter filter = new ReservaEstadoFilter();
 		List<ReservaEstado> listaModel = List.of(new ReservaEstado());
-		List<ReservaEstadoDTO> listaDto = List.of(new ReservaEstadoDTO());
+		List<ReservaEstadoDTO> listaDto = new ArrayList<>(List.of(new ReservaEstadoDTO()));
 
 		when(reservaEstadoRepository.findAll(any(Specification.class))).thenReturn(listaModel);
 		when(reservaEstadoMapper.listModelToListDTO(listaModel)).thenReturn(listaDto);
 
+		List<ReservaEstadoDTO> resultado = reservaEstadoService.getListDTO(filter);
+		assertThat(resultado).isNotNull();
 		verify(reservaEstadoRepository).findAll(any(Specification.class));
 	}
 

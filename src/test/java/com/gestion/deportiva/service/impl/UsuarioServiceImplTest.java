@@ -232,9 +232,11 @@ class UsuarioServiceImplTest {
 		UsuarioDTO dto = new UsuarioDTO();
 		dto.setId(1L);
 		Usuario usuario = new Usuario();
+		usuario.setId(1L);
 
 		when(usuarioRepository.findByActivoTrueAndId(1L)).thenReturn(usuario);
 		when(usuarioMapper.dtoToModel(dto, usuario)).thenReturn(usuario);
+		when(usuarioRepository.saveAndFlush(usuario)).thenReturn(usuario);
 
 		Long id = usuarioService.guardarDatos(dto);
 
