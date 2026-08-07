@@ -13,9 +13,6 @@ import com.gestion.deportiva.util.BreadcrumbBuilder;
 import com.gestion.deportiva.util.Constantes;
 import com.gestion.deportiva.util.Utils;
 
-
-
-
 public class BaseController {
 
 	public void addBasicModelDetails(ModelAndView mav, String title) {
@@ -25,15 +22,15 @@ public class BaseController {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
 		String username = "";
-		if (authentication.isAuthenticated()) {
+		if (authentication != null && authentication.isAuthenticated()) {
 			username = authentication.getName();
 		}
 		mav.addObject(Constantes.USERNAME, username);
 	}
-	
+
 	public void addBasicModelDetails(ModelAndView mav, String title, boolean isAddBasicBreadCrumb) {
 		addBasicModelDetails(mav, title);
-		if(isAddBasicBreadCrumb) {
+		if (isAddBasicBreadCrumb) {
 			addBasicBreadcrumb(mav);
 		}
 	}

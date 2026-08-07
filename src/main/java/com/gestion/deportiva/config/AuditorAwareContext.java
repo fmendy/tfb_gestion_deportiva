@@ -15,4 +15,8 @@ public class AuditorAwareContext {
 	public static boolean isAuditingDisabled() {
 		return auditingDisabled.get() != null && auditingDisabled.get();
 	}
+
+	public static void clear() {
+		auditingDisabled.remove();
+	}
 }

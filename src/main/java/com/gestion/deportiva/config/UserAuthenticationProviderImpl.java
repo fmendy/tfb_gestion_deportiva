@@ -26,12 +26,17 @@ public class UserAuthenticationProviderImpl implements AuthenticationProvider {
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		String username = authentication.getName();
-		String password = authentication.getCredentials().toString(); // Get the raw password
+		Object credentials = authentication.getCredentials();
+
+		if (credentials == null) {
+			throw new BadCredentialsException("Invalid username or password");
+		}
+
+		String password = credentials.toString();
 
 		UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
 		if (userDetails == null) {
-			// Throw an exception if user is not found
 			throw new BadCredentialsException("Invalid username or password");
 		}
 
