@@ -20,6 +20,11 @@ public class MiPerfilPasswordValidator implements ConstraintValidator<MiPerfilPa
 		this.repository = repository;
 		this.passwordEncoder = passwordEncoder;
 	}
+	
+	public MiPerfilPasswordValidator() {
+		this.repository = null;
+		this.passwordEncoder = null;
+    }
 
 	@Override
 	public boolean isValid(MiPerfilPasswordDTO dto, ConstraintValidatorContext context) {
