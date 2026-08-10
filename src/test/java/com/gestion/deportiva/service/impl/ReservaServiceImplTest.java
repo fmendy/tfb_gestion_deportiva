@@ -13,7 +13,10 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Optional;
 
+import org.hibernate.envers.AuditReader;
+import org.hibernate.envers.AuditReaderFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,11 +34,16 @@ import com.gestion.deportiva.dto.ReservaDTO;
 import com.gestion.deportiva.dto.ReservaListadoDTO;
 import com.gestion.deportiva.dto.ReservaSolicitudDTO;
 import com.gestion.deportiva.dto.filter.ReservaFilter;
+import com.gestion.deportiva.dto.historico.HistoricoReservaDTO;
 import com.gestion.deportiva.mapper.ReservaMapper;
+import com.gestion.deportiva.model.Empresa;
 import com.gestion.deportiva.model.Instalacion;
 import com.gestion.deportiva.model.InstalacionHorarioBloqueado;
+import com.gestion.deportiva.model.InstalacionTipo;
 import com.gestion.deportiva.model.Reserva;
 import com.gestion.deportiva.model.ReservaEstado;
+import com.gestion.deportiva.model.RevisionInfoEntity;
+import com.gestion.deportiva.model.Sede;
 import com.gestion.deportiva.repository.InstalacionHorarioBloqueadoRepository;
 import com.gestion.deportiva.repository.InstalacionHorarioEspecialRepository;
 import com.gestion.deportiva.repository.InstalacionHorarioRepository;
@@ -88,6 +96,9 @@ class ReservaServiceImplTest {
 	private ReservaServiceImpl reservaService;
 
 	private MockedStatic<SecurityUtil> securityUtilMockedStatic;
+
+	@Mock
+	private AuditReader auditReader;
 
 	@BeforeEach
 	void setUp() {
@@ -150,7 +161,7 @@ class ReservaServiceImplTest {
 	}
 
 	@Test
-	void guardarExistenteCuandoYaExiste() {
+	void guardarExistenteКогдаYaExiste() {
 		ReservaDTO dto = new ReservaDTO();
 		dto.setUuid("uuid-existente");
 
@@ -738,4 +749,5 @@ class ReservaServiceImplTest {
 		reservaService.fechaComprobarPorCambioDeHorarios(date, instalacionId);
 		verify(reservaRepository).saveAndFlush(any());
 	}
+
 }
