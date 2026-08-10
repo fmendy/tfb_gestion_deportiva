@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -13,10 +14,12 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -30,6 +33,7 @@ import com.gestion.deportiva.dto.ReservaSolicitudDTO;
 import com.gestion.deportiva.dto.filter.ReservaFilter;
 import com.gestion.deportiva.mapper.ReservaMapper;
 import com.gestion.deportiva.model.Instalacion;
+import com.gestion.deportiva.model.InstalacionHorarioBloqueado;
 import com.gestion.deportiva.model.Reserva;
 import com.gestion.deportiva.model.ReservaEstado;
 import com.gestion.deportiva.repository.InstalacionHorarioBloqueadoRepository;
@@ -41,6 +45,7 @@ import com.gestion.deportiva.repository.ReservaRepository;
 import com.gestion.deportiva.repository.UsuarioRepository;
 import com.gestion.deportiva.service.MailService;
 import com.gestion.deportiva.util.Constantes;
+import com.gestion.deportiva.util.SecurityUtil;
 
 import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityManager;
@@ -81,6 +86,20 @@ class ReservaServiceImplTest {
 
 	@InjectMocks
 	private ReservaServiceImpl reservaService;
+
+	private MockedStatic<SecurityUtil> securityUtilMockedStatic;
+
+	@BeforeEach
+	void setUp() {
+		securityUtilMockedStatic = mockStatic(SecurityUtil.class);
+	}
+
+	@org.junit.jupiter.api.AfterEach
+	void tearDown() {
+		if (securityUtilMockedStatic != null) {
+			securityUtilMockedStatic.close();
+		}
+	}
 
 	@Test
 	void buscarPorId() {
@@ -527,5 +546,196 @@ class ReservaServiceImplTest {
 		assertThat(reservaService.getListByFechaDesdeInstalacionSedeEmpresaIdAndReservaEstados(fecha, 1L, estados))
 				.isEmpty();
 		assertThat(reservaService.getListByFechaDesdeInstalacionSedeIdAndReservaEstados(fecha, 1L, estados)).isEmpty();
+	}
+
+	@Test
+	void limitacionesPermisosYGetPageListadoByFilterTest() {
+		ReservaFilter filter = new ReservaFilter();
+		Pageable pageable = PageRequest.of(0, 10);
+		Page<Reserva> pageModel = new PageImpl<>(List.of(new Reserva()));
+		Page<ReservaListadoDTO> pageDto = new PageImpl<>(List.of(new ReservaListadoDTO()));
+
+		// 1. GESTION_GLOBAL
+		securityUtilMockedStatic.when(() -> SecurityUtil.hasAuthority(Constantes.Permiso.GESTION_GLOBAL))
+				.thenReturn(true);
+		when(reservaRepository.findAll(any(Specification.class), eq(pageable))).thenReturn(pageModel);
+		when(reservaMapper.pageToPageReservaListadoDTO(pageModel)).thenReturn(pageDto);
+
+		Page<ReservaListadoDTO> resultado = reservaService.getPageListadoByFilter(filter, pageable);
+		assertThat(resultado).isNotNull();
+
+		// 2. GESTION_RESERVA_EMPRESA
+		securityUtilMockedStatic.when(() -> SecurityUtil.hasAuthority(Constantes.Permiso.GESTION_GLOBAL))
+				.thenReturn(false);
+		securityUtilMockedStatic
+				.when(() -> SecurityUtil.hasAuthority(Constantes.Permiso.Reserva.GESTION_RESERVA_EMPRESA))
+				.thenReturn(true);
+		securityUtilMockedStatic.when(SecurityUtil::getCurrentUserListEmpresaId).thenReturn(List.of(1L));
+
+		reservaService.getPageListadoByFilter(filter, pageable);
+
+		// 3. GESTION_RESERVA_SEDE
+		securityUtilMockedStatic
+				.when(() -> SecurityUtil.hasAuthority(Constantes.Permiso.Reserva.GESTION_RESERVA_EMPRESA))
+				.thenReturn(false);
+		securityUtilMockedStatic.when(() -> SecurityUtil.hasAuthority(Constantes.Permiso.Reserva.GESTION_RESERVA_SEDE))
+				.thenReturn(true);
+		securityUtilMockedStatic.when(SecurityUtil::getCurrentUserListSedeId).thenReturn(List.of(1L));
+
+		reservaService.getPageListadoByFilter(filter, pageable);
+
+		// 4. GESTION_RESERVA_INSTALACION
+		securityUtilMockedStatic.when(() -> SecurityUtil.hasAuthority(Constantes.Permiso.Reserva.GESTION_RESERVA_SEDE))
+				.thenReturn(false);
+		securityUtilMockedStatic
+				.when(() -> SecurityUtil.hasAuthority(Constantes.Permiso.Reserva.GESTION_RESERVA_INSTALACION))
+				.thenReturn(true);
+		securityUtilMockedStatic.when(SecurityUtil::getCurrentUserListInstalacionId).thenReturn(List.of(1L));
+
+		reservaService.getPageListadoByFilter(filter, pageable);
+
+		// 5. Sin permisos (Else)
+		securityUtilMockedStatic
+				.when(() -> SecurityUtil.hasAuthority(Constantes.Permiso.Reserva.GESTION_RESERVA_INSTALACION))
+				.thenReturn(false);
+		reservaService.getPageListadoByFilter(filter, pageable);
+	}
+
+	@Test
+	void canWriteYCanReadScenariosTest() {
+		Long reservaId = 1L;
+		Reserva reserva = new Reserva();
+		Instalacion instalacion = new Instalacion();
+		com.gestion.deportiva.model.Sede sede = new com.gestion.deportiva.model.Sede();
+		com.gestion.deportiva.model.Empresa empresa = new com.gestion.deportiva.model.Empresa();
+		empresa.setId(1L);
+		sede.setEmpresa(empresa);
+		sede.setId(2L);
+		instalacion.setSede(sede);
+		instalacion.setId(3L);
+		reserva.setInstalacion(instalacion);
+
+		com.gestion.deportiva.model.Usuario usuario = new com.gestion.deportiva.model.Usuario();
+		usuario.setId(10L);
+		reserva.setUsuarioCreacion(usuario);
+
+		// GESTION_RESERVA_GLOBAL
+		securityUtilMockedStatic.when(() -> SecurityUtil.hasAuthority(Constantes.Permiso.GESTION_GLOBAL))
+				.thenReturn(false);
+		securityUtilMockedStatic
+				.when(() -> SecurityUtil.hasAuthority(Constantes.Permiso.Reserva.GESTION_RESERVA_GLOBAL))
+				.thenReturn(true);
+		assertThat(reservaService.canWrite(reservaId)).isTrue();
+		assertThat(reservaService.canRead(reservaId)).isTrue();
+
+		// Reserva null
+		securityUtilMockedStatic
+				.when(() -> SecurityUtil.hasAuthority(Constantes.Permiso.Reserva.GESTION_RESERVA_GLOBAL))
+				.thenReturn(false);
+		when(reservaRepository.findByActivoTrueAndId(reservaId)).thenReturn(null);
+		assertThat(reservaService.canWrite(reservaId)).isFalse();
+
+		// GESTION_RESERVA_EMPRESA match
+		when(reservaRepository.findByActivoTrueAndId(reservaId)).thenReturn(reserva);
+		securityUtilMockedStatic
+				.when(() -> SecurityUtil.hasAuthority(Constantes.Permiso.Reserva.GESTION_RESERVA_EMPRESA))
+				.thenReturn(true);
+		securityUtilMockedStatic.when(SecurityUtil::getCurrentUserListEmpresaId).thenReturn(List.of(1L));
+		assertThat(reservaService.canWrite(reservaId)).isTrue();
+
+		// GESTION_RESERVA_SEDE match
+		securityUtilMockedStatic
+				.when(() -> SecurityUtil.hasAuthority(Constantes.Permiso.Reserva.GESTION_RESERVA_EMPRESA))
+				.thenReturn(false);
+		securityUtilMockedStatic.when(() -> SecurityUtil.hasAuthority(Constantes.Permiso.Reserva.GESTION_RESERVA_SEDE))
+				.thenReturn(true);
+		securityUtilMockedStatic.when(SecurityUtil::getCurrentUserListSedeId).thenReturn(List.of(2L));
+		assertThat(reservaService.canWrite(reservaId)).isTrue();
+
+		// GESTION_RESERVA_INSTALACION match
+		securityUtilMockedStatic.when(() -> SecurityUtil.hasAuthority(Constantes.Permiso.Reserva.GESTION_RESERVA_SEDE))
+				.thenReturn(false);
+		securityUtilMockedStatic
+				.when(() -> SecurityUtil.hasAuthority(Constantes.Permiso.Reserva.GESTION_RESERVA_INSTALACION))
+				.thenReturn(true);
+		securityUtilMockedStatic.when(SecurityUtil::getCurrentUserListInstalacionId).thenReturn(List.of(3L));
+		assertThat(reservaService.canWrite(reservaId)).isTrue();
+
+		// GESTION_RESERVA_PROPIA match
+		securityUtilMockedStatic
+				.when(() -> SecurityUtil.hasAuthority(Constantes.Permiso.Reserva.GESTION_RESERVA_INSTALACION))
+				.thenReturn(false);
+		securityUtilMockedStatic
+				.when(() -> SecurityUtil.hasAuthority(Constantes.Permiso.Reserva.GESTION_RESERVA_PROPIA))
+				.thenReturn(true);
+		securityUtilMockedStatic.when(SecurityUtil::getCurrentUserId).thenReturn(10L);
+		assertThat(reservaService.canWrite(reservaId)).isTrue();
+	}
+
+	@Test
+	void canAprobarDenegarYCancelacionesValidacionesTest() {
+		Long reservaId = 1L;
+		Reserva reserva = new Reserva();
+		ReservaEstado estado = new ReservaEstado();
+		estado.setNombre(Constantes.ReservaEstado.PENDIENTE);
+		reserva.setReservaEstado(estado);
+
+		com.gestion.deportiva.model.Usuario usuario = new com.gestion.deportiva.model.Usuario();
+		usuario.setId(5L);
+		reserva.setUsuarioCreacion(usuario);
+
+		when(reservaRepository.findByActivoTrueAndId(reservaId)).thenReturn(reserva);
+		securityUtilMockedStatic.when(() -> SecurityUtil.hasAuthority(any())).thenReturn(true);
+
+		// canAprobarDenegarReserva
+		assertThat(reservaService.canAprobarDenegarReserva(reservaId)).isTrue();
+
+		// canCancelarUsuario (estado PENDIENTE -> false para cancelacion de usuario
+		// aprobado, cambiamos a APROBADA)
+		estado.setNombre(Constantes.ReservaEstado.APROBADA);
+		securityUtilMockedStatic.when(SecurityUtil::getCurrentUserId).thenReturn(5L);
+		assertThat(reservaService.canCancelarUsuario(reservaId)).isTrue();
+
+		// canCancelarCompletadaIncompletadaEmpresa
+		assertThat(reservaService.canCancelarCompletadaIncompletadaEmpresa(reservaId)).isTrue();
+
+		// Reserva null para cobertura de nulos
+		when(reservaRepository.findByActivoTrueAndId(reservaId)).thenReturn(null);
+		assertThat(reservaService.canCancelarUsuario(reservaId)).isFalse();
+		assertThat(reservaService.canCancelarCompletadaIncompletadaEmpresa(reservaId)).isFalse();
+		assertThat(reservaService.canAprobarDenegarReserva(reservaId)).isFalse();
+	}
+
+	@Test
+	void determinarReservasAfectadasYFueraDeRangoTest() {
+		LocalDate date = LocalDate.now();
+		Long instalacionId = 1L;
+
+		Reserva reserva = new Reserva();
+		reserva.setHoraInicio(LocalTime.of(10, 0));
+		reserva.setHoraFin(LocalTime.of(11, 0));
+
+		// Bloqueo que solapa
+		InstalacionHorarioBloqueado bloqueo = new InstalacionHorarioBloqueado();
+		bloqueo.setHoraInicio(LocalTime.of(9, 30));
+		bloqueo.setHoraFin(LocalTime.of(10, 30));
+
+		when(reservaRepository.findByActivoTrueAndFechaAndInstalacionIdAndReservaEstadoNombreIn(eq(date),
+				eq(instalacionId), any())).thenReturn(List.of(reserva));
+		when(instalacionHorarioBloqueadoRepository.findByActivoTrueAndInstalacionIdAndFecha(instalacionId, date))
+				.thenReturn(List.of(bloqueo));
+		when(instalacionHorarioEspecialRepository.findByActivoTrueAndInstalacionIdAndFecha(instalacionId, date))
+				.thenReturn(List.of());
+		when(instalacionHorarioRepository.findByActivoTrueAndInstalacionIdAndDiaSemana(any(), any()))
+				.thenReturn(List.of());
+
+		ReservaEstado estado = new ReservaEstado();
+		when(reservaRepository.findByActivoTrueAndId(any())).thenReturn(reserva);
+		when(reservaEstadoRepository
+				.findByActivoTrueAndNombreEqualsIgnoreCase(Constantes.ReservaEstado.CANCELADA_POR_EMPRESA))
+				.thenReturn(estado);
+
+		reservaService.fechaComprobarPorCambioDeHorarios(date, instalacionId);
+		verify(reservaRepository).saveAndFlush(any());
 	}
 }

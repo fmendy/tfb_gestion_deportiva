@@ -22,6 +22,7 @@ import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -64,18 +65,18 @@ class SedeServiceImplTest {
 
 	@InjectMocks
 	private SedeServiceImpl sedeService;
-	
+
 	private MockedStatic<SecurityUtil> securityUtilMockedStatic;
 
-    @BeforeEach
-    void setUp() {
-        securityUtilMockedStatic = mockStatic(SecurityUtil.class);
-    }
+	@BeforeEach
+	void setUp() {
+		securityUtilMockedStatic = mockStatic(SecurityUtil.class);
+	}
 
-    @AfterEach
-    void tearDown() {
-        securityUtilMockedStatic.close();
-    }
+	@AfterEach
+	void tearDown() {
+		securityUtilMockedStatic.close();
+	}
 
 	@Test
 	void buscarPorId() {
@@ -127,10 +128,22 @@ class SedeServiceImplTest {
 
 	@Test
 	void obtenerPaginaPorFiltro() {
+		SedeFilter filter = new SedeFilter();
+		Pageable pageable = PageRequest.of(0, 10);
 		Sede model = new Sede();
 		Page<Sede> pageModel = new PageImpl<>(List.of(model));
 		Page<SedeDTO> pageDto = new PageImpl<>(List.of(new SedeDTO()));
 
+		securityUtilMockedStatic.when(() -> SecurityUtil.hasAuthority(any())).thenReturn(true);
+		when(sedeRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(pageModel);
+		when(sedeMapper.pageToPageDTO(pageModel)).thenReturn(pageDto);
+
+		Page<SedeDTO> resultado = sedeService.getPageByFilter(filter, pageable);
+
+		assertThat(resultado).isNotNull();
+		assertThat(resultado.getContent()).hasSize(1);
+		verify(sedeRepository).findAll(any(Specification.class), any(Pageable.class));
+		verify(sedeMapper).pageToPageDTO(pageModel);
 	}
 
 	@Test
@@ -212,8 +225,6 @@ class SedeServiceImplTest {
 		assertThat(resultado).isNotNull();
 		verify(sedeRepository).findAll(any(Specification.class));
 	}
-	
-	
 
 	@Test
 	void getListSedePublicoDTO() {
