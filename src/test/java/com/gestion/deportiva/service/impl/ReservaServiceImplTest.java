@@ -7,6 +7,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -41,6 +42,7 @@ import com.gestion.deportiva.repository.UsuarioRepository;
 import com.gestion.deportiva.service.MailService;
 import com.gestion.deportiva.util.Constantes;
 
+import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 
@@ -333,5 +335,197 @@ class ReservaServiceImplTest {
 
 		verify(reservaRepository).findByActivoTrueAndFechaAndInstalacionIdAndReservaEstadoNombreIn(eq(date),
 				eq(instalacionId), any());
+	}
+
+	@Test
+	void isFranjaHorariaDisponibleParaUsuarioConSolapamiento() {
+		LocalDate fecha = LocalDate.now(ZoneId.of("Europe/Madrid"));
+		LocalTime horaInicio = LocalTime.of(10, 0);
+		Long duracion = 60L;
+		Long usuarioId = 1L;
+
+		Reserva reservaExistente = new Reserva();
+		reservaExistente.setHoraInicio(LocalTime.of(10, 30));
+		reservaExistente.setHoraFin(LocalTime.of(11, 30));
+
+		when(reservaRepository.findByActivoTrueAndFechaAndUsuarioCreacionIdAndReservaEstadoNombreIn(eq(fecha),
+				eq(usuarioId), any())).thenReturn(List.of(reservaExistente));
+
+		boolean disponible = reservaService.isFranjaHorariaDisponibleParaUsuario(fecha, horaInicio, duracion,
+				usuarioId);
+
+		assertThat(disponible).isFalse();
+	}
+
+	@Test
+	void canEliminarReservaRetornaFalseSiNoExiste() {
+		Long reservaId = 1L;
+
+		when(reservaRepository.findByActivoTrueAndId(reservaId)).thenReturn(null);
+
+		boolean resultado = reservaService.canEliminarReserva(reservaId);
+
+		assertThat(resultado).isFalse();
+	}
+
+	@Test
+	void canEliminarReservaEvaluaEntidadExistente() {
+		Long reservaId = 1L;
+		Reserva reserva = new Reserva();
+		ReservaEstado estado = new ReservaEstado();
+		estado.setNombre(Constantes.ReservaEstado.PENDIENTE);
+		reserva.setReservaEstado(estado);
+
+		com.gestion.deportiva.model.Usuario usuario = new com.gestion.deportiva.model.Usuario();
+		usuario.setId(1L);
+		reserva.setUsuarioCreacion(usuario);
+
+		when(reservaRepository.findByActivoTrueAndId(reservaId)).thenReturn(reserva);
+
+		reservaService.canEliminarReserva(reservaId);
+
+		verify(reservaRepository).findByActivoTrueAndId(reservaId);
+	}
+
+	@Test
+	void cancelarUsuarioFechaDesdeTest() {
+		Long usuarioId = 1L;
+		LocalDate fechaDesde = LocalDate.now();
+		Reserva reserva = new Reserva();
+		reserva.setId(1L);
+		ReservaEstado estado = new ReservaEstado();
+		estado.setNombre(Constantes.ReservaEstado.PENDIENTE);
+		reserva.setReservaEstado(estado);
+
+		when(reservaRepository.findByActivoTrueAndUsuarioCreacionIdAndFechaGreaterThanEqualAndReservaEstadoNombreIn(
+				eq(usuarioId), eq(fechaDesde), any())).thenReturn(List.of(reserva));
+		when(reservaRepository.findByActivoTrueAndId(1L)).thenReturn(reserva);
+		when(reservaEstadoRepository
+				.findByActivoTrueAndNombreEqualsIgnoreCase(Constantes.ReservaEstado.CANCELADA_POR_USUARIO))
+				.thenReturn(estado);
+
+		reservaService.cancelarUsuarioFechaDesde(usuarioId, fechaDesde);
+
+		verify(reservaRepository).saveAndFlush(reserva);
+	}
+
+	@Test
+	void aprobarReservaTest() throws MessagingException, IOException {
+		Long reservaId = 1L;
+		Reserva reserva = new Reserva();
+		ReservaEstado estado = new ReservaEstado();
+		reserva.setReservaEstado(estado);
+
+		when(reservaRepository.findByActivoTrueAndId(reservaId)).thenReturn(reserva);
+		when(reservaEstadoRepository.findByActivoTrueAndNombreEqualsIgnoreCase(Constantes.ReservaEstado.APROBADA))
+				.thenReturn(estado);
+
+		reservaService.aprobar(reservaId);
+
+		verify(reservaRepository).saveAndFlush(reserva);
+		verify(mailService).mensajeAprobacionReserva(reserva);
+	}
+
+	@Test
+	void completarEIncompletarTest() {
+		Long reservaId = 1L;
+		Reserva reserva = new Reserva();
+		ReservaEstado estado = new ReservaEstado();
+		reserva.setReservaEstado(estado);
+
+		when(reservaRepository.findByActivoTrueAndId(reservaId)).thenReturn(reserva);
+		when(reservaEstadoRepository.findByActivoTrueAndNombreEqualsIgnoreCase(any())).thenReturn(estado);
+
+		reservaService.completar(reservaId);
+		reservaService.incompletar(reservaId);
+
+		verify(reservaRepository, org.mockito.Mockito.times(2)).saveAndFlush(reserva);
+	}
+
+	@Test
+	void cancelarSancionRangoTest() {
+		Long usuarioId = 1L;
+		LocalDate inicio = LocalDate.now();
+		LocalDate fin = LocalDate.now().plusDays(5);
+		Reserva reserva = new Reserva();
+		reserva.setId(1L);
+		ReservaEstado estado = new ReservaEstado();
+		estado.setNombre(Constantes.ReservaEstado.PENDIENTE);
+		reserva.setReservaEstado(estado);
+
+		when(reservaRepository
+				.findByActivoTrueAndUsuarioCreacionIdAndFechaGreaterThanEqualAndFechaLessThanEqualAndReservaEstadoNombreIn(
+						eq(usuarioId), eq(inicio), eq(fin), any()))
+				.thenReturn(List.of(reserva));
+		when(reservaRepository.findByActivoTrueAndId(1L)).thenReturn(reserva);
+		when(reservaEstadoRepository
+				.findByActivoTrueAndNombreEqualsIgnoreCase(Constantes.ReservaEstado.CANCELADA_POR_SANCION))
+				.thenReturn(estado);
+
+		reservaService.cancelarSancion(usuarioId, inicio, fin);
+
+		verify(reservaRepository).saveAndFlush(reserva);
+	}
+
+	@Test
+	void cancelarEmpresaYDenegarTest() throws MessagingException, IOException {
+		Long reservaId = 1L;
+		Reserva reserva = new Reserva();
+		ReservaEstado estado = new ReservaEstado();
+		reserva.setReservaEstado(estado);
+
+		when(reservaRepository.findByActivoTrueAndId(reservaId)).thenReturn(reserva);
+		when(reservaEstadoRepository.findByActivoTrueAndNombreEqualsIgnoreCase(any())).thenReturn(estado);
+
+		reservaService.cancelarEmpresa(reservaId);
+		reservaService.denegar(reservaId);
+
+		verify(mailService).mensajeCanceladaEmpresaReserva(reserva);
+		verify(mailService).mensajeDenegacionReserva(reserva);
+	}
+
+	@Test
+	void fechaComprobarPorCambioDeHorariosConEspecialCerrado() {
+		LocalDate date = LocalDate.now();
+		Long instalacionId = 1L;
+		Reserva reserva = new Reserva();
+		reserva.setId(1L);
+		ReservaEstado estado = new ReservaEstado();
+		reserva.setReservaEstado(estado);
+
+		com.gestion.deportiva.model.InstalacionHorarioEspecial especial = new com.gestion.deportiva.model.InstalacionHorarioEspecial();
+		especial.setCerrado(true);
+
+		when(reservaRepository.findByActivoTrueAndFechaAndInstalacionIdAndReservaEstadoNombreIn(eq(date),
+				eq(instalacionId), any())).thenReturn(List.of(reserva));
+		when(instalacionHorarioBloqueadoRepository.findByActivoTrueAndInstalacionIdAndFecha(instalacionId, date))
+				.thenReturn(List.of());
+		when(instalacionHorarioEspecialRepository.findByActivoTrueAndInstalacionIdAndFecha(instalacionId, date))
+				.thenReturn(List.of(especial));
+		when(reservaRepository.findByActivoTrueAndId(1L)).thenReturn(reserva);
+		when(reservaEstadoRepository
+				.findByActivoTrueAndNombreEqualsIgnoreCase(Constantes.ReservaEstado.CANCELADA_POR_EMPRESA))
+				.thenReturn(estado);
+
+		reservaService.fechaComprobarPorCambioDeHorarios(date, instalacionId);
+
+		verify(reservaRepository).saveAndFlush(reserva);
+	}
+
+	@Test
+	void getListByFechaMetodosTest() {
+		LocalDate fecha = LocalDate.now();
+		List<String> estados = List.of("PENDIENTE");
+		when(reservaRepository.findByActivoTrueAndFechaAndInstalacionIdAndReservaEstadoNombreIn(fecha, 1L, estados))
+				.thenReturn(List.of());
+		when(reservaRepository.findByActivoTrueAndFechaAndInstalacionSedeEmpresaIdAndReservaEstadoNombreIn(fecha, 1L,
+				estados)).thenReturn(List.of());
+		when(reservaRepository.findByActivoTrueAndFechaAndInstalacionSedeIdAndReservaEstadoNombreIn(fecha, 1L, estados))
+				.thenReturn(List.of());
+
+		assertThat(reservaService.getListByFechaDesdeInstalacionIdAndReservaEstados(fecha, 1L, estados)).isEmpty();
+		assertThat(reservaService.getListByFechaDesdeInstalacionSedeEmpresaIdAndReservaEstados(fecha, 1L, estados))
+				.isEmpty();
+		assertThat(reservaService.getListByFechaDesdeInstalacionSedeIdAndReservaEstados(fecha, 1L, estados)).isEmpty();
 	}
 }

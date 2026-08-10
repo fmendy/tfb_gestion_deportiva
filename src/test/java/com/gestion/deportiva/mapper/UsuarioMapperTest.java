@@ -66,6 +66,7 @@ class UsuarioMapperTest {
 		model.setUuid("uuid-usuario-1");
 		model.setEmail("user@test.com");
 		model.setNombre("Juan Usuario");
+		model.setListUsuarioRol(List.of()); // Avoids NullPointerException
 
 		when(usuarioRolMapper.listModelToListDTO(model.getListUsuarioRol())).thenReturn(List.of());
 
@@ -84,6 +85,7 @@ class UsuarioMapperTest {
 		Usuario model = new Usuario();
 		model.setId(1L);
 		model.setNombre("Usuario Test");
+		model.setListUsuarioRol(List.of()); // Avoids NullPointerException
 
 		when(usuarioRolMapper.listModelToListDTO(model.getListUsuarioRol())).thenReturn(List.of());
 
@@ -98,6 +100,7 @@ class UsuarioMapperTest {
 		Usuario model = new Usuario();
 		model.setId(1L);
 		model.setNombre("Usuario Page");
+		model.setListUsuarioRol(List.of()); // Avoids NullPointerException
 
 		when(usuarioRolMapper.listModelToListDTO(model.getListUsuarioRol())).thenReturn(List.of());
 
