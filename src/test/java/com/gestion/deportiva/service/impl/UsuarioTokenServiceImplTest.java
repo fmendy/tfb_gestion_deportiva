@@ -114,7 +114,7 @@ class UsuarioTokenServiceImplTest {
 			return ut;
 		});
 
-		String uuid = usuarioTokenService.crearToken(usuarioId);
+		usuarioTokenService.crearToken(usuarioId);
 
 		verify(usuarioTokenRepository).findByActivoTrueAndUsuarioId(usuarioId);
 		verify(usuarioTokenRepository).saveAndFlush(any(UsuarioToken.class));

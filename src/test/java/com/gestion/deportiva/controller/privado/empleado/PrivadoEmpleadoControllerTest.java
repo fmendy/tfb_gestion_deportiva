@@ -1,4 +1,4 @@
-package com.gestion.deportiva.controller.privado;
+package com.gestion.deportiva.controller.privado.empleado;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
