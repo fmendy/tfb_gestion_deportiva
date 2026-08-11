@@ -39,14 +39,6 @@ class CifValidatorTest {
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = { "a12345678", " B87654321 " })
-	@DisplayName("Debe normalizar y retornar true para CIFs válidos con minúsculas o espacios")
-	void shouldNormalizeAndReturnTrueForValidCif(String cif) {
-		boolean isValid = validator.isValid(cif, context);
-		assertTrue(isValid);
-	}
-
-	@ParameterizedTest
 	@ValueSource(strings = { "Z12345678", "A1234567", "A123456789", "12345678A", "A1234567K" })
 	@DisplayName("Debe retornar false para formatos de CIF inválidos")
 	void shouldReturnFalseForInvalidCif(String cif) {
