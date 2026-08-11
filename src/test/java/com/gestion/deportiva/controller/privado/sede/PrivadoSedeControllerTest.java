@@ -6,7 +6,6 @@ import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -24,19 +23,16 @@ import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
-import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import com.gestion.deportiva.dto.SedeDTO;
-import com.gestion.deportiva.exception.PermisoException;
 import com.gestion.deportiva.service.ComunidadAutonomaService;
 import com.gestion.deportiva.service.EmpresaService;
 import com.gestion.deportiva.service.MunicipioService;
 import com.gestion.deportiva.service.ProvinciaService;
 import com.gestion.deportiva.service.SedeService;
-import com.gestion.deportiva.util.Constantes;
 import com.gestion.deportiva.util.SecurityUtil;
 
 @ExtendWith(MockitoExtension.class)
@@ -128,6 +124,5 @@ class PrivadoSedeControllerTest {
 		mockMvc.perform(get("/privado/sede/crear")).andExpect(status().isOk())
 				.andExpect(view().name("privado/sede/form")).andExpect(model().attributeExists("form"));
 	}
-
 
 }

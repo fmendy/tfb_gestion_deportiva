@@ -27,7 +27,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
-import com.gestion.deportiva.controller.privado.empleado.PrivadoEmpleadoController;
 import com.gestion.deportiva.dto.EmpleadoRegistroDTO;
 import com.gestion.deportiva.dto.filter.EmpleadoFilter;
 import com.gestion.deportiva.exception.PermisoException;
