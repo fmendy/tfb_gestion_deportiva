@@ -136,7 +136,6 @@ class PrivadoEmpresaControllerTest {
 	void shouldGuardarThrowsExceptionHandling() throws Exception {
 		when(empresaService.canWrite(anyLong())).thenReturn(true);
 		doThrow(new RuntimeException("Database error")).when(empresaService).guardar(any(EmpresaDTO.class));
-		when(empresaService.findById(anyLong())).thenReturn(new EmpresaDTO());
 
 		mockMvc.perform(post("/privado/empresa/guardar").param("id", "1").param("nombre", "Empresa Test"))
 				.andExpect(status().isOk()).andExpect(view().name("privado/empresa/form"))
