@@ -1,33 +1,45 @@
 package com.gestion.deportiva.controller.privado.instalacion;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mockStatic;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-import java.util.List;
+import java.time.LocalDate;
+import java.util.Collections;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import org.springframework.validation.Validator;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
+import com.gestion.deportiva.dto.InstalacionHorarioBloqueadoDTO;
+import com.gestion.deportiva.dto.filter.InstalacionHorarioBloqueadoFilter;
+import com.gestion.deportiva.exception.PermisoException;
 import com.gestion.deportiva.service.InstalacionHorarioBloqueadoService;
-import com.gestion.deportiva.util.SecurityUtil;
+import com.gestion.deportiva.util.Constantes;
 
 @ExtendWith(MockitoExtension.class)
 class PrivadoInstalacionHorarioBloqueadoControllerTest {
@@ -37,49 +49,160 @@ class PrivadoInstalacionHorarioBloqueadoControllerTest {
 	@Mock
 	private InstalacionHorarioBloqueadoService instalacionHorarioBloqueadoService;
 
-	@InjectMocks
-	private PrivadoInstalacionHorarioBloqueadoController controller;
+	@Mock
+	private Validator validator;
 
-	private MockedStatic<SecurityUtil> securityUtilMockedStatic;
+	@InjectMocks
+	private PrivadoInstalacionHorarioBloqueadoController privadoInstalacionHorarioBloqueadoController;
 
 	@BeforeEach
 	void setUp() {
-		LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
-		validator.afterPropertiesSet();
+		InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
+		viewResolver.setPrefix("/WEB-INF/jsp/");
+		viewResolver.setSuffix(".jsp");
 
-		mockMvc = MockMvcBuilders.standaloneSetup(controller)
-				.setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver()).setValidator(validator)
-				.build();
-
-		securityUtilMockedStatic = mockStatic(SecurityUtil.class);
-	}
-
-	@AfterEach
-	void tearDown() {
-		securityUtilMockedStatic.close();
+		mockMvc = MockMvcBuilders.standaloneSetup(privadoInstalacionHorarioBloqueadoController)
+				.setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver()).setViewResolvers(viewResolver)
+				.setValidator(validator).build();
 	}
 
 	@Test
-	void searchTest() throws Exception {
-		securityUtilMockedStatic.when(SecurityUtil::getCurrentUserId).thenReturn(1L);
-		when(instalacionHorarioBloqueadoService.getPageByFilter(any(), any())).thenReturn(new PageImpl<>(List.of()));
+	void shouldSearch() throws Exception {
+		Page<InstalacionHorarioBloqueadoDTO> page = new PageImpl<>(Collections.emptyList());
+		when(instalacionHorarioBloqueadoService.getPageByFilter(any(InstalacionHorarioBloqueadoFilter.class),
+				any(Pageable.class))).thenReturn(page);
 
 		mockMvc.perform(get("/privado/instalacion/1/horario/bloqueado")).andExpect(status().isOk())
 				.andExpect(view().name("privado/instalacion/horarioBloqueadoList"))
-				.andExpect(model().attributeExists("page"));
+				.andExpect(model().attributeExists("page", "filter", "url", "breadcrumbs"));
 	}
 
 	@Test
-	void eliminarExitosoTest() throws Exception {
-		Long idInstalacion = 1L;
-		Long id = 10L;
-		when(instalacionHorarioBloqueadoService.canWrite(id)).thenReturn(true);
+	void shouldEditar() throws Exception {
+		InstalacionHorarioBloqueadoDTO dto = new InstalacionHorarioBloqueadoDTO();
+		dto.setInstalacionId(1L);
+		when(instalacionHorarioBloqueadoService.canRead(anyLong())).thenReturn(true);
+		when(instalacionHorarioBloqueadoService.findByIdOrNewEmpty(anyLong(), anyLong())).thenReturn(dto);
 
-		mockMvc.perform(get("/privado/instalacion/{idInstalacion}/horario/bloqueado/{id}/eliminar", idInstalacion, id))
-				.andExpect(status().is3xxRedirection())
-				.andExpect(redirectedUrl("/privado/instalacion/1/horario/bloqueado"));
-
-		verify(instalacionHorarioBloqueadoService).eliminar(id);
+		mockMvc.perform(get("/privado/instalacion/1/horario/bloqueado/1/editar")).andExpect(status().isOk())
+				.andExpect(view().name("privado/instalacion/horarioBloqueadoForm"))
+				.andExpect(model().attributeExists("form", "breadcrumbs"));
 	}
 
+	@Test
+	void shouldEditarThrowsPermisoException() {
+		when(instalacionHorarioBloqueadoService.canRead(anyLong())).thenReturn(false);
+
+		try {
+			mockMvc.perform(get("/privado/instalacion/1/horario/bloqueado/1/editar")).andExpect(result -> {
+				Exception ex = result.getResolvedException();
+				assertNotNull(ex);
+				assertEquals(PermisoException.class, ex.getClass());
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	void shouldCrear() throws Exception {
+		InstalacionHorarioBloqueadoDTO dto = new InstalacionHorarioBloqueadoDTO();
+		dto.setInstalacionId(1L);
+		when(instalacionHorarioBloqueadoService.findByIdOrNewEmpty(any(), anyLong())).thenReturn(dto);
+
+		mockMvc.perform(get("/privado/instalacion/1/horario/bloqueado/crear")).andExpect(status().isOk())
+				.andExpect(view().name("privado/instalacion/horarioBloqueadoForm"))
+				.andExpect(model().attributeExists("form", "breadcrumbs"));
+	}
+
+	@Test
+	void shouldGuardarSuccess() {
+		when(instalacionHorarioBloqueadoService.canWrite(anyLong())).thenReturn(true);
+
+		try {
+			mockMvc.perform(post("/privado/instalacion/1/horario/bloqueado/guardar").param("id", "1")
+					.param("instalacionId", "1").param("fechaInicio", LocalDate.now().toString())
+					.param("fechaFin", LocalDate.now().toString())).andExpect(status().is3xxRedirection())
+					.andExpect(redirectedUrl("/privado/instalacion/1/horario/bloqueado"))
+					.andExpect(flash().attribute(Constantes.HTTP_STATUS, HttpStatus.OK.value()));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		verify(instalacionHorarioBloqueadoService, times(1)).guardar(any(InstalacionHorarioBloqueadoDTO.class));
+	}
+
+	@Test
+	void shouldGuardarThrowsPermisoException() {
+		when(instalacionHorarioBloqueadoService.canWrite(anyLong())).thenReturn(false);
+
+		try {
+			mockMvc.perform(post("/privado/instalacion/1/horario/bloqueado/guardar").param("id", "1")
+					.param("instalacionId", "1")).andExpect(result -> {
+						Exception ex = result.getResolvedException();
+						assertNotNull(ex);
+						assertEquals(PermisoException.class, ex.getClass());
+					});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	void shouldGuardarThrowsExceptionHandling() throws Exception {
+		when(instalacionHorarioBloqueadoService.canWrite(anyLong())).thenReturn(true);
+		doThrow(new RuntimeException("Database error")).when(instalacionHorarioBloqueadoService)
+				.guardar(any(InstalacionHorarioBloqueadoDTO.class));
+
+		mockMvc.perform(
+				post("/privado/instalacion/1/horario/bloqueado/guardar").param("id", "1").param("instalacionId", "1")
+						.param("fechaInicio", LocalDate.now().toString()).param("fechaFin", LocalDate.now().toString()))
+				.andExpect(status().isOk()).andExpect(view().name("privado/instalacion/horarioBloqueadoForm"))
+				.andExpect(model().attribute(Constantes.HTTP_STATUS, HttpStatus.INTERNAL_SERVER_ERROR.value()));
+	}
+
+	@Test
+	void shouldEliminarSuccess() {
+		when(instalacionHorarioBloqueadoService.canWrite(anyLong())).thenReturn(true);
+
+		try {
+			mockMvc.perform(get("/privado/instalacion/1/horario/bloqueado/1/eliminar"))
+					.andExpect(status().is3xxRedirection())
+					.andExpect(redirectedUrl("/privado/instalacion/1/horario/bloqueado"))
+					.andExpect(flash().attribute(Constantes.HTTP_STATUS, HttpStatus.OK.value()));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		verify(instalacionHorarioBloqueadoService, times(1)).eliminar(1L);
+	}
+
+	@Test
+	void shouldEliminarThrowsPermisoException() {
+		when(instalacionHorarioBloqueadoService.canWrite(anyLong())).thenReturn(false);
+
+		try {
+			mockMvc.perform(get("/privado/instalacion/1/horario/bloqueado/1/eliminar")).andExpect(result -> {
+				Exception ex = result.getResolvedException();
+				assertNotNull(ex);
+				assertEquals(PermisoException.class, ex.getClass());
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	void shouldEliminarThrowsExceptionHandling() {
+		when(instalacionHorarioBloqueadoService.canWrite(anyLong())).thenReturn(true);
+		doThrow(new RuntimeException("Error deleting")).when(instalacionHorarioBloqueadoService).eliminar(anyLong());
+
+		try {
+			mockMvc.perform(get("/privado/instalacion/1/horario/bloqueado/1/eliminar"))
+					.andExpect(status().is3xxRedirection())
+					.andExpect(redirectedUrl("/privado/instalacion/1/horario/bloqueado?httpStatus=500"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }
