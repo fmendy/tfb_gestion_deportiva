@@ -30,8 +30,8 @@ class InstalacionHorarioEspecialUtilTest {
 		filter.setEmpresaId(1L);
 		filter.setSedeId(2L);
 		filter.setInstalacionId(3L);
-		filter.setFechaDesde(LocalDate.of(2026, 8, 1));
-		filter.setFechaHasta(LocalDate.of(2026, 8, 31));
+		filter.setFechaDesde(LocalDate.of(2026, java.time.Month.AUGUST, 1));
+		filter.setFechaHasta(LocalDate.of(2026, java.time.Month.AUGUST, 31));
 		filter.setCerrado(true);
 
 		String url = "/horarios-especiales";

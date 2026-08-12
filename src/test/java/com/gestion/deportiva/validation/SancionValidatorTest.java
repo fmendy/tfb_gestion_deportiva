@@ -45,8 +45,8 @@ class SancionValidatorTest {
 	void setUp() {
 		sancionDTO = new SancionDTO();
 		sancionDTO.setReservaId(1L);
-		sancionDTO.setFechaInicio(LocalDate.of(2026, 8, 15));
-		sancionDTO.setFechaFin(LocalDate.of(2026, 8, 20));
+		sancionDTO.setFechaInicio(LocalDate.of(2026, java.time.Month.AUGUST, 15));
+		sancionDTO.setFechaFin(LocalDate.of(2026, java.time.Month.AUGUST, 20));
 
 		sancionModel = new Sancion();
 		sancionModel.setId(2L);
@@ -76,8 +76,8 @@ class SancionValidatorTest {
 
 	@Test
 	void shouldReturnFalseWhenFechaInicioIsAfterFechaFin() {
-		sancionDTO.setFechaInicio(LocalDate.of(2026, 8, 25));
-		sancionDTO.setFechaFin(LocalDate.of(2026, 8, 20));
+		sancionDTO.setFechaInicio(LocalDate.of(2026, java.time.Month.AUGUST, 25));
+		sancionDTO.setFechaFin(LocalDate.of(2026, java.time.Month.AUGUST, 20));
 
 		when(repository.findByActivoTrueAndReservaId(eq(1L))).thenReturn(null);
 

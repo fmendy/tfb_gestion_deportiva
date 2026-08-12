@@ -47,7 +47,7 @@ class ReservaSolicitudDisponibilidadValidatorTest {
 	@BeforeEach
 	void setUp() {
 		dto = new ReservaSolicitudDTO();
-		dto.setFecha(LocalDate.of(2026, 8, 15));
+		dto.setFecha(LocalDate.of(2026, java.time.Month.AUGUST, 15));
 		dto.setHora(LocalTime.of(10, 0));
 		dto.setDuracion(60L);
 		dto.setInstalacionId(5L);

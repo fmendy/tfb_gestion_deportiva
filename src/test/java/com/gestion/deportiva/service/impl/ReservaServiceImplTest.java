@@ -7,6 +7,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.times;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -462,7 +463,7 @@ class ReservaServiceImplTest {
 		reservaService.completar(reservaId);
 		reservaService.incompletar(reservaId);
 
-		verify(reservaRepository, org.mockito.Mockito.times(2)).saveAndFlush(reserva);
+		verify(reservaRepository, times(2)).saveAndFlush(reserva);
 	}
 
 	@Test

@@ -64,8 +64,7 @@ class UtilsTest {
 
 		String resultado = Utils.dateToMesAnnoString(date);
 
-		assertThat(resultado).isNotNull();
-		assertThat(resultado).contains("2026");
+		assertThat(resultado).isNotNull().contains("2026");
 	}
 
 	@Test
@@ -156,7 +155,7 @@ class UtilsTest {
 
 	@Test
 	void dateToStringConLocalDateTime() {
-		LocalDateTime ldt = LocalDateTime.of(2026, 8, 7, 10, 15);
+		LocalDateTime ldt = LocalDateTime.of(2026, java.time.Month.AUGUST, 7, 10, 15);
 
 		String str = Utils.dateToString(ldt, "yyyy-MM-dd HH:mm");
 
@@ -233,9 +232,7 @@ class UtilsTest {
 
 		String resultado = sb.toString();
 
-		assertThat(resultado).contains("nombre=Juan");
-		assertThat(resultado).doesNotContain("vacio=");
-		assertThat(resultado).doesNotContain("nulo=");
-		assertThat(resultado).contains("ids=1, 2, 3");
+		assertThat(resultado).contains("nombre=Juan").doesNotContain("vacio=").doesNotContain("nulo=")
+				.contains("ids=1, 2, 3");
 	}
 }

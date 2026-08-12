@@ -44,7 +44,7 @@ class InstalacionHorarioBloqueadoMapperTest {
 		instalacion.setNombre("Pista de Pádel");
 		instalacion.setSede(sede);
 
-		LocalDate fecha = LocalDate.of(2026, 8, 7);
+		LocalDate fecha = LocalDate.of(2026, java.time.Month.AUGUST, 7);
 		LocalTime horaInicio = LocalTime.of(10, 0);
 		LocalTime horaFin = LocalTime.of(12, 0);
 
@@ -131,7 +131,7 @@ class InstalacionHorarioBloqueadoMapperTest {
 
 	@Test
 	void dtoToModelCreandoNuevoSiModelEsNull() {
-		LocalDate fecha = LocalDate.of(2026, 8, 7);
+		LocalDate fecha = LocalDate.of(2026, java.time.Month.AUGUST, 7);
 		LocalTime horaInicio = LocalTime.of(8, 0);
 		LocalTime horaFin = LocalTime.of(10, 0);
 

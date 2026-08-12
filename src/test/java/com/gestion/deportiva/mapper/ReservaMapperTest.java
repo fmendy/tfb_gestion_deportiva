@@ -62,7 +62,7 @@ class ReservaMapperTest {
 		estado.setId(5L);
 		estado.setNombre("APROBADA");
 
-		LocalDate fecha = LocalDate.of(2026, 8, 7);
+		LocalDate fecha = LocalDate.of(2026, java.time.Month.AUGUST, 7);
 		LocalTime horaInicio = LocalTime.of(10, 0);
 		LocalTime horaFin = LocalTime.of(11, 30);
 
@@ -174,7 +174,7 @@ class ReservaMapperTest {
 
 	@Test
 	void dtoToModelCreandoNuevoSiModelEsNull() {
-		LocalDate fecha = LocalDate.of(2026, 8, 7);
+		LocalDate fecha = LocalDate.of(2026, java.time.Month.AUGUST, 7);
 		LocalTime horaInicio = LocalTime.of(9, 0);
 		LocalTime horaFin = LocalTime.of(10, 0);
 
@@ -261,14 +261,14 @@ class ReservaMapperTest {
 
 		ReservaSolicitudDTO entradaDTO = new ReservaSolicitudDTO();
 		entradaDTO.setDuracion(60L);
-		entradaDTO.setFecha(LocalDate.of(2026, 8, 7));
+		entradaDTO.setFecha(LocalDate.of(2026, java.time.Month.AUGUST, 7));
 		entradaDTO.setHora(LocalTime.of(12, 0));
 
 		ReservaSolicitudDTO resultado = mapper.instalacionModelToReservaInstalacionDTO(instalacion, entradaDTO);
 
 		assertThat(resultado).isNotNull();
 		assertThat(resultado.getDuracion()).isEqualTo(60);
-		assertThat(resultado.getFecha()).isEqualTo(LocalDate.of(2026, 8, 7));
+		assertThat(resultado.getFecha()).isEqualTo(LocalDate.of(2026, java.time.Month.AUGUST, 7));
 		assertThat(resultado.getHora()).isEqualTo(LocalTime.of(12, 0));
 		assertThat(resultado.getHoraFin()).isEqualTo(LocalTime.of(13, 0));
 		assertThat(resultado.getInstalacionId()).isEqualTo(7L);

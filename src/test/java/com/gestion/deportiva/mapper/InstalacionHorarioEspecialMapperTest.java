@@ -44,7 +44,7 @@ class InstalacionHorarioEspecialMapperTest {
 		instalacion.setNombre("Pista Polideportiva");
 		instalacion.setSede(sede);
 
-		LocalDate fecha = LocalDate.of(2026, 8, 7);
+		LocalDate fecha = LocalDate.of(2026, java.time.Month.AUGUST, 7);
 		LocalTime horaInicio = LocalTime.of(9, 0);
 		LocalTime horaFin = LocalTime.of(14, 0);
 
@@ -133,7 +133,7 @@ class InstalacionHorarioEspecialMapperTest {
 
 	@Test
 	void dtoToModelCreandoNuevoSiModelEsNull() {
-		LocalDate fecha = LocalDate.of(2026, 8, 7);
+		LocalDate fecha = LocalDate.of(2026, java.time.Month.AUGUST, 7);
 		LocalTime horaInicio = LocalTime.of(8, 0);
 		LocalTime horaFin = LocalTime.of(15, 0);
 

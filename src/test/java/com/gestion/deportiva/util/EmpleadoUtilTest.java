@@ -59,9 +59,7 @@ class EmpleadoUtilTest {
 		String url = "/empleados";
 		String resultado = EmpleadoUtil.cleanUrlPageFilter(filter, url);
 
-		assertThat(resultado).contains("/empleados?");
-		assertThat(resultado).contains("email=test@test.com");
-		assertThat(resultado).contains("nombre=Juan");
-		assertThat(resultado).contains("empresaId=1");
+		assertThat(resultado).contains("/empleados?").contains("email=test@test.com").contains("nombre=Juan")
+				.contains("empresaId=1");
 	}
 }

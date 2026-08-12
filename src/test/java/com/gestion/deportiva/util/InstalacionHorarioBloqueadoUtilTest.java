@@ -30,8 +30,8 @@ class InstalacionHorarioBloqueadoUtilTest {
 		filter.setEmpresaId(1L);
 		filter.setSedeId(2L);
 		filter.setInstalacionId(3L);
-		filter.setFechaDesde(LocalDate.of(2026, 8, 1));
-		filter.setFechaHasta(LocalDate.of(2026, 8, 31));
+		filter.setFechaDesde(LocalDate.of(2026, java.time.Month.AUGUST, 1));
+		filter.setFechaHasta(LocalDate.of(2026, java.time.Month.AUGUST, 31));
 
 		String url = "/bloqueos";
 		String resultado = InstalacionHorarioBloqueadoUtil.cleanUrlPageFilter(filter, url);
@@ -43,7 +43,7 @@ class InstalacionHorarioBloqueadoUtilTest {
 	@Test
 	void cleanUrlPageFilterConUrlConParametrosYFiltroParcial() {
 		InstalacionHorarioBloqueadoFilter filter = new InstalacionHorarioBloqueadoFilter();
-		filter.setFechaDesde(LocalDate.of(2026, 8, 1));
+		filter.setFechaDesde(LocalDate.of(2026, java.time.Month.AUGUST, 1));
 
 		String url = "/bloqueos?page=1";
 		String resultado = InstalacionHorarioBloqueadoUtil.cleanUrlPageFilter(filter, url);

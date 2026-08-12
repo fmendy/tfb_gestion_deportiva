@@ -58,18 +58,14 @@ class SancionUtilTest {
 		filter.setUsuarioId(20L);
 		filter.setSancionTipoId(2L);
 		filter.setUsuarioNombre("Pedro");
-		filter.setFechaInicioDesde(LocalDate.of(2026, 8, 1));
-		filter.setFechaInicioHasta(LocalDate.of(2026, 8, 31));
+		filter.setFechaInicioDesde(LocalDate.of(2026, java.time.Month.AUGUST, 1));
+		filter.setFechaInicioHasta(LocalDate.of(2026, java.time.Month.AUGUST, 31));
 
 		String url = "/sanciones";
 		String resultado = SancionUtil.cleanUrlPageFilter(filter, url);
 
-		assertThat(resultado).contains("/sanciones?");
-		assertThat(resultado).contains("reservaId=10");
-		assertThat(resultado).contains("usuarioId=20");
-		assertThat(resultado).contains("sancionTipoId=2");
-		assertThat(resultado).contains("usuarioNombre=Pedro");
-		assertThat(resultado).contains("fechaInicioDesde=2026-08-01");
-		assertThat(resultado).contains("fechaInicioHasta=2026-08-31");
+		assertThat(resultado).contains("/sanciones?").contains("reservaId=10").contains("usuarioId=20")
+				.contains("sancionTipoId=2").contains("usuarioNombre=Pedro").contains("fechaInicioDesde=2026-08-01")
+				.contains("fechaInicioHasta=2026-08-31");
 	}
 }

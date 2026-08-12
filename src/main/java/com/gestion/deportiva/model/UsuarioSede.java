@@ -10,6 +10,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,6 +21,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "usuario_sede")
 @Audited
+@EqualsAndHashCode(callSuper = false, exclude = "usuario")
 @AuditTable(value = "usuario_sede_historico")
 public class UsuarioSede extends BaseEntity implements Serializable {
 

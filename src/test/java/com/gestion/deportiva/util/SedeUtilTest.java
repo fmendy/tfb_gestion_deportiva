@@ -59,9 +59,7 @@ class SedeUtilTest {
 		String url = "/sedes";
 		String resultado = SedeUtil.cleanUrlPageFilter(filter, url);
 
-		assertThat(resultado).contains("/sedes?");
-		assertThat(resultado).contains("nombre=Sede Central");
-		assertThat(resultado).contains("empresaId=1");
-		assertThat(resultado).contains("municipioId=28079");
+		assertThat(resultado).contains("/sedes?").contains("nombre=Sede Central").contains("empresaId=1")
+				.contains("municipioId=28079");
 	}
 }

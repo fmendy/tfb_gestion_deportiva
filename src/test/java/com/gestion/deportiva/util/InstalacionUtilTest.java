@@ -53,7 +53,7 @@ class InstalacionUtilTest {
 		InstalacionPublicoFilter filter = new InstalacionPublicoFilter();
 		filter.setNombre("Piscina");
 		filter.setMunicipioId(10L);
-		filter.setFecha(LocalDate.of(2026, 8, 7));
+		filter.setFecha(LocalDate.of(2026, java.time.Month.AUGUST, 7));
 		filter.setHoraInicio(LocalTime.of(10, 0));
 
 		String url = "/publico/instalaciones?page=1";

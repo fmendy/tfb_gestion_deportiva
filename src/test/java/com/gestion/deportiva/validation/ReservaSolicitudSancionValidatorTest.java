@@ -46,7 +46,7 @@ class ReservaSolicitudSancionValidatorTest {
 
 	@BeforeEach
 	void setUp() {
-		fechaPrueba = LocalDate.of(2026, 8, 15);
+		fechaPrueba = LocalDate.of(2026, java.time.Month.AUGUST, 15);
 		dto = new ReservaSolicitudDTO();
 		dto.setFecha(fechaPrueba);
 

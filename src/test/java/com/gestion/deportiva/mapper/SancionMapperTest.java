@@ -50,7 +50,7 @@ class SancionMapperTest {
 
 		Reserva reserva = new Reserva();
 		reserva.setId(10L);
-		reserva.setFecha(LocalDate.of(2026, 8, 7));
+		reserva.setFecha(LocalDate.of(2026, java.time.Month.AUGUST, 7));
 		reserva.setHoraInicio(LocalTime.of(10, 0));
 		reserva.setHoraFin(LocalTime.of(11, 0));
 		reserva.setReservaEstado(estado);
@@ -64,8 +64,8 @@ class SancionMapperTest {
 		tipo.setId(30L);
 		tipo.setNombre("Leve");
 
-		LocalDate fechaInicio = LocalDate.of(2026, 8, 7);
-		LocalDate fechaFin = LocalDate.of(2026, 8, 14);
+		LocalDate fechaInicio = LocalDate.of(2026, java.time.Month.AUGUST, 7);
+		LocalDate fechaFin = LocalDate.of(2026, java.time.Month.AUGUST, 14);
 
 		Sancion model = new Sancion();
 		model.setId(1L);
@@ -93,7 +93,7 @@ class SancionMapperTest {
 		assertThat(dto.getReservaReservaEstadoNombre()).isEqualTo("COMPLETADA");
 		assertThat(dto.getReservaHoraInicio()).isEqualTo(LocalTime.of(10, 0));
 		assertThat(dto.getReservaHoraFin()).isEqualTo(LocalTime.of(11, 0));
-		assertThat(dto.getReservaFecha()).isEqualTo(LocalDate.of(2026, 8, 7));
+		assertThat(dto.getReservaFecha()).isEqualTo(LocalDate.of(2026, java.time.Month.AUGUST, 7));
 		assertThat(dto.getReservaInstalacionNombre()).isEqualTo("Pista Central");
 		assertThat(dto.getReservaInstalacionSedeNombre()).isEqualTo("Sede Norte");
 		assertThat(dto.getReservaInstalacionSedeEmpresaNombre()).isEqualTo("Empresa Central");
@@ -158,8 +158,8 @@ class SancionMapperTest {
 
 	@Test
 	void dtoToModelCreandoNuevoSiModelEsNull() {
-		LocalDate fechaInicio = LocalDate.of(2026, 8, 7);
-		LocalDate fechaFin = LocalDate.of(2026, 8, 14);
+		LocalDate fechaInicio = LocalDate.of(2026, java.time.Month.AUGUST, 7);
+		LocalDate fechaFin = LocalDate.of(2026, java.time.Month.AUGUST, 14);
 
 		SancionDTO dto = new SancionDTO();
 		dto.setId(5L);
@@ -266,7 +266,7 @@ class SancionMapperTest {
 		reserva.setUsuarioCreacion(usuario);
 		reserva.setHoraInicio(LocalTime.of(9, 0));
 		reserva.setHoraFin(LocalTime.of(10, 0));
-		reserva.setFecha(LocalDate.of(2026, 8, 7));
+		reserva.setFecha(LocalDate.of(2026, java.time.Month.AUGUST, 7));
 		reserva.setInstalacion(instalacion);
 		reserva.setReservaEstado(estado);
 
@@ -278,7 +278,7 @@ class SancionMapperTest {
 		assertThat(resultado.getUsuarioNombre()).isEqualTo("Usuario Test");
 		assertThat(resultado.getReservaHoraInicio()).isEqualTo(LocalTime.of(9, 0));
 		assertThat(resultado.getReservaHoraFin()).isEqualTo(LocalTime.of(10, 0));
-		assertThat(resultado.getReservaFecha()).isEqualTo(LocalDate.of(2026, 8, 7));
+		assertThat(resultado.getReservaFecha()).isEqualTo(LocalDate.of(2026, java.time.Month.AUGUST, 7));
 		assertThat(resultado.getReservaInstalacionNombre()).isEqualTo("Instalacion Test");
 		assertThat(resultado.getReservaInstalacionSedeNombre()).isEqualTo("Sede Test");
 		assertThat(resultado.getReservaInstalacionSedeEmpresaNombre()).isEqualTo("Empresa Test");
