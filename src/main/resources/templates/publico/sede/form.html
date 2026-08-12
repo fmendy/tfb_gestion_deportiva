@@ -36,7 +36,8 @@
 
 			<div
 				class="bg-primary bg-gradient text-white p-4 p-md-5 d-flex align-items-center">
-				<div th:if="${sede.logo != null and sede.logo.trim() != ''}" class="me-4">
+				<div th:if="${sede.logo != null and sede.logo.trim() != ''}"
+					class="me-4">
 					<img th:src="${sede.logo}"
 						class="rounded-circle bg-white p-1 shadow" width="90" height="90"
 						alt="Logo">
@@ -57,7 +58,7 @@
 						<p class="text-muted mb-5" th:text="${sede.descripcion}">Descripción...</p>
 
 						<h5 class="fw-bold mb-3 text-primary">
-							<i class="bi bi-tools me-2"></i>Instalaciones
+							<i class="bi bi-geo me-2"></i>Instalaciones
 						</h5>
 						<div class="row g-3">
 							<div th:each="inst : ${sede.listInstalacion}" class="col-md-6">
@@ -66,7 +67,7 @@
 									<div
 										class="card border-0 bg-light p-3 h-100 shadow-sm rounded-3 hover-card">
 										<div class="d-flex align-items-center">
-											<i class="bi bi-gear-wide-connected text-primary fs-4 me-3"></i>
+											<i class="bi bi-building me-1 text-primary fs-4 me-3"></i>
 											<div>
 												<h6 class="fw-bold mb-0 text-dark" th:text="${inst.nombre}">Nombre</h6>
 												<small class="text-muted"

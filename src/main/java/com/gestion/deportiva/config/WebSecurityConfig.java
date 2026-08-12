@@ -20,7 +20,7 @@ public class WebSecurityConfig {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests(auth -> auth.requestMatchers("/resources/**", "/css/**", "/images/**", "/js/**",
-				"/publico/**", LOGIN_PAGE, "/error").permitAll().anyRequest().authenticated())
+				"/docs/**", "/publico/**", LOGIN_PAGE, "/error").permitAll().anyRequest().authenticated())
 				.formLogin(form -> form
 						.loginPage(LOGIN_PAGE).defaultSuccessUrl("/privado/usuario/miperfil", true).permitAll())
 				.logout(logout -> logout.logoutUrl("/privado/logout") // URL que invoca el logout
