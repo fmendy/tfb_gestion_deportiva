@@ -51,6 +51,7 @@ import com.gestion.deportiva.util.Constantes;
 import com.gestion.deportiva.util.SecurityUtil;
 import com.gestion.deportiva.util.Utils;
 
+import org.springframework.context.annotation.Lazy;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.validation.Valid;
@@ -86,11 +87,15 @@ public class UsuarioServiceImpl extends MaestraServiceImpl<UsuarioDTO, UsuarioFi
 
 	private final ReservaService reservaService;
 
+	@Lazy
+	private final UsuarioServiceImpl self;
+
+	@Lazy
 	UsuarioServiceImpl(UsuarioRepository usuarioRepository, UsuarioMapper usuarioMapper,
 			PasswordEncoder passwordEncoder, UsuarioEmpresaRepository usuarioEmpresaRepository,
 			UsuarioSedeRepository usuarioSedeRepository, UsuarioInstalacionRepository usuarioInstalacionRepository,
 			UsuarioRolRepository usuarioRolRepository, RolRepository rolRepository, MailService mailService,
-			UsuarioTokenService usuarioTokenService, ReservaService reservaService) {
+			UsuarioTokenService usuarioTokenService, ReservaService reservaService, UsuarioServiceImpl self) {
 		this.usuarioRepository = usuarioRepository;
 		this.usuarioMapper = usuarioMapper;
 		this.passwordEncoder = passwordEncoder;
@@ -102,6 +107,7 @@ public class UsuarioServiceImpl extends MaestraServiceImpl<UsuarioDTO, UsuarioFi
 		this.mailService = mailService;
 		this.usuarioTokenService = usuarioTokenService;
 		this.reservaService = reservaService;
+		this.self = self;
 	}
 
 	@Override
@@ -318,7 +324,7 @@ public class UsuarioServiceImpl extends MaestraServiceImpl<UsuarioDTO, UsuarioFi
 		Usuario usuario = usuarioRepository.findByActivoTrueAndId(SecurityUtil.getCurrentUserId());
 		usuario.setNombre("usuario_eliminado");
 		usuario.setEmail(Utils.generarStringAleatorio(12) + "@tfb_carlemany_apm_2026.com");
-		eliminar(SecurityUtil.getCurrentUserId());
+		self.eliminar(SecurityUtil.getCurrentUserId());
 		reservaService.cancelarUsuarioFechaDesde(SecurityUtil.getCurrentUserId(),
 				LocalDate.now(ZoneId.of("Europe/Madrid")));
 		usuarioRepository.saveAndFlush(usuario);
