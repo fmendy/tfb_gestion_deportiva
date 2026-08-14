@@ -38,6 +38,9 @@ public class MailServiceImpl implements MailService {
 	@Value("${spring.mail.username}")
 	private String mailUsername;
 
+	@Value("${spring.profiles.active}")
+	private String perfilActivo;
+
 	private static final DateTimeFormatter ICS_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss");
 
 	private static final String B_TAG_PUNTOS = "</b>: ";
@@ -61,7 +64,11 @@ public class MailServiceImpl implements MailService {
 		MimeMessage mensaje = mailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(mensaje, true, "UTF-8");
 
-		helper.setTo("apaneda@transportes.gob.es");
+		if ("pro".equalsIgnoreCase(perfilActivo)) {
+			helper.setTo(destinatarios.toArray(new String[0]));
+		} else {
+			helper.setTo("apaneda@transportes.gob.es");
+		}
 		helper.setSubject(asunto);
 
 		if (StringUtils.hasText(icsContent)) {
