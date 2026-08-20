@@ -24,7 +24,7 @@ public class EmpresaSpecifications extends BaseSpecifications<Empresa> {
 			specs.add(new EmpresaSpecifications().likeIgnoreCase(filter.getCif(), "cif"));
 		}
 
-		if (!filter.getListIds().isEmpty()) {
+		if (filter.getListIds() != null && !filter.getListIds().isEmpty()) {
 			specs.add(new EmpresaSpecifications().fieldInLong(filter.getListIds(), "id"));
 		}
 		return new EmpresaSpecifications().combine(specs);
