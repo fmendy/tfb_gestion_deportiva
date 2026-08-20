@@ -101,7 +101,7 @@
 									th:text="${sede.email}">Email</span></li>
 								<li class="mb-0" th:if="${sede.url}"><i
 									class="bi bi-globe text-primary me-2"></i> <a
-									th:href="${sede.url}" target="_blank"
+									th:href="@{https://{url}(url=${sede.url})}" target="_blank" rel="noopener noreferrer"
 									class="text-decoration-none">Sitio Web</a></li>
 							</ul>
 						</div>

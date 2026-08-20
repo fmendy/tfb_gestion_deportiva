@@ -4,7 +4,7 @@
 insert into empresa (nombre, email, cif, url, descripcion) values 
 ('VamosFIT','vamosfit@apm-tfb-calermany-2026.com','D85354041','www.vamosfit.tfb','Empresa líder del sector deportivo en la península');
 
-insert into sede (id_empresa, id_municipio, direccion, latitud, longitud, nombre, email, url, descripcion) values
+insert into sede (id_empresa, id_municipio, direccion, latitud, longitud, nombre,  url, email, descripcion) values
 ((select id from empresa where nombre = 'VamosFIT'), (select id from municipio where nombre = 'Madrid'),'Calle San Agustin, 3, 28014 Madrid, España',
 '40.41517748601217', '-3.697032734932634', 'VamosFIT Madrid','www.vamosfit_madird.tfb', 'vamosfit_madrid@apm-tfb-calermany-2026.com',
 'Ahora en Madrid, VamosFIT Madrid');
@@ -104,7 +104,7 @@ insert into instalacion_horario(id_instalacion, dia_semana, hora_inicio, hora_fi
 **************************************************************/
 insert into empresa (nombre, email, cif, url, descripcion) values 
 ('Ayuntamiento Siero','ayutamiento_siero@apm-tfb-calermany-2026.com','J76037514','www.siero.tfb','Tus instalaciones deportivas municipales en el concejo de Siero');
-insert into sede (id_empresa, id_municipio, direccion, latitud, longitud, nombre, email, url, descripcion) values
+insert into sede (id_empresa, id_municipio, direccion, latitud, longitud, nombre,  url, email, descripcion) values
 ((select id from empresa where nombre = 'Ayuntamiento Siero'), (select id from municipio where nombre = 'Siero'),'Polideportivo de Pola de Siero, Carretera de San Sebastián a Santiago de Compostela, 33519 Siero, España',
 '43.39297152851873', '-5.66033244745077', 'Complejo Municipal de Pola de Siero','www.siero.tfb', 'siero_pola_siero@apm-tfb-calermany-2026.com',
 'Instalaciones Municipales del Ayuntamiento de Siero en la Localidad de Pola de Siero');
@@ -218,7 +218,7 @@ insert into instalacion_configuracion_reserva (id_instalacion, duracion_min, dur
 ((select i.id from instalacion i inner join sede s on s.id = i.id_sede where s.nombre = 'Complejo Municipal de Pola de Siero' and i.nombre = 'Gimanasio'),30,60,15);
 
 
-insert into sede (id_empresa, id_municipio, direccion, latitud, longitud, nombre, email, url, descripcion) values
+insert into sede (id_empresa, id_municipio, direccion, latitud, longitud, nombre,  url, email, descripcion) values
 ((select id from empresa where nombre = 'Ayuntamiento Siero'), (select id from municipio where nombre = 'Siero'),'Polideportivo de El Berrón, Avenida de Los Campones, 33186 Siero, España',
 '43.38360686398542', '-5.70787393390313', 'Complejo Municipal de El Berrón','www.siero.tfb', 'siero_el_berron@apm-tfb-calermany-2026.com',
 'Instalaciones Municipales del Ayuntamiento de Siero en la Localidad de El Berrón');
@@ -270,7 +270,7 @@ insert into instalacion_horario(id_instalacion, dia_semana, hora_inicio, hora_fi
 ((select i.id from instalacion i inner join sede s on s.id = i.id_sede where s.nombre = 'Complejo Municipal de El Berrón' and i.nombre = 'Pista'),7,'08:00:00','14:00:00');
 
 
-insert into sede (id_empresa, id_municipio, direccion, latitud, longitud, nombre, email, url, descripcion) values
+insert into sede (id_empresa, id_municipio, direccion, latitud, longitud, nombre,  url, email, descripcion) values
 ((select id from empresa where nombre = 'Ayuntamiento Siero'), (select id from municipio where nombre = 'Siero'),'Pisicina Climatizada de Lugones, Avenida del Conde de Santa Bárbara, 33420 Siero, España',
 '43.406093317049994', '-5.811088930392856', 'Complejo Municipal de Lugones','www.siero.tfb', 'siero_siero@apm-tfb-calermany-2026.com',
 'Instalaciones Municipales del Ayuntamiento de Siero en la Localidad de Lugones');
@@ -383,7 +383,7 @@ insert into instalacion_horario(id_instalacion, dia_semana, hora_inicio, hora_fi
 **************************************************************/
 insert into empresa (nombre, email, cif, url, descripcion) values 
 ('BajaFIT','baja_fit@apm-tfb-calermany-2026.com','D85758332','www.baja_fit.tfb','Baja Fit, nuevo concepto de bienestar, baja de peso con nosotros');
-insert into sede (id_empresa, id_municipio, direccion, latitud, longitud, nombre, email, url, descripcion) values
+insert into sede (id_empresa, id_municipio, direccion, latitud, longitud, nombre,  url, email, descripcion) values
 ((select id from empresa where nombre = 'BajaFIT'), (select id from municipio where nombre = 'Barcelona'),
 'Plaça de Nemesi Ponsati, 08004 Barcelona, España',
 '41.36455578179243', '2.15576266674438', 'Campo de Montjuict','www.baja_fit.tfb', 'baja_fit_barcelona@apm-tfb-calermany-2026.com',
@@ -526,7 +526,7 @@ insert into instalacion_horario(id_instalacion, dia_semana, hora_inicio, hora_fi
 
 
 
-insert into sede (id_empresa, id_municipio, direccion, latitud, longitud, nombre, email, url, descripcion) values
+insert into sede (id_empresa, id_municipio, direccion, latitud, longitud, nombre,  url, email, descripcion) values
 ((select id from empresa where nombre = 'BajaFIT'), (select id from municipio where nombre = 'Barcelona'),
 'Provençals del Poblenou, Sant Martí, 08020 Barcelona',
 '41.418341', '2.207365', 'Barcelona Norte','www.baja_fit.tfb', 'baja_fit_barcelona_norte@apm-tfb-calermany-2026.com',
@@ -651,7 +651,7 @@ insert into instalacion_horario(id_instalacion, dia_semana, hora_inicio, hora_fi
 insert into empresa (nombre, email, cif, url, descripcion) values 
 ('GoGYM','go_gym@apm-tfb-calermany-2026.com','K50185016','www.go_gym.tfb','GO GYM, gimnasios de última generación, todo para el cuerpo y la mente');
 
-insert into sede (id_empresa, id_municipio, direccion, latitud, longitud, nombre, email, url, descripcion) values
+insert into sede (id_empresa, id_municipio, direccion, latitud, longitud, nombre,  url, email, descripcion) values
 ((select id from empresa where nombre = 'GoGYM'), (select id from municipio where nombre = 'Barcelona'),
 'Calle de Mallorca, 436-442, Eixample, 08013 Barcelona',
 '41.404802', '2.177139', 'GoGYM Barcelona','www.go_gym.tfb', 'go_gym_barcelona@apm-tfb-calermany-2026.com',
@@ -721,7 +721,7 @@ insert into instalacion_horario(id_instalacion, dia_semana, hora_inicio, hora_fi
 ((select i.id from instalacion i inner join sede s on s.id = i.id_sede where s.nombre = 'GoGYM Barcelona' and i.nombre = 'Gimnasio'),7,'10:00:00','16:00:00');
 
 
-insert into sede (id_empresa, id_municipio, direccion, latitud, longitud, nombre, email, url, descripcion) values
+insert into sede (id_empresa, id_municipio, direccion, latitud, longitud, nombre,  url, email, descripcion) values
 ((select id from empresa where nombre = 'GoGYM'), (select id from municipio where nombre = 'Madrid'),
 'C. de Alfonso XII, 1V, Retiro, 28009 Madrid',
 '40.412368', '-3.686392', 'GoGYM Madrid','www.go_gym.tfb', 'go_gym_madrid@apm-tfb-calermany-2026.com',
@@ -780,7 +780,7 @@ insert into empresa (nombre, email, cif, url, descripcion) values
 ('Benidorm Fitness','benidorm_fitness@apm-tfb-calermany-2026.com','L61174736','www.benidorm_fitness.tfb','En Benidorm, costa Blanca, tu lugar de entramiento perfecto');
 
 
-insert into sede (id_empresa, id_municipio, direccion, latitud, longitud, nombre, email, url, descripcion) values
+insert into sede (id_empresa, id_municipio, direccion, latitud, longitud, nombre,  url, email, descripcion) values
 ((select id from empresa where nombre = 'Benidorm Fitness'), (select id from municipio where nombre = 'Benidorm'),
 'Benidorm, 03502, Alicante',
 '38.547536', '-0.139383', 'Benidorm Fitness Center','www.benidorm_fitness.tfb', 'benidorm_fitness@apm-tfb-calermany-2026.com',
