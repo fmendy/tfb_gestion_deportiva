@@ -17,7 +17,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
 
 import com.gestion.deportiva.config.AuditorAwareContext;
 import com.gestion.deportiva.dto.ComboDTO;
