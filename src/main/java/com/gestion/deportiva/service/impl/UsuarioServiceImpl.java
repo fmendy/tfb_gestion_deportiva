@@ -57,7 +57,6 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.validation.Valid;
 
 @Service
-@Validated
 public class UsuarioServiceImpl extends MaestraServiceImpl<UsuarioDTO, UsuarioFilter>
 		implements UsuarioService, UserDetailsService {
 
@@ -279,7 +278,7 @@ public class UsuarioServiceImpl extends MaestraServiceImpl<UsuarioDTO, UsuarioFi
 
 	@Override
 	@Transactional
-	public Long registrarUsuarioEmpresa(@Valid EmpresaRegistroDTO dto) {
+	public Long registrarUsuarioEmpresa(EmpresaRegistroDTO dto) {
 		Usuario usuario = usuarioMapper.registroEmpresaDTOToModel(dto);
 		usuarioRepository.saveAndFlush(usuario);
 

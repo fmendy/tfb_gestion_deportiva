@@ -67,7 +67,7 @@ public class MailServiceImpl implements MailService {
 		if ("pro".equalsIgnoreCase(perfilActivo)) {
 			helper.setTo(destinatarios.toArray(new String[0]));
 		} else {
-			helper.setTo("apaneda@transportes.gob.es");
+			helper.setTo("apanedam@student.ucarlemany.com");
 		}
 		helper.setSubject(asunto);
 
